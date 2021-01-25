@@ -1,3 +1,6 @@
 # Project exclude paths
 /cmake-build-debug-mingw/
 /cmake-build-release-mingw/
+
+# IDE files
+/idea/
