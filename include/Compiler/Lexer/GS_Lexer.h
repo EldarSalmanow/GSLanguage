@@ -2,7 +2,6 @@
 #define GSLANGUAGE_GS_LEXER_H
 
 #include <vector>
-#include <functional>
 
 #include "GS_Token.h"
 #include "GS_Regex.h"
