@@ -4,6 +4,10 @@
 #include <map>
 
 namespace GSLanguageCompiler {
+
+    /**
+     * Type of token
+     */
     enum TokenType {
         END_OF_FILE,
         NEW_LINE,
@@ -17,7 +21,11 @@ namespace GSLanguageCompiler {
         SYMBOL_RIGHT_PARENTHESES
     };
 
+    /**
+     * Reserved letters and symbols
+     */
     extern std::map<std::string, TokenType> reserved;
+
 }
 
 #endif //GSLANGUAGE_GS_KEYWORDS_H

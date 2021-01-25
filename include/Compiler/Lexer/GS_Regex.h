@@ -4,6 +4,7 @@
 #include <regex>
 
 namespace GSLanguageCompiler {
+
     /**
      * Type of regular expression
      * ALPHABET_... - the alphabet of a language (includes large and small characters)
@@ -18,6 +19,7 @@ namespace GSLanguageCompiler {
 
     extern std::regex _wordEnglishLowerCaseExpression;
     extern std::regex _wordEnglishUpperCaseExpression;
+
 }
 
 #endif //GSLANGUAGE_GS_REGEX_H

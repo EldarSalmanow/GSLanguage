@@ -4,6 +4,7 @@
 #include "GS_Exception.h"
 
 namespace GSLanguageCompiler::Exceptions {
+
     /**
      * Class for throwing errors related to reading files
      */
@@ -24,6 +25,7 @@ namespace GSLanguageCompiler::Exceptions {
             this->_printErrorMessage();
         }
     };
+
 }
 
 #endif //GSLANGUAGE_GS_READEREXCEPTION_H

@@ -7,11 +7,13 @@
 #include "../../Exceptions/GS_ReaderException.h"
 
 namespace GSLanguageCompiler {
+
     /**
      * Reader for read files
      */
     class GS_Reader {
     public:
+
         /**
          * Constructor for GS_Reader
          * @param filename Name of the main file to read
@@ -28,6 +30,7 @@ namespace GSLanguageCompiler {
         std::vector<std::string> readFile();
 
     private:
+
         /**
          * Code from file
          */

@@ -4,6 +4,7 @@
 #include "GS_Exception.h"
 
 namespace GSLanguageCompiler::Exceptions {
+
     /**
      * Class for throwing parsing errors
      */
@@ -24,6 +25,7 @@ namespace GSLanguageCompiler::Exceptions {
             this->_printErrorMessage();
         }
     };
+
 }
 
 

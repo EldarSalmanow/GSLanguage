@@ -4,6 +4,7 @@
 #include "GS_Exception.h"
 
 namespace GSLanguageCompiler::Exceptions {
+
     /**
      * Exception for throwing argument parsing error
      */
@@ -25,6 +26,7 @@ namespace GSLanguageCompiler::Exceptions {
             this->_printErrorMessage();
         }
     };
+
 }
 
 #endif //GSLANGUAGE_GS_ARGUMENTEXCEPTION_H

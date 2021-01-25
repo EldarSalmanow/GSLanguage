@@ -1,6 +1,7 @@
 #include "../../../include/Compiler/Reader/GS_Reader.h"
 
 namespace GSLanguageCompiler {
+
     std::vector<std::string> GS_Reader::readFile() {
         char symbol;
         std::string line;
@@ -39,4 +40,5 @@ namespace GSLanguageCompiler {
 #endif // __WIN32
         return this->input;
     }
+
 }

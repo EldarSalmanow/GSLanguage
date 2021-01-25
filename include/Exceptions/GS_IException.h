@@ -4,11 +4,13 @@
 #include <iostream>
 
 namespace GSLanguageCompiler::Exceptions {
+
     /**
      * Interface for GS_LanguageCompiler errors
      */
     class GS_IException {
     public:
+
         /**
          * Getting an error message
          * @return Error message

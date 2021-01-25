@@ -6,6 +6,7 @@
 using namespace GSLanguageCompiler;
 
 namespace Testing {
+
     /**
     * Function for testing GS_Lexer class<br>
     * Note: Do not use in final version!
@@ -34,7 +35,7 @@ namespace Testing {
                 return "END_OF_FILE";
         }
         return "!!ERROR!!";
-    };
+    }
 
     /**
      * Function for testing the GS_Reader class<br>

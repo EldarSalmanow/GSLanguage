@@ -49,6 +49,7 @@ namespace GSLanguageCompiler::Exceptions {
          */
         int line, column;
     };
+
 }
 
 #endif //GSLANGUAGE_GS_EXCEPTION_H

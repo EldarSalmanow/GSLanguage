@@ -9,8 +9,12 @@
 
 namespace GSLanguageCompiler {
 
+    /**
+     * Class for analyzing source code
+     */
     class GS_Lexer {
     public:
+
         /**
          * Constructor for GS_Lexer
          * @param input Lines of code from input file
@@ -67,6 +71,7 @@ namespace GSLanguageCompiler {
         bool isSupportedCharacter(RegexType type);
 
     private:
+
         /**
          * Input code from reader
          */
@@ -97,6 +102,7 @@ namespace GSLanguageCompiler {
          */
         std::string symbol;
     };
+
 }
 
 #endif //GSLANGUAGE_GS_LEXER_H
