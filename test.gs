@@ -1,1 +1,1 @@
-if (name) var
+if (test = 10) print(passed)

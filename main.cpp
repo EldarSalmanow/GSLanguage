@@ -5,25 +5,34 @@
 
 #include "test/Tests.h"
 
+using namespace GSLanguageCompiler;
+
 /**
  * Start compiler function
  * @param argc Number of console arguments
  * @param argv Array with console arguments
  */
 void CompilingStart(int argc, char *argv[]) {
-    GSLanguageCompiler::GS_Arguments arguments(argc, argv);
-    arguments.parseArguments();
+    std::shared_ptr<GS_Arguments> arguments(new GS_Arguments(argc, argv));
+    arguments->parseArguments();
 
     // reading input file
-    GSLanguageCompiler::GS_Reader reader(arguments.getFilename());
-    std::vector<std::string> input = reader.readFile();
+    std::shared_ptr<GS_Reader> reader(new GS_Reader(arguments->getFilename()));
+    std::vector<std::string> input = reader->readFile();
 
     // lexer analyzing
-    GSLanguageCompiler::GS_Lexer lexer(input);
-    std::vector<GSLanguageCompiler::GS_Token> tokens = lexer.tokenize();
+    std::shared_ptr<GS_Lexer> lexer(new GS_Lexer(input));
+    std::vector<GS_Token> tokens = lexer->tokenize();
 
-    // testing
+    // lexer testing
     Testing::printTokenTypes(tokens);
+
+    // parser analyzing
+//    std::shared_ptr<GS_Parser> parser(new GS_Parser(tokens));
+//    std::vector<std::shared_ptr<GS_Expression>> expressions = parser->parse();
+
+    // parser testing
+//    Testing::printExpressions(expressions);
 }
 
 /**
@@ -34,7 +43,7 @@ int main(int argc, char *argv[]) {
     try {
         CompilingStart(argc, argv);
     }
-    catch (GSLanguageCompiler::Exceptions::_GS_Exception &exception) {
+    catch (Exceptions::_GS_Exception &exception) {
         std::cerr << exception << std::endl;
     }
     catch (std::exception &exception) {

@@ -3,8 +3,10 @@
 
 #include <vector>
 #include <iostream>
+#include <memory>
 
 #include "../Lexer/GS_Token.h"
+#include "GS_Expression.h"
 #include "../../../include/Exceptions/GS_ParserException.h"
 
 namespace GSLanguageCompiler {
@@ -14,6 +16,10 @@ namespace GSLanguageCompiler {
      */
     class GS_Parser {
     public:
+        /**
+         * Constructor for GS_Parser
+         * @param tokens Container with tokens, before lexing analyzing
+         */
         GS_Parser(std::vector<GS_Token> &tokens) {
             this->tokens = tokens;
         }
@@ -23,7 +29,7 @@ namespace GSLanguageCompiler {
         /**
          * Function for parsing input tokens
          */
-        void parse();
+        std::vector<std::shared_ptr<GS_Expression>> parse();
 
     private:
 
@@ -33,9 +39,14 @@ namespace GSLanguageCompiler {
         std::vector<GS_Token> tokens;
 
         /**
-         * Position of parser analyzing
+         * Expressions, before parsing analyzing
          */
-        int line, column;
+        std::vector<std::shared_ptr<GS_Expression>> expressions;
+
+        /**
+         * Iterator input container with tokens
+         */
+        std::vector<GS_Token>::iterator tokenIterator;
     };
 
 }

@@ -13,12 +13,20 @@ namespace GSLanguageCompiler {
         NEW_LINE,
 
         WORD,
+
         TYPE_STRING,
         TYPE_NUMBER,
+
         KEYWORD_VAR,
         KEYWORD_IF,
-        SYMBOL_LEFT_PARENTHESES,
-        SYMBOL_RIGHT_PARENTHESES
+
+        SYMBOL_LEFT_PARENTHESES,  // (
+        SYMBOL_RIGHT_PARENTHESES, // )
+        SYMBOL_DOT,               // .
+        SYMBOL_PLUS,              // +
+        SYMBOL_MINUS,             // -
+        SYMBOL_STAR,              // *
+        SYMBOL_SLASH              // /
     };
 
     /**

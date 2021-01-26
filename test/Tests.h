@@ -29,6 +29,16 @@ namespace Testing {
                 return "SYMBOL_LEFT_PARENTHESES";
             case SYMBOL_RIGHT_PARENTHESES:
                 return "SYMBOL_RIGHT_PARENTHESES";
+            case SYMBOL_DOT:
+                return "SYMBOL_DOT";
+            case SYMBOL_PLUS:
+                return "SYMBOL_PLUS";
+            case SYMBOL_MINUS:
+                return "SYMBOL_MINUS";
+            case SYMBOL_STAR:
+                return "SYMBOL_STAR";
+            case SYMBOL_SLASH:
+                return "SYMBOL_SLASH";
             case NEW_LINE:
                 return "NEW_LINE";
             case END_OF_FILE:

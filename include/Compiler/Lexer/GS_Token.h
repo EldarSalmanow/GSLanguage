@@ -52,6 +52,14 @@ namespace GSLanguageCompiler {
             return this->type;
         }
 
+        int getNumber() {
+            return this->number;
+        }
+
+        std::string getWord() {
+            return this->word;
+        }
+
     private:
 
         /**

@@ -15,8 +15,8 @@ add_executable(GSLanguage
         include/Compiler/Lexer/GS_Regex.h
 #       Parser headers
         include/Compiler/Parser/GS_Parser.h
-        include/Compiler/Parser/Expression.h
-        include/Compiler/Parser/Statement.h
+        include/Compiler/Parser/GS_Expression.h
+        include/Compiler/Parser/GS_Statement.h
 #       Reader headers
         include/Compiler/Reader/GS_Reader.h
 #       Logging headers
