@@ -1,1 +1,1 @@
-if (test = 10) print(passed)
+if (true) break

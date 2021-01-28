@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.17)
 
 project(GSLanguage VERSION 0.1 LANGUAGES CXX)
 
-#include_directories("C:\\Users\\Ruslan\\Desktop\\EldarFiles\\CXX\\googletest-master\\googletest\\include")
-#include_directories("C:\\Users\\Ruslan\\Desktop\\EldarFiles\\CXX\\boost")
-
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(GSLanguage

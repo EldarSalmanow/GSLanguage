@@ -8,14 +8,28 @@
 using namespace GSLanguageCompiler;
 
 /**
- * Start compiler function
- * @param argc Number of console arguments
- * @param argv Array with console arguments
+ * Function for parsing command line arguments and generating config for compiling
+ * @param argc Number of arguments
+ * @param argv Array of arguments
+ * @return Object std::shared_ptr<GS_Arguments> (configs for compiling)
  */
-void CompilingStart(int argc, char *argv[]) {
+std::shared_ptr<GS_Arguments> parseArguments(int argc, char *argv[]) {
     std::shared_ptr<GS_Arguments> arguments(new GS_Arguments(argc, argv));
+
+    if (argc < 3) {
+        arguments->printUsage();
+    }
+
     arguments->parseArguments();
 
+    return arguments;
+}
+
+/**
+ * Start compiler function
+ * @param arguments Command line arguments before argument analyzing
+ */
+void CompilingStart(std::shared_ptr<GS_Arguments> &arguments) {
     // reading input file
     std::shared_ptr<GS_Reader> reader(new GS_Reader(arguments->getFilename()));
     std::vector<std::string> input = reader->readFile();
@@ -40,8 +54,12 @@ void CompilingStart(int argc, char *argv[]) {
  * @return Status number for operation system
  */
 int main(int argc, char *argv[]) {
+    std::shared_ptr<GS_Arguments> arguments = parseArguments(argc, argv);
+
+    if (arguments->getFilename().empty()) return 0;
+
     try {
-        CompilingStart(argc, argv);
+        CompilingStart(arguments);
     }
     catch (Exceptions::_GS_Exception &exception) {
         std::cerr << exception << std::endl;

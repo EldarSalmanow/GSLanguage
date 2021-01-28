@@ -41,6 +41,11 @@ namespace GSLanguageCompiler {
             return this->_filename;
         }
 
+        /**
+         * Function for print usage
+         */
+        void printUsage();
+
     private:
 
         /**
