@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <memory>
 
 #include "GS_Keywords.h"
 
@@ -77,6 +78,10 @@ namespace GSLanguageCompiler {
          */
         std::string word;
     };
+
+    typedef std::shared_ptr<GS_Token> GSTokenPointer;
+
+    typedef std::vector<GS_Token> GSTokenArray;
 
 }
 

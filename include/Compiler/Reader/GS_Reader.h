@@ -3,10 +3,13 @@
 
 #include <fstream>
 #include <vector>
+#include <memory>
 
 #include "../../Exceptions/GS_ReaderException.h"
 
 namespace GSLanguageCompiler {
+
+    typedef std::vector<std::string> GSText;
 
     /**
      * Reader for read files
@@ -27,20 +30,22 @@ namespace GSLanguageCompiler {
          * reads a file through a file I/O stream.
          * @return Lines code from file
          */
-        std::vector<std::string> readFile();
+        GSText readFile();
 
     private:
 
         /**
          * Code from file
          */
-        std::vector<std::string> input;
+        GSText input;
 
         /**
          * The name of the file being read
          */
         std::string filename;
     };
+
+    typedef std::shared_ptr<GS_Reader> GSReaderPointer;
 
 }
 

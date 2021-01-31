@@ -2,7 +2,7 @@
 
 namespace GSLanguageCompiler {
 
-    std::vector<std::string> GS_Reader::readFile() {
+    GSText GS_Reader::readFile() {
         char symbol;
         std::string line;
         std::ifstream stream;

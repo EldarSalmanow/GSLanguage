@@ -1,11 +1,49 @@
 #ifndef GSLANGUAGE_TESTS_H
 #define GSLANGUAGE_TESTS_H
 
+#if defined(__WIN32)
+#include <windows.h>
+#endif
+
 #include "../include/Compiler/Lexer/GS_Lexer.h"
 
-using namespace GSLanguageCompiler;
-
 namespace Testing {
+
+    /**
+     * Supported console colors
+     */
+    enum ConsoleColor {
+        BLACK = 0,
+        BLUE = 1,
+        GREEN = 2,
+        CYAN = 3,
+        RED = 4,
+        MAGENTA = 5,
+        BROWN = 6,
+        LIGHT_GRAY = 7,
+        DARK_GRAY = 8,
+        LIGHT_BLUE = 9,
+        LIGHT_GREEN = 10,
+        LIGHT_CYAN = 11,
+        LIGHT_RED = 12,
+        LIGHT_MAGENTA = 13,
+        YELLOW = 14,
+        WHITE = 15
+    };
+
+    /**
+     * Setting console color
+     * @param background Background color
+     * @param text Text color
+     */
+    void setConsoleColor(ConsoleColor background, ConsoleColor text) {
+#if defined(__WIN32)
+        HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(handle, (WORD) ((background << 4) | text));
+#else
+#error Platform not supported!
+#endif
+    }
 
     /**
     * Function for testing GS_Lexer class<br>
@@ -13,35 +51,35 @@ namespace Testing {
     * @param type Enum input type
     * @return String name of enum
     */
-    std::string enumToString(TokenType type) {
+    std::string enumToString(GSLanguageCompiler::TokenType type) {
         switch (type) {
-            case WORD:
+            case GSLanguageCompiler::WORD:
                 return "WORD";
-            case TYPE_STRING:
+            case GSLanguageCompiler::TYPE_STRING:
                 return "TYPE_STRING";
-            case TYPE_NUMBER:
+            case GSLanguageCompiler::TYPE_NUMBER:
                 return "TYPE_NUMBER";
-            case KEYWORD_VAR:
+            case GSLanguageCompiler::KEYWORD_VAR:
                 return "KEYWORD_VAR";
-            case KEYWORD_IF:
+            case GSLanguageCompiler::KEYWORD_IF:
                 return "KEYWORD_IF";
-            case SYMBOL_LEFT_PARENTHESES:
+            case GSLanguageCompiler::SYMBOL_LEFT_PARENTHESES:
                 return "SYMBOL_LEFT_PARENTHESES";
-            case SYMBOL_RIGHT_PARENTHESES:
+            case GSLanguageCompiler::SYMBOL_RIGHT_PARENTHESES:
                 return "SYMBOL_RIGHT_PARENTHESES";
-            case SYMBOL_DOT:
+            case GSLanguageCompiler::SYMBOL_DOT:
                 return "SYMBOL_DOT";
-            case SYMBOL_PLUS:
+            case GSLanguageCompiler::SYMBOL_PLUS:
                 return "SYMBOL_PLUS";
-            case SYMBOL_MINUS:
+            case GSLanguageCompiler::SYMBOL_MINUS:
                 return "SYMBOL_MINUS";
-            case SYMBOL_STAR:
+            case GSLanguageCompiler::SYMBOL_STAR:
                 return "SYMBOL_STAR";
-            case SYMBOL_SLASH:
+            case GSLanguageCompiler::SYMBOL_SLASH:
                 return "SYMBOL_SLASH";
-            case NEW_LINE:
+            case GSLanguageCompiler::NEW_LINE:
                 return "NEW_LINE";
-            case END_OF_FILE:
+            case GSLanguageCompiler::END_OF_FILE:
                 return "END_OF_FILE";
         }
         return "!!ERROR!!";
@@ -64,9 +102,13 @@ namespace Testing {
      * @param tokens The container of tokens, before lexing analyzing
      */
     void printTokenTypes(std::vector<GSLanguageCompiler::GS_Token> &tokens) {
+        setConsoleColor(BLACK, RED);
+        std::cerr << "----------LEXER OUT START----------" << std::endl;
         for (auto &token : tokens) {
-            std::cout << enumToString(token.getType()) << std::endl;
+            std::cerr << enumToString(token.getType()) << std::endl;
         }
+        std::cerr << "----------LEXER OUT END----------" << std::endl;
+        setConsoleColor(BLACK, WHITE);
     }
 
 }

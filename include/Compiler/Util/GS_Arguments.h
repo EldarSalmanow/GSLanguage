@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include <memory>
 
 #include "../../Exceptions/GS_ArgumentException.h"
 
@@ -34,11 +35,19 @@ namespace GSLanguageCompiler {
     public:
 
         /**
-         * Getter for _filename
+         * Getter for filename
          * @return Input filename
          */
         std::string &getFilename() {
-            return this->_filename;
+            return this->filename;
+        }
+
+        /**
+         * Getter for isTestingMode
+         * @return Is testing mode
+         */
+        bool getIsTestingMode() {
+            return this->isTestingMode;
         }
 
         /**
@@ -51,7 +60,12 @@ namespace GSLanguageCompiler {
         /**
          * Input filename
          */
-        std::string _filename;
+        std::string filename;
+
+        /**
+         * Is testing compiling mode (for developers GSLanguageCompiler)
+         */
+        bool isTestingMode = false;
 
     private:
 
@@ -65,6 +79,8 @@ namespace GSLanguageCompiler {
          */
         char **argv;
     };
+
+    typedef std::shared_ptr<GS_Arguments> GSArgumentsPointer;
 
 }
 

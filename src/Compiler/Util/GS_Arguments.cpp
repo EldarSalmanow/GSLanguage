@@ -7,10 +7,14 @@ namespace GSLanguageCompiler {
             std::string argument = this->argv[index];
             if (argument == "-f" || argument == "--file") {
                 ++index;
-                this->_filename = argv[index];
+                this->filename = argv[index];
+                continue;
             } else if (argument == "-h" || argument == "--help") {
                 this->printUsage();
                 break;
+            } else if (argument == "-t" || argument == "--test") {
+                this->isTestingMode = true;
+                continue;
             }
         }
     }
@@ -19,6 +23,7 @@ namespace GSLanguageCompiler {
         std::cout
         << "Usage: \n"
         << "\t-f --file \tMain filename to compiling\n"
+        << "\t-t --test \tPrinting information because compiling\n"
         << "\t-h --help \tInformation about flags and compiler\n"
         << std::endl;
     }

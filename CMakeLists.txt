@@ -27,6 +27,8 @@ add_executable(GSLanguage
         include/Exceptions/GS_ParserException.h
         include/Exceptions/GS_ReaderException.h
         include/Exceptions/GS_ArgumentException.h
+#       Starter header
+        include/Starter/GS_Starter.h
 #       Testing headers
         test/Tests.h
 #       Lexer sources
@@ -41,6 +43,8 @@ add_executable(GSLanguage
 #        src/Compiler/Logging/Logger.cpp
 #       Util source
         src/Compiler/Util/GS_Arguments.cpp
+#       Starter header
+        src/Starter/GS_Starter.cpp
 #       Main file
         main.cpp)
 
