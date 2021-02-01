@@ -27,7 +27,7 @@ namespace GSLanguageCompiler {
                 }
 
                 if (this->_argv[index] == "-tModeAll") {
-                    this->_arguments.isTestingLexer = true;
+                    this->_arguments.isTestingModeAll = true;
                 } else if (this->_argv[index] == "-tModeLexer") {
                     this->_arguments.isTestingLexer = true;
                 }
@@ -42,8 +42,10 @@ namespace GSLanguageCompiler {
     void GS_Arguments::printUsage() {
         std::cout
         << "Usage: \n"
-        << "\t-f --file \tMain _filename to compiling\n"
+        << "\t-f --file \tMain filename to compiling\n"
         << "\t-t --test \tPrinting information because compiling\n"
+        << "\t\t-tModeAll \tTesting all mode\n"
+        << "\t\t-tModeLexer \tTesting lexer mode\n"
         << "\t-h --help \tInformation about flags and compiler\n"
         << std::endl;
     }

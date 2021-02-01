@@ -35,7 +35,7 @@ namespace GSLanguageCompiler {
     public:
 
         /**
-         * Getter for _filename
+         * Getter for _arguments.filename
          * @return Input _filename
          */
         std::string &getFilename() {
@@ -43,11 +43,27 @@ namespace GSLanguageCompiler {
         }
 
         /**
-         * Getter for _isTestingMode
+         * Getter for _arguments.isTestingMode
          * @return Is testing mode
          */
         bool getIsTestingMode() {
             return this->_arguments.isTestingMode;
+        }
+
+        /**
+         * Getter for _arguments.isTestingModeAll
+         * @return Is testing all mode
+         */
+        bool getIsTestingModeAll() {
+            return this->_arguments.isTestingModeAll;
+        }
+
+        /**
+         * Getter for _arguments.isTestingModeLexer
+         * @return Is testing lexer mode
+         */
+        bool getIsTestingModeLexer() {
+            return this->_arguments.isTestingLexer;
         }
 
         /**
@@ -71,12 +87,17 @@ namespace GSLanguageCompiler {
             /**
             * Is testing compiling mode (for developers GSLanguageCompiler)
             */
-            bool isTestingMode  = false;
+            bool isTestingMode    = false;
 
             /**
-             * Is the lexer tested
+             * Is testing all mode (for developers GSLanguageCompiler)
              */
-            bool isTestingLexer = false;
+            bool isTestingModeAll = false;
+
+            /**
+             * Is the lexer tested (for developers GSLanguageCompiler)
+             */
+            bool isTestingLexer   = false;
 
         };
 

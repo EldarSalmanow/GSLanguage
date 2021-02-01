@@ -37,7 +37,13 @@ namespace Starter {
 
         // lexer testing
         if (arguments->getIsTestingMode()) {
-            Testing::printTokenTypes(tokens);
+            if (arguments->getIsTestingModeAll()) {
+                Testing::printTokenTypes(tokens);
+                return;
+            }
+            if (arguments->getIsTestingModeLexer()) {
+                Testing::printTokenTypes(tokens);
+            }
         }
     }
 
