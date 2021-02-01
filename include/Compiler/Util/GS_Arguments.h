@@ -4,6 +4,7 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 #include "../../Exceptions/GS_ArgumentException.h"
 
@@ -51,22 +52,6 @@ namespace GSLanguageCompiler {
         }
 
         /**
-         * Getter for _arguments.isTestingModeAll
-         * @return Is testing all mode
-         */
-        bool getIsTestingModeAll() {
-            return this->_arguments.isTestingModeAll;
-        }
-
-        /**
-         * Getter for _arguments.isTestingModeLexer
-         * @return Is testing lexer mode
-         */
-        bool getIsTestingModeLexer() {
-            return this->_arguments.isTestingLexer;
-        }
-
-        /**
          * Function for print usage
          */
         void printUsage();
@@ -88,17 +73,6 @@ namespace GSLanguageCompiler {
             * Is testing compiling mode (for developers GSLanguageCompiler)
             */
             bool isTestingMode    = false;
-
-            /**
-             * Is testing all mode (for developers GSLanguageCompiler)
-             */
-            bool isTestingModeAll = false;
-
-            /**
-             * Is the lexer tested (for developers GSLanguageCompiler)
-             */
-            bool isTestingLexer   = false;
-
         };
 
     private:

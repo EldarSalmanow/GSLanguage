@@ -21,17 +21,6 @@ namespace GSLanguageCompiler {
             } else if (argument == "-t" || argument == "--test") {
                 this->_arguments.isTestingMode = true;
 
-                ++index;
-                if (this->_argc < index) {
-                    throw Exceptions::GS_ArgumentException("Invalid argument \"" + argument + "\"!");
-                }
-
-                if (this->_argv[index] == "-tModeAll") {
-                    this->_arguments.isTestingModeAll = true;
-                } else if (this->_argv[index] == "-tModeLexer") {
-                    this->_arguments.isTestingLexer = true;
-                }
-
                 continue;
             } else {
                 throw Exceptions::GS_ArgumentException("Invalid arguments!");
@@ -44,8 +33,6 @@ namespace GSLanguageCompiler {
         << "Usage: \n"
         << "\t-f --file \tMain filename to compiling\n"
         << "\t-t --test \tPrinting information because compiling\n"
-        << "\t\t-tModeAll \tTesting all mode\n"
-        << "\t\t-tModeLexer \tTesting lexer mode\n"
         << "\t-h --help \tInformation about flags and compiler\n"
         << std::endl;
     }

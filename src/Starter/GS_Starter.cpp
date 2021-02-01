@@ -37,13 +37,7 @@ namespace Starter {
 
         // lexer testing
         if (arguments->getIsTestingMode()) {
-            if (arguments->getIsTestingModeAll()) {
-                Testing::printTokenTypes(tokens);
-                return;
-            }
-            if (arguments->getIsTestingModeLexer()) {
-                Testing::printTokenTypes(tokens);
-            }
+            Testing::printTokenTypes(tokens);
         }
     }
 
@@ -56,6 +50,11 @@ namespace Starter {
         }
 
         arguments->parseArguments();
+
+        if (arguments->getFilename().empty()) {
+            arguments->printUsage();
+            return nullptr;
+        }
 
         return arguments;
     }
