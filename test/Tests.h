@@ -101,14 +101,14 @@ namespace Testing {
      * Note: Do not use in final version!
      * @param tokens The container of tokens, before lexing analyzing
      */
-    void printTokenTypes(std::vector<GSLanguageCompiler::GS_Token> &tokens) {
+    void printTokenTypes(GSLanguageCompiler::GSTokenArray &tokens) {
         setConsoleColor(BLACK, RED);
         std::cerr << "----------LEXER OUT START----------" << std::endl;
         for (auto &token : tokens) {
             std::cerr << enumToString(token.getType()) << std::endl;
         }
         std::cerr << "----------LEXER OUT END----------" << std::endl;
-        setConsoleColor(BLACK, WHITE);
+        setConsoleColor(BLACK, LIGHT_GRAY);
     }
 
 }

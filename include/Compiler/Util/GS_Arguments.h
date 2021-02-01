@@ -21,8 +21,8 @@ namespace GSLanguageCompiler {
          * @param argv Array of command line arguments
          */
         GS_Arguments(int argc, char *argv[]) {
-            this->argc = argc;
-            this->argv = argv;
+            this->_argc = argc;
+            this->_argv = argv;
         }
 
     public:
@@ -35,19 +35,19 @@ namespace GSLanguageCompiler {
     public:
 
         /**
-         * Getter for filename
-         * @return Input filename
+         * Getter for _filename
+         * @return Input _filename
          */
         std::string &getFilename() {
-            return this->filename;
+            return this->_arguments.filename;
         }
 
         /**
-         * Getter for isTestingMode
+         * Getter for _isTestingMode
          * @return Is testing mode
          */
         bool getIsTestingMode() {
-            return this->isTestingMode;
+            return this->_arguments.isTestingMode;
         }
 
         /**
@@ -58,26 +58,46 @@ namespace GSLanguageCompiler {
     private:
 
         /**
-         * Input filename
+         * Class for highlighting command line arguments
          */
-        std::string filename;
+        class _Arguments {
+        public:
+
+            /**
+            * Input filename
+            */
+            std::string filename;
+
+            /**
+            * Is testing compiling mode (for developers GSLanguageCompiler)
+            */
+            bool isTestingMode  = false;
+
+            /**
+             * Is the lexer tested
+             */
+            bool isTestingLexer = false;
+
+        };
+
+    private:
 
         /**
-         * Is testing compiling mode (for developers GSLanguageCompiler)
+         * Arguments for compiler, before analyzing command line arguments
          */
-        bool isTestingMode = false;
+        _Arguments _arguments;
 
     private:
 
         /**
          * Number of command line arguments
          */
-        int argc;
+        int _argc;
 
         /**
          * Array of command line arguments
          */
-        char **argv;
+        char **_argv;
     };
 
     typedef std::shared_ptr<GS_Arguments> GSArgumentsPointer;

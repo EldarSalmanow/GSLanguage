@@ -1,1 +1,1 @@
-if (true) break
+if (myName + age) var hello .
