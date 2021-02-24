@@ -3,9 +3,11 @@
 namespace GSLanguageCompiler {
 
     std::vector<GS_Token> GS_Lexer::tokenize() {
+        // setting the iterator to the beginning of the text
         this->codeIterator = this->input.begin();
         this->line = 1;
 
+        // text tokenization process
         while (this->codeIterator != this->input.end()) {
             this->lineIterator = this->codeIterator[0].begin();
             analyzeLine();
@@ -13,7 +15,8 @@ namespace GSLanguageCompiler {
             ++this->line;
         }
 
-        this->tokens.emplace_back(GS_Token(END_OF_FILE));
+        // putting a file end token
+        this->tokens.emplace_back(GS_Token(TokenType::END_OF_FILE));
 
         return this->tokens;
     }
@@ -24,13 +27,13 @@ namespace GSLanguageCompiler {
             this->column = 1;
 
             // 0..9 number
-            if (this->isSupportedCharacter(NUMBER_SIMPLE)) {
+            if (this->isSupportedCharacter(RegexType::NUMBER_SIMPLE)) {
                 tokenizeNumber();
                 continue;
             }
 
             // A..Z a..z english alphabet
-            else if (this->isSupportedCharacter(ALPHABET_ENGLISH)) {
+            else if (this->isSupportedCharacter(RegexType::ALPHABET_ENGLISH)) {
                 this->tokenizeWord();
                 continue;
             }
@@ -45,7 +48,7 @@ namespace GSLanguageCompiler {
             ++this->lineIterator;
         }
 
-        this->tokens.emplace_back(GS_Token(NEW_LINE));
+        this->tokens.emplace_back(GS_Token(TokenType::NEW_LINE));
     }
 
 //---------------------------------------------------------
@@ -53,20 +56,20 @@ namespace GSLanguageCompiler {
     void GS_Lexer::tokenizeNumber() {
         std::string number;
 
-        while (isSupportedCharacter(NUMBER_SIMPLE)) {
+        while (isSupportedCharacter(RegexType::NUMBER_SIMPLE)) {
             number += this->symbol;
             ++lineIterator;
             this->symbol = lineIterator[0];
             ++column;
         }
 
-        tokens.emplace_back(GS_Token(TYPE_NUMBER, std::stoi(number)));
+        tokens.emplace_back(GS_Token(TokenType::TYPE_NUMBER, number));
     }
 
     void GS_Lexer::tokenizeWord() {
         std::string word;
 
-        while (this->isSupportedCharacter(ALPHABET_ENGLISH)) {
+        while (this->isSupportedCharacter(RegexType::ALPHABET_ENGLISH)) {
             word += this->symbol;
             ++this->lineIterator;
             this->symbol = this->lineIterator[0];
@@ -78,7 +81,7 @@ namespace GSLanguageCompiler {
             return;
         }
 
-        this->tokens.emplace_back(WORD, word);
+        this->tokens.emplace_back(TokenType::WORD, word);
 
         return;
     }
@@ -97,12 +100,12 @@ namespace GSLanguageCompiler {
         std::smatch match;
         std::vector<std::regex> regexps;
         switch (type) {
-            case NUMBER_SIMPLE:
+            case RegexType::NUMBER_SIMPLE:
                 regexps = {
                         _numberExpression
                 };
                 break;
-            case ALPHABET_ENGLISH:
+            case RegexType::ALPHABET_ENGLISH:
                 regexps = {
                         _wordEnglishLowerCaseExpression,
                         _wordEnglishUpperCaseExpression

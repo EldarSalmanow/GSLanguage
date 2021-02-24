@@ -8,25 +8,27 @@ namespace GSLanguageCompiler {
     /**
      * Type of token
      */
-    enum TokenType {
+    enum class TokenType {
         END_OF_FILE,
         NEW_LINE,
 
-        WORD,
+        WORD,                     // main
 
-        TYPE_STRING,
-        TYPE_NUMBER,
+        TYPE_STRING,              // "hello"
+        TYPE_NUMBER,              // 12
 
-        KEYWORD_VAR,
-        KEYWORD_IF,
+        KEYWORD_VAR,              // var
+        KEYWORD_IF,               // if
 
         SYMBOL_LEFT_PARENTHESES,  // (
         SYMBOL_RIGHT_PARENTHESES, // )
         SYMBOL_DOT,               // .
+        SYMBOL_COLON,             // :
         SYMBOL_PLUS,              // +
         SYMBOL_MINUS,             // -
         SYMBOL_STAR,              // *
-        SYMBOL_SLASH              // /
+        SYMBOL_SLASH,             // /
+        SYMBOL_EQ                 // =
     };
 
     /**

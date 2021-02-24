@@ -18,7 +18,7 @@ namespace Starter {
 
             return 1;
         } catch (std::exception &exception) {
-            std::cerr << exception.what() << std::endl;
+            std::cerr << "System error!\n" << exception.what() << std::endl;
 
             return 1;
         }

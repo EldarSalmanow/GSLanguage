@@ -48,38 +48,42 @@ namespace Testing {
     /**
     * Function for testing GS_Lexer class<br>
     * Note: Do not use in final version!
-    * @param type Enum input type
+    * @param type Enum input _type
     * @return String name of enum
     */
     std::string enumToString(GSLanguageCompiler::TokenType type) {
         switch (type) {
-            case GSLanguageCompiler::WORD:
+            case GSLanguageCompiler::TokenType::WORD:
                 return "WORD";
-            case GSLanguageCompiler::TYPE_STRING:
+            case GSLanguageCompiler::TokenType::TYPE_STRING:
                 return "TYPE_STRING";
-            case GSLanguageCompiler::TYPE_NUMBER:
+            case GSLanguageCompiler::TokenType::TYPE_NUMBER:
                 return "TYPE_NUMBER";
-            case GSLanguageCompiler::KEYWORD_VAR:
+            case GSLanguageCompiler::TokenType::KEYWORD_VAR:
                 return "KEYWORD_VAR";
-            case GSLanguageCompiler::KEYWORD_IF:
+            case GSLanguageCompiler::TokenType::KEYWORD_IF:
                 return "KEYWORD_IF";
-            case GSLanguageCompiler::SYMBOL_LEFT_PARENTHESES:
+            case GSLanguageCompiler::TokenType::SYMBOL_LEFT_PARENTHESES:
                 return "SYMBOL_LEFT_PARENTHESES";
-            case GSLanguageCompiler::SYMBOL_RIGHT_PARENTHESES:
+            case GSLanguageCompiler::TokenType::SYMBOL_RIGHT_PARENTHESES:
                 return "SYMBOL_RIGHT_PARENTHESES";
-            case GSLanguageCompiler::SYMBOL_DOT:
+            case GSLanguageCompiler::TokenType::SYMBOL_DOT:
                 return "SYMBOL_DOT";
-            case GSLanguageCompiler::SYMBOL_PLUS:
+            case GSLanguageCompiler::TokenType::SYMBOL_COLON:
+                return "SYMBOL_COLON";
+            case GSLanguageCompiler::TokenType::SYMBOL_PLUS:
                 return "SYMBOL_PLUS";
-            case GSLanguageCompiler::SYMBOL_MINUS:
+            case GSLanguageCompiler::TokenType::SYMBOL_MINUS:
                 return "SYMBOL_MINUS";
-            case GSLanguageCompiler::SYMBOL_STAR:
+            case GSLanguageCompiler::TokenType::SYMBOL_STAR:
                 return "SYMBOL_STAR";
-            case GSLanguageCompiler::SYMBOL_SLASH:
+            case GSLanguageCompiler::TokenType::SYMBOL_SLASH:
                 return "SYMBOL_SLASH";
-            case GSLanguageCompiler::NEW_LINE:
+            case GSLanguageCompiler::TokenType::SYMBOL_EQ:
+                return "SYMBOL_EQ";
+            case GSLanguageCompiler::TokenType::NEW_LINE:
                 return "NEW_LINE";
-            case GSLanguageCompiler::END_OF_FILE:
+            case GSLanguageCompiler::TokenType::END_OF_FILE:
                 return "END_OF_FILE";
         }
         return "!!ERROR!!";

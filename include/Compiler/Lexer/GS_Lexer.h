@@ -65,7 +65,7 @@ namespace GSLanguageCompiler {
         /**
          * Function to check if a character is supported by the compiler
          * @param character Symbol to check
-         * @param type Regular expression type
+         * @param type Regular expression _type
          * @return Is supported character
          */
         bool isSupportedCharacter(RegexType type);

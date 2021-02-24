@@ -1,1 +1,5 @@
-if (myName + age) var hello .
+import System
+
+name: Int = 12
+
+System.println(name)

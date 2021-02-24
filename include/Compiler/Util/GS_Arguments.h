@@ -72,7 +72,7 @@ namespace GSLanguageCompiler {
             /**
             * Is testing compiling mode (for developers GSLanguageCompiler)
             */
-            bool isTestingMode    = false;
+            bool isTestingMode = false;
         };
 
     private:

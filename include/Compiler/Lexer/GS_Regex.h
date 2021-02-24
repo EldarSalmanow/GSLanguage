@@ -10,7 +10,7 @@ namespace GSLanguageCompiler {
      * ALPHABET_... - the alphabet of a language (includes large and small characters)
      * NUMBER_...   - any numeric representations
      */
-    enum RegexType {
+    enum class RegexType {
         NUMBER_SIMPLE,      // 0..9
         ALPHABET_ENGLISH    // a..z A..Z
     };

@@ -15,50 +15,42 @@ namespace GSLanguageCompiler {
     class GS_Token {
     public:
 
+        GS_Token() = default;
+
         /**
          * Constructor for GS_Token
          * @param type Type of token
          */
         GS_Token(TokenType type) {
-            this->type = type;
+            this->_type = type;
         }
 
         /**
          * Constructor for GS_Token
          * @param type Type of token
-         * @param number Integer value
-         */
-        GS_Token(TokenType type, int number) {
-            this->type = type;
-            this->number = number;
-        }
-
-        /**
-         * Constructor for GS_Token
-         * @param type Type of token
-         * @param word String value or name
+         * @param value String or number _value
          */
         GS_Token(TokenType type, std::string &word) {
-            this->type = type;
-            this->word = word;
+            this->_type = type;
+            this->_value = word;
         }
 
     public:
 
         /**
-         * Getter for TokenType
+         * Getter for _type
          * @return Token type
          */
         TokenType getType() {
-            return this->type;
+            return this->_type;
         }
 
-        int getNumber() {
-            return this->number;
-        }
-
-        std::string getWord() {
-            return this->word;
+        /**
+         * Getter for _value
+         * @return Token value
+         */
+        std::string getValue() {
+            return this->_value;
         }
 
     private:
@@ -66,22 +58,17 @@ namespace GSLanguageCompiler {
         /**
          * Type of token
          */
-        TokenType type;
+        TokenType _type;
 
         /**
-         * Integer value
+         * String _value or name
          */
-        int number;
-
-        /**
-         * String value or name
-         */
-        std::string word;
+        std::string _value;
     };
 
     typedef std::shared_ptr<GS_Token> GSTokenPointer;
 
-    typedef std::vector<GS_Token> GSTokenArray;
+    typedef std::vector<GS_Token>     GSTokenArray;
 
 }
 

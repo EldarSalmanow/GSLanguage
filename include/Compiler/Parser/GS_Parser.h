@@ -7,6 +7,7 @@
 
 #include "../Lexer/GS_Token.h"
 #include "GS_Expression.h"
+
 #include "../../../include/Exceptions/GS_ParserException.h"
 
 namespace GSLanguageCompiler {
@@ -16,6 +17,7 @@ namespace GSLanguageCompiler {
      */
     class GS_Parser {
     public:
+
         /**
          * Constructor for GS_Parser
          * @param tokens Container with tokens, before lexing analyzing
@@ -30,6 +32,16 @@ namespace GSLanguageCompiler {
          * Function for parsing input tokens
          */
         std::vector<std::shared_ptr<GS_Expression>> parse();
+
+    private:
+
+        void analyzeToken();
+
+        GS_Expression *higherOrder();
+
+        GS_Expression *middleOrder();
+
+        GS_Expression *lowerOrder();
 
     private:
 
