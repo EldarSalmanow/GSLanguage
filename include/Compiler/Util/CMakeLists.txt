@@ -13,8 +13,8 @@ add_library(
         ${LIBRARY_NAME}
 #       Library type
         STATIC
-#       Reader headers
+#       Util headers
         ${GS_UTIL_HEADERS}
-#       Reader source
+#       Util source
         ${GS_UTIL_SOURCE}
 )

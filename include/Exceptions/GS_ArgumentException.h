@@ -10,12 +10,9 @@ namespace GSLanguageCompiler::Exceptions {
      */
     class GS_ArgumentException : public _GS_Exception {
     public:
-        GS_ArgumentException(std::string errorMessage, int line = -1, int column = -1) {
+        GS_ArgumentException(std::string errorMessage) {
             this->errorMessage = errorMessage;
-            this->line = line;
-            this->column = column;
         }
-
 
     public:
         std::string getErrorMessage() {

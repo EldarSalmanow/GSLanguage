@@ -11,6 +11,7 @@ add_subdirectory(include/Compiler/Reader)
 add_subdirectory(include/Compiler/Util)
 add_subdirectory(include/Starter)
 
+
 add_executable(${PROJECT_NAME}
         main.cpp
         )

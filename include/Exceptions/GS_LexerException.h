@@ -1,13 +1,13 @@
 #ifndef GSLANGUAGE_GS_LEXEREXCEPTION_H
 #define GSLANGUAGE_GS_LEXEREXCEPTION_H
 
-#include "GS_Exception.h"
+#include "GS_CompilingException.h"
 
 namespace GSLanguageCompiler::Exceptions {
     /**
      * Class for throwing lexical parsing errors
      */
-    class GS_LexerException : public _GS_Exception {
+    class GS_LexerException : public GS_CompilingException {
     public:
         GS_LexerException(std::string errorMessage, int line = -1, int column = -1) {
             this->errorMessage = errorMessage;

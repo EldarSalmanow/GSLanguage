@@ -28,12 +28,14 @@ namespace GSLanguageCompiler {
 
             // 0..9 number
             if (this->isSupportedCharacter(RegexType::NUMBER_SIMPLE)) {
-                tokenizeNumber();
+//                GS_Tokenizer::tokenizeNumber();
+                this->tokenizeNumber();
                 continue;
             }
 
             // A..Z a..z english alphabet
             else if (this->isSupportedCharacter(RegexType::ALPHABET_ENGLISH)) {
+//                GS_Tokenizer::tokenizeWord();
                 this->tokenizeWord();
                 continue;
             }
@@ -111,6 +113,8 @@ namespace GSLanguageCompiler {
                         _wordEnglishUpperCaseExpression
                 };
                 break;
+            case RegexType::UNSUPPORTED:
+                return false;
         }
 
         for (auto & regex : regexps) {

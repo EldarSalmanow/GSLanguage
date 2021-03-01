@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_STARTER_H
 #define GSLANGUAGE_GS_STARTER_H
 
+#include "../../include/Debug/GS_Timer.h"
+
 #include "../../include/Compiler/Util/GS_Arguments.h"
 #include "../../include/Compiler/Reader/GS_Reader.h"
 #include "../../include/Compiler/Lexer/GS_Lexer.h"

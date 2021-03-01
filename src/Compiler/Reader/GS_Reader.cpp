@@ -9,32 +9,37 @@ namespace GSLanguageCompiler {
 #if defined(__WIN32)
         try {
             stream.open(this->filename, std::ios::binary);
+
+            if (!stream.is_open()) {
+                throw Exceptions::GS_ReaderException("Not found file \'" + this->filename + "\'!");
+            }
+
+            while (true) {
+                stream.get(symbol);
+
+                if (stream.eof()) {
+                    this->input.emplace_back(line);
+                    break;
+                }
+
+                if (symbol == '\r' && line.empty()) {
+                    stream.get();
+                    continue;
+                } else if (symbol == '\r') {
+                    this->input.emplace_back(line);
+                    line.clear();
+                    stream.get(); // skipping '\n' (specific for Windows system)
+                    continue;
+                } else {
+                    line += symbol;
+                }
+            }
         } catch (std::exception &exception) {
+            if (stream.is_open()) {
+                stream.close();
+            }
             throw Exceptions::GS_ReaderException(exception.what());
         }
-
-        while (true) {
-            stream.get(symbol);
-
-            if (stream.eof()) {
-                this->input.emplace_back(line);
-                break;
-            }
-
-            if (symbol == '\r' && line.empty()) {
-                stream.get();
-                continue;
-            } else if (symbol == '\r') {
-                this->input.emplace_back(line);
-                line.clear();
-                stream.get(); // skipping '\n' (specific for Windows system)
-                continue;
-            } else {
-                line += symbol;
-            }
-        }
-
-        stream.close();
 #else
 #error Platform not supported!
 #endif // __WIN32

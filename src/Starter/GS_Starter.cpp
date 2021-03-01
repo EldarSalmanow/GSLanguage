@@ -26,14 +26,19 @@ namespace Starter {
     }
 
     void GS_Starter::startCompiling(GSArgumentsPointer &arguments) {
+        std::function<GSText(GS_Reader&)> readerFunction = &GS_Reader::readFile;
+        std::function<GSTokenArray(GS_Lexer&)> lexerFunction = &GS_Lexer::tokenize;
+
+        Debug::GS_Timer<GSText(GS_Reader&)> readerTimer(readerFunction);
+        Debug::GS_Timer<GSTokenArray(GS_Lexer&)> lexerTimer(lexerFunction);
 
         // reading input file
         GSReaderPointer reader(new GS_Reader(arguments->getFilename()));
-        GSText input = reader->readFile();
+        GSText input = readerTimer.runtime("Reading time", *reader);
 
         // lexer analyzing
         GSLexerPointer lexer(new GS_Lexer(input));
-        GSTokenArray tokens = lexer->tokenize();
+        GSTokenArray tokens = lexerTimer.runtime("Lexer analyzing time", *lexer);
 
         // lexer testing
         if (arguments->getIsTestingMode()) {
@@ -42,6 +47,10 @@ namespace Starter {
     }
 
     GSArgumentsPointer GS_Starter::parseArguments(int argc, char *argv[]) {
+        std::function<void(GS_Arguments&)> argumentsFunction = &GS_Arguments::parseArguments;
+
+        Debug::GS_Timer<void(GS_Arguments&)> argumentsTimer(argumentsFunction);
+
         GSArgumentsPointer arguments(new GS_Arguments(argc, argv));
 
         if (argc < 3) {
@@ -49,7 +58,8 @@ namespace Starter {
             return nullptr;
         }
 
-        arguments->parseArguments();
+        argumentsTimer.runtime("Parsing arguments time", *arguments);
+
 
         if (arguments->getFilename().empty()) {
             arguments->printUsage();

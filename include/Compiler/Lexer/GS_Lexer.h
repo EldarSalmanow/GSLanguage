@@ -5,6 +5,7 @@
 
 #include "GS_Token.h"
 #include "GS_Regex.h"
+//#include "GS_Tokenizer.h"
 #include "../../Exceptions/GS_LexerException.h"
 
 namespace GSLanguageCompiler {

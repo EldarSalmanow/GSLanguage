@@ -22,8 +22,17 @@ namespace GSLanguageCompiler {
 
         SYMBOL_LEFT_PARENTHESES,  // (
         SYMBOL_RIGHT_PARENTHESES, // )
+        SYMBOL_LBRACE,            // {
+        SYMBOL_RBRACE,            // }
+
+        SYMBOL_LT,                // <
+        SYMBOL_GT,                // >
+
         SYMBOL_DOT,               // .
         SYMBOL_COLON,             // :
+        SYMBOL_QUOTES,            // '
+        SYMBOL_DOUBLE_QUOTES,     // "
+
         SYMBOL_PLUS,              // +
         SYMBOL_MINUS,             // -
         SYMBOL_STAR,              // *

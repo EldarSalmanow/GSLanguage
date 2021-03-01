@@ -8,8 +8,17 @@ namespace GSLanguageCompiler {
 
             {"(",   TokenType::SYMBOL_LEFT_PARENTHESES},
             {")",   TokenType::SYMBOL_RIGHT_PARENTHESES},
+            {"{",   TokenType::SYMBOL_LBRACE},
+            {"}",   TokenType::SYMBOL_RBRACE},
+
+            {"<",   TokenType::SYMBOL_LT},
+            {">",   TokenType::SYMBOL_GT},
+
             {".",   TokenType::SYMBOL_DOT},
             {":",   TokenType::SYMBOL_COLON},
+            {"\'",  TokenType::SYMBOL_QUOTES},
+            {"\"",  TokenType::SYMBOL_DOUBLE_QUOTES},
+
             {"+",   TokenType::SYMBOL_PLUS},
             {"-",   TokenType::SYMBOL_MINUS},
             {"*",   TokenType::SYMBOL_STAR},

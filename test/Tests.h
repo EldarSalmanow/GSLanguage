@@ -59,28 +59,46 @@ namespace Testing {
                 return "TYPE_STRING";
             case GSLanguageCompiler::TokenType::TYPE_NUMBER:
                 return "TYPE_NUMBER";
+
             case GSLanguageCompiler::TokenType::KEYWORD_VAR:
-                return "KEYWORD_VAR";
+                return "KEYWORD_VAR  :  \'var\'";
             case GSLanguageCompiler::TokenType::KEYWORD_IF:
-                return "KEYWORD_IF";
+                return "KEYWORD_IF  :  \'if\'";
+
             case GSLanguageCompiler::TokenType::SYMBOL_LEFT_PARENTHESES:
-                return "SYMBOL_LEFT_PARENTHESES";
+                return "SYMBOL_LEFT_PARENTHESES  :  \'(\'";
             case GSLanguageCompiler::TokenType::SYMBOL_RIGHT_PARENTHESES:
-                return "SYMBOL_RIGHT_PARENTHESES";
+                return "SYMBOL_RIGHT_PARENTHESES  :  \')\'";
+            case GSLanguageCompiler::TokenType::SYMBOL_LBRACE:
+                return "SYMBOL_LBRACE  :  \'{\'";
+            case GSLanguageCompiler::TokenType::SYMBOL_RBRACE:
+                return "SYMBOL_RBRACE  :  \'}\'";
+
+            case GSLanguageCompiler::TokenType::SYMBOL_LT:
+                return "SYMBOL_LT  :  \'<\'";
+            case GSLanguageCompiler::TokenType::SYMBOL_GT:
+                return "SYMBOL_GT  :  \'>\'";
+
             case GSLanguageCompiler::TokenType::SYMBOL_DOT:
-                return "SYMBOL_DOT";
+                return "SYMBOL_DOT  :  \'.\'";
             case GSLanguageCompiler::TokenType::SYMBOL_COLON:
-                return "SYMBOL_COLON";
+                return "SYMBOL_COLON  :  \':\'";
+            case GSLanguageCompiler::TokenType::SYMBOL_QUOTES:
+                return "SYMBOL_QUOTES  :  \'\'\'";
+            case GSLanguageCompiler::TokenType::SYMBOL_DOUBLE_QUOTES:
+                return "SYMBOL_DOUBLE_QUOTES  :  \'\"\'";
+
             case GSLanguageCompiler::TokenType::SYMBOL_PLUS:
-                return "SYMBOL_PLUS";
+                return "SYMBOL_PLUS  :  \'+\'";
             case GSLanguageCompiler::TokenType::SYMBOL_MINUS:
-                return "SYMBOL_MINUS";
+                return "SYMBOL_MINUS  :  \'-\'";
             case GSLanguageCompiler::TokenType::SYMBOL_STAR:
-                return "SYMBOL_STAR";
+                return "SYMBOL_STAR  :  \'*\'";
             case GSLanguageCompiler::TokenType::SYMBOL_SLASH:
-                return "SYMBOL_SLASH";
+                return "SYMBOL_SLASH  :  \'/\'";
             case GSLanguageCompiler::TokenType::SYMBOL_EQ:
-                return "SYMBOL_EQ";
+                return "SYMBOL_EQ  :  \'=\'";
+
             case GSLanguageCompiler::TokenType::NEW_LINE:
                 return "NEW_LINE";
             case GSLanguageCompiler::TokenType::END_OF_FILE:

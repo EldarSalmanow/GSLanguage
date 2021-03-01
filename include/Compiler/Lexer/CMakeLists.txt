@@ -5,14 +5,12 @@ set(GS_LEXER_HEADERS
         GS_Tokenizer.h
         GS_Token.h
         GS_Keywords.h
-        GS_Regex.h
-        )
+        GS_Regex.h)
 
 set(GS_LEXER_SOURCE
         ../../../src/Compiler/Lexer/GS_Lexer.cpp
         ../../../src/Compiler/Lexer/GS_Keywords.cpp
-        ../../../src/Compiler/Lexer/GS_Regex.cpp
-        )
+        ../../../src/Compiler/Lexer/GS_Regex.cpp)
 
 add_library(
 #       Library name

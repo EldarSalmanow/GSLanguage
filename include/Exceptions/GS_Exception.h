@@ -15,14 +15,14 @@ namespace GSLanguageCompiler::Exceptions {
          * @return Error message
          */
         std::string _getErrorMessage() override {
-            return this->errorMessage + "\nLine: " + std::to_string(this->line) + "\nColumn: " + std::to_string(this->column);
+            return this->errorMessage;
         }
 
         /**
          * Function to output the error message to the error stream
          */
         void _printErrorMessage() override {
-            std::cerr << this->errorMessage << "\nLine: " << this->line << "\nColumn: " << this->column << std::endl;
+            std::cerr << this->errorMessage << std::endl;
         }
 
     public:
@@ -34,7 +34,7 @@ namespace GSLanguageCompiler::Exceptions {
          * @return Output stream
          */
         friend std::ostream &operator<<(std::ostream &out, const _GS_Exception &exception) {
-            out << exception.errorMessage << "\nLine: " << exception.line << "\nColumn: " << exception.column;
+            out << exception.errorMessage;
             return out;
         }
 
@@ -43,11 +43,6 @@ namespace GSLanguageCompiler::Exceptions {
          * Error message
          */
         std::string errorMessage;
-
-        /**
-         * The position in the file that threw the error
-         */
-        int line, column;
     };
 
 }

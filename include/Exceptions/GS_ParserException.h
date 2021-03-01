@@ -1,14 +1,14 @@
 #ifndef GSLANGUAGE_GS_PARSEREXCEPTION_H
 #define GSLANGUAGE_GS_PARSEREXCEPTION_H
 
-#include "GS_Exception.h"
+#include "GS_CompilingException.h"
 
 namespace GSLanguageCompiler::Exceptions {
 
     /**
      * Class for throwing parsing errors
      */
-    class GS_ParserException : public _GS_Exception {
+    class GS_ParserException : public GS_CompilingException {
     public:
         GS_ParserException(std::string errorMessage, int line = -1, int column = -1) {
             this->errorMessage = errorMessage;

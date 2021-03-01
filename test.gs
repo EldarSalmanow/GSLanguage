@@ -1,5 +1,6 @@
-import System
+import std::io
 
-name: Int = 12
-
-System.println(name)
+func main(args: Array<String>) {
+    Console.println()
+    Console.println("Hello, World!")
+}
