@@ -6,7 +6,8 @@
 #include <memory>
 
 #include "../Lexer/GS_Token.h"
-#include "GS_Expression.h"
+#include "Expressions/GS_Expression.h"
+#include "GS_IncludeStatements.h"
 
 #include "../../../include/Exceptions/GS_ParserException.h"
 
@@ -31,35 +32,53 @@ namespace GSLanguageCompiler {
         /**
          * Function for parsing input tokens
          */
-        std::vector<std::shared_ptr<GS_Expression>> parse();
+        GSStatementPointerArray parse();
 
     private:
 
-        void analyzeToken();
+        /**
+         *
+         * @return
+         */
+        GSStatementPointer statement();
 
-        GS_Expression *higherOrder();
-
-        GS_Expression *middleOrder();
-
-        GS_Expression *lowerOrder();
+        /**
+         *
+         * @return
+         */
+        Statements::GS_VariableStatement *parsingVariable();
 
     private:
 
         /**
          * Input tokens, before lexing analyzing
          */
-        std::vector<GS_Token> tokens;
+        GSTokenArray tokens;
 
         /**
          * Expressions, before parsing analyzing
          */
-        std::vector<std::shared_ptr<GS_Expression>> expressions;
+        GSStatementPointerArray expressions;
+
+        /**
+         *
+         */
+        int line, column;
+
+        /**
+         *
+         */
+        bool isEndOfFile = false;
 
         /**
          * Iterator input container with tokens
          */
         std::vector<GS_Token>::iterator tokenIterator;
+
+        Literal convertTokenTypeToReservedLiteral(TokenType type);
     };
+
+    typedef std::shared_ptr<GS_Parser> GSParserPointer;
 
 }
 

@@ -3,6 +3,8 @@
 
 #if defined(__WIN32)
 #include <windows.h>
+#else
+#error Platform not supported!
 #endif
 
 #include "../include/Compiler/Lexer/GS_Lexer.h"
@@ -39,6 +41,7 @@ namespace Testing {
     void setConsoleColor(ConsoleColor background, ConsoleColor text) {
 #if defined(__WIN32)
         HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+
         SetConsoleTextAttribute(handle, (WORD) ((background << 4) | text));
 #else
 #error Platform not supported!
@@ -55,10 +58,10 @@ namespace Testing {
         switch (type) {
             case GSLanguageCompiler::TokenType::WORD:
                 return "WORD";
-            case GSLanguageCompiler::TokenType::TYPE_STRING:
-                return "TYPE_STRING";
-            case GSLanguageCompiler::TokenType::TYPE_NUMBER:
-                return "TYPE_NUMBER";
+            case GSLanguageCompiler::TokenType::LITERAL_STRING:
+                return "LITERAL_STRING";
+            case GSLanguageCompiler::TokenType::LITERAL_NUMBER:
+                return "LITERAL_NUMBER";
 
             case GSLanguageCompiler::TokenType::KEYWORD_VAR:
                 return "KEYWORD_VAR  :  \'var\'";
@@ -113,6 +116,8 @@ namespace Testing {
      * @param input The container that holds the code
      */
     void printInput(std::vector<std::string> &input) {
+        std::cout << std::endl;
+
         for (auto &line : input) {
             std::cout << line << std::endl;
         }
@@ -125,14 +130,32 @@ namespace Testing {
      */
     void printTokenTypes(GSLanguageCompiler::GSTokenArray &tokens) {
         setConsoleColor(BLACK, RED);
-        std::cerr << "----------LEXER OUT START----------" << std::endl;
+
+        std::cerr << "\n----------LEXER OUT START----------\n" << std::endl;
+
         for (auto &token : tokens) {
             std::cerr << enumToString(token.getType()) << std::endl;
         }
-        std::cerr << "----------LEXER OUT END----------" << std::endl;
+
+        std::cerr << "\n----------LEXER OUT END----------\n" << std::endl;
+
         setConsoleColor(BLACK, LIGHT_GRAY);
     }
 
+
+    void printStatements(GSLanguageCompiler::GSStatementPointerArray &statements) {
+        setConsoleColor(BLACK, RED);
+
+        std::cerr << "\n----------PARSER OUT START----------\n" << std::endl;
+
+        for (auto &statement : statements) {
+            std::cerr << statement.get()->toString() << std::endl;
+        }
+
+        std::cerr << "\n----------PARSER OUT END----------\n" << std::endl;
+
+        setConsoleColor(BLACK, LIGHT_GRAY);
+    }
 }
 
 #endif //GSLANGUAGE_TESTS_H

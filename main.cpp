@@ -9,5 +9,6 @@ Debug::GS_Timer<int(int, char*[])> timer(startFunction);
  * @return Status number for operation system
  */
 int main(int argc, char *argv[]) {
+//    return Starter::GS_Starter::startCompiler(argc, argv);
     return timer.runtime("Total time", argc, argv);
 }

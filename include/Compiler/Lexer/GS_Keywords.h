@@ -14,8 +14,11 @@ namespace GSLanguageCompiler {
 
         WORD,                     // main
 
-        TYPE_STRING,              // "hello"
-        TYPE_NUMBER,              // 12
+        LITERAL_STRING,           // "hello"
+        LITERAL_NUMBER,           // 12
+
+        KEYWORD_INT,              // Int
+        KEYWORD_STRING,           // String
 
         KEYWORD_VAR,              // var
         KEYWORD_IF,               // if

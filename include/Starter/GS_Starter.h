@@ -6,7 +6,7 @@
 #include "../../include/Compiler/Util/GS_Arguments.h"
 #include "../../include/Compiler/Reader/GS_Reader.h"
 #include "../../include/Compiler/Lexer/GS_Lexer.h"
-//#include "../../include/Compiler/Parser/GS_Parser.h"
+#include "../../include/Compiler/Parser/GS_Parser.h"
 
 namespace Starter {
 

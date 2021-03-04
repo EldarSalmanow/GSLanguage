@@ -65,7 +65,7 @@ namespace GSLanguageCompiler {
             ++column;
         }
 
-        tokens.emplace_back(GS_Token(TokenType::TYPE_NUMBER, number));
+        tokens.emplace_back(GS_Token(TokenType::LITERAL_NUMBER, number));
     }
 
     void GS_Lexer::tokenizeWord() {
@@ -83,7 +83,7 @@ namespace GSLanguageCompiler {
             return;
         }
 
-        this->tokens.emplace_back(TokenType::WORD, word);
+        this->tokens.emplace_back(GS_Token(TokenType::WORD, word));
 
         return;
     }
