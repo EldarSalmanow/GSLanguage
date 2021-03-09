@@ -4,12 +4,14 @@
 #include "GS_IException.h"
 
 namespace GSLanguageCompiler::Exceptions {
+
     /**
      * Base error class for GS_LanguageCompiler<br>
      * Note: Do not create objects of this class!
      */
     class _GS_Exception : public GS_IException {
     public:
+
         /**
          * Function for receiving an error message
          * @return Error message
@@ -26,6 +28,7 @@ namespace GSLanguageCompiler::Exceptions {
         }
 
     public:
+
         /**
          * Overloading the output operator to display an error message for inherited classes
          * @param out Output stream
@@ -39,6 +42,7 @@ namespace GSLanguageCompiler::Exceptions {
         }
 
     public:
+
         /**
          * Error message
          */

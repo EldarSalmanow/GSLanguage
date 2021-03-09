@@ -6,33 +6,21 @@
 namespace GSLanguageCompiler::Exceptions {
 
     /**
-     *
+     * Base class for compilation errors
      */
     class GS_CompilingException : public _GS_Exception {
     public:
 
-        /**
-         *
-         * @return
-         */
         std::string _getErrorMessage() {
             return this->errorMessage + "\nLine: " + std::to_string(this->line) + "\nColumn: " + std::to_string(this->column);
         }
 
-        /**
-         *
-         */
         void _printErrorMessage() {
             std::cerr << this->errorMessage << "\nLine: " << this->line << "\nColumn: " << this->column << std::endl;
         }
+
     public:
 
-        /**
-         *
-         * @param out
-         * @param exception
-         * @return
-         */
         friend std::ostream &operator<<(std::ostream &out, const GS_CompilingException &exception) {
             out
             << exception.errorMessage
@@ -45,9 +33,6 @@ namespace GSLanguageCompiler::Exceptions {
 
     public:
 
-        /**
-         * The position in the file that threw the error
-         */
         int line, column;
     };
 

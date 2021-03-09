@@ -6,8 +6,9 @@
 #include <memory>
 
 #include "../Lexer/GS_Token.h"
-#include "Expressions/GS_Expression.h"
+#include "GS_IncludeExpressions.h"
 #include "GS_IncludeStatements.h"
+#include "GS_IncludeValues.h"
 
 #include "../../../include/Exceptions/GS_ParserException.h"
 
@@ -23,7 +24,7 @@ namespace GSLanguageCompiler {
          * Constructor for GS_Parser
          * @param tokens Container with tokens, before lexing analyzing
          */
-        GS_Parser(std::vector<GS_Token> &tokens) {
+        GS_Parser(GSTokenArray &tokens) {
             this->tokens = tokens;
         }
 
@@ -48,6 +49,52 @@ namespace GSLanguageCompiler {
          */
         Statements::GS_VariableStatement *parsingVariable();
 
+        /**
+         *
+         * @return
+         */
+        Statements::GS_VariableStatement *parsingVariableWithoutType();
+
+    private:
+
+        /**
+         *
+         * @return
+         */
+        GSExpressionPointer expression();
+
+        /**
+         *
+         * @return
+         */
+        GSExpressionPointer additive();
+
+        /**
+         *
+         * @return
+         */
+        GSExpressionPointer multiplicative();
+
+        /**
+         *
+         * @return
+         */
+        GSExpressionPointer unary();
+
+        /**
+         *
+         * @return
+         */
+        GSExpressionPointer primary();
+
+        /**
+         *
+         * @param typeForCheck
+         * @param numberOfToken
+         * @return
+         */
+        inline bool checkCurrentTokenType(TokenType typeForCheck, int numberOfToken = 0);
+
     private:
 
         /**
@@ -56,9 +103,9 @@ namespace GSLanguageCompiler {
         GSTokenArray tokens;
 
         /**
-         * Expressions, before parsing analyzing
+         *
          */
-        GSStatementPointerArray expressions;
+        GSStatementPointerArray statements;
 
         /**
          *
@@ -73,9 +120,7 @@ namespace GSLanguageCompiler {
         /**
          * Iterator input container with tokens
          */
-        std::vector<GS_Token>::iterator tokenIterator;
-
-        Literal convertTokenTypeToReservedLiteral(TokenType type);
+        GSTokenArray::iterator tokenIterator;
     };
 
     typedef std::shared_ptr<GS_Parser> GSParserPointer;

@@ -40,6 +40,11 @@ namespace GSLanguageCompiler {
                 continue;
             }
 
+            else if (this->symbol == "\"") {
+                this->tokenizeString();
+                continue;
+            }
+
             // special symbols
             else if (this->isReservedWord(symbol)) {
                 this->tokens.emplace_back(GS_Token(analyzeReservedWord(this->symbol)));
@@ -84,6 +89,30 @@ namespace GSLanguageCompiler {
         }
 
         this->tokens.emplace_back(GS_Token(TokenType::WORD, word));
+
+        return;
+    }
+
+    void GS_Lexer::tokenizeString() {
+        std::string string;
+
+        // scip "
+        ++this->lineIterator;
+
+        this->symbol = this->lineIterator[0];
+
+        while (this->lineIterator != this->input[this->line - 1].end()) {
+            this->symbol = this->lineIterator[0];
+
+            if (symbol == "\"") {
+                this->tokens.emplace_back(GS_Token(TokenType::LITERAL_STRING, string));
+                break;
+            }
+
+            string += this->symbol;
+
+            ++this->lineIterator;
+        }
 
         return;
     }

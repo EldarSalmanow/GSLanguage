@@ -68,7 +68,7 @@ namespace GSLanguageCompiler {
 
     typedef std::shared_ptr<GS_Token> GSTokenPointer;
 
-    typedef std::vector<GS_Token>     GSTokenArray;
+    typedef std::vector<GS_Token> GSTokenArray;
 
 }
 

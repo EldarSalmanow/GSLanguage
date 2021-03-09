@@ -23,8 +23,6 @@ namespace GSLanguageCompiler {
     extern std::regex _wordEnglishLowerCaseExpression;
     extern std::regex _wordEnglishUpperCaseExpression;
 
-    extern std::vector<std::regex> _regexps;
-
 }
 
 #endif //GSLANGUAGE_GS_REGEX_H

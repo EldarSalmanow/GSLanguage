@@ -1,18 +1,18 @@
-#ifndef GSLANGUAGE_GS_PARSEREXCEPTION_H
-#define GSLANGUAGE_GS_PARSEREXCEPTION_H
+#ifndef GSLANGUAGE_GS_TYPECASTEXCEPTION_H
+#define GSLANGUAGE_GS_TYPECASTEXCEPTION_H
 
 #include "GS_CompilingException.h"
 
 namespace GSLanguageCompiler::Exceptions {
 
     /**
-     * Class for throwing parsing errors
+     * Class for throwing errors with type casting
      */
-    class GS_ParserException : public GS_CompilingException {
+    class GS_TypeCastException : public GS_CompilingException {
     public:
 
-        GS_ParserException(std::string errorMessage, int line = -1, int column = -1) {
-            this->errorMessage = errorMessage;
+        GS_TypeCastException(std::string message, int line = -1, int column = -1) {
+            this->errorMessage = message;
             this->line = line;
             this->column = column;
         }
@@ -30,5 +30,4 @@ namespace GSLanguageCompiler::Exceptions {
 
 }
 
-
-#endif //GSLANGUAGE_GS_PARSEREXCEPTION_H
+#endif //GSLANGUAGE_GS_TYPECASTEXCEPTION_H

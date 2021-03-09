@@ -1,17 +1,17 @@
-#ifndef GSLANGUAGE_GS_PARSEREXCEPTION_H
-#define GSLANGUAGE_GS_PARSEREXCEPTION_H
+#ifndef GSLANGUAGE_GS_ARITHMETICEXCEPTION_H
+#define GSLANGUAGE_GS_ARITHMETICEXCEPTION_H
 
 #include "GS_CompilingException.h"
 
 namespace GSLanguageCompiler::Exceptions {
 
     /**
-     * Class for throwing parsing errors
+     * Class for throwing math errors
      */
-    class GS_ParserException : public GS_CompilingException {
+    class GS_ArithmeticException : public GS_CompilingException {
     public:
 
-        GS_ParserException(std::string errorMessage, int line = -1, int column = -1) {
+        GS_ArithmeticException(std::string message, int line = -1, int column = -1) {
             this->errorMessage = errorMessage;
             this->line = line;
             this->column = column;
@@ -30,5 +30,4 @@ namespace GSLanguageCompiler::Exceptions {
 
 }
 
-
-#endif //GSLANGUAGE_GS_PARSEREXCEPTION_H
+#endif //GSLANGUAGE_GS_ARITHMETICEXCEPTION_H

@@ -1,3 +1,6 @@
-var hello: Int = 13
-var test: String = 13874
-var name = 575
+var firstBrother = "Eldar"
+var secondBrother = "Azamat"
+var thirdBrother = "Emil"
+
+var father = "Ruslan"
+var mother = "Oxana"

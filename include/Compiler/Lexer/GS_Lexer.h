@@ -5,7 +5,6 @@
 
 #include "GS_Token.h"
 #include "GS_Regex.h"
-//#include "GS_Tokenizer.h"
 #include "../../Exceptions/GS_LexerException.h"
 
 namespace GSLanguageCompiler {
@@ -48,6 +47,11 @@ namespace GSLanguageCompiler {
          * Tokenizing word
          */
         void tokenizeWord();
+
+        /**
+         * Tokenizing string
+         */
+        void tokenizeString();
 
         /**
          * Analyzing reserved word or symbol

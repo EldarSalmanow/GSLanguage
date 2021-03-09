@@ -6,10 +6,4 @@ namespace GSLanguageCompiler {
     std::regex _wordEnglishLowerCaseExpression = std::regex(R"([a-z])");
     std::regex _wordEnglishUpperCaseExpression = std::regex(R"([A-Z])");
 
-    std::vector<std::regex> _regexps = {
-            _numberExpression,
-
-            _wordEnglishLowerCaseExpression,
-            _wordEnglishUpperCaseExpression
-    };
 }

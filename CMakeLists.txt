@@ -9,6 +9,7 @@ add_subdirectory(include/Compiler/Lexer)
 add_subdirectory(include/Compiler/Parser)
 add_subdirectory(include/Compiler/Reader)
 add_subdirectory(include/Compiler/Util)
+add_subdirectory(include/Debug)
 add_subdirectory(include/Starter)
 
 
@@ -22,4 +23,5 @@ target_link_libraries(${PROJECT_NAME}
         GSReaderLibrary
         GSLexerLibrary
         GSParserLibrary
+        GSDebugLibrary
         )

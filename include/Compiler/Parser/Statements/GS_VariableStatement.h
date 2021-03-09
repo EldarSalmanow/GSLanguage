@@ -17,10 +17,10 @@ namespace GSLanguageCompiler::Statements {
          * @param name
          * @param number
          */
-        GS_VariableStatement(std::string name, Values::GS_IntegerValue number) {
+        GS_VariableStatement(std::string name, GSValuePointer value) {
             this->_name = name;
-            this->_number = number;
-            this->_type = number.getLiteralType();
+            this->_value = value;
+            this->_type = value->getLiteralType();
         }
 
         /**
@@ -29,9 +29,9 @@ namespace GSLanguageCompiler::Statements {
          * @param number
          * @param type
          */
-        GS_VariableStatement(std::string name, Values::GS_IntegerValue number, Literal type) {
+        GS_VariableStatement(std::string name, GSValuePointer value, Literal type) {
             this->_name = name;
-            this->_number = number;
+            this->_value = value;
             this->_type = type;
         }
 
@@ -41,14 +41,13 @@ namespace GSLanguageCompiler::Statements {
          *
          */
          std::string toString() override {
-             return "GS_VariableStatement  :  "
-             "Name: " +
-             this->_name +
-             " Value: " +
-             std::to_string(this->_number.getNumber()) +
-             " Type: " +
-             literalToString(this->_type) +
-             "\n";
+             return "[ "
+             + this->_name
+             + ": "
+             + literalToString(this->_type)
+             + " = "
+             + this->_value->getString()
+             + " ]";
          }
 
     private:
@@ -56,7 +55,7 @@ namespace GSLanguageCompiler::Statements {
         /**
          *
          */
-        Values::GS_IntegerValue _number;
+        GSValuePointer _value;
 
         /**
          *

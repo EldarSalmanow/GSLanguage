@@ -1,5 +1,4 @@
 #include "../../include/Starter/GS_Starter.h"
-#include "../../test/Tests.h"
 
 namespace Starter {
 
@@ -29,31 +28,35 @@ namespace Starter {
         std::function<GSText(GS_Reader&)> readerFunction = &GS_Reader::readFile;
         std::function<GSTokenArray(GS_Lexer&)> lexerFunction = &GS_Lexer::tokenize;
         std::function<GSStatementPointerArray(GS_Parser&)> parserFunction = &GS_Parser::parse;
+//        std::function<GSExpressionPointerArray(GS_Parser&)> parserFunction = &GS_Parser::parse;
 
         Debug::GS_Timer<GSText(GS_Reader&)> readerTimer(readerFunction);
         Debug::GS_Timer<GSTokenArray(GS_Lexer&)> lexerTimer(lexerFunction);
         Debug::GS_Timer<GSStatementPointerArray(GS_Parser&)> parserTimer(parserFunction);
+//        Debug::GS_Timer<GSExpressionPointerArray(GS_Parser&)> parserTimer(parserFunction);
 
         // reading input file
         GSReaderPointer reader(new GS_Reader(arguments->getFilename()));
-        GSText input = readerTimer.runtime("Reading time", *reader);
-//        GSText input = reader->readFile();
+//        GSText input = readerTimer.runtime("Reading time", *reader);
+        GSText input = reader->readFile();
 
         // lexer analyzing
         GSLexerPointer lexer(new GS_Lexer(input));
         GSTokenArray tokens = lexerTimer.runtime("Lexer analyzing time", *lexer);
 //        GSTokenArray tokens = lexer->tokenize();
 
-        // parsing tokens to statements and expressions
+        // parsing tokens to statements and statements
         GSParserPointer parser(new GS_Parser(tokens));
         GSStatementPointerArray statements = parserTimer.runtime("Parsing tokens time", *parser);
+//        GSExpressionPointerArray expressions = parserTimer.runtime("Parsing tokens time", *parser);
 //        GSStatementPointerArray statements = parser->parse();
 
         // testing
         if (arguments->getIsTestingMode()) {
-            Testing::printInput(input);
-            Testing::printTokenTypes(tokens);
-            Testing::printStatements(statements);
+            Debug::GS_Debug::printInput(input);
+            Debug::GS_Debug::printLexerOutput(tokens);
+            Debug::GS_Debug::printParserOutput(statements);
+//            Debug::GS_Debug::printParserOutput(expressions);
         }
     }
 
