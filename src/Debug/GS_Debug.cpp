@@ -5,13 +5,17 @@ namespace Debug {
     void GS_Debug::printInput(GSLanguageCompiler::GSText &input) {
         std::cout << std::endl;
 
+        GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::RED);
+
         for (auto &line : input) {
             std::cout << line << std::endl;
         }
+
+        GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::LIGHT_GRAY);
     }
 
     void GS_Debug::printLexerOutput(GSLanguageCompiler::GSTokenArray &tokens) {
-        setConsoleColor(BLACK, RED);
+        GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::RED);
 
         std::cerr << "\n----------LEXER OUT START----------\n" << std::endl;
 
@@ -21,11 +25,11 @@ namespace Debug {
 
         std::cerr << "\n----------LEXER OUT END----------\n" << std::endl;
 
-        setConsoleColor(BLACK, LIGHT_GRAY);
+        GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::LIGHT_GRAY);
     }
 
     void GS_Debug::printParserOutput(GSLanguageCompiler::GSStatementPointerArray &statements) {
-        setConsoleColor(BLACK, RED);
+        GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::RED);
 
         std::cerr << "\n----------PARSER OUT START----------\n" << std::endl;
 
@@ -35,17 +39,7 @@ namespace Debug {
 
         std::cerr << "\n----------PARSER OUT END----------\n" << std::endl;
 
-        setConsoleColor(BLACK, LIGHT_GRAY);
-    }
-
-    void GS_Debug::setConsoleColor(ConsoleColor background, ConsoleColor text) {
-#if defined(__WIN32)
-        HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-
-        SetConsoleTextAttribute(handle, (WORD) ((background << 4) | text));
-#else
-#error Platform not supported!
-#endif
+        GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::LIGHT_GRAY);
     }
 
     std::string GS_Debug::tokenTypeToString(GSLanguageCompiler::TokenType type) {

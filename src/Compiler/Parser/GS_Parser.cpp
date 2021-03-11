@@ -46,7 +46,7 @@ namespace GSLanguageCompiler {
             return GSStatementPointer(this->parsingVariable());
         }
         else {
-            throw Exceptions::GS_ParserException("Unknown statement!", this->line);
+            throw Exceptions::GS_ParserException("Unknown statement!", this->input[this->line - 1], this->line);
         }
     }
 
@@ -57,7 +57,7 @@ namespace GSLanguageCompiler {
         }
         // if none of the available types of declaration
         else {
-            throw Exceptions::GS_ParserException("Invalid variable declaration!", this->line);
+            throw Exceptions::GS_ParserException("Invalid variable declaration! \nValid variable declaration: var <name> = <value>", this->input[this->line - 1], this->line);
         }
     }
 
@@ -79,7 +79,7 @@ namespace GSLanguageCompiler {
                 variableValue = GSValuePointer(new Values::GS_StringValue(result->getString()));
                 break;
             case Literal::LITERAL_NULL:
-                throw Exceptions::GS_ParserException("Unknown type for variable declaration!", this->line);
+                throw Exceptions::GS_ParserException("Unknown type for variable declaration!", this->input[this->line - 1], this->line);
         }
 
         return new Statements::GS_VariableStatement(variableName, variableValue);
@@ -205,16 +205,16 @@ namespace GSLanguageCompiler {
             expression = this->expression();
 
             if (!this->checkCurrentTokenType(TokenType::SYMBOL_RIGHT_PARENTHESES)) {
-                throw Exceptions::GS_ParserException("Lost right parentheses!", this->line);
+                throw Exceptions::GS_ParserException("Lost right parentheses!", this->input[this->line - 1], this->line);
             }
 
             ++this->tokenIterator;
         } else if (this->checkCurrentTokenType(TokenType::SYMBOL_RIGHT_PARENTHESES)) {
-            throw Exceptions::GS_ParserException("Lost left parentheses!", this->line);
+            throw Exceptions::GS_ParserException("Lost left parentheses!", this->input[this->line - 1], this->line);
         }
 
         if (expression == nullptr) {
-            throw Exceptions::GS_ParserException("Unknown expression!", this->line);
+            throw Exceptions::GS_ParserException("Unknown expression!", this->input[this->line - 1], this->line);
         }
 
         return expression;
@@ -225,4 +225,5 @@ namespace GSLanguageCompiler {
     inline bool GS_Parser::checkCurrentTokenType(TokenType typeForCheck, int numberOfToken) {
         return this->tokenIterator[numberOfToken].getType() == typeForCheck;
     }
+
 }

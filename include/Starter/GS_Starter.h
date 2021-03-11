@@ -18,15 +18,17 @@ namespace Starter {
      */
     class GS_Starter {
     public:
+
         /**
-         * Starting compiler
+         * Starting compiler, error handlers and timers
          * @param argc Number of arguments
          * @param argv Array of arguments
          * @return Status number for operation system
          */
-        static int startCompiler(int argc, char *argv[]);
+        static int start(int argc, char **argv);
 
     private:
+
         /**
         * Start compiling function
         * @param arguments Command line arguments before argument analyzing

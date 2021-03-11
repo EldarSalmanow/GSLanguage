@@ -40,15 +40,23 @@ namespace GSLanguageCompiler {
          * @return Input _filename
          */
         std::string &getFilename() {
-            return this->_arguments.filename;
+            return _Arguments::filename;
         }
 
         /**
-         * Getter for _arguments.isTestingMode
+         * Getter for _arguments.isTestingEnable
          * @return Is testing mode
          */
-        bool getIsTestingMode() {
-            return this->_arguments.isTestingMode;
+        bool getIsTestingEnable() {
+            return _Arguments::isTestingEnable;
+        }
+
+        /**
+         * Getter for _arguments.isProfilingEnable
+         * @return Is timers enable
+         */
+        bool getIsProfilingEnable() {
+            return _Arguments::isProfilingEnable;
         }
 
         /**
@@ -67,20 +75,18 @@ namespace GSLanguageCompiler {
             /**
             * Input filename
             */
-            std::string filename;
+            inline static std::string filename;
 
             /**
             * Is testing compiling mode (for developers GSLanguageCompiler)
             */
-            bool isTestingMode = false;
+            inline static bool isTestingEnable = false;
+
+            /**
+             * Is timers enable (compiling profiling)
+             */
+            inline static bool isProfilingEnable = false;
         };
-
-    private:
-
-        /**
-         * Arguments for compiler, before analyzing command line arguments
-         */
-        _Arguments _arguments;
 
     private:
 

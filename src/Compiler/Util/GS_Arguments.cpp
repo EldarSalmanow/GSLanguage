@@ -11,7 +11,7 @@ namespace GSLanguageCompiler {
                     throw Exceptions::GS_ArgumentException("Invalid argument \"" + argument + "\"!");
                 }
 
-                this->_arguments.filename = _argv[index];
+                _Arguments::filename = _argv[index];
 
                 continue;
             } else if (argument == "-h" || argument == "--help") {
@@ -19,11 +19,15 @@ namespace GSLanguageCompiler {
 
                 break;
             } else if (argument == "-t" || argument == "--test") {
-                this->_arguments.isTestingMode = true;
+                _Arguments::isTestingEnable = true;
+
+                continue;
+            } else if (argument == "-p" || argument == "--profiling") {
+                _Arguments::isProfilingEnable = true;
 
                 continue;
             } else {
-                throw Exceptions::GS_ArgumentException("Invalid arguments!");
+                    throw Exceptions::GS_ArgumentException("Invalid arguments!");
             }
         }
     }

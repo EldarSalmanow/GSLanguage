@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_EXCEPTION_H
 #define GSLANGUAGE_GS_EXCEPTION_H
 
+#include "../Compiler/Util/GS_CrossPlatform.h"
+
 #include "GS_IException.h"
 
 namespace GSLanguageCompiler::Exceptions {
@@ -24,7 +26,11 @@ namespace GSLanguageCompiler::Exceptions {
          * Function to output the error message to the error stream
          */
         void _printErrorMessage() override {
+            Platform::GS_CrossPlatform::setConsoleColor(Platform::GS_CrossPlatform::BLACK, Platform::GS_CrossPlatform::RED);
+
             std::cerr << this->errorMessage << std::endl;
+            
+            Platform::GS_CrossPlatform::setConsoleColor(Platform::GS_CrossPlatform::BLACK, Platform::GS_CrossPlatform::LIGHT_GRAY);
         }
 
     public:
@@ -38,6 +44,7 @@ namespace GSLanguageCompiler::Exceptions {
          */
         friend std::ostream &operator<<(std::ostream &out, const _GS_Exception &exception) {
             out << exception.errorMessage;
+
             return out;
         }
 

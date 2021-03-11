@@ -3,6 +3,8 @@
 
 #include "GS_TimerBase.h"
 
+#include "GS_TimerResults.h"
+
 namespace Debug {
 
     template<typename... _ArgumentsType>
@@ -40,7 +42,7 @@ namespace Debug {
 
             std::chrono::duration<double> time = end - start;
 
-            std::cout << "\n" << message << ": " << time.count() << std::endl;
+            GS_TimerResults::addTimerResult("\n" + message + ": " + std::to_string(time.count()) + " seconds." + "\n");
 
             return result;
         }
@@ -76,7 +78,7 @@ namespace Debug {
 
             std::chrono::duration<double> time = end - start;
 
-            std::cout << "\n" << message << ": " << time.count() << std::endl;
+            GS_TimerResults::addTimerResult("\n" + message + ": " + std::to_string(time.count()) + " seconds." + "\n");
 
             return;
         }

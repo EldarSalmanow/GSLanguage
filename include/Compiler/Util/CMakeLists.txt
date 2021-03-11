@@ -2,6 +2,7 @@ set(LIBRARY_NAME GSUtilLibrary)
 
 set(GS_UTIL_SOURCE
         ../../../src/Compiler/Util/GS_Arguments.cpp
+        ../../../src/Compiler/Util/GS_CrossPlatform.cpp
         )
 
 add_library(

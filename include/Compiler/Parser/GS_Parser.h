@@ -14,6 +14,8 @@
 
 namespace GSLanguageCompiler {
 
+    typedef std::vector<std::string> GSText;
+
     /**
      * Class for generating AST and parsing AST
      */
@@ -24,8 +26,9 @@ namespace GSLanguageCompiler {
          * Constructor for GS_Parser
          * @param tokens Container with tokens, before lexing analyzing
          */
-        GS_Parser(GSTokenArray &tokens) {
+        GS_Parser(GSTokenArray &tokens, GSText &input) {
             this->tokens = tokens;
+            this->input = input;
         }
 
     public:
@@ -97,6 +100,8 @@ namespace GSLanguageCompiler {
 
     private:
 
+        GSText input;
+
         /**
          * Input tokens, before lexing analyzing
          */
@@ -110,7 +115,7 @@ namespace GSLanguageCompiler {
         /**
          *
          */
-        int line, column;
+        int line;
 
         /**
          *

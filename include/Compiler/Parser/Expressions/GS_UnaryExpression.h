@@ -41,6 +41,8 @@ namespace GSLanguageCompiler::Expressions {
                     return this->_expression->result();
                 case UnaryOperation::MINUS:
                     return GSValuePointer(new Values::GS_IntegerValue(-this->_expression->result()->getInt()));
+                default:
+                    return nullptr;
             }
         }
 
