@@ -1,10 +1,15 @@
 #ifndef GSLANGUAGE_GS_CROSSPLATFORM_H
 #define GSLANGUAGE_GS_CROSSPLATFORM_H
 
-#if defined(__WIN32)
-#include <windows.h>
-#else
-#error Platform not supported
+#include "GS_PlatformDefines.h"
+
+#if defined(OS_WINDOWS)
+#  if defined(COMPILER_MSVC)
+#    include <Windows.h>
+#  endif
+#  if defined(COMPILER_MINGW)
+#    include <windows.h>
+#  endif
 #endif
 
 namespace Platform {

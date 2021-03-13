@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_TIMER_H
 #define GSLANGUAGE_GS_TIMER_H
 
+#include <string>
+
 #include "GS_TimerBase.h"
 
 #include "GS_TimerResults.h"

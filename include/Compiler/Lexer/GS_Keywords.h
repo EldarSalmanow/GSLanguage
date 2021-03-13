@@ -2,6 +2,7 @@
 #define GSLANGUAGE_GS_KEYWORDS_H
 
 #include <map>
+#include <string>
 
 namespace GSLanguageCompiler {
 

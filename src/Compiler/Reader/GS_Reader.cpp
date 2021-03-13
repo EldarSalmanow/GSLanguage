@@ -6,7 +6,7 @@ namespace GSLanguageCompiler {
         char symbol;
         std::string line;
         std::ifstream stream;
-#if defined(__WIN32)
+#if defined(OS_WINDOWS)
         try {
             stream.open(this->filename, std::ios::binary);
 
@@ -40,10 +40,8 @@ namespace GSLanguageCompiler {
             }
             throw Exceptions::GS_ReaderException(exception.what());
         }
-#else
-#error Platform not supported!
-#endif // __WIN32
-        return this->input;
+#endif
+    	return this->input;
     }
 
 }

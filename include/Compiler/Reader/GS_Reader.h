@@ -5,6 +5,8 @@
 #include <vector>
 #include <memory>
 
+#include "../Util/GS_PlatformDefines.h"
+
 #include "../../Exceptions/GS_ReaderException.h"
 
 namespace GSLanguageCompiler {

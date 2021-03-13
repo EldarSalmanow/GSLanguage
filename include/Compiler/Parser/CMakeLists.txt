@@ -2,6 +2,7 @@ set(LIBRARY_NAME GSParserLibrary)
 
 set(GS_PARSER_SOURCE
         ../../../src/Compiler/Parser/GS_Parser.cpp
+        ../../../src/Compiler/Parser/GS_VariableParser.cpp
         ../../../src/Compiler/Parser/Values/GS_LiteralTypes.cpp)
 
 add_library(
