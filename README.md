@@ -26,17 +26,17 @@ EN:
 5. Building an executable file via target "GSLanguage"
 
 # Run
-<h3>Run without additional flags</h3>
+Run without additional flags
 ```shell
 GSLanguage.exe --file {pathToInputFile}.gs
 ```
 
-<h3>Run with testing of each compilation step</h3>
+Run with testing of each compilation step
 ```shell
 GSLanguage.exe --file {pathToInputFile}.gs --test
 ```
 
-<h3>Run with profiling of each compilation step.</h3>
+Run with profiling of each compilation step.
 ```shell
 GSLanguage.exe --file {pathToInputFile}.gs --profiling
 ```
