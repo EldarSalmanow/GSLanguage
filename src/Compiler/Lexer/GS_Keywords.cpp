@@ -1,10 +1,10 @@
 #include "../../../include/Compiler/Lexer/GS_Keywords.h"
 
-namespace GSLanguageCompiler {
+namespace GSLanguageCompiler::Lexer {
 
     std::map<std::string, TokenType> reserved = {
-            {"Int",   TokenType::KEYWORD_INT},
-            {"String",TokenType::KEYWORD_STRING},
+            {"Int",   TokenType::KEYWORD_TYPE_INT},
+            {"String",TokenType::KEYWORD_TYPE_STRING},
 
             {"var",   TokenType::KEYWORD_VAR},
             {"if",    TokenType::KEYWORD_IF},

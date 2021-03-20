@@ -11,7 +11,7 @@ namespace GSLanguageCompiler::Exceptions {
     class GS_ArithmeticException : public GS_CompilingException {
     public:
 
-        GS_ArithmeticException(std::string message, int line = -1, int column = -1) {
+        GS_ArithmeticException(std::string message, size_t line = 0, size_t column = 0) {
             this->errorMessage = errorMessage;
             this->line = line;
             this->column = column;

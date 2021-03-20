@@ -42,10 +42,10 @@ namespace GSLanguageCompiler::Statements {
          */
          std::string toString() override {
              return "[ "
-             + this->_name
-             + ": "
-             + literalToString(this->_type)
-             + " = "
+                    + this->_name
+                    + ": "
+                    + convertLiteralToString(this->_type)
+                    + " = "
              + this->_value->getString()
              + " ]";
          }

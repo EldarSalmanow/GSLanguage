@@ -11,7 +11,7 @@ namespace GSLanguageCompiler::Exceptions {
     class GS_ParserException : public GS_CompilingException {
     public:
 
-        GS_ParserException(std::string errorMessage, std::string &code, int line = -1, int column = -1) {
+        GS_ParserException(std::string errorMessage, std::string &code, size_t line = 0, size_t column = 0) {
             this->errorMessage = errorMessage + "\nCode: " + code;
             this->line = line;
             this->column = column;

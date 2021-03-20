@@ -5,9 +5,10 @@
 
 #include "GS_Token.h"
 #include "GS_Regex.h"
+
 #include "../../Exceptions/GS_LexerException.h"
 
-namespace GSLanguageCompiler {
+namespace GSLanguageCompiler::Lexer {
 
     /**
      * Class for analyzing source code
@@ -19,9 +20,7 @@ namespace GSLanguageCompiler {
          * Constructor for GS_Lexer
          * @param input Lines of code from input file
          */
-        GS_Lexer(std::vector<std::string> &input) {
-            this->input = input;
-        }
+        GS_Lexer(std::vector<std::string> &input);
 
     public:
 
@@ -36,76 +35,117 @@ namespace GSLanguageCompiler {
         /**
          * Analysis of each line in turn
          */
-        void analyzeLine();
+        void _analyzeLine();
 
         /**
          * Tokenizing number
          */
-        void tokenizeNumber();
+        void _tokenizeNumber();
 
         /**
          * Tokenizing word
          */
-        void tokenizeWord();
+        void _tokenizeWord();
 
         /**
          * Tokenizing string
          */
-        void tokenizeString();
+        void _tokenizeString();
 
         /**
          * Analyzing reserved word or symbol
          * @param word Input word for analyzing
          * @return Type of reserved word or symbol
          */
-        inline TokenType analyzeReservedWord(std::string &word);
+        inline TokenType _analyzeReservedWord(std::string &word);
 
         /**
          * Search for a string in reserved words and symbols
-         * @param basicString input string to analyze
+         * @param word _input string to analyze
          * @return Is reserved word or symbol
          */
-        inline bool isReservedWord(std::string &basicString);
+        inline bool _isReservedWord(std::string &word);
 
         /**
          * Function to check if a character is supported by the compiler
          * @param character Symbol to check
-         * @param type Regular expression _type
+         * @param type Regular expression type
          * @return Is supported character
          */
-        bool isSupportedCharacter(RegexType type);
+        bool _isValidRegexForSymbol(RegexType type);
+
+        /**
+         * Adding token
+         * @param type Token type
+         */
+        inline void _addToken(TokenType type);
+
+        /**
+         * Adding token with value
+         * @param type Token type
+         * @param value Token value
+         */
+        inline void _addToken(TokenType type, std::string value);
+
+        /**
+         * Updating line iterator to next symbol in line
+         */
+        inline void _nextSymbol();
+
+        /**
+         * Updating code iterator to next line in source
+         */
+        inline void _nextLine();
+
+        /**
+         * Getting current symbol in line iterator
+         * @return Current symbol in line iterator
+         */
+        inline char _currentSymbol();
+
+        /**
+         * Is end of line in line iterator
+         * @return Is end of line
+         */
+        inline bool _isEndOfLine();
+
+        /**
+         * Is end of source in code iterator
+         * @return Is end of source
+         */
+        inline bool _isEndOfSource();
 
     private:
 
         /**
          * Input code from reader
          */
-        std::vector<std::string> input;
+        std::vector<std::string> _input;
 
         /**
          * Tokens before lexer analyzing
          */
-        std::vector<GS_Token> tokens;
+        std::vector<GS_Token> _tokens;
 
         /**
          * Position in lexer analyzing
          */
-        int line, column;
+        size_t _line, _column;
 
         /**
          * An iterator to read code from a file
          */
-        std::vector<std::string>::iterator codeIterator;
+        std::vector<std::string>::iterator _codeIterator;
 
         /**
          * Iterator for reading a line of code
          */
-        std::string::iterator lineIterator;
+        std::string::iterator _lineIterator;
 
         /**
          * Current symbol
          */
-        std::string symbol;
+        std::string _symbol;
     };
 
     typedef std::shared_ptr<GS_Lexer> GSLexerPointer;

@@ -58,6 +58,12 @@ namespace GSLanguageCompiler {
          */
         Statements::GS_VariableStatement *parsingVariableWithoutType();
 
+        /**
+         *
+         * @return
+         */
+        Statements::GS_VariableStatement *parsingVariableWithType();
+
     private:
 
         /**
@@ -96,7 +102,7 @@ namespace GSLanguageCompiler {
          * @param numberOfToken
          * @return
          */
-        inline bool checkCurrentTokenType(TokenType typeForCheck, int numberOfToken = 0);
+        inline bool checkTokenType(TokenType typeForCheck, int numberOfToken = 0);
 
     private:
 

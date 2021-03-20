@@ -42,6 +42,27 @@ namespace Debug {
         GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::LIGHT_GRAY);
     }
 
+    void GS_Debug::printTableOfSymbols() {
+
+        GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::RED);
+
+        std::cerr << "\n----------TABLE_OF_SYMBOLS START----------\n" << std::endl;
+
+        for (auto &variableName : GSLanguageCompiler::GS_TableOfSymbols::getVariableNames()) {
+            GSLanguageCompiler::GSValuePointer variable = GSLanguageCompiler::GS_TableOfSymbols::get(variableName);
+
+            std::cerr
+            << "Variable name: " << variableName
+            << " Value: " << variable->getString()
+            << " Type: " << GSLanguageCompiler::convertLiteralToString(variable->getLiteralType())
+            << std::endl;
+        }
+
+        std::cerr << "\n----------TABLE_OF_SYMBOLS END----------\n" << std::endl;
+
+        GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::LIGHT_GRAY);
+    }
+
     std::string GS_Debug::tokenTypeToString(GSLanguageCompiler::TokenType type) {
         switch (type) {
             case GSLanguageCompiler::TokenType::WORD:
@@ -51,10 +72,10 @@ namespace Debug {
             case GSLanguageCompiler::TokenType::LITERAL_NUMBER:
                 return "LITERAL_NUMBER";
 
-            case GSLanguageCompiler::TokenType::KEYWORD_INT:
-                return "KEYWORD_INT  :  \'Int\'";
-            case GSLanguageCompiler::TokenType::KEYWORD_STRING:
-                return "KEYWORD_STRING  :  \'String\'";
+            case GSLanguageCompiler::TokenType::KEYWORD_TYPE_INT:
+                return "KEYWORD_TYPE_INT  :  \'Int\'";
+            case GSLanguageCompiler::TokenType::KEYWORD_TYPE_STRING:
+                return "KEYWORD_TYPE_STRING  :  \'String\'";
 
             case GSLanguageCompiler::TokenType::KEYWORD_VAR:
                 return "KEYWORD_VAR  :  \'var\'";

@@ -29,8 +29,10 @@ namespace Debug {
             _GS_Timer_Base<_Result(_ArgumentsType...)>::_function = function;
         }
 
+    public:
+
         /**
-         * Function for starting input function and calculating runtime
+         * Function for starting _input function and calculating runtime
          * @param message Message for printing information about function
          * @param arguments Input argument types
          * @return Measured function result
@@ -66,8 +68,10 @@ namespace Debug {
             _GS_Timer_Base<void(_ArgumentsType...)>::_function = function;
         }
 
+    public:
+
         /**
-         * Function for starting input function and calculating runtime
+         * Function for starting _input function and calculating runtime
          * @param message Message for printing information about function
          * @param arguments Input argument types
          */

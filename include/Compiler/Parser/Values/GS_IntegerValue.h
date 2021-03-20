@@ -14,18 +14,13 @@ namespace GSLanguageCompiler::Values {
         /**
          *
          */
-        GS_IntegerValue() {
-            this->_type = Literal::LITERAL_NULL;
-        }
+        GS_IntegerValue();
 
         /**
          *
          * @param value
          */
-        GS_IntegerValue(int number) {
-            this->_number = number;
-            this->_type = Literal::LITERAL_INT;
-        }
+        GS_IntegerValue(int value);
 
     public:
 
@@ -33,9 +28,7 @@ namespace GSLanguageCompiler::Values {
          *
          * @return
          */
-        int getValue() {
-            return this->_number;
-        }
+        int getValue();
 
     public:
 
@@ -43,25 +36,26 @@ namespace GSLanguageCompiler::Values {
          *
          * @return
          */
-        int getInt() override {
-            return this->_number;
-        }
+        int getInt() override;
 
         /**
          *
          * @return
          */
-        std::string getString() override {
-            return std::to_string(this->_number);
-        }
+        std::string getString() override;
+
+        /**
+         *
+         * @param type
+         * @return
+         */
+        GSValuePointer castTo(Literal type) override;
 
         /**
          *
          * @return
          */
-        Literal getLiteralType() override {
-            return _type;
-        }
+        Literal getLiteralType() override;
 
     private:
 
@@ -73,7 +67,7 @@ namespace GSLanguageCompiler::Values {
         /**
          *
          */
-        int _number;
+        int _value;
     };
 
 }

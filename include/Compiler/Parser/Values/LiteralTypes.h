@@ -4,7 +4,11 @@
 #include <vector>
 #include <string>
 
+#include "../../Lexer/GS_Keywords.h"
+
 namespace GSLanguageCompiler {
+
+    using namespace Lexer;
 
     enum class Literal {
         LITERAL_NULL,  // invalid type
@@ -15,7 +19,9 @@ namespace GSLanguageCompiler {
 
     extern std::vector<Literal> types;
 
-    extern std::string literalToString(Literal literal);
+    extern Literal convertTokenTypeToLiteral(TokenType type);
+
+    extern std::string convertLiteralToString(Literal literal);
 
 }
 

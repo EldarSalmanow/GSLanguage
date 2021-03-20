@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-namespace GSLanguageCompiler {
+namespace GSLanguageCompiler::Lexer {
 
     /**
      * Type of token
@@ -18,8 +18,8 @@ namespace GSLanguageCompiler {
         LITERAL_STRING,           // "hello"
         LITERAL_NUMBER,           // 12
 
-        KEYWORD_INT,              // Int
-        KEYWORD_STRING,           // String
+        KEYWORD_TYPE_INT,         // Int
+        KEYWORD_TYPE_STRING,      // String
 
         KEYWORD_VAR,              // var
         KEYWORD_IF,               // if

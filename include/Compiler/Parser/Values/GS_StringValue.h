@@ -14,18 +14,13 @@ namespace GSLanguageCompiler::Values {
        /**
         *
         */
-       GS_StringValue() {
-           this->_type = Literal::LITERAL_NULL;
-       }
+       GS_StringValue();
 
        /**
         *
         * @param value
         */
-       GS_StringValue(std::string value) {
-           this->_value = value;
-           this->_type = Literal::LITERAL_STRING;
-       }
+       GS_StringValue(std::string value);
 
     public:
 
@@ -33,31 +28,26 @@ namespace GSLanguageCompiler::Values {
          *
          * @return
          */
-        int getInt() override {
-            int number;
-            try {
-                number = std::stoi(this->_value);
-            } catch (std::exception &exception) {
-                throw Exceptions::GS_TypeCastException("Can not cast string value to int!");
-            }
-            return number;
-        }
+        int getInt() override;
 
         /**
          *
          * @return
          */
-        std::string getString() override {
-            return this->_value;
-        }
+        std::string getString() override;
+
+        /**
+         *
+         * @param type
+         * @return
+         */
+        GSValuePointer castTo(Literal type) override;
 
         /**
          *
          * @return
          */
-        Literal getLiteralType() override {
-            return this->_type;
-        }
+        Literal getLiteralType() override;
 
     private:
 

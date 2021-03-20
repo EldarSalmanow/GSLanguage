@@ -7,7 +7,18 @@ namespace GSLanguageCompiler {
             Literal::LITERAL_STRING
     };
 
-    std::string literalToString(Literal literal) {
+    Literal convertTokenTypeToLiteral(TokenType type) {
+        switch (type) {
+            case TokenType::KEYWORD_TYPE_INT:
+                return Literal::LITERAL_INT;
+            case TokenType::KEYWORD_TYPE_STRING:
+                return Literal::LITERAL_STRING;
+            default:
+                return Literal::LITERAL_NULL;
+        }
+    }
+
+    std::string convertLiteralToString(Literal literal) {
         switch (literal) {
             case Literal::LITERAL_NULL:
                 return "LITERAL_NULL";

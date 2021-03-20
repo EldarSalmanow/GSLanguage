@@ -37,7 +37,7 @@ namespace GSLanguageCompiler::Exceptions {
 
     public:
 
-        int line, column;
+        size_t line = 0, column = 0;
     };
 
 }

@@ -3,7 +3,7 @@
 
 #include <regex>
 
-namespace GSLanguageCompiler {
+namespace GSLanguageCompiler::Lexer {
 
     /**
      * Type of regular expression
@@ -15,13 +15,13 @@ namespace GSLanguageCompiler {
         UNSUPPORTED,
 
         NUMBER_SIMPLE,      // 0..9
-        ALPHABET_ENGLISH    // a..z A..Z
+
+        ALPHABET_ENGLISH,   // a..z A..Z
     };
 
     extern std::regex _numberExpression;
 
-    extern std::regex _wordEnglishLowerCaseExpression;
-    extern std::regex _wordEnglishUpperCaseExpression;
+    extern std::regex _wordEnglishExpression;
 
 }
 

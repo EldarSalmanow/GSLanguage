@@ -29,18 +29,18 @@ namespace GSLanguageCompiler {
 //--------------------------------------------------------------------------
 
     GSStatementPointer GS_Parser::statement() {
-        if (this->checkCurrentTokenType(TokenType::NEW_LINE)) {
+        if (this->checkTokenType(TokenType::NEW_LINE)) {
             ++this->line;
 
             return nullptr;
-        } else if (this->checkCurrentTokenType(TokenType::END_OF_FILE)) {
+        } else if (this->checkTokenType(TokenType::END_OF_FILE)) {
             this->isEndOfFile = true;
 
             return nullptr;
         }
 
         // var
-        if (this->checkCurrentTokenType(TokenType::KEYWORD_VAR)) {
+        if (this->checkTokenType(TokenType::KEYWORD_VAR)) {
             ++this->tokenIterator;
 
             return GSStatementPointer(this->parsingVariable());
@@ -48,41 +48,6 @@ namespace GSLanguageCompiler {
         else {
             throw Exceptions::GS_ParserException("Unknown statement!", this->input[this->line - 1], this->line);
         }
-    }
-
-    Statements::GS_VariableStatement *GS_Parser::parsingVariable() {
-        // var <name> = <value>
-        if (this->checkCurrentTokenType(TokenType::SYMBOL_EQ, 1)) {
-            return this->parsingVariableWithoutType();
-        }
-        // if none of the available types of declaration
-        else {
-            throw Exceptions::GS_ParserException("Invalid variable declaration! \nValid variable declaration: var <name> = <value>", this->input[this->line - 1], this->line);
-        }
-    }
-
-    Statements::GS_VariableStatement *GS_Parser::parsingVariableWithoutType() {
-        std::string variableName = this->tokenIterator[0].getValue();
-        // skip variable name and =
-        ++this->tokenIterator;
-        ++this->tokenIterator;
-
-        GSValuePointer variableValue;
-
-        GSValuePointer result = this->expression()->result();
-
-        switch (result->getLiteralType()) {
-            case Literal::LITERAL_INT:
-                variableValue = GSValuePointer(new Values::GS_IntegerValue(result->getInt()));
-                break;
-            case Literal::LITERAL_STRING:
-                variableValue = GSValuePointer(new Values::GS_StringValue(result->getString()));
-                break;
-            case Literal::LITERAL_NULL:
-                throw Exceptions::GS_ParserException("Unknown type for variable declaration!", this->input[this->line - 1], this->line);
-        }
-
-        return new Statements::GS_VariableStatement(variableName, variableValue);
     }
 
 //--------------------------------------------------------------------------------
@@ -95,7 +60,7 @@ namespace GSLanguageCompiler {
         GSExpressionPointer expression = multiplicative();
 
         while (true) {
-            if (this->checkCurrentTokenType(TokenType::SYMBOL_PLUS)) {
+            if (this->checkTokenType(TokenType::SYMBOL_PLUS)) {
                 ++this->tokenIterator;
 
                 expression = GSExpressionPointer(
@@ -107,7 +72,7 @@ namespace GSLanguageCompiler {
                 );
 
                 continue;
-            } else if (this->checkCurrentTokenType(TokenType::SYMBOL_MINUS)) {
+            } else if (this->checkTokenType(TokenType::SYMBOL_MINUS)) {
                 ++this->tokenIterator;
 
                 expression = GSExpressionPointer(
@@ -131,7 +96,7 @@ namespace GSLanguageCompiler {
         GSExpressionPointer expression = unary();
 
         while (true) {
-            if (this->checkCurrentTokenType(TokenType::SYMBOL_STAR)) {
+            if (this->checkTokenType(TokenType::SYMBOL_STAR)) {
                 ++this->tokenIterator;
 
                 expression = GSExpressionPointer(
@@ -142,7 +107,7 @@ namespace GSLanguageCompiler {
                         ));
 
                 continue;
-            } else if (this->checkCurrentTokenType(TokenType::SYMBOL_SLASH)) {
+            } else if (this->checkTokenType(TokenType::SYMBOL_SLASH)) {
                 ++this->tokenIterator;
 
                 expression = GSExpressionPointer(
@@ -162,14 +127,14 @@ namespace GSLanguageCompiler {
     }
 
     GSExpressionPointer GS_Parser::unary() {
-        if (this->checkCurrentTokenType(TokenType::SYMBOL_MINUS)) {
+        if (this->checkTokenType(TokenType::SYMBOL_MINUS)) {
             ++this->tokenIterator;
 
             return GSExpressionPointer(new Expressions::GS_UnaryExpression(
                     Expressions::UnaryOperation::MINUS,
                     this->primary())
             );
-        } else if (this->checkCurrentTokenType(TokenType::SYMBOL_PLUS)) {
+        } else if (this->checkTokenType(TokenType::SYMBOL_PLUS)) {
             ++this->tokenIterator;
 
             return this->primary();
@@ -181,35 +146,35 @@ namespace GSLanguageCompiler {
     GSExpressionPointer GS_Parser::primary() {
         GSExpressionPointer expression = nullptr;
 
-        if (this->checkCurrentTokenType(TokenType::NEW_LINE)) {
+        if (this->checkTokenType(TokenType::NEW_LINE)) {
             ++this->line;
 
             return nullptr;
-        } else if (this->checkCurrentTokenType(TokenType::END_OF_FILE)) {
+        } else if (this->checkTokenType(TokenType::END_OF_FILE)) {
             this->isEndOfFile = true;
 
             return nullptr;
-        } else if (this->checkCurrentTokenType(TokenType::LITERAL_NUMBER)) {
+        } else if (this->checkTokenType(TokenType::LITERAL_NUMBER)) {
             expression = GSExpressionPointer(new Expressions::GS_NumberExpression(
                     std::stoi(this->tokenIterator[0].getValue())));
 
             ++this->tokenIterator;
         }
-        else if (this->checkCurrentTokenType(TokenType::LITERAL_STRING)) {
+        else if (this->checkTokenType(TokenType::LITERAL_STRING)) {
             expression = GSExpressionPointer(new Expressions::GS_StringExpression(this->tokenIterator[0].getValue()));
 
             ++this->tokenIterator;
-        } else if (this->checkCurrentTokenType(TokenType::SYMBOL_LEFT_PARENTHESES)) {
+        } else if (this->checkTokenType(TokenType::SYMBOL_LEFT_PARENTHESES)) {
             ++this->tokenIterator;
 
             expression = this->expression();
 
-            if (!this->checkCurrentTokenType(TokenType::SYMBOL_RIGHT_PARENTHESES)) {
+            if (!this->checkTokenType(TokenType::SYMBOL_RIGHT_PARENTHESES)) {
                 throw Exceptions::GS_ParserException("Lost right parentheses!", this->input[this->line - 1], this->line);
             }
 
             ++this->tokenIterator;
-        } else if (this->checkCurrentTokenType(TokenType::SYMBOL_RIGHT_PARENTHESES)) {
+        } else if (this->checkTokenType(TokenType::SYMBOL_RIGHT_PARENTHESES)) {
             throw Exceptions::GS_ParserException("Lost left parentheses!", this->input[this->line - 1], this->line);
         }
 
@@ -222,7 +187,7 @@ namespace GSLanguageCompiler {
 
 //---------------------------------------------------------------------
 
-    inline bool GS_Parser::checkCurrentTokenType(TokenType typeForCheck, int numberOfToken) {
+    inline bool GS_Parser::checkTokenType(TokenType typeForCheck, int numberOfToken) {
         return this->tokenIterator[numberOfToken].getType() == typeForCheck;
     }
 

@@ -11,15 +11,15 @@
 namespace GSLanguageCompiler {
 
     /**
-     * Class for parsing command line arguments and generate config of compiling
+     * Class for parsing command _line arguments and generate config of compiling
      */
     class GS_Arguments {
     public:
 
         /**
          * Constructor for GS_Arguments
-         * @param argc Number of command line arguments
-         * @param argv Array of command line arguments
+         * @param argc Number of command _line arguments
+         * @param argv Array of command _line arguments
          */
         GS_Arguments(int argc, char *argv[]) {
             this->_argc = argc;
@@ -67,7 +67,7 @@ namespace GSLanguageCompiler {
     private:
 
         /**
-         * Class for highlighting command line arguments
+         * Class for highlighting command _line arguments
          */
         class _Arguments {
         public:
@@ -91,12 +91,12 @@ namespace GSLanguageCompiler {
     private:
 
         /**
-         * Number of command line arguments
+         * Number of command _line arguments
          */
         int _argc;
 
         /**
-         * Array of command line arguments
+         * Array of command _line arguments
          */
         char **_argv;
     };

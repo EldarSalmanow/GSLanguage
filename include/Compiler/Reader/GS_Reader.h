@@ -28,7 +28,7 @@ namespace GSLanguageCompiler {
         }
 
         /**
-         * The file read function takes the file name from the GS_Reader class object and line by line
+         * The file read function takes the file name from the GS_Reader class object and _line by _line
          * reads a file through a file I/O stream.
          * @return Lines code from file
          */

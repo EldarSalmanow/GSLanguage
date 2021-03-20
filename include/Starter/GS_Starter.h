@@ -13,6 +13,8 @@ namespace Starter {
 
     using namespace GSLanguageCompiler;
 
+    using namespace Lexer;
+
     /**
      * Class for starting GSLanguageCompiler
      */
@@ -33,7 +35,7 @@ namespace Starter {
         * Start compiling function
         * @param arguments Command line arguments before argument analyzing
         */
-        static void startCompiling(GSArgumentsPointer &arguments);
+        static void startCompiling();
 
         /**
         * Function for parsing command line arguments and generating config for compiling
@@ -41,7 +43,78 @@ namespace Starter {
         * @param argv Array of arguments
         * @return Configs for compiling
         */
-        static GSArgumentsPointer parseArguments(int argc, char **argv);
+        static void parseArguments(int argc, char **argv);
+
+        /**
+         * Start reading source from file
+         */
+        static void startReader();
+
+        /**
+         * Start lexer analyzing source
+         */
+        static void startLexer();
+
+        /**
+         * Start parser analyzing tokens
+         */
+        static void startParser();
+
+        /**
+         * Start debug functions
+         */
+        static void startDebugMode();
+
+    private:
+
+        /**
+         * Class for functions for timers and timers
+         */
+        class _Timers {
+        private:
+
+            /**
+             * Initialized functions for timers
+             */
+            inline static std::function<void()> startFunction = startCompiling;
+            inline static std::function<GSText(GS_Reader&)> readerFunction = &GS_Reader::readFile;
+            inline static std::function<GSTokenArray(GS_Lexer&)> lexerFunction = &GS_Lexer::tokenize;
+            inline static std::function<GSStatementPointerArray(GS_Parser&)> parserFunction = &GS_Parser::parse;
+
+        public:
+
+            /**
+             * Timers for profiling compiler
+             */
+            inline static Debug::GS_Timer<void()> totalTimer = startFunction;
+            inline static Debug::GS_Timer<GSText(GS_Reader&)> readerTimer = readerFunction;
+            inline static Debug::GS_Timer<GSTokenArray(GS_Lexer&)> lexerTimer = lexerFunction;
+            inline static Debug::GS_Timer<GSStatementPointerArray(GS_Parser&)> parserTimer = parserFunction;
+        };
+
+        class _CompilerData {
+        public:
+
+            /**
+             * Command line arguments
+             */
+            inline static GSArgumentsPointer arguments;
+
+            /**
+             * Source from file
+             */
+            inline static GSText inputSource;
+
+            /**
+             * Tokens before lexer analyzing
+             */
+             inline static GSTokenArray tokens;
+
+             /**
+              * Statements before parser analyzing
+              */
+             inline static GSStatementPointerArray statements;
+        };
     };
 
 }

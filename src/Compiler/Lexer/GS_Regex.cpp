@@ -1,9 +1,9 @@
 #include "../../../include/Compiler/Lexer/GS_Regex.h"
 
-namespace GSLanguageCompiler {
+namespace GSLanguageCompiler::Lexer {
 
     std::regex _numberExpression               = std::regex(R"(\d)");
-    std::regex _wordEnglishLowerCaseExpression = std::regex(R"([a-z])");
-    std::regex _wordEnglishUpperCaseExpression = std::regex(R"([A-Z])");
+
+    std::regex _wordEnglishExpression          = std::regex(R"([a-zA-Z])");
 
 }
