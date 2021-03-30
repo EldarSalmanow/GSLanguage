@@ -6,7 +6,7 @@
 namespace GSLanguageCompiler {
 
     /**
-     * Base class for statements
+     * Base class for _statements
      */
     class GS_Expression {
     public:

@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "GS_Keywords.h"
+#include "GS_Position.h"
 
 namespace GSLanguageCompiler::Lexer {
 
@@ -23,14 +24,29 @@ namespace GSLanguageCompiler::Lexer {
          * Constructor for GS_Token
          * @param type Type of token
          */
-        GS_Token(TokenType type);
+//        GS_Token(TokenType type);
+
+        /**
+         *
+         * @param type
+         * @param position
+         */
+        GS_Token(TokenType type, GS_Position position);
 
         /**
          * Constructor for GS_Token
          * @param type Type of token
          * @param value String or number value
          */
-        GS_Token(TokenType type, std::string &word);
+//        GS_Token(TokenType type, std::string &word);
+
+        /**
+         *
+         * @param type
+         * @param word
+         * @param position
+         */
+        GS_Token(TokenType type, std::string &word, GS_Position position);
 
     public:
 
@@ -46,6 +62,12 @@ namespace GSLanguageCompiler::Lexer {
          */
         std::string getValue();
 
+        /**
+         *
+         * @return
+         */
+        GS_Position getPosition();
+
     private:
 
         /**
@@ -57,6 +79,11 @@ namespace GSLanguageCompiler::Lexer {
          * String value or name
          */
         std::string _value;
+
+        /**
+         *
+         */
+        GS_Position _position;
     };
 
     typedef std::shared_ptr<GS_Token> GSTokenPointer;

@@ -12,19 +12,19 @@ namespace Debug {
     using namespace Platform;
 
     /**
-     * Class for debugging and testing _input and output compilation parameters GSLanguageCompiler
+     * Class for debugging and testing input and output compilation parameters GSLanguageCompiler
      */
     class GS_Debug {
     public:
 
         /**
-         * Printing _input code from file
+         * Printing input code from file
          * @param input Container with std::string
          */
         static void printInput(GSLanguageCompiler::GSText &input);
 
         /**
-         * Printing _tokens before lexer analyzing
+         * Printing tokens before lexer analyzing
          * @param tokens Container with GS_Token
          */
         static void printLexerOutput(GSLanguageCompiler::GSTokenArray &tokens);

@@ -61,7 +61,7 @@ namespace GSLanguageCompiler::Lexer {
 
         /**
          * Search for a string in reserved words and symbols
-         * @param word _input string to analyze
+         * @param word Input string to analyze
          * @return Is reserved word or symbol
          */
         inline bool _isReservedWord(std::string &word);
@@ -73,6 +73,11 @@ namespace GSLanguageCompiler::Lexer {
          * @return Is supported character
          */
         bool _isValidRegexForSymbol(RegexType type);
+
+        /**
+         * Setting start position of token value
+         */
+        inline void _setStartPositionOfToken();
 
         /**
          * Adding token
@@ -128,9 +133,14 @@ namespace GSLanguageCompiler::Lexer {
         std::vector<GS_Token> _tokens;
 
         /**
-         * Position in lexer analyzing
+         * Current position in lexer analyzing
          */
         size_t _line, _column;
+
+        /**
+         * Start token value position
+         */
+        size_t _startLine, _startColumn;
 
         /**
          * An iterator to read code from a file

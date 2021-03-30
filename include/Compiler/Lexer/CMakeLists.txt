@@ -4,8 +4,9 @@ set(GS_LEXER_SOURCE
         ../../../src/Compiler/Lexer/GS_Lexer.cpp
         ../../../src/Compiler/Lexer/GS_Keywords.cpp
         ../../../src/Compiler/Lexer/GS_Regex.cpp
-#        ../../../src/Compiler/Lexer/GS_Position.cpp
-        ../../../src/Compiler/Lexer/GS_Token.cpp)
+        ../../../src/Compiler/Lexer/GS_Token.cpp
+        ../../../src/Compiler/Lexer/GS_Position.cpp
+        ../../../src/Compiler/Lexer/GS_Coordinate.cpp)
 
 add_library(
 #       Library name

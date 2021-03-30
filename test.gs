@@ -1,1 +1,1 @@
-var test = "werfd
+var test = 12

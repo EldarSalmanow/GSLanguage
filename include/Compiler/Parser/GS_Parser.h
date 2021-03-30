@@ -11,6 +11,7 @@
 #include "GS_IncludeValues.h"
 
 #include "../../../include/Exceptions/GS_ParserException.h"
+#include "../../../include/Exceptions/GS_NewLineException.h"
 
 namespace GSLanguageCompiler {
 
@@ -27,8 +28,8 @@ namespace GSLanguageCompiler {
          * @param tokens Container with tokens, before lexing analyzing
          */
         GS_Parser(GSTokenArray &tokens, GSText &input) {
-            this->tokens = tokens;
-            this->input = input;
+            this->_tokens = tokens;
+            this->_input = input;
         }
 
     public:
@@ -44,25 +45,25 @@ namespace GSLanguageCompiler {
          *
          * @return
          */
-        GSStatementPointer statement();
+        GSStatementPointer _statement();
 
         /**
          *
          * @return
          */
-        Statements::GS_VariableStatement *parsingVariable();
+        Statements::GS_VariableStatement *_parsingVariable();
 
         /**
          *
          * @return
          */
-        Statements::GS_VariableStatement *parsingVariableWithoutType();
+        Statements::GS_VariableStatement *_parsingVariableWithoutType();
 
         /**
          *
          * @return
          */
-        Statements::GS_VariableStatement *parsingVariableWithType();
+        Statements::GS_VariableStatement *_parsingVariableWithType();
 
     private:
 
@@ -70,31 +71,31 @@ namespace GSLanguageCompiler {
          *
          * @return
          */
-        GSExpressionPointer expression();
+        GSExpressionPointer _expression();
 
         /**
          *
          * @return
          */
-        GSExpressionPointer additive();
+        GSExpressionPointer _additive();
 
         /**
          *
          * @return
          */
-        GSExpressionPointer multiplicative();
+        GSExpressionPointer _multiplicative();
 
         /**
          *
          * @return
          */
-        GSExpressionPointer unary();
+        GSExpressionPointer _unary();
 
         /**
          *
          * @return
          */
-        GSExpressionPointer primary();
+        GSExpressionPointer _primary();
 
         /**
          *
@@ -102,36 +103,49 @@ namespace GSLanguageCompiler {
          * @param numberOfToken
          * @return
          */
-        inline bool checkTokenType(TokenType typeForCheck, int numberOfToken = 0);
+        bool _checkTokenType(TokenType typeForCheck, int numberOfToken = 0);
+
+        /**
+         *
+         * @param errorMessage
+         */
+        void throwException(std::string errorMessage);
+
+        /**
+         *
+         * @param statement
+         */
+        inline void _addStatement(GSStatementPointer &statement);
+
+        /**
+         *
+         */
+        void _nextToken();
+
+        /**
+         *
+         * @return
+         */
+        GS_Token _currentToken();
 
     private:
 
-        GSText input;
+        GSText _input;
 
         /**
          * Input tokens, before lexing analyzing
          */
-        GSTokenArray tokens;
+        GSTokenArray _tokens;
 
         /**
          *
          */
-        GSStatementPointerArray statements;
-
-        /**
-         *
-         */
-        int line;
-
-        /**
-         *
-         */
-        bool isEndOfFile = false;
+        GSStatementPointerArray _statements;
 
         /**
          * Iterator input container with tokens
          */
-        GSTokenArray::iterator tokenIterator;
+        GSTokenArray::iterator _tokenIterator;
     };
 
     typedef std::shared_ptr<GS_Parser> GSParserPointer;

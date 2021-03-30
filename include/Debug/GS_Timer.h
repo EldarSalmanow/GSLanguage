@@ -32,7 +32,7 @@ namespace Debug {
     public:
 
         /**
-         * Function for starting _input function and calculating runtime
+         * Function for starting input function and calculating runtime
          * @param message Message for printing information about function
          * @param arguments Input argument types
          * @return Measured function result
@@ -71,7 +71,7 @@ namespace Debug {
     public:
 
         /**
-         * Function for starting _input function and calculating runtime
+         * Function for starting input function and calculating runtime
          * @param message Message for printing information about function
          * @param arguments Input argument types
          */

@@ -6,7 +6,7 @@ set(GS_PARSER_SOURCE
         ../../../src/Compiler/Parser/Values/GS_LiteralTypes.cpp
         ../../../src/Compiler/Parser/Values/GS_StringValue.cpp
         ../../../src/Compiler/Parser/Values/GS_IntegerValue.cpp
-        ../../../src/Compiler/Parser/GS_TableOfSymbols.cpp)
+        ../../../src/Compiler/Parser/GS_TableOfSymbols.cpp ../../../src/Compiler/Parser/GS_ExpressionParser.cpp)
 
 add_library(
 #       Library name

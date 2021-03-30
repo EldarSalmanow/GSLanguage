@@ -23,13 +23,17 @@ namespace GSLanguageCompiler::Lexer {
         }
 
         // putting a file end token
-        _addToken(TokenType::END_OF_FILE);
+        _tokens.emplace_back(GS_Token(TokenType::END_OF_FILE, GS_Position(
+                "",
+                GS_Coordinate(_startLine, _startColumn),
+                GS_Coordinate(_line, _column)
+        )));
 
         return _tokens;
     }
 
     void GS_Lexer::_analyzeLine() {
-        while(!_isEndOfLine()) {
+        while (!_isEndOfLine()) {
             _symbol = _currentSymbol();
 
             // is whitespace
@@ -39,28 +43,28 @@ namespace GSLanguageCompiler::Lexer {
                 continue;
             }
 
-            // is number (0..9)
+                // is number (0..9)
             else if (_isValidRegexForSymbol(RegexType::NUMBER_SIMPLE)) {
                 _tokenizeNumber();
 
                 continue;
             }
 
-            // is english alphabet (a-zA-Z)
+                // is english alphabet (a-zA-Z)
             else if (_isValidRegexForSymbol(RegexType::ALPHABET_ENGLISH)) {
                 _tokenizeWord();
 
                 continue;
             }
 
-            // is string
+                // is string
             else if (_symbol == "\"") {
                 _tokenizeString();
 
                 continue;
             }
 
-            // is special symbol
+                // is special symbol
             else if (_isReservedWord(_symbol)) {
                 _addToken(_analyzeReservedWord(_symbol));
 
@@ -81,6 +85,8 @@ namespace GSLanguageCompiler::Lexer {
     void GS_Lexer::_tokenizeNumber() {
         std::string number;
 
+        _setStartPositionOfToken();
+
         while (_isValidRegexForSymbol(RegexType::NUMBER_SIMPLE)) {
             number += _symbol;
 
@@ -89,11 +95,15 @@ namespace GSLanguageCompiler::Lexer {
             _symbol = _currentSymbol();
         }
 
+        _setStartPositionOfToken();
+
         _addToken(TokenType::LITERAL_NUMBER, number);
     }
 
     void GS_Lexer::_tokenizeWord() {
         std::string word;
+
+        _setStartPositionOfToken();
 
         while (_isValidRegexForSymbol(RegexType::ALPHABET_ENGLISH)) {
             word += _symbol;
@@ -102,6 +112,8 @@ namespace GSLanguageCompiler::Lexer {
 
             _symbol = _currentSymbol();
         }
+
+        _setStartPositionOfToken();
 
         if (_isReservedWord(word)) {
             _addToken(_analyzeReservedWord(word));
@@ -120,11 +132,15 @@ namespace GSLanguageCompiler::Lexer {
 
         _symbol = _currentSymbol();
 
+        _setStartPositionOfToken();
+
         while (!_isEndOfLine()) {
             _symbol = _currentSymbol();
 
             if (_symbol == "\"") {
                 _addToken(TokenType::LITERAL_STRING, string);
+
+                _setStartPositionOfToken();
 
                 _nextSymbol();
 
@@ -170,7 +186,7 @@ namespace GSLanguageCompiler::Lexer {
                 return false;
         }
 
-        for (auto & regex : regexps) {
+        for (auto &regex : regexps) {
             if (std::regex_match(_symbol, match, regex)) {
                 return true;
             }
@@ -179,12 +195,25 @@ namespace GSLanguageCompiler::Lexer {
         return false;
     }
 
+    inline void GS_Lexer::_setStartPositionOfToken() {
+        _startLine = _line;
+        _startColumn = _column;
+    }
+
     inline void GS_Lexer::_addToken(TokenType type) {
-        _tokens.emplace_back(GS_Token(type));
+        _tokens.emplace_back(GS_Token(type, GS_Position(
+                _codeIterator[0],
+                GS_Coordinate(_startLine, _startColumn),
+                GS_Coordinate(_line, _column)
+        )));
     }
 
     inline void GS_Lexer::_addToken(TokenType type, std::string value) {
-        _tokens.emplace_back(GS_Token(type, value));
+        _tokens.emplace_back(GS_Token(type, value, GS_Position(
+                _codeIterator[0],
+                GS_Coordinate(_startLine, _startColumn),
+                GS_Coordinate(_line, _column)
+        )));
     }
 
     inline void GS_Lexer::_nextSymbol() {

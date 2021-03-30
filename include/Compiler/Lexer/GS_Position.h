@@ -1,7 +1,9 @@
 #ifndef GSLANGUAGE_GS_POSITION_H
 #define GSLANGUAGE_GS_POSITION_H
 
-#include <ctype.h>
+#include <string>
+
+#include "GS_Coordinate.h"
 
 namespace GSLanguageCompiler::Lexer {
 
@@ -20,26 +22,40 @@ namespace GSLanguageCompiler::Lexer {
          * Constructor for GS_Position
          * @param line
          */
-        GS_Position(size_t line, size_t column);
+        GS_Position(std::string code, GS_Coordinate start, GS_Coordinate end);
+
+
+    public:
 
         /**
-         * Getter for _line position in source
+         *
          * @return
          */
-        size_t getLine();
+        GS_Coordinate getStartPosition();
 
         /**
-         * Getter for _column position in source
+         *
          * @return
          */
-        size_t getColumn();
+        GS_Coordinate getEndPosition();
+
+        /**
+         *
+         * @return
+         */
+        std::string getCode();
 
     private:
 
         /**
          * Position in source file
          */
-        size_t _line, _column;
+        GS_Coordinate _startPosition, _endPosition;
+
+        /**
+         *
+         */
+        std::string _code;
     };
 
 }
