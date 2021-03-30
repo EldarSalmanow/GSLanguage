@@ -54,7 +54,7 @@ namespace GSLanguageCompiler {
         _statements.emplace_back(statement);
     }
 
-    inline GS_Token GS_Parser::_currentToken() {
+    GS_Token GS_Parser::_currentToken() {
         return _tokenIterator[0];
     }
 
