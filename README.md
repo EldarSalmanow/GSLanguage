@@ -15,7 +15,7 @@ RU: GSLanguage - новый компилируемый язык программ
 1) cd {pathToDir}/GSLanguage
 2) mkdir build
 3) cd build
-4) cmake ../ or cmake -G "MinGW Makefiles" ../
+4) cmake -G "Visual Studio 16 2019" ../ or cmake -G "MinGW Makefiles" ../
 5) cmake --build . --target GSLanguage
 ```
 EN:
