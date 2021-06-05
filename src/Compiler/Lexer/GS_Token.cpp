@@ -1,20 +1,11 @@
-#include "../../../include/Compiler/Lexer/GS_Token.h"
+#include <GS_Token.h>
 
 namespace GSLanguageCompiler::Lexer {
-
-//    GS_Token::GS_Token(TokenType type) {
-//        this->_type = type;
-//    }
 
     GS_Token::GS_Token(TokenType type, GS_Position position) {
         this->_type = type;
         this->_position = position;
     }
-
-//    GS_Token::GS_Token(TokenType type, std::string &word) {
-//        this->_type = type;
-//        this->_value = word;
-//    }
 
     GS_Token::GS_Token(TokenType type, std::string &word, GS_Position position) {
         this->_type = type;

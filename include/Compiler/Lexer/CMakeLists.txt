@@ -1,4 +1,4 @@
-set(LIBRARY_NAME GSLexerLibrary)
+project(GSLexerLibrary)
 
 set(GS_LEXER_SOURCE
         ../../../src/Compiler/Lexer/GS_Lexer.cpp
@@ -10,9 +10,11 @@ set(GS_LEXER_SOURCE
 
 add_library(
 #       Library name
-        ${LIBRARY_NAME}
+        ${PROJECT_NAME}
 #       Library type
         STATIC
 #       Lexer source
         ${GS_LEXER_SOURCE}
 )
+
+target_include_directories(${PROJECT_NAME} PRIVATE ../Lexer)

@@ -1,35 +1,35 @@
-#include "../../../include/Compiler/Reader/GS_Reader.h"
+#include <Compiler/Reader/GS_Reader.h>
 
 namespace GSLanguageCompiler {
 
+    GS_Reader::GS_Reader(const GSString &filename) {
+        this->_filename = filename;
+    }
+
     GSText GS_Reader::readFile() {
-        char symbol;
-        std::string line;
+        GSChar symbol;
+        GSString line;
         std::ifstream stream;
 
 #if defined(OS_WINDOWS)
         try {
-            stream.open(this->filename, std::ios::binary);
+            stream.open(_filename, std::ios::binary);
 
             if (!stream.is_open()) {
-                throw Exceptions::GS_ReaderException("Not found file \'" + this->filename + "\'!");
+                throw Exceptions::GS_ReaderException("Not found file \'" + _filename + "\'!");
             }
 
             while (true) {
                 stream.get(symbol);
 
                 if (stream.eof()) {
-                    this->input.emplace_back(line);
+                    _input.emplace_back(line);
 
                     break;
                 }
 
-//                if (symbol == '\r' && line.empty()) {
-//                    stream.get();
-//                    continue;
-//                }
                 if (symbol == '\r') {
-                    this->input.emplace_back(line);
+                    _input.emplace_back(line);
 
                     line.clear();
 
@@ -49,7 +49,7 @@ namespace GSLanguageCompiler {
         }
 #endif
 
-    	return this->input;
+    	return _input;
     }
 
 }

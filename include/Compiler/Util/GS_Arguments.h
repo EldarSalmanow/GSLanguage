@@ -1,109 +1,170 @@
 #ifndef GSLANGUAGE_GS_ARGUMENTS_H
 #define GSLANGUAGE_GS_ARGUMENTS_H
 
-
-#include <string>
 #include <memory>
 #include <vector>
 
-#include "../../Exceptions/GS_ArgumentException.h"
+#include <Compiler/Util/GS_PlatformTypes.h>
+
+#include <Exceptions/GS_ArgumentException.h>
 
 namespace GSLanguageCompiler {
 
     /**
-     * Class for parsing command _line arguments and generate config of compiling
+     *
+     */
+    class GS_ArgumentsOptions {
+    public:
+
+        /**
+         *
+         */
+        GS_ArgumentsOptions() = default;
+
+        /**
+         *
+         * @param inputFilename
+         * @param outputFilename
+         * @param isEnableTesting
+         * @param isEnableProfiling
+         */
+        GS_ArgumentsOptions(const GSString &inputFilename,
+                            const GSString &outputFilename = "",
+                            const GSBool isEnableTesting = false,
+                            const GSBool isEnableProfiling = false,
+                            const GSBool isInvalidArguments = false);
+
+    public:
+
+        /**
+         *
+         * @return
+         */
+        GSString getInputFilename();
+
+        /**
+         *
+         * @return
+         */
+        GSString getOutputAsmFilename();
+
+        /**
+         *
+         * @return
+         */
+        GSString getOutputObjFilename();
+
+        /**
+         *
+         * @return
+         */
+        GSString getOutputExeFilename();
+
+        /**
+         *
+         * @return
+         */
+        GSBool getIsEnableTesting();
+
+        /**
+         *
+         * @return
+         */
+        GSBool getIsEnableProfiling();
+
+        /**
+         *
+         * @return
+         */
+        GSBool getIsInvalidArguments();
+
+    public:
+
+        /**
+         *
+         * @param isInvalidArguments
+         * @return
+         */
+        GSVoid setIsInvalidArguments(GSBool isInvalidArguments);
+
+    private:
+
+        /**
+         *
+         */
+        GSString _inputFilename;
+
+        /**
+         *
+         */
+        GSString _outputAsmFilename;
+
+        /**
+         *
+         */
+        GSString _outputObjFilename;
+
+        /**
+         *
+         */
+        GSString _outputExeFilename;
+
+        /**
+         *
+         */
+        GSBool _isEnableTesting;
+
+        /**
+         *
+         */
+        GSBool _isEnableProfiling;
+
+        /**
+         *
+         */
+        GSBool _isInvalidArguments;
+    };
+
+    /**
+     * Class for parsing command line arguments and generate config of compiling
      */
     class GS_Arguments {
     public:
 
         /**
          * Constructor for GS_Arguments
-         * @param argc Number of command _line arguments
-         * @param argv Array of command _line arguments
+         * @param argc Number of command line arguments
+         * @param argv Array of command line arguments
          */
-        GS_Arguments(int argc, char *argv[]) {
-            this->_argc = argc;
-            this->_argv = argv;
-        }
+        GS_Arguments(GSInt argc, GSChar *argv[]);
 
     public:
 
         /**
          * Function for parsing arguments and generate config of project
          */
-        void parseArguments();
-
-    public:
+         GS_ArgumentsOptions parseArguments();
 
         /**
-         * Getter for _arguments.filename
-         * @return Input _filename
-         */
-        std::string &getFilename() {
-            return _Arguments::filename;
-        }
-
-        /**
-         * Getter for _arguments.isTestingEnable
-         * @return Is testing mode
-         */
-        bool getIsTestingEnable() {
-            return _Arguments::isTestingEnable;
-        }
-
-        /**
-         * Getter for _arguments.isProfilingEnable
-         * @return Is timers enable
-         */
-        bool getIsProfilingEnable() {
-            return _Arguments::isProfilingEnable;
-        }
-
-        /**
-         * Function for print usage
-         */
-        void printUsage();
+        * Function for print usage
+        */
+        GSVoid printUsage();
 
     private:
 
         /**
-         * Class for highlighting command _line arguments
+         * Number of command line arguments
          */
-        class _Arguments {
-        public:
-
-            /**
-            * Input filename
-            */
-            inline static std::string filename;
-
-            /**
-            * Is testing compiling mode (for developers GSLanguageCompiler)
-            */
-            inline static bool isTestingEnable = false;
-
-            /**
-             * Is timers enable (compiling profiling)
-             */
-            inline static bool isProfilingEnable = false;
-        };
-
-    private:
+        GSInt _argc;
 
         /**
-         * Number of command _line arguments
+         * Array of command line arguments
          */
-        int _argc;
-
-        /**
-         * Array of command _line arguments
-         */
-        char **_argv;
+        GSChar **_argv;
     };
 
     typedef std::shared_ptr<GS_Arguments> GSArgumentsPointer;
 
 }
-
 
 #endif //GSLANGUAGE_GS_ARGUMENTS_H

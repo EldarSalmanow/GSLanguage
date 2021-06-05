@@ -8,12 +8,84 @@
 #include "../../include/Compiler/Reader/GS_Reader.h"
 #include "../../include/Compiler/Lexer/GS_Lexer.h"
 #include "../../include/Compiler/Parser/GS_Parser.h"
+#include "../../include/Compiler/CodeGenerator/GS_CodeGenerator.h"
 
 namespace Starter {
 
     using namespace GSLanguageCompiler;
 
     using namespace Lexer;
+    using namespace Parser;
+    using namespace CodeGenerator;
+
+    using namespace Debug;
+
+    /**
+     *
+     */
+    class GS_DebugFunctions {
+    public:
+
+        /**
+         *
+         * @param string
+         * @return
+         */
+        static GSVoid printReaderDebugInfo(GSString &string);
+
+        /**
+         *
+         * @param token
+         * @return
+         */
+        static GSVoid printLexerDebugInfo(GS_Token &token);
+
+        /**
+         *
+         * @param statement
+         * @return
+         */
+        static GSVoid printParserDebugInfo(GSStatementPointer &statement);
+    };
+
+    /**
+     *
+     */
+    class GS_CompilerData {
+    public:
+
+        /**
+         *
+         */
+        GS_CompilerData() = default;
+
+    public:
+
+        /**
+         * Command line arguments
+         */
+        GS_ArgumentsOptions argumentsOptions;
+
+        /**
+         * Source from file
+         */
+        GSText inputSource;
+
+        /**
+         * Tokens before lexer analyzing
+         */
+        GSTokenArray lexerTokens;
+
+        /**
+         * Statements before parser analyzing
+         */
+        GSStatementPointerArray parserStatements;
+
+        /**
+         * Code before code generator
+         */
+        GSGeneratedCode codeGeneratorCode;
+    };
 
     /**
      * Class for starting GSLanguageCompiler
@@ -27,7 +99,7 @@ namespace Starter {
          * @param argv Array of arguments
          * @return Status number for operation system
          */
-        static int start(int argc, char **argv);
+        static GSInt start(GSInt argc, GSChar **argv);
 
     private:
 
@@ -35,7 +107,7 @@ namespace Starter {
         * Start compiling function
         * @param arguments Command line arguments before argument analyzing
         */
-        static void startCompiling();
+        static GSVoid startCompiling();
 
         /**
         * Function for parsing command line arguments and generating config for compiling
@@ -43,78 +115,44 @@ namespace Starter {
         * @param argv Array of arguments
         * @return Configs for compiling
         */
-        static void parseArguments(int argc, char **argv);
+        static GSVoid parseArguments(GSInt argc, GSChar **argv);
 
         /**
          * Start reading source from file
          */
-        static void startReader();
+        static GSVoid startReader();
 
         /**
          * Start lexer analyzing source
          */
-        static void startLexer();
+        static GSVoid startLexer();
 
         /**
          * Start parser analyzing tokens
          */
-        static void startParser();
+        static GSVoid startParser();
+
+        /**
+         * Start code generator for generating output code
+         */
+        static GSVoid generateCode();
 
         /**
          * Start debug functions
          */
-        static void startDebugMode();
+        static GSVoid startDebugMode();
 
     private:
 
         /**
-         * Class for functions for timers and timers
+         *
          */
-        class _Timers {
-        private:
+        inline static GS_CompilerData _compilerData;
 
-            /**
-             * Initialized functions for timers
-             */
-            inline static std::function<void()> startFunction = startCompiling;
-            inline static std::function<GSText(GS_Reader&)> readerFunction = &GS_Reader::readFile;
-            inline static std::function<GSTokenArray(GS_Lexer&)> lexerFunction = &GS_Lexer::tokenize;
-            inline static std::function<GSStatementPointerArray(GS_Parser&)> parserFunction = &GS_Parser::parse;
-
-        public:
-
-            /**
-             * Timers for profiling compiler
-             */
-            inline static Debug::GS_Timer<void()> totalTimer = startFunction;
-            inline static Debug::GS_Timer<GSText(GS_Reader&)> readerTimer = readerFunction;
-            inline static Debug::GS_Timer<GSTokenArray(GS_Lexer&)> lexerTimer = lexerFunction;
-            inline static Debug::GS_Timer<GSStatementPointerArray(GS_Parser&)> parserTimer = parserFunction;
-        };
-
-        class _CompilerData {
-        public:
-
-            /**
-             * Command line arguments
-             */
-            inline static GSArgumentsPointer arguments;
-
-            /**
-             * Source from file
-             */
-            inline static GSText inputSource;
-
-            /**
-             * Tokens before lexer analyzing
-             */
-             inline static GSTokenArray tokens;
-
-             /**
-              * Statements before parser analyzing
-              */
-             inline static GSStatementPointerArray statements;
-        };
+        /**
+         *
+         */
+        inline static GS_Timer _timer;
     };
 
 }

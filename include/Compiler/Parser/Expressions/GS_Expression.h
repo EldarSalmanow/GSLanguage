@@ -1,31 +1,47 @@
 #ifndef GSLANGUAGE_GS_EXPRESSION_H
 #define GSLANGUAGE_GS_EXPRESSION_H
 
-#include "../Values/GS_Value.h"
+#include <memory>
 
-namespace GSLanguageCompiler {
+#include <Exceptions/GS_NotSupportedException.h>
+
+#include <Compiler/Parser/Expressions/GS_ExpressionTypes.h>
+
+namespace GSLanguageCompiler::Parser {
 
     /**
-     * Base class for _statements
+     * Base class for expressions
      */
     class GS_Expression {
     public:
 
         /**
          *
-         * @return
          */
-        virtual GSValuePointer result() = 0;
+        virtual ~GS_Expression() = default;
+
+    public:
 
         /**
          *
          * @return
          */
+        virtual ExpressionType getExpressionType() = 0;
+
+        /**
+         * Generating code
+         * @return String with code
+         */
+        virtual std::string generateCode() = 0;
+
+        /**
+         * Converting expression to string
+         * @return Converted string
+         */
         virtual std::string toStringForDebug() = 0;
     };
 
-    typedef std::shared_ptr<GS_Expression> GSExpressionPointer;
-    typedef std::vector<GSExpressionPointer> GSExpressionPointerArray;
+    typedef std::shared_ptr<GS_Expression>   GSExpressionPointer;
 
 }
 

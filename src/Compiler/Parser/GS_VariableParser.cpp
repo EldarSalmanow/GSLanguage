@@ -1,72 +1,64 @@
-#include "../../../include/Compiler/Parser/GS_Parser.h"
+#include <GS_Parser.h>
 
-#include "../../../include/Compiler/Parser/GS_TableOfSymbols.h"
+namespace GSLanguageCompiler::Parser {
 
-namespace GSLanguageCompiler {
-
-    Statements::GS_VariableStatement *GS_Parser::_parsingVariable() {
+    GSStatementPointer GS_Parser::_parsingVariableDeclaration() {
         // skip 'var'
         _nextToken();
 
-        // var <name> = <value>
-        if (_checkTokenType(TokenType::SYMBOL_EQ, 1)) {
-            return _parsingVariableWithoutType();
-        }
-        // var <name>: <type> = <value>
-        else if (_checkTokenType(TokenType::SYMBOL_COLON, 1)
-                 && _checkTokenType(TokenType::SYMBOL_EQ, 3)) {
-            return _parsingVariableWithType();
-        }
-        // if none of the available types of declaration
-        else {
-            throwException("Invalid variable declaration! \nValid variable declaration: var <name> = <value>");
-            // TODO add GS_Documentation for valid code
+        if (_checkTokenType(TokenType::WORD)) {
+            GSStatementPointer statement;
+            if (_checkTokenType(TokenType::SYMBOL_COLON, 1)) {
+                statement = GSStatementPointer(_parsingVariableWithType());
+            } else {
+                statement = GSStatementPointer(_parsingVariableWithoutType());
+            }
+
+            return statement;
+        } else {
+            _throwException(
+                    "Invalid variable declaration! "
+                    "\nValid variable declaration: var <name> or var <name>: <type>");
         }
     }
 
-    Statements::GS_VariableStatement *GS_Parser::_parsingVariableWithoutType() {
-        std::string variableName = _currentToken().getValue();
+    GS_VariableDeclarationStatement *GS_Parser::_parsingVariableWithoutType() {
+        std::string variableName = _currentToken().getValue(); // TODO add checking for valid variable name
 
-        // skip variable name and '='
-        _tokenIterator += 2;
+        // skip variable name
+        _nextToken();
 
-        GSValuePointer variableValue = _expression()->result();
-
-        switch (variableValue->getLiteralType()) {
-            case Literal::LITERAL_INT:
-                variableValue = GSValuePointer(new Values::GS_IntegerValue(variableValue->getInt()));
-                break;
-            case Literal::LITERAL_STRING:
-                variableValue = GSValuePointer(new Values::GS_StringValue(variableValue->getString()));
-                break;
-            case Literal::LITERAL_NULL:
-                throwException("Unknown type for variable declaration!");
-        }
-
-        GS_TableOfSymbols::add(variableName, variableValue);
-
-        return new Statements::GS_VariableStatement(variableName, variableValue);
+        return new GS_VariableDeclarationStatement(variableName);
     }
 
-    Statements::GS_VariableStatement *GS_Parser::_parsingVariableWithType() {
-        std::string variableName = _currentToken().getValue();
+    GS_VariableDeclarationStatement *GS_Parser::_parsingVariableWithType() {
+        std::string variableName = _currentToken().getValue(); // TODO add checking for valid variable name
 
-        // skip variable name and :
-        _tokenIterator += 2;
+        // skip variable name
+        _nextToken();
 
-        Literal variableType = convertTokenTypeToLiteral(_currentToken().getType());
+        // skip ':'
+        _nextToken();
 
-        _tokenIterator += 2;
+        std::string variableType = convertTokenTypeToStringType(_currentToken().getType());
 
-        GSValuePointer variableValue = _expression()->result();
+        // skip variable type
+        _nextToken();
 
-        if (variableValue->getLiteralType() != variableType) {
-            variableValue = variableValue->castTo(variableType);
-        }
+        return new GS_VariableDeclarationStatement(variableName, variableType);
+    }
 
-        GS_TableOfSymbols::add(variableName, variableValue);
+    GSStatementPointer GS_Parser::_parsingAssignmentStatement() {
+        // skip '='
+        _nextToken();
 
-        return new Statements::GS_VariableStatement(variableName, variableValue);
+        GSStatementPointer statement = _statements.back();
+
+        _statements.pop_back();
+
+        return GSStatementPointer(
+                new GS_AssignmentStatement(
+                        *static_cast<GS_VariableDeclarationStatement*>(statement.get()), _expression()));
     }
 
 }

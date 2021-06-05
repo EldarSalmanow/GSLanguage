@@ -1,17 +1,17 @@
-#include "../../../include/Compiler/Lexer/GS_Coordinate.h"
+#include <GS_Coordinate.h>
 
 namespace GSLanguageCompiler::Lexer {
 
-    GS_Coordinate::GS_Coordinate(size_t line, size_t column) {
+    GS_Coordinate::GS_Coordinate(GSULongLong line, GSULongLong column) {
         this->_line = line;
         this->_column = column;
     }
 
-    size_t GS_Coordinate::getLine() {
+    GSULongLong GS_Coordinate::getLine() {
         return this->_line;
     }
 
-    size_t GS_Coordinate::getColumn() {
+    GSULongLong GS_Coordinate::getColumn() {
         return this->_column;
     }
 

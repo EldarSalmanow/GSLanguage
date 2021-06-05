@@ -1,6 +1,6 @@
-#include "../../../include/Compiler/Parser/GS_Parser.h"
+#include <GS_Parser.h>
 
-namespace GSLanguageCompiler {
+namespace GSLanguageCompiler::Parser {
 
     GSExpressionPointer GS_Parser::_expression() {
         return _additive();
@@ -13,8 +13,8 @@ namespace GSLanguageCompiler {
             if (_checkTokenType(TokenType::SYMBOL_PLUS)) {
                 _nextToken();
 
-                expression = GSExpressionPointer(new Expressions::GS_BinaryExpression(
-                        Expressions::BinaryOperation::PLUS,
+                expression = GSExpressionPointer(new GS_BinaryExpression(
+                        BinaryOperation::PLUS,
                         expression,
                         _multiplicative()));
 
@@ -22,8 +22,8 @@ namespace GSLanguageCompiler {
             } else if (_checkTokenType(TokenType::SYMBOL_MINUS)) {
                 _nextToken();
 
-                expression = GSExpressionPointer(new Expressions::GS_BinaryExpression(
-                        Expressions::BinaryOperation::MINUS,
+                expression = GSExpressionPointer(new GS_BinaryExpression(
+                        BinaryOperation::MINUS,
                         expression,
                         _multiplicative()));
 
@@ -43,8 +43,8 @@ namespace GSLanguageCompiler {
             if (_checkTokenType(TokenType::SYMBOL_STAR)) {
                 _nextToken();
 
-                expression = GSExpressionPointer(new Expressions::GS_BinaryExpression(
-                                Expressions::BinaryOperation::STAR,
+                expression = GSExpressionPointer(new GS_BinaryExpression(
+                                BinaryOperation::STAR,
                                 expression,
                                 _unary()));
 
@@ -52,8 +52,8 @@ namespace GSLanguageCompiler {
             } else if (_checkTokenType(TokenType::SYMBOL_SLASH)) {
                 _nextToken();
 
-                expression = GSExpressionPointer(new Expressions::GS_BinaryExpression(
-                                Expressions::BinaryOperation::SLASH,
+                expression = GSExpressionPointer(new GS_BinaryExpression(
+                                BinaryOperation::SLASH,
                                 expression,
                                 _unary()));
 
@@ -70,8 +70,8 @@ namespace GSLanguageCompiler {
         if (this->_checkTokenType(TokenType::SYMBOL_MINUS)) {
             _nextToken();
 
-            return GSExpressionPointer(new Expressions::GS_UnaryExpression(
-                    Expressions::UnaryOperation::MINUS,
+            return GSExpressionPointer(new GS_UnaryExpression(
+                    UnaryOperation::MINUS,
                     _primary()));
         }
 
@@ -86,12 +86,17 @@ namespace GSLanguageCompiler {
         }
 
         if (_checkTokenType(TokenType::LITERAL_NUMBER)) {
-            expression = GSExpressionPointer(new Expressions::GS_NumberExpression(
-                    std::stoi(_currentToken().getValue())));
+            expression = GSExpressionPointer(
+                    new GS_ValueExpression(
+                            GSValuePointer(
+                                    new GS_IntegerValue(std::stoi(_currentToken().getValue())))));
 
             _nextToken();
         } else if (_checkTokenType(TokenType::LITERAL_STRING)) {
-            expression = GSExpressionPointer(new Expressions::GS_StringExpression(_currentToken().getValue()));
+            expression = GSExpressionPointer(
+                    new GS_ValueExpression(
+                            GSValuePointer(
+                                    new GS_StringValue(_currentToken().getValue()))));
 
             _nextToken();
         } else if (_checkTokenType(TokenType::SYMBOL_LEFT_PARENTHESES)) {
@@ -100,17 +105,17 @@ namespace GSLanguageCompiler {
             expression = this->_expression();
 
             if (!_checkTokenType(TokenType::SYMBOL_RIGHT_PARENTHESES)) {
-                throwException("Lost right parentheses!");
+                _throwException("Lost right parentheses!");
             }
 
             _nextToken();
         }
         else if (_checkTokenType(TokenType::SYMBOL_RIGHT_PARENTHESES)) {
-            throwException("Lost left parentheses!");
+            _throwException("Lost left parentheses!");
         }
 
         if (expression == nullptr) {
-            throwException("Unknown expression!");
+            _throwException("Unknown expression!");
         }
 
         return expression;

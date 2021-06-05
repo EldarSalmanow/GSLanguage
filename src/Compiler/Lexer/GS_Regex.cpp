@@ -1,4 +1,4 @@
-#include "../../../include/Compiler/Lexer/GS_Regex.h"
+#include <GS_Regex.h>
 
 namespace GSLanguageCompiler::Lexer {
 

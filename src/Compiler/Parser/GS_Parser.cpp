@@ -1,15 +1,19 @@
-#include "../../../include/Compiler/Parser/GS_Parser.h"
+#include <GS_Parser.h>
 
-namespace GSLanguageCompiler {
+namespace GSLanguageCompiler::Parser {
+
+    GS_Parser::GS_Parser(GSTokenArray &tokens) {
+        this->_tokens = tokens;
+
+        _tokenIterator = this->_tokens.begin();
+    }
 
     GSStatementPointerArray GS_Parser::parse() {
-        _tokenIterator = _tokens.begin();
-
         while (!_checkTokenType(TokenType::END_OF_FILE)) {
             GSStatementPointer statement;
 
             try {
-                statement = this->_statement();
+                statement = _statement();
             } catch (Exceptions::GS_NewLineException) {
                 _nextToken();
 
@@ -27,19 +31,23 @@ namespace GSLanguageCompiler {
     GSStatementPointer GS_Parser::_statement() {
         // var
         if (_checkTokenType(TokenType::KEYWORD_VAR)) {
-            return GSStatementPointer(_parsingVariable());
+            return _parsingVariableDeclaration();
         }
+        else if (_checkTokenType(TokenType::SYMBOL_EQ)) {
+            return _parsingAssignmentStatement();
+        }
+        //else if (_checkTokenType())
         else if (_checkTokenType(TokenType::NEW_LINE)) {
             throw Exceptions::GS_NewLineException();
         }
         else {
-            throwException("Unknown statement!");
+            _throwException("Unknown statement!");
         }
     }
 
 //--------------------------------------------------------------------------------
 
-    void GS_Parser::throwException(std::string errorMessage) {
+    void GS_Parser::_throwException(std::string errorMessage) {
         throw Exceptions::GS_ParserException(errorMessage,
                                              _currentToken().getPosition().getCode(),
                                              _currentToken().getPosition().getEndPosition().getLine(),

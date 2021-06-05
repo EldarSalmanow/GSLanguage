@@ -6,7 +6,8 @@
 namespace GSLanguageCompiler::Exceptions {
 
     /**
-     * Base class for compilation errors
+     * Base class for compilation errors<br>
+     * Note: Do not create objects of this class!
      */
     class GS_CompilingException : public _GS_Exception {
     public:
@@ -20,7 +21,7 @@ namespace GSLanguageCompiler::Exceptions {
 
             std::cerr << this->errorMessage << "\nLine: " << this->line << "\nColumn: " << this->column << std::endl;
 
-            Platform::GS_CrossPlatform::setConsoleColor(Platform::GS_CrossPlatform::BLACK, Platform::GS_CrossPlatform::LIGHT_GRAY);
+            Platform::GS_CrossPlatform::setConsoleColor(Platform::GS_CrossPlatform::BLACK, Platform::GS_CrossPlatform::WHITE);
         }
 
     public:

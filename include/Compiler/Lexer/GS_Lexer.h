@@ -3,12 +3,14 @@
 
 #include <vector>
 
-#include "GS_Token.h"
-#include "GS_Regex.h"
+#include <Compiler/Lexer/GS_Token.h>
+#include <Compiler/Lexer/GS_Regex.h>
 
-#include "../../Exceptions/GS_LexerException.h"
+#include <Exceptions/GS_LexerException.h>
 
 namespace GSLanguageCompiler::Lexer {
+
+    typedef std::vector<GSString> GSText;
 
     /**
      * Class for analyzing source code
@@ -18,53 +20,53 @@ namespace GSLanguageCompiler::Lexer {
 
         /**
          * Constructor for GS_Lexer
-         * @param input Lines of code from input file
+         * @param input Lines of code from _input file
          */
-        GS_Lexer(std::vector<std::string> &input);
+        GS_Lexer(GSText &input);
 
     public:
 
         /**
-         * Function for tokenize input code
+         * Function for tokenize _input code
          * @return Tokens for parser analyze
          */
-        std::vector<GS_Token> tokenize();
+        GSTokenArray tokenize();
 
     private:
 
         /**
          * Analysis of each line in turn
          */
-        void _analyzeLine();
+        GSVoid _analyzeLine();
 
         /**
          * Tokenizing number
          */
-        void _tokenizeNumber();
+        GSVoid _tokenizeNumber();
 
         /**
          * Tokenizing word
          */
-        void _tokenizeWord();
+        GSVoid _tokenizeWord();
 
         /**
          * Tokenizing string
          */
-        void _tokenizeString();
+        GSVoid _tokenizeString();
 
         /**
          * Analyzing reserved word or symbol
          * @param word Input word for analyzing
          * @return Type of reserved word or symbol
          */
-        inline TokenType _analyzeReservedWord(std::string &word);
+        inline TokenType _analyzeReservedWord(GSString &word);
 
         /**
          * Search for a string in reserved words and symbols
          * @param word Input string to analyze
          * @return Is reserved word or symbol
          */
-        inline bool _isReservedWord(std::string &word);
+        inline GSBool _isReservedWord(GSString &word);
 
         /**
          * Function to check if a character is supported by the compiler
@@ -72,90 +74,90 @@ namespace GSLanguageCompiler::Lexer {
          * @param type Regular expression type
          * @return Is supported character
          */
-        bool _isValidRegexForSymbol(RegexType type);
+        GSBool _isValidRegexForSymbol(RegexType type);
 
         /**
          * Setting start position of token value
          */
-        inline void _setStartPositionOfToken();
+        inline GSVoid _setStartPositionOfToken();
 
         /**
          * Adding token
          * @param type Token type
          */
-        inline void _addToken(TokenType type);
+        inline GSVoid _addToken(TokenType type);
 
         /**
          * Adding token with value
          * @param type Token type
          * @param value Token value
          */
-        inline void _addToken(TokenType type, std::string value);
+        inline GSVoid _addToken(TokenType type, GSString value);
 
         /**
          * Updating line iterator to next symbol in line
          */
-        inline void _nextSymbol();
+        inline GSVoid _nextSymbol();
 
         /**
          * Updating code iterator to next line in source
          */
-        inline void _nextLine();
+        inline GSVoid _nextLine();
 
         /**
          * Getting current symbol in line iterator
          * @return Current symbol in line iterator
          */
-        inline char _currentSymbol();
+        inline GSChar _currentSymbol();
 
         /**
          * Is end of line in line iterator
          * @return Is end of line
          */
-        inline bool _isEndOfLine();
+        inline GSBool _isEndOfLine();
 
         /**
          * Is end of source in code iterator
          * @return Is end of source
          */
-        inline bool _isEndOfSource();
+        inline GSBool _isEndOfSource();
 
     private:
 
         /**
          * Input code from reader
          */
-        std::vector<std::string> _input;
+        GSText _input;
 
         /**
          * Tokens before lexer analyzing
          */
-        std::vector<GS_Token> _tokens;
+        GSTokenArray _tokens;
 
         /**
          * Current position in lexer analyzing
          */
-        size_t _line, _column;
+        GSULongLong _line, _column;
 
         /**
          * Start token value position
          */
-        size_t _startLine, _startColumn;
+        GSULongLong _startLine, _startColumn;
 
         /**
          * An iterator to read code from a file
          */
-        std::vector<std::string>::iterator _codeIterator;
+        GSText::iterator _codeIterator;
 
         /**
          * Iterator for reading a line of code
          */
-        std::string::iterator _lineIterator;
+        GSString::iterator _lineIterator;
 
         /**
          * Current symbol
          */
-        std::string _symbol;
+        GSString _symbol;
     };
 
     typedef std::shared_ptr<GS_Lexer> GSLexerPointer;

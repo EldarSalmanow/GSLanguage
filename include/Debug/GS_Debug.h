@@ -1,11 +1,14 @@
 #ifndef GSLANGUAGE_GS_DEBUG_H
 #define GSLANGUAGE_GS_DEBUG_H
 
-#include "../Compiler/Lexer/GS_Lexer.h"
-#include "../Compiler/Parser/GS_Parser.h"
-#include "../Compiler/Reader/GS_Reader.h"
-#include "../Compiler/Parser/GS_TableOfSymbols.h"
-#include "../Compiler/Util/GS_CrossPlatform.h"
+#include <iostream>
+#include <vector>
+
+#include <Compiler/Lexer/GS_Keywords.h>
+
+#include <Compiler/Util/GS_CrossPlatform.h>
+
+//#include <Compiler/Parser/GS_TableOfSymbols.h>
 
 namespace Debug {
 
@@ -18,36 +21,43 @@ namespace Debug {
     public:
 
         /**
-         * Printing input code from file
-         * @param input Container with std::string
+         * Printing table of symbols
          */
-        static void printInput(GSLanguageCompiler::GSText &input);
+//        static void printTableOfSymbols();
 
-        /**
-         * Printing tokens before lexer analyzing
-         * @param tokens Container with GS_Token
-         */
-        static void printLexerOutput(GSLanguageCompiler::GSTokenArray &tokens);
+         /**
+          *
+          * @tparam _ElementType
+          * @param startMessage
+          * @param endMessage
+          * @param function
+          * @param data
+          */
+         template<typename _ElementType>
+         static void printDebugInformation(const GSString &startMessage,
+                                           const GSString &endMessage,
+                                           GSVoid (*function)(_ElementType &),
+                                           std::vector<_ElementType> &data) {
+             GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::RED);
 
-        /**
-         * Printing statements before parsing analyzing
-         * @param statements Container with GSStatementPointer
-         */
-        static void printParserOutput(GSLanguageCompiler::GSStatementPointerArray &statements);
+             std::cerr << startMessage << std::endl;
 
-        /**
-         *
-         */
-        static void printTableOfSymbols();
+             for (auto &element : data) {
+                 function(element);
+             }
 
-    private:
+             std::cerr << endMessage << std::endl;
+
+             GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::WHITE);
+         }
+
 
         /**
          * Converting TokenType to std::string
          * @param type Token type
          * @return Converted type
          */
-        static std::string tokenTypeToString(GSLanguageCompiler::TokenType type);
+        static std::string tokenTypeToString(GSLanguageCompiler::Lexer::TokenType type);
     };
 
 }

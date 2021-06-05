@@ -1,4 +1,4 @@
-#include "../../../../include/Compiler/Parser/Values/LiteralTypes.h"
+#include <Values/LiteralTypes.h>
 
 namespace GSLanguageCompiler {
 
@@ -15,6 +15,17 @@ namespace GSLanguageCompiler {
                 return Literal::LITERAL_STRING;
             default:
                 return Literal::LITERAL_NULL;
+        }
+    }
+
+    std::string convertTokenTypeToStringType(TokenType type) {
+        switch (type) {
+            case TokenType::KEYWORD_TYPE_INT:
+                return "Int";
+            case TokenType::KEYWORD_TYPE_STRING:
+                return "String";
+            default:
+                return "Null";
         }
     }
 

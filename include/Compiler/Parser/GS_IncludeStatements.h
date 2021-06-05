@@ -1,6 +1,7 @@
 #ifndef GSLANGUAGE_GS_INCLUDESTATEMENTS_H
 #define GSLANGUAGE_GS_INCLUDESTATEMENTS_H
 
-#include "Statements/GS_VariableStatement.h"
+#include <Compiler/Parser/Statements/GS_AssignmentStatement.h>
+#include <Compiler/Parser/Statements/GS_VariableDeclarationStatement.h>
 
 #endif //GSLANGUAGE_GS_INCLUDESTATEMENTS_H

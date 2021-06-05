@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_CROSSPLATFORM_H
 #define GSLANGUAGE_GS_CROSSPLATFORM_H
 
-#include "GS_PlatformDefines.h"
+#include <Compiler/Util/GS_PlatformTypes.h>
 
 #if defined(OS_WINDOWS)
 #  if defined(COMPILER_MSVC)
@@ -10,6 +10,10 @@
 #  if defined(COMPILER_MINGW)
 #    include <windows.h>
 #  endif
+#endif
+
+#if defined(OS_LINUX)
+#  include <iostream>
 #endif
 
 namespace Platform {
@@ -22,8 +26,9 @@ namespace Platform {
     public:
 
         /**
-         * Available console colors for Windows
+         * Available console colors for coloring console
          */
+#if defined(OS_WINDOWS)
         enum ConsoleColor {
             BLACK = 0,
             BLUE = 1,
@@ -31,17 +36,23 @@ namespace Platform {
             CYAN = 3,
             RED = 4,
             MAGENTA = 5,
-            BROWN = 6,
-            LIGHT_GRAY = 7,
-            DARK_GRAY = 8,
-            LIGHT_BLUE = 9,
-            LIGHT_GREEN = 10,
-            LIGHT_CYAN = 11,
-            LIGHT_RED = 12,
-            LIGHT_MAGENTA = 13,
             YELLOW = 14,
             WHITE = 15
         };
+#endif
+
+#if defined(OS_LINUX)
+        enum ConsoleColor {
+            BLACK = 0,
+            RED = 1,
+            GREEN = 2,
+            YELLOW = 3,
+            BLUE = 4,
+            MAGENTA = 5,
+            CYAN = 6,
+            WHITE = 7
+        };
+#endif
 
     public:
 
@@ -50,7 +61,7 @@ namespace Platform {
          * @param background Background color
          * @param text Text color
          */
-        static void setConsoleColor(ConsoleColor background, ConsoleColor text);
+        static GSVoid setConsoleColor(ConsoleColor background, ConsoleColor text);
 
     };
 

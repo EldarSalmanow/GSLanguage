@@ -5,13 +5,13 @@
 #include <vector>
 #include <memory>
 
-#include "../Util/GS_PlatformDefines.h"
+#include <Compiler/Util/GS_PlatformTypes.h>
 
-#include "../../Exceptions/GS_ReaderException.h"
+#include <Exceptions/GS_ReaderException.h>
 
 namespace GSLanguageCompiler {
 
-    typedef std::vector<std::string> GSText;
+    typedef std::vector<GSString> GSText;
 
     /**
      * Reader for read files
@@ -23,12 +23,10 @@ namespace GSLanguageCompiler {
          * Constructor for GS_Reader
          * @param filename Name of the main file to read
          */
-        GS_Reader(std::string &filename) {
-            this->filename = filename;
-        }
+        GS_Reader(const GSString &filename);
 
         /**
-         * The file read function takes the file name from the GS_Reader class object and _line by _line
+         * The file read function takes the file name from the GS_Reader class object and line by line
          * reads a file through a file I/O stream.
          * @return Lines code from file
          */
@@ -39,12 +37,12 @@ namespace GSLanguageCompiler {
         /**
          * Code from file
          */
-        GSText input;
+        GSText _input;
 
         /**
          * The name of the file being read
          */
-        std::string filename;
+        GSString _filename;
     };
 
     typedef std::shared_ptr<GS_Reader> GSReaderPointer;

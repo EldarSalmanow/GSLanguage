@@ -1,11 +1,9 @@
 #ifndef GSLANGUAGE_GS_UNARYEXPRESSION_H
 #define GSLANGUAGE_GS_UNARYEXPRESSION_H
 
-#include "GS_Expression.h"
+#include <Compiler/Parser/Expressions/GS_Expression.h>
 
-#include "../Values/GS_IntegerValue.h"
-
-namespace GSLanguageCompiler::Expressions {
+namespace GSLanguageCompiler::Parser {
 
     /**
      *
@@ -23,10 +21,7 @@ namespace GSLanguageCompiler::Expressions {
         /**
          *
          */
-        GS_UnaryExpression(UnaryOperation operation, GSExpressionPointer expression) {
-            this->_operation = operation;
-            this->_expression = expression;
-        }
+        GS_UnaryExpression(UnaryOperation operation, GSExpressionPointer expression);
 
     public:
 
@@ -34,25 +29,19 @@ namespace GSLanguageCompiler::Expressions {
          *
          * @return
          */
-        GSValuePointer result() override {
-            switch (this->_operation) {
-                case UnaryOperation::MINUS:
-                    return GSValuePointer(new Values::GS_IntegerValue(-this->_expression->result()->getInt()));
-                default:
-                    return nullptr;
-            }
-        }
+        ExpressionType getExpressionType() override;
 
         /**
          *
          * @return
          */
-        std::string toStringForDebug() override {
-            return "[ "
-            + std::string(1, static_cast<char>(this->_operation))
-            + this->_expression->toStringForDebug()
-            + " ]";
-        }
+        std::string generateCode() override;
+
+        /**
+         *
+         * @return
+         */
+        std::string toStringForDebug() override;
 
     private:
 

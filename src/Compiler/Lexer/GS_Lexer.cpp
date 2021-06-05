@@ -1,12 +1,12 @@
-#include "../../../include/Compiler/Lexer/GS_Lexer.h"
+#include <GS_Lexer.h>
 
 namespace GSLanguageCompiler::Lexer {
 
-    GS_Lexer::GS_Lexer(std::vector<std::string> &input) {
+    GS_Lexer::GS_Lexer(GSText &input) {
         this->_input = input;
     }
 
-    std::vector<GS_Token> GS_Lexer::tokenize() {
+    GSTokenArray GS_Lexer::tokenize() {
         // setting the iterator to the beginning of the text
         _codeIterator = _input.begin();
         _line = 1;
@@ -32,7 +32,7 @@ namespace GSLanguageCompiler::Lexer {
         return _tokens;
     }
 
-    void GS_Lexer::_analyzeLine() {
+    GSVoid GS_Lexer::_analyzeLine() {
         while (!_isEndOfLine()) {
             _symbol = _currentSymbol();
 
@@ -43,28 +43,28 @@ namespace GSLanguageCompiler::Lexer {
                 continue;
             }
 
-                // is number (0..9)
+            // is number (0..9)
             else if (_isValidRegexForSymbol(RegexType::NUMBER_SIMPLE)) {
                 _tokenizeNumber();
 
                 continue;
             }
 
-                // is english alphabet (a-zA-Z)
+            // is english alphabet (a-zA-Z)
             else if (_isValidRegexForSymbol(RegexType::ALPHABET_ENGLISH)) {
                 _tokenizeWord();
 
                 continue;
             }
 
-                // is string
+            // is string
             else if (_symbol == "\"") {
                 _tokenizeString();
 
                 continue;
             }
 
-                // is special symbol
+            // is special symbol
             else if (_isReservedWord(_symbol)) {
                 _addToken(_analyzeReservedWord(_symbol));
 
@@ -82,8 +82,8 @@ namespace GSLanguageCompiler::Lexer {
 
 //---------------------------------------------------------
 
-    void GS_Lexer::_tokenizeNumber() {
-        std::string number;
+    GSVoid GS_Lexer::_tokenizeNumber() {
+        GSString number;
 
         _setStartPositionOfToken();
 
@@ -100,8 +100,8 @@ namespace GSLanguageCompiler::Lexer {
         _addToken(TokenType::LITERAL_NUMBER, number);
     }
 
-    void GS_Lexer::_tokenizeWord() {
-        std::string word;
+    GSVoid GS_Lexer::_tokenizeWord() {
+        GSString word;
 
         _setStartPositionOfToken();
 
@@ -124,8 +124,8 @@ namespace GSLanguageCompiler::Lexer {
         _addToken(TokenType::WORD, word);
     }
 
-    void GS_Lexer::_tokenizeString() {
-        std::string string;
+    GSVoid GS_Lexer::_tokenizeString() {
+        GSString string;
 
         // scip "
         _nextSymbol();
@@ -157,15 +157,15 @@ namespace GSLanguageCompiler::Lexer {
 
 //-----------------------------------------------------------------
 
-    inline bool GS_Lexer::_isReservedWord(std::string &word) {
+    inline GSBool GS_Lexer::_isReservedWord(GSString &word) {
         return reserved.find(word) != reserved.end();
     }
 
-    inline TokenType GS_Lexer::_analyzeReservedWord(std::string &word) {
+    inline TokenType GS_Lexer::_analyzeReservedWord(GSString &word) {
         return reserved.at(word);
     }
 
-    bool GS_Lexer::_isValidRegexForSymbol(RegexType type) {
+    GSBool GS_Lexer::_isValidRegexForSymbol(RegexType type) {
         std::smatch match;
         std::vector<std::regex> regexps;
 
@@ -195,12 +195,12 @@ namespace GSLanguageCompiler::Lexer {
         return false;
     }
 
-    inline void GS_Lexer::_setStartPositionOfToken() {
+    inline GSVoid GS_Lexer::_setStartPositionOfToken() {
         _startLine = _line;
         _startColumn = _column;
     }
 
-    inline void GS_Lexer::_addToken(TokenType type) {
+    inline GSVoid GS_Lexer::_addToken(TokenType type) {
         _tokens.emplace_back(GS_Token(type, GS_Position(
                 _codeIterator[0],
                 GS_Coordinate(_startLine, _startColumn),
@@ -208,7 +208,7 @@ namespace GSLanguageCompiler::Lexer {
         )));
     }
 
-    inline void GS_Lexer::_addToken(TokenType type, std::string value) {
+    inline GSVoid GS_Lexer::_addToken(TokenType type, GSString value) {
         _tokens.emplace_back(GS_Token(type, value, GS_Position(
                 _codeIterator[0],
                 GS_Coordinate(_startLine, _startColumn),
@@ -216,13 +216,13 @@ namespace GSLanguageCompiler::Lexer {
         )));
     }
 
-    inline void GS_Lexer::_nextSymbol() {
+    inline GSVoid GS_Lexer::_nextSymbol() {
         ++_lineIterator;
 
         ++_column;
     }
 
-    inline void GS_Lexer::_nextLine() {
+    inline GSVoid GS_Lexer::_nextLine() {
         ++_codeIterator;
 
         ++_line;
@@ -230,15 +230,15 @@ namespace GSLanguageCompiler::Lexer {
         _column = 1;
     }
 
-    inline char GS_Lexer::_currentSymbol() {
+    inline GSChar GS_Lexer::_currentSymbol() {
         return _lineIterator[0];
     }
 
-    inline bool GS_Lexer::_isEndOfLine() {
+    inline GSBool GS_Lexer::_isEndOfLine() {
         return _lineIterator == _codeIterator[0].end();
     }
 
-    inline bool GS_Lexer::_isEndOfSource() {
+    inline GSBool GS_Lexer::_isEndOfSource() {
         return _codeIterator == _input.end();
     }
 

@@ -1,12 +1,12 @@
 #ifndef GSLANGUAGE_GS_COORDINATE_H
 #define GSLANGUAGE_GS_COORDINATE_H
 
-#include <ctype.h>
+#include <Compiler/Util/GS_PlatformTypes.h>
 
 namespace GSLanguageCompiler::Lexer {
 
     /**
-     *
+     * Class for representation position in source code
      */
     class GS_Coordinate {
     public:
@@ -14,32 +14,32 @@ namespace GSLanguageCompiler::Lexer {
         GS_Coordinate() = default;
 
         /**
-         *
-         * @param line
-         * @param column
+         * Constructor for GS_Coordinate
+         * @param line Line position
+         * @param column Column position
          */
-        GS_Coordinate(size_t line, size_t column);
+        GS_Coordinate(GSULongLong line, GSULongLong column);
 
     public:
 
         /**
-         *
-         * @return
+         * Getter line position in source code
+         * @return Line number
          */
-        size_t getLine();
+        GSULongLong getLine();
 
         /**
-         *
-         * @return
+         * Getter column position in source code
+         * @return Column number
          */
-        size_t getColumn();
+        GSULongLong getColumn();
 
     private:
 
         /**
-         *
+         * Position in source code from file
          */
-        size_t _line = 0, _column = 0;
+        GSULongLong _line = 0, _column = 0;
     };
 
 }

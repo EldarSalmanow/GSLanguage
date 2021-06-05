@@ -1,13 +1,11 @@
 #ifndef GSLANGUAGE_GS_BINARYEXPRESSION_H
 #define GSLANGUAGE_GS_BINARYEXPRESSION_H
 
-#include "../Values/GS_IntegerValue.h"
+#include <Compiler/Parser/Expressions/GS_Expression.h>
 
-#include "GS_Expression.h"
+#include <Exceptions/GS_ArithmeticException.h>
 
-#include "../../../Exceptions/GS_ArithmeticException.h"
-
-namespace GSLanguageCompiler::Expressions {
+namespace GSLanguageCompiler::Parser {
 
     /**
      *
@@ -31,11 +29,9 @@ namespace GSLanguageCompiler::Expressions {
          * @param firstValue
          * @param secondValue
          */
-        GS_BinaryExpression(BinaryOperation operation, GSExpressionPointer firstValue, GSExpressionPointer secondValue) {
-            this->_operation = operation;
-            this->_firstExpression = firstValue;
-            this->_secondExpression = secondValue;
-        }
+        GS_BinaryExpression(BinaryOperation operation,
+                            GSExpressionPointer firstValue,
+                            GSExpressionPointer secondValue);
 
     public:
 
@@ -43,47 +39,19 @@ namespace GSLanguageCompiler::Expressions {
          *
          * @return
          */
-        GSValuePointer result() override {
-            int result;
-
-            GSValuePointer firstValueResult = this->_firstExpression->result();
-            GSValuePointer secondValueResult = this->_secondExpression->result();
-
-            switch (this->_operation) {
-                case BinaryOperation::PLUS:
-                    result = firstValueResult->getInt() + secondValueResult->getInt();
-                    break;
-                case BinaryOperation::MINUS:
-                    result = firstValueResult->getInt() - secondValueResult->getInt();
-                    break;
-                case BinaryOperation::STAR:
-                    result = firstValueResult->getInt() * secondValueResult->getInt();
-                    break;
-                case BinaryOperation::SLASH:
-                    if (secondValueResult->getInt() == 0) {
-                        throw Exceptions::GS_ArithmeticException("Division by zero!");
-                    } else {
-                        result = firstValueResult->getInt() / secondValueResult->getInt();
-                        break;
-                    }
-            }
-
-            return GSValuePointer(new Values::GS_IntegerValue(result));
-        }
+        ExpressionType getExpressionType() override;
 
         /**
          *
          * @return
          */
-        std::string toStringForDebug() override {
-            return "[ "
-            + this->_firstExpression->toStringForDebug()
-            + " "
-            + std::string(1, static_cast<char>(this->_operation))
-            + " "
-            + this->_secondExpression->toStringForDebug()
-            + " ]";
-        }
+        std::string generateCode() override;
+
+        /**
+         *
+         * @return
+         */
+        std::string toStringForDebug() override;
 
     private:
 

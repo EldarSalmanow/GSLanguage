@@ -6,7 +6,7 @@
 namespace GSLanguageCompiler::Exceptions {
 
     /**
-     *
+     * Special class error for throwing a newline token to the parser at the moment of meeting
      */
     class GS_NewLineException : public _GS_Exception {
     public:

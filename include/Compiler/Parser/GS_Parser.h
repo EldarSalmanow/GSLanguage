@@ -5,17 +5,15 @@
 #include <iostream>
 #include <memory>
 
-#include "../Lexer/GS_Token.h"
-#include "GS_IncludeExpressions.h"
-#include "GS_IncludeStatements.h"
-#include "GS_IncludeValues.h"
+#include <Compiler/Lexer/GS_Token.h>
+#include <Compiler/Parser/GS_IncludeExpressions.h>
+#include <Compiler/Parser/GS_IncludeStatements.h>
+#include <Compiler/Parser/GS_IncludeValues.h>
 
-#include "../../../include/Exceptions/GS_ParserException.h"
-#include "../../../include/Exceptions/GS_NewLineException.h"
+#include <Exceptions/GS_ParserException.h>
+#include <Exceptions/GS_NewLineException.h>
 
-namespace GSLanguageCompiler {
-
-    typedef std::vector<std::string> GSText;
+namespace GSLanguageCompiler::Parser {
 
     /**
      * Class for generating AST and parsing AST
@@ -27,15 +25,12 @@ namespace GSLanguageCompiler {
          * Constructor for GS_Parser
          * @param tokens Container with tokens, before lexing analyzing
          */
-        GS_Parser(GSTokenArray &tokens, GSText &input) {
-            this->_tokens = tokens;
-            this->_input = input;
-        }
+        GS_Parser(GSTokenArray &tokens);
 
     public:
 
         /**
-         * Function for parsing input tokens
+         * Function for parsing _input tokens
          */
         GSStatementPointerArray parse();
 
@@ -51,19 +46,26 @@ namespace GSLanguageCompiler {
          *
          * @return
          */
-        Statements::GS_VariableStatement *_parsingVariable();
+        GSStatementPointer _parsingVariableDeclaration();
 
         /**
          *
          * @return
          */
-        Statements::GS_VariableStatement *_parsingVariableWithoutType();
+         GS_VariableDeclarationStatement *_parsingVariableWithoutType();
 
         /**
          *
          * @return
          */
-        Statements::GS_VariableStatement *_parsingVariableWithType();
+         GS_VariableDeclarationStatement *_parsingVariableWithType();
+
+        /**
+         *
+         * @param statement
+         * @return
+         */
+         GSStatementPointer _parsingAssignmentStatement();
 
     private:
 
@@ -109,7 +111,7 @@ namespace GSLanguageCompiler {
          *
          * @param errorMessage
          */
-        void throwException(std::string errorMessage);
+        void _throwException(std::string errorMessage);
 
         /**
          *
@@ -130,8 +132,6 @@ namespace GSLanguageCompiler {
 
     private:
 
-        GSText _input;
-
         /**
          * Input tokens, before lexing analyzing
          */
@@ -143,7 +143,7 @@ namespace GSLanguageCompiler {
         GSStatementPointerArray _statements;
 
         /**
-         * Iterator input container with tokens
+         * Iterator _input container with tokens
          */
         GSTokenArray::iterator _tokenIterator;
     };

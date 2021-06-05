@@ -2,11 +2,12 @@
 #define GSLANGUAGE_GS_IEXCEPTION_H
 
 #include <iostream>
+#include <string>
 
 namespace GSLanguageCompiler::Exceptions {
 
     /**
-     * Interface for GS_LanguageCompiler errors
+     * Interface for GSLanguageCompiler errors
      */
     class GS_IException {
     public:

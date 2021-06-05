@@ -6,7 +6,7 @@
 namespace GSLanguageCompiler::Exceptions {
 
     /**
-     *
+     * Class for throwing error with not founded variable in table of symbols
      */
     class GS_NotFoundVariableException : public GS_CompilingException {
     public:

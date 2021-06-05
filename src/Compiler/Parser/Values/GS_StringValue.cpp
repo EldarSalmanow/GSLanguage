@@ -1,46 +1,30 @@
-#include "../../../../include/Compiler/Parser/Values/GS_StringValue.h"
+#include <Values/GS_StringValue.h>
 
-#include "../../../../include/Compiler/Parser/Values/GS_IntegerValue.h"
+#include <Values/GS_IntegerValue.h>
 
-namespace GSLanguageCompiler::Values {
+namespace GSLanguageCompiler::Parser {
 
     GS_StringValue::GS_StringValue() {
-        this->_type = Literal::LITERAL_NULL;
+        this->setType("String");
+        this->setIsLiteralType(true);
     }
 
     GS_StringValue::GS_StringValue(std::string value) {
-        this->_value = value;
-        this->_type = Literal::LITERAL_STRING;
-    }
-
-    int GS_StringValue::getInt() {
-        int number;
-        try {
-            number = std::stoi(this->_value);
-        } catch (std::exception &exception) {
-            throw Exceptions::GS_TypeCastException("Can not cast string value to int!");
-        }
-        return number;
-    }
-
-    std::string GS_StringValue::getString() {
-        return this->_value;
+        this->setData(value);
+        this->setType("String");
+        this->setIsLiteralType(true);
     }
 
     GSValuePointer GS_StringValue::castTo(Literal type) {
         switch (type) {
             case Literal::LITERAL_INT:
-                return GSValuePointer(new Values::GS_IntegerValue(std::stoi(this->_value)));
+                return GSValuePointer(new GS_IntegerValue(std::stoi(std::any_cast<std::string>(getData()))));
             case Literal::LITERAL_STRING:
-                return GSValuePointer(new Values::GS_StringValue(this->_value));
+                return GSValuePointer(new GS_StringValue(std::any_cast<std::string>(getData())));
             case Literal::LITERAL_NULL:
             default:
-                throw Exceptions::GS_TypeCastException("Can not cast string value to " + convertLiteralToString(this->_type));
+                throw Exceptions::GS_TypeCastException("Can not cast string value to " + convertLiteralToString(type));
         }
-    }
-
-    Literal GS_StringValue::getLiteralType() {
-        return this->_type;
     }
 
 }

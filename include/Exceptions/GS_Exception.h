@@ -30,7 +30,7 @@ namespace GSLanguageCompiler::Exceptions {
 
             std::cerr << this->errorMessage << std::endl;
             
-            Platform::GS_CrossPlatform::setConsoleColor(Platform::GS_CrossPlatform::BLACK, Platform::GS_CrossPlatform::LIGHT_GRAY);
+            Platform::GS_CrossPlatform::setConsoleColor(Platform::GS_CrossPlatform::BLACK, Platform::GS_CrossPlatform::WHITE);
         }
 
     public:

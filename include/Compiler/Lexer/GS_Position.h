@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "GS_Coordinate.h"
+#include <Compiler/Lexer/GS_Coordinate.h>
 
 namespace GSLanguageCompiler::Lexer {
 
@@ -28,20 +28,20 @@ namespace GSLanguageCompiler::Lexer {
     public:
 
         /**
-         *
-         * @return
+         * Getter for start position
+         * @return Start position
          */
         GS_Coordinate getStartPosition();
 
         /**
-         *
-         * @return
+         * Getter for end position
+         * @return End position
          */
         GS_Coordinate getEndPosition();
 
         /**
-         *
-         * @return
+         * Getter for string with code
+         * @return Code line
          */
         std::string getCode();
 
@@ -53,7 +53,7 @@ namespace GSLanguageCompiler::Lexer {
         GS_Coordinate _startPosition, _endPosition;
 
         /**
-         *
+         * Code line from source file
          */
         std::string _code;
     };

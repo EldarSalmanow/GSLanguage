@@ -1,4 +1,4 @@
-#include "../../../include/Compiler/Lexer/GS_Position.h"
+#include <GS_Position.h>
 
 namespace GSLanguageCompiler::Lexer {
 

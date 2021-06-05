@@ -2,12 +2,14 @@
 #define GSLANGUAGE_GS_VALUE_H
 
 #include <memory>
+#include <any>
 
-#include "LiteralTypes.h"
+#include <Compiler/Parser/Values/LiteralTypes.h>
 
-#include "../../../Exceptions/GS_TypeCastException.h"
+#include <Exceptions/GS_TypeCastException.h>
+#include <Exceptions/GS_NotSupportedException.h>
 
-namespace GSLanguageCompiler {
+namespace GSLanguageCompiler::Parser {
 
     class GS_Value;
 
@@ -23,26 +25,72 @@ namespace GSLanguageCompiler {
          *
          * @return
          */
-        virtual int getInt() = 0;
+        std::any getData();
+
+        /**
+         *
+         * @tparam _ValueType
+         * @param data
+         */
+        template<typename _ValueType>
+        void setData(_ValueType &data) {
+            this->_data = data;
+        }
+
+        /**
+         *
+         */
+        void deleteData();
 
         /**
          *
          * @return
          */
-        virtual std::string getString() = 0;
+        std::string getType();
+
+        /**
+         *
+         * @return
+         */
+        bool getIsLiteralType();
+
+        /**
+         *
+         * @param type
+         */
+        void setType(const std::string &type);
+
+        /**
+         *
+         * @param isLiteralType
+         */
+        void setIsLiteralType(bool isLiteralType);
+
+    public:
 
         /**
          *
          * @param type
          * @return
          */
-        virtual GSValuePointer castTo(Literal type) = 0; // TODO доделать систему кастинга и убрать лишний код, связанный с прошлой системой
+        virtual GSValuePointer castTo(Literal type) = 0;
+
+    private:
 
         /**
          *
-         * @return
          */
-        virtual Literal getLiteralType() = 0;
+        std::any _data;
+
+        /**
+         *
+         */
+        std::string _type;
+
+        /**
+         *
+         */
+        bool _isLiteralType;
     };
 
 }

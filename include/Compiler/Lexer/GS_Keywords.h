@@ -2,7 +2,8 @@
 #define GSLANGUAGE_GS_KEYWORDS_H
 
 #include <map>
-#include <string>
+
+#include <Compiler/Util/GS_PlatformTypes.h>
 
 namespace GSLanguageCompiler::Lexer {
 
@@ -47,7 +48,7 @@ namespace GSLanguageCompiler::Lexer {
     /**
      * Reserved letters and symbols
      */
-    extern std::map<std::string, TokenType> reserved;
+    extern std::map<GSString, TokenType> reserved;
 
 }
 

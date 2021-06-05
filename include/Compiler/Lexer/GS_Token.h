@@ -4,8 +4,8 @@
 #include <vector>
 #include <memory>
 
-#include "GS_Keywords.h"
-#include "GS_Position.h"
+#include <Compiler/Lexer/GS_Keywords.h>
+#include <Compiler/Lexer/GS_Position.h>
 
 namespace GSLanguageCompiler::Lexer {
 
@@ -21,12 +21,6 @@ namespace GSLanguageCompiler::Lexer {
         GS_Token() = default;
 
         /**
-         * Constructor for GS_Token
-         * @param type Type of token
-         */
-//        GS_Token(TokenType type);
-
-        /**
          *
          * @param type
          * @param position
@@ -34,19 +28,12 @@ namespace GSLanguageCompiler::Lexer {
         GS_Token(TokenType type, GS_Position position);
 
         /**
-         * Constructor for GS_Token
-         * @param type Type of token
-         * @param value String or number value
-         */
-//        GS_Token(TokenType type, std::string &word);
-
-        /**
          *
          * @param type
          * @param word
          * @param position
          */
-        GS_Token(TokenType type, std::string &word, GS_Position position);
+        GS_Token(TokenType type, GSString &word, GS_Position position);
 
     public:
 
@@ -60,11 +47,11 @@ namespace GSLanguageCompiler::Lexer {
          * Getter for value
          * @return Token value
          */
-        std::string getValue();
+        GSString getValue();
 
         /**
-         *
-         * @return
+         * Getter for position in source file
+         * @return Position in source file
          */
         GS_Position getPosition();
 
@@ -78,10 +65,10 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * String value or name
          */
-        std::string _value;
+        GSString _value;
 
         /**
-         *
+         * Start and end token position
          */
         GS_Position _position;
     };
