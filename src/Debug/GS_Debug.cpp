@@ -2,27 +2,6 @@
 
 namespace Debug {
 
-//    void GS_Debug::printTableOfSymbols() {
-//
-//        GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::RED);
-//
-//        std::cerr << "\n----------TABLE_OF_SYMBOLS START----------\n" << std::endl;
-//
-//        for (auto &variableName : GSLanguageCompiler::GS_TableOfSymbols::getVariableNames()) {
-//            GSLanguageCompiler::GSValuePointer variable = GSLanguageCompiler::GS_TableOfSymbols::get(variableName);
-//
-//            std::cerr
-//            << "Variable name: " << variableName
-//            << " Value: " << variable->getString()
-//            << " Type: " << GSLanguageCompiler::convertLiteralToString(variable->getLiteralType())
-//            << std::endl;
-//        }
-//
-//        std::cerr << "\n----------TABLE_OF_SYMBOLS END----------\n" << std::endl;
-//
-//        GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::LIGHT_GRAY);
-//    }
-
     std::string GS_Debug::tokenTypeToString(GSLanguageCompiler::Lexer::TokenType type) {
         switch (type) {
             case GSLanguageCompiler::Lexer::TokenType::WORD:

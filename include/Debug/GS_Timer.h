@@ -4,7 +4,7 @@
 #include <chrono>
 #include <vector>
 
-#include <Compiler/Util/GS_PlatformTypes.h>
+#include <CrossPlatform/GS_PlatformTypes.h>
 #include <Debug/GS_Debug.h>
 
 namespace Debug {

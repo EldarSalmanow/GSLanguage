@@ -48,6 +48,14 @@ namespace Starter {
         std::cerr << statement->toStringForDebug() << std::endl;
     }
 
+    void printException(Exceptions::GS_Exception &exception) {
+        Platform::GS_CrossPlatform::setConsoleColor(Platform::GS_CrossPlatform::BLACK, Platform::GS_CrossPlatform::RED);
+
+        std::cerr << exception.what() << std::endl;
+
+        Platform::GS_CrossPlatform::setConsoleColor(Platform::GS_CrossPlatform::BLACK, Platform::GS_CrossPlatform::WHITE);
+    }
+
     GSInt GS_Starter::start(GSInt argc, GSChar **argv) {
         try {
             parseArguments(argc, argv);
@@ -70,8 +78,8 @@ namespace Starter {
                 startCompiling();
             }
 
-        } catch (Exceptions::_GS_Exception &exception) {
-            exception._printErrorMessage();
+        } catch (Exceptions::GS_Exception &exception) {
+            printException(exception);
 
             return 1;
         } catch (std::exception &exception) {
@@ -181,6 +189,12 @@ namespace Starter {
         }
 
         out.close();
+
+        // TODO add directory for nasm and golink
+//        execute(("bin\\nasm\\nasm.exe -f win32 " + _compilerData.argumentsOptions.getOutputAsmFilename()).c_str());
+//        execute(("bin\\GoLink\\GoLink.exe /console /entry _Fmain4 "
+//                 + _compilerData.argumentsOptions.getOutputObjFilename()
+//                 + " kernel32.dll").c_str());
 
         execute(("nasm -f win32 " + _compilerData.argumentsOptions.getOutputAsmFilename()).c_str());
         execute(("golink /console /entry _Fmain4 "

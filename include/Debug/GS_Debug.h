@@ -4,11 +4,9 @@
 #include <iostream>
 #include <vector>
 
-#include <Compiler/Lexer/GS_Keywords.h>
+#include <Lexer/GS_Keywords.h>
 
-#include <Compiler/Util/GS_CrossPlatform.h>
-
-//#include <Compiler/Parser/GS_TableOfSymbols.h>
+#include <CrossPlatform/GS_CrossPlatform.h>
 
 namespace Debug {
 
@@ -19,11 +17,6 @@ namespace Debug {
      */
     class GS_Debug {
     public:
-
-        /**
-         * Printing table of symbols
-         */
-//        static void printTableOfSymbols();
 
          /**
           *

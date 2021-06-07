@@ -12,11 +12,12 @@ include_directories(include)
 
 add_subdirectory(include/Debug)
 add_subdirectory(include/Starter)
-add_subdirectory(include/Compiler/Reader)
-add_subdirectory(include/Compiler/Lexer)
-add_subdirectory(include/Compiler/Parser)
-add_subdirectory(include/Compiler/CodeGenerator)
-add_subdirectory(include/Compiler/Util)
+add_subdirectory(include/Reader)
+add_subdirectory(include/Lexer)
+add_subdirectory(include/Parser)
+add_subdirectory(include/CodeGenerator)
+add_subdirectory(include/ArgumentsParser)
+add_subdirectory(include/CrossPlatform)
 
 target_link_libraries(${PROJECT_NAME}
         GSStarterLibrary
@@ -24,6 +25,7 @@ target_link_libraries(${PROJECT_NAME}
         GSLexerLibrary
         GSParserLibrary
         GSCodeGeneratorLibrary
-        GSUtilLibrary
+        GSArgumentsParserLibrary
+        GSCrossPlatformLibrary
         GSDebugLibrary
         )
