@@ -28,15 +28,15 @@ EN:
 # Run
 Run without additional flags
 ```shell
-GSLanguage.exe --file {pathToInputFile}.gs
+GSLanguage --file {pathToInputFile}.gs
 ```
 
 Run with testing of each compilation step
 ```shell
-GSLanguage.exe --file {pathToInputFile}.gs --test
+GSLanguage --file {pathToInputFile}.gs --test
 ```
 
 Run with profiling of each compilation step.
 ```shell
-GSLanguage.exe --file {pathToInputFile}.gs --profiling
+GSLanguage --file {pathToInputFile}.gs --profiling
 ```
