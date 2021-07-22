@@ -1,7 +1,9 @@
 project(GSCrossPlatformLibrary)
 
+set(CROSS_PLATFORM_DIR ${SOURCE_DIR}/CrossPlatform)
+
 set(GS_CROSS_PLATFORM_SOURCE
-        ../../src/CrossPlatform/GS_CrossPlatform.cpp)
+        ${CROSS_PLATFORM_DIR}/GS_CrossPlatform.cpp)
 
 add_library(
 #       Library name
@@ -12,4 +14,4 @@ add_library(
         ${GS_CROSS_PLATFORM_SOURCE}
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE ../CrossPlatform)
+target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR}/CrossPlatform)

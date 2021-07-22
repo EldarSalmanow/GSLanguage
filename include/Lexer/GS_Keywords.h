@@ -46,6 +46,11 @@ namespace GSLanguageCompiler::Lexer {
     };
 
     /**
+     * Token type to string
+     */
+    extern std::map<TokenType, GSString> tokenTypeToString;
+
+    /**
      * Reserved letters and symbols
      */
     extern std::map<GSString, TokenType> reserved;

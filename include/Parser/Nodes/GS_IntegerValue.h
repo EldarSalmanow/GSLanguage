@@ -1,12 +1,12 @@
 #ifndef GSLANGUAGE_GS_INTEGERVALUE_H
 #define GSLANGUAGE_GS_INTEGERVALUE_H
 
-#include <Parser/Values/GS_Value.h>
+#include <Parser/Nodes/GS_Value.h>
 
 namespace GSLanguageCompiler::Parser {
 
     /**
-     *
+     * Integer value
      */
     class GS_IntegerValue : public GS_Value {
     public:
@@ -17,19 +17,10 @@ namespace GSLanguageCompiler::Parser {
         GS_IntegerValue();
 
         /**
-         *
-         * @param value
+         * Constructor for integer value
+         * @param value Integer value
          */
-        GS_IntegerValue(int value);
-
-    public:
-
-        /**
-         *
-         * @param type
-         * @return
-         */
-        GSValuePointer castTo(Literal type) override;
+        GS_IntegerValue(GSInt value);
     };
 
 }

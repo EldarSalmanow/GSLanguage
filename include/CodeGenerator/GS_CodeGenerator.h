@@ -3,12 +3,32 @@
 
 #include <Parser/GS_Parser.h>
 
-#include <CodeGenerator/GS_Section.h>
-#include <CodeGenerator/GS_VariablesTable.h>
-
 namespace GSLanguageCompiler::CodeGenerator {
 
-    typedef std::string GSGeneratedCode;
+    typedef unsigned char Byte;
+
+    typedef std::vector<Byte> GSByteCode;
+
+    enum class Opcode {
+        PUSH,
+        POP,
+
+        ADD,
+        SUB,
+
+        TO_REG_1,
+        FROM_REG_1,
+
+        TO_REG_2,
+        FROM_REG_2,
+
+        TO_REG_3,
+        FROM_REG_3,
+
+        DONE
+    };
+
+    extern std::map<Opcode, Byte> opcodeToByte;
 
     /**
      *
@@ -18,9 +38,9 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         /**
          *
-         * @param statements
+         * @param nodes
          */
-        GS_CodeGenerator(Parser::GSStatementPointerArray &statements);
+        GS_CodeGenerator(Parser::GSNodePtrArray &nodes);
 
     public:
 
@@ -28,77 +48,51 @@ namespace GSLanguageCompiler::CodeGenerator {
          *
          * @return
          */
-        GSGeneratedCode generateCode();
+        GSByteCode codegen();
 
     private:
 
         /**
          *
+         * @param node
          * @return
          */
-        void _generateAssignmentStatement();
+        GSVoid _generateNode(Parser::GSNodePtr node);
 
         /**
          *
          * @return
          */
-        void _generateVariableDeclarationStatement();
+        GSVoid _generateValueNode();
 
         /**
          *
-         * @param expression
          * @return
          */
-        std::string _generateExpression(Parser::GSExpressionPointer expression);
+        GSVoid _generateUnaryNode();
 
         /**
          *
-         * @param expression
          * @return
          */
-        std::string _generateValueExpression(Parser::GSExpressionPointer expression);
-
-        /**
-         *
-         * @param expression
-         * @return
-         */
-        std::string _generateBinaryExpression(Parser::GSExpressionPointer expression);
-
-        /**
-         *
-         * @param expression
-         * @return
-         */
-        std::string _generateUnaryExpression(Parser::GSExpressionPointer expression);
+        GSVoid _generateBinaryNode();
 
     private:
 
         /**
          *
          */
-        Parser::GSStatementPointerArray _statements;
+        Parser::GSNodePtrArray _nodes;
 
         /**
          *
          */
-        Parser::GSStatementPointerArray::iterator _statementIterator;
+        Parser::GSNodePtrArray::iterator _nodeIterator;
 
         /**
          *
          */
-        GS_Section _textSection;
-
-        /**
-         *
-         */
-        GS_Section _dataSection;
-
-        /**
-         *
-         */
-        GS_Section _bssSection;
-
+        GSByteCode _bytecode;
     };
 
     typedef std::shared_ptr<GS_CodeGenerator> GSCodeGeneratorPointer;

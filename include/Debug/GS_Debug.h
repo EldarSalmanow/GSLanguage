@@ -20,17 +20,18 @@ namespace Debug {
 
          /**
           *
+          * @tparam _ContType
           * @tparam _ElementType
           * @param startMessage
           * @param endMessage
           * @param function
           * @param data
           */
-         template<typename _ElementType>
+         template<typename _ContType, typename _ElementType>
          static void printDebugInformation(const GSString &startMessage,
                                            const GSString &endMessage,
                                            GSVoid (*function)(_ElementType &),
-                                           std::vector<_ElementType> &data) {
+                                           _ContType &data) {
              GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::RED);
 
              std::cerr << startMessage << std::endl;
@@ -43,14 +44,6 @@ namespace Debug {
 
              GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::WHITE);
          }
-
-
-        /**
-         * Converting TokenType to std::string
-         * @param type Token type
-         * @return Converted type
-         */
-        static std::string tokenTypeToString(GSLanguageCompiler::Lexer::TokenType type);
     };
 
 }

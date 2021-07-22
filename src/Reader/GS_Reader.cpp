@@ -2,9 +2,8 @@
 
 namespace GSLanguageCompiler {
 
-    GS_Reader::GS_Reader(const GSString &filename) {
-        this->_filename = filename;
-    }
+    GS_Reader::GS_Reader(GSString filename)
+            : _filename(filename) {}
 
     GSText GS_Reader::readFile() {
         GSChar symbol;

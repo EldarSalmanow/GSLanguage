@@ -1,18 +1,18 @@
 project(GSParserLibrary)
 
+set(PARSER_DIR ${SOURCE_DIR}/Parser)
+
 set(GS_PARSER_SOURCE
-        ../../src/Parser/GS_Parser.cpp
-        ../../src/Parser/GS_ExpressionParser.cpp
-        ../../src/Parser/GS_VariableParser.cpp
-        ../../src/Parser/Values/GS_LiteralTypes.cpp
-        ../../src/Parser/Values/GS_Value.cpp
-        ../../src/Parser/Values/GS_StringValue.cpp
-        ../../src/Parser/Values/GS_IntegerValue.cpp
-        ../../src/Parser/Expressions/GS_ValueExpression.cpp
-        ../../src/Parser/Expressions/GS_BinaryExpression.cpp
-        ../../src/Parser/Expressions/GS_UnaryExpression.cpp
-        ../../src/Parser/Statements/GS_VariableDeclarationStatement.cpp
-        ../../src/Parser/Statements/GS_AssignmentStatement.cpp)
+        ${PARSER_DIR}/GS_Parser.cpp
+        ${PARSER_DIR}/GS_ExpressionParser.cpp
+
+        ${PARSER_DIR}/Nodes/GS_Value.cpp
+        ${PARSER_DIR}/Nodes/GS_IntegerValue.cpp
+
+        ${PARSER_DIR}/Nodes/GS_ValueNode.cpp
+
+        ${PARSER_DIR}/Nodes/GS_BinaryNode.cpp
+        ${PARSER_DIR}/Nodes/GS_UnaryNode.cpp)
 
 add_library(
 #       Library name
@@ -23,4 +23,4 @@ add_library(
         ${GS_PARSER_SOURCE}
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE ../Parser)
+target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR}/Parser)

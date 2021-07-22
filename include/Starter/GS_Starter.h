@@ -8,6 +8,7 @@
 #include <Reader/GS_Reader.h>
 #include <Lexer/GS_Lexer.h>
 #include <Parser/GS_Parser.h>
+#include <Optimizer/GS_Optimizer.h>
 #include <CodeGenerator/GS_CodeGenerator.h>
 
 namespace Starter {
@@ -16,6 +17,7 @@ namespace Starter {
 
     using namespace Lexer;
     using namespace Parser;
+    using namespace Optimizer;
     using namespace CodeGenerator;
 
     using namespace Debug;
@@ -42,20 +44,27 @@ namespace Starter {
 
         /**
          *
-         * @param statement
+         * @param nodePtr
          * @return
          */
-        static GSVoid printParserDebugInfo(GSStatementPointer &statement);
+        static GSVoid printParserDebugInfo(GSNodePtr &nodePtr);
+
+        /**
+         *
+         * @param nodePtr
+         * @return
+         */
+        static GSVoid printOptimizerDebugInfo(GSNodePtr &nodePtr);
     };
 
     /**
-     *
+     * Class for containing compiler data
      */
     class GS_CompilerData {
     public:
 
         /**
-         *
+         * Default constructor
          */
         GS_CompilerData() = default;
 
@@ -79,12 +88,17 @@ namespace Starter {
         /**
          * Statements before parser analyzing
          */
-        GSStatementPointerArray parserStatements;
+        GSNodePtrArray parserStatements;
 
         /**
-         * Code before code generator
+         * Optimized statements
          */
-        GSGeneratedCode codeGeneratorCode;
+        GSNodePtrArray optimizedParserStatements;
+
+        /**
+         * Bytecode for GSVirtualMachine before code generator
+         */
+        GSByteCode codeGeneratorByteCode;
     };
 
     /**
@@ -133,6 +147,11 @@ namespace Starter {
         static GSVoid startParser();
 
         /**
+         * Start optimizer for optimize AST
+         */
+        static GSVoid startOptimizer();
+
+        /**
          * Start code generator for generating output code
          */
         static GSVoid generateCode();
@@ -145,12 +164,12 @@ namespace Starter {
     private:
 
         /**
-         *
+         * Compiler data
          */
         inline static GS_CompilerData _compilerData;
 
         /**
-         *
+         * Timer for profiling
          */
         inline static GS_Timer _timer;
     };

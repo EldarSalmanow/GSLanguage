@@ -1,9 +1,9 @@
 project(GSCodeGeneratorLibrary)
 
+set(CODEGENERATOR_DIR ${SOURCE_DIR}/CodeGenerator)
+
 set(GS_CODEGENERATOR_SOURCE
-        ../../src/CodeGenerator/GS_CodeGenerator.cpp
-        ../../src/CodeGenerator/GS_Section.cpp
-        ../../src/CodeGenerator/GS_Variable.cpp)
+        ${CODEGENERATOR_DIR}/GS_CodeGenerator.cpp)
 
 add_library(
 #       Library name
@@ -14,4 +14,4 @@ add_library(
         ${GS_CODEGENERATOR_SOURCE}
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE ../CodeGenerator)
+target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR}/CodeGenerator)

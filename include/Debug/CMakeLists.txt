@@ -1,13 +1,17 @@
-set(LIBRARY_NAME GSDebugLibrary)
+project(GSDebugLibrary)
+
+set(DEBUG_DIR ${SOURCE_DIR}/Debug)
 
 set(GS_DEBUG_SOURCE
-        ../../src/Debug/GS_Debug.cpp ../../src/Debug/GS_Timer.cpp)
+        ${DEBUG_DIR}/GS_Timer.cpp)
 
 add_library(
 #       Library name
-        ${LIBRARY_NAME}
+        ${PROJECT_NAME}
 #       Library type
         STATIC
 #       Debug source
         ${GS_DEBUG_SOURCE}
 )
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR}/Debug)

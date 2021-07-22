@@ -23,7 +23,7 @@ namespace GSLanguageCompiler {
          * Constructor for GS_Reader
          * @param filename Name of the main file to read
          */
-        GS_Reader(const GSString &filename);
+        GS_Reader(GSString filename);
 
         /**
          * The file read function takes the file name from the GS_Reader class object and line by line

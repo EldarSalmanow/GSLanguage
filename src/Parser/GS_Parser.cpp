@@ -2,25 +2,22 @@
 
 namespace GSLanguageCompiler::Parser {
 
-    GS_Parser::GS_Parser(GSTokenArray &tokens) {
-        this->_tokens = tokens;
+    GS_Parser::GS_Parser(Lexer::GSTokenArray &tokens)
+            : _tokens(tokens), _tokenIterator(_tokens.begin()) {}
 
-        _tokenIterator = this->_tokens.begin();
-    }
-
-    GSStatementPointerArray GS_Parser::parse() {
-        while (!_checkTokenType(TokenType::END_OF_FILE)) {
-            GSStatementPointer statement;
+    GSNodePtrArray GS_Parser::parse() {
+        while (!_checkTokenType(Lexer::TokenType::END_OF_FILE)) {
+            GSNodePtr node;
 
             try {
-                statement = _statement();
+                node = _node();
             } catch (Exceptions::GS_NewLineException) {
                 _nextToken();
 
                 continue;
             }
 
-            _addStatement(statement);
+            _addNode(node);
         }
 
         return _statements;
@@ -28,45 +25,48 @@ namespace GSLanguageCompiler::Parser {
 
 //--------------------------------------------------------------------------
 
-    GSStatementPointer GS_Parser::_statement() {
+    GSNodePtr GS_Parser::_node() {
         // var
-        if (_checkTokenType(TokenType::KEYWORD_VAR)) {
-            return _parsingVariableDeclaration();
+        if (_checkTokenType(Lexer::TokenType::KEYWORD_VAR)) {
+            throw Exceptions::GS_Exception("Unsupported parsing for variables declaration in this version!");
         }
-        else if (_checkTokenType(TokenType::SYMBOL_EQ)) {
-            return _parsingAssignmentStatement();
-        }
-        //else if (_checkTokenType())
-        else if (_checkTokenType(TokenType::NEW_LINE)) {
+        // new line
+        else if (_checkTokenType(Lexer::TokenType::NEW_LINE)) {
             throw Exceptions::GS_NewLineException();
         }
         else {
-            _throwException("Unknown statement!");
+            return _expression();
         }
     }
 
 //--------------------------------------------------------------------------------
 
-    void GS_Parser::_throwException(std::string errorMessage) {
-        throw Exceptions::GS_Exception((errorMessage +
-        _currentToken().getPosition().getCode() +
-        std::to_string(_currentToken().getPosition().getEndPosition().getLine()) +
-        std::to_string(_currentToken().getPosition().getEndPosition().getColumn())).c_str());
+    GSVoid GS_Parser::_throwException(GSString errorMessage) {
+        Lexer::GS_Position position = _currentToken().getPosition();
+
+        throw Exceptions::GS_Exception(
+                errorMessage
+                + "\nCode: "
+                + position.getCode()
+                + "\nLine: "
+                + std::to_string(position.getEndPosition().getLine())
+                + "\nColumn: "
+                + std::to_string(position.getEndPosition().getColumn()));
     }
 
-    bool GS_Parser::_checkTokenType(TokenType typeForCheck, int numberOfToken) {
+    GSBool GS_Parser::_checkTokenType(Lexer::TokenType typeForCheck, GSInt numberOfToken) {
         return _tokenIterator[numberOfToken].getType() == typeForCheck;
     }
 
-    inline void GS_Parser::_addStatement(GSStatementPointer &statement) {
+    inline GSVoid GS_Parser::_addNode(GSNodePtr &statement) {
         _statements.emplace_back(statement);
     }
 
-    GS_Token GS_Parser::_currentToken() {
+    Lexer::GS_Token GS_Parser::_currentToken() {
         return _tokenIterator[0];
     }
 
-    void GS_Parser::_nextToken() {
+    GSVoid GS_Parser::_nextToken() {
         ++_tokenIterator;
     }
 

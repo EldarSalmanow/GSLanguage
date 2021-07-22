@@ -1,14 +1,17 @@
-set(LIBRARY_NAME GSReaderLibrary)
+project(GSReaderLibrary)
+
+set(READER_DIR ${SOURCE_DIR}/Reader)
 
 set(GS_READER_SOURCE
-        ../../src/Reader/GS_Reader.cpp
-        )
+        ${READER_DIR}/GS_Reader.cpp)
 
 add_library(
 #       Library name
-        ${LIBRARY_NAME}
+        ${PROJECT_NAME}
 #       Library type
         STATIC
 #       Reader source
         ${GS_READER_SOURCE}
 )
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR}/Reader)

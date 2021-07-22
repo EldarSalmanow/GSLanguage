@@ -2,30 +2,24 @@
 
 namespace GSLanguageCompiler::Parser {
 
-    GSExpressionPointer GS_Parser::_expression() {
+    GSNodePtr GS_Parser::_expression() {
         return _additive();
     }
 
-    GSExpressionPointer GS_Parser::_additive() {
-        GSExpressionPointer expression = _multiplicative();
+    GSNodePtr GS_Parser::_additive() {
+        GSNodePtr expression = _multiplicative();
 
         while (true) {
-            if (_checkTokenType(TokenType::SYMBOL_PLUS)) {
+            if (_checkTokenType(Lexer::TokenType::SYMBOL_PLUS)) {
                 _nextToken();
 
-                expression = GSExpressionPointer(new GS_BinaryExpression(
-                        BinaryOperation::PLUS,
-                        expression,
-                        _multiplicative()));
+                expression = std::make_shared<GS_BinaryNode>(BinaryOperation::PLUS, expression, _multiplicative());
 
                 continue;
-            } else if (_checkTokenType(TokenType::SYMBOL_MINUS)) {
+            } else if (_checkTokenType(Lexer::TokenType::SYMBOL_MINUS)) {
                 _nextToken();
 
-                expression = GSExpressionPointer(new GS_BinaryExpression(
-                        BinaryOperation::MINUS,
-                        expression,
-                        _multiplicative()));
+                expression = std::make_shared<GS_BinaryNode>(BinaryOperation::MINUS, expression, _multiplicative());
 
                 continue;
             }
@@ -36,26 +30,20 @@ namespace GSLanguageCompiler::Parser {
         return expression;
     }
 
-    GSExpressionPointer GS_Parser::_multiplicative() {
-        GSExpressionPointer expression = _unary();
+    GSNodePtr GS_Parser::_multiplicative() {
+        GSNodePtr expression = _unary();
 
         while (true) {
-            if (_checkTokenType(TokenType::SYMBOL_STAR)) {
+            if (_checkTokenType(Lexer::TokenType::SYMBOL_STAR)) {
                 _nextToken();
 
-                expression = GSExpressionPointer(new GS_BinaryExpression(
-                                BinaryOperation::STAR,
-                                expression,
-                                _unary()));
+                expression = std::make_shared<GS_BinaryNode>(BinaryOperation::STAR, expression, _unary());
 
                 continue;
-            } else if (_checkTokenType(TokenType::SYMBOL_SLASH)) {
+            } else if (_checkTokenType(Lexer::TokenType::SYMBOL_SLASH)) {
                 _nextToken();
 
-                expression = GSExpressionPointer(new GS_BinaryExpression(
-                                BinaryOperation::SLASH,
-                                expression,
-                                _unary()));
+                expression = std::make_shared<GS_BinaryNode>(BinaryOperation::SLASH, expression, _unary());
 
                 continue;
             }
@@ -66,55 +54,40 @@ namespace GSLanguageCompiler::Parser {
         return expression;
     }
 
-    GSExpressionPointer GS_Parser::_unary() {
-        if (this->_checkTokenType(TokenType::SYMBOL_MINUS)) {
+    GSNodePtr GS_Parser::_unary() {
+        if (_checkTokenType(Lexer::TokenType::SYMBOL_MINUS)) {
             _nextToken();
 
-            return GSExpressionPointer(new GS_UnaryExpression(
-                    UnaryOperation::MINUS,
-                    _primary()));
+            return std::make_shared<GS_UnaryNode>(UnaryOperation::MINUS, _primary());
         }
 
         return _primary();
     }
 
-    GSExpressionPointer GS_Parser::_primary() {
-        GSExpressionPointer expression = nullptr;
+    GSNodePtr GS_Parser::_primary() {
+        GSNodePtr expression = nullptr;
 
-        if (_checkTokenType(TokenType::NEW_LINE)) {
+        if (_checkTokenType(Lexer::TokenType::NEW_LINE)) {
             throw Exceptions::GS_NewLineException();
         }
 
-        if (_checkTokenType(TokenType::LITERAL_NUMBER)) {
-            expression = GSExpressionPointer(
-                    new GS_ValueExpression(
-                            GSValuePointer(
-                                    new GS_IntegerValue(std::stoi(_currentToken().getValue())))));
+        if (_checkTokenType(Lexer::TokenType::LITERAL_NUMBER)) {
+            expression = std::make_shared<GS_ValueNode>(std::make_shared<GS_IntegerValue>(std::stoi(_currentToken().getValue())));
 
             _nextToken();
-        } else if (_checkTokenType(TokenType::LITERAL_STRING)) {
-            expression = GSExpressionPointer(
-                    new GS_ValueExpression(
-                            GSValuePointer(
-                                    new GS_StringValue(_currentToken().getValue()))));
-
-            _nextToken();
-        } else if (_checkTokenType(TokenType::SYMBOL_LEFT_PARENTHESES)) {
+        } else if (_checkTokenType(Lexer::TokenType::SYMBOL_LEFT_PARENTHESES)) {
             _nextToken();
 
-            expression = this->_expression();
+            expression = _expression();
 
-            if (!_checkTokenType(TokenType::SYMBOL_RIGHT_PARENTHESES)) {
+            if (!_checkTokenType(Lexer::TokenType::SYMBOL_RIGHT_PARENTHESES)) {
                 _throwException("Lost right parentheses!");
             }
 
             _nextToken();
-        }
-        else if (_checkTokenType(TokenType::SYMBOL_RIGHT_PARENTHESES)) {
+        } else if (_checkTokenType(Lexer::TokenType::SYMBOL_RIGHT_PARENTHESES)) {
             _throwException("Lost left parentheses!");
-        }
-
-        if (expression == nullptr) {
+        } else {
             _throwException("Unknown expression!");
         }
 

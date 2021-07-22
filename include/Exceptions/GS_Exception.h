@@ -17,8 +17,8 @@ namespace GSLanguageCompiler::Exceptions {
          *
          * @param errorMessage
          */
-        GS_Exception(const GSChar *errorMessage)
-        : _errorMessage(errorMessage) {}
+        GS_Exception(GSString errorMessage)
+        : _errorMessage(std::move(errorMessage)) {}
 
     public:
 
@@ -27,7 +27,7 @@ namespace GSLanguageCompiler::Exceptions {
          * @return
          */
         const GSChar *what() {
-            return _errorMessage;
+            return _errorMessage.c_str();
         }
 
     private:
@@ -35,7 +35,7 @@ namespace GSLanguageCompiler::Exceptions {
         /**
          *
          */
-        const GSChar *_errorMessage;
+        GSString _errorMessage;
     };
 
 }

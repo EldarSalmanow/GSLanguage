@@ -2,117 +2,105 @@
 
 namespace GSLanguageCompiler::CodeGenerator {
 
-    GS_CodeGenerator::GS_CodeGenerator(Parser::GSStatementPointerArray &statements) {
-        this->_statements = statements;
+    std::map<Opcode, Byte> opcodeToByte = {
+            {Opcode::PUSH,       0x0},
+            {Opcode::POP,        0x1},
+
+            {Opcode::ADD,        0x2},
+            {Opcode::SUB,        0x3},
+
+            {Opcode::TO_REG_1,   0xf},
+            {Opcode::FROM_REG_1, 0xf1},
+
+            {Opcode::TO_REG_2,   0xf2},
+            {Opcode::FROM_REG_2, 0xf3},
+
+            {Opcode::TO_REG_3,   0xf4},
+            {Opcode::FROM_REG_3, 0xf5},
+
+            {Opcode::DONE,       0xff},
+    };
+
+    GS_CodeGenerator::GS_CodeGenerator(Parser::GSNodePtrArray &nodes)
+            : _nodes(nodes), _nodeIterator(_nodes.begin()) {}
+
+    template<typename Out>
+    Out castNodePtrTo(Parser::GSNodePtr &ptr) {
+        return *dynamic_cast<Out*>(ptr.get());
     }
 
-    GSGeneratedCode GS_CodeGenerator::generateCode() {
-        GSGeneratedCode generatedCode;
-
-        _textSection.addLineToSection("section .text\n"
-                                      "global _Fmain4\n\n"
-                                      "extern ExitProcess\n\n"
-                                      "_Fmain4:\n");
-        _dataSection.addLineToSection("section .data\n");
-        _bssSection.addLineToSection("section .bss\n");
-
-        _statementIterator = _statements.begin();
-
-        while (_statementIterator != _statements.end()) {
-            switch (_statementIterator[0]->getStatementType()) {
-                case Parser::StatementType::ASSIGNMENT:
-                    _generateAssignmentStatement();
+    GSByteCode GS_CodeGenerator::codegen() {
+        while (_nodeIterator != _nodes.end()) {
+            switch (_nodeIterator[0]->getNodeType()) {
+                case Parser::NodeType::VALUE_NODE:
+                    _generateValueNode();
                     break;
-                case Parser::StatementType::VARIABLE_DECLARATION:
-                    _generateVariableDeclarationStatement();
+                case Parser::NodeType::UNARY_NODE:
+                    _generateUnaryNode();
+                    break;
+                case Parser::NodeType::BINARY_NODE:
+                    _generateBinaryNode();
                     break;
             }
+
+            ++_nodeIterator;
         }
 
-        _textSection.addLineToSection("\tmov eax, 0\n"
-                                      "\tcall _FSystem6Exit4\n");
+	_bytecode.emplace_back(opcodeToByte[Opcode::DONE]);
 
-        _textSection.addLineToSection("_FSystem6Exit4:\n"
-                                      "\tpush eax\n"
-                                      "\tcall ExitProcess\n");
-
-        generatedCode += _dataSection.getSectionCode();
-        generatedCode += _bssSection.getSectionCode();
-        generatedCode += _textSection.getSectionCode();
-
-//        for (auto statement : _statements) {
-//            generatedCode += statement->generateCode();
-//        }
-
-        return generatedCode;
+        return _bytecode;
     }
 
-    void GS_CodeGenerator::_generateAssignmentStatement() {
-        GSGeneratedCode assignmentStatementCode;
-
-        Parser::GS_AssignmentStatement assignmentStatement = *static_cast<Parser::GS_AssignmentStatement *>(_statementIterator[0].get());
-
-        Parser::GS_VariableDeclarationStatement variableDeclarationStatement = assignmentStatement.getVariableDeclarationStatement();
-
-        std::string variableName;
-        std::string dataSize;
-        std::string moveSize;
-        int dataNumberSize;
-
-//        if (variableDeclarationStatement.getType() == "Int") {
-//            dataSize = "resd"; // reserve 4 bytes
-//            moveSize = "dword";
-//            dataNumberSize = 1;
-//        } else {
-//            throw Exceptions::GS_NotSupportedException("Compiling for string and other types not supported!");
-//        }
-        // TODO rewrite generating for assignment statement
-
-        dataSize = "resd"; // reserve 4 bytes
-        moveSize = "dword";
-        dataNumberSize = 1;
-
-        variableName = "_V"
-                       + variableDeclarationStatement.getName()
-                       + std::to_string(variableDeclarationStatement.getName().size());
-
-        _bssSection.addLineToSection(
-                "\t" + variableName + " " + dataSize + " " + std::to_string(dataNumberSize) + "\n");
-
-        _textSection.addLineToSection(_generateExpression(assignmentStatement.getExpression()));
-        _textSection.addLineToSection("\tmov " + moveSize + "[" + variableName + "], eax\n");
-
-        ++_statementIterator;
-
-        return;
-    }
-
-    void GS_CodeGenerator::_generateVariableDeclarationStatement() {
-        throw Exceptions::GS_Exception("Generating code for variable declaration statements not supported!");
-    }
-
-    std::string GS_CodeGenerator::_generateExpression(Parser::GSExpressionPointer expression) {
-        switch (expression->getExpressionType()) {
-            case Parser::ExpressionType::VALUE:
-                return _generateValueExpression(expression);
-            case Parser::ExpressionType::BINARY:
-                return _generateBinaryExpression(expression);
-            case Parser::ExpressionType::UNARY:
-                return _generateUnaryExpression(expression);
+    GSVoid GS_CodeGenerator::_generateNode(Parser::GSNodePtr node) {
+        switch (_nodeIterator[0]->getNodeType()) {
+            case Parser::NodeType::VALUE_NODE:
+                _generateValueNode();
+                break;
+            case Parser::NodeType::UNARY_NODE:
+                _generateUnaryNode();
+                break;
+            case Parser::NodeType::BINARY_NODE:
+                _generateBinaryNode();
+                break;
         }
     }
 
-    std::string GS_CodeGenerator::_generateValueExpression(Parser::GSExpressionPointer expression) {
-        Parser::GS_ValueExpression valueExpression = *static_cast<Parser::GS_ValueExpression *>(expression.get());
-        return "\tmov eax, " + std::to_string(std::any_cast<int>(valueExpression.getValue()->getData())) + "\n";
+    GSVoid GS_CodeGenerator::_generateValueNode() {
+        auto valueNode = castNodePtrTo<Parser::GS_ValueNode>(_nodeIterator[0]);
+
+        _bytecode.emplace_back(opcodeToByte[Opcode::PUSH]);
+
+        auto byteValue = static_cast<Byte>(valueNode.getValue()->getData<int>());
+
+        _bytecode.emplace_back(byteValue);
     }
 
-    std::string GS_CodeGenerator::_generateBinaryExpression(Parser::GSExpressionPointer expression) {
-        throw Exceptions::GS_Exception("Generating code for binary expressions not supported!");
+    GSVoid GS_CodeGenerator::_generateUnaryNode() {
+        throw Exceptions::GS_Exception("Generating bytecode for unary node not supported!");
     }
 
-    std::string GS_CodeGenerator::_generateUnaryExpression(Parser::GSExpressionPointer expression) {
-        throw Exceptions::GS_Exception("Generating code for unary expressions not supported!");
+    GSVoid GS_CodeGenerator::_generateBinaryNode() {
+        auto binaryNode = castNodePtrTo<Parser::GS_BinaryNode>(_nodeIterator[0]);
+
+        _generateNode(binaryNode.getFirstNode());
+        _generateNode(binaryNode.getSecondNode());
+
+        Byte operation;
+
+        switch (binaryNode.getBinaryOperation()) {
+            case Parser::BinaryOperation::PLUS:
+                operation = opcodeToByte[Opcode::ADD];
+                break;
+            case Parser::BinaryOperation::MINUS:
+                operation = opcodeToByte[Opcode::SUB];
+                break;
+            case Parser::BinaryOperation::STAR:
+                throw Exceptions::GS_Exception("Generating for star operation in binary node not supported!");
+            case Parser::BinaryOperation::SLASH:
+                throw Exceptions::GS_Exception("Generating for slash operation in binary node not supported!");
+        }
+
+        _bytecode.emplace_back(operation);
     }
 
 }

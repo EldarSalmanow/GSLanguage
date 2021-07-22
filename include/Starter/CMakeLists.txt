@@ -1,14 +1,17 @@
-set(LIBRARY_NAME GSStarterLibrary)
+project(GSStarterLibrary)
+
+set(STARTER_DIR ${SOURCE_DIR}/Starter)
 
 set(GS_STARTER_SOURCE
-        ../../src/Starter/GS_Starter.cpp
-        )
+        ${STARTER_DIR}/GS_Starter.cpp)
 
 add_library(
 #       Library name
-        ${LIBRARY_NAME}
+        ${PROJECT_NAME}
 #       Library type
         STATIC
 #       Starter source
         ${GS_STARTER_SOURCE}
 )
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR}/Starter)

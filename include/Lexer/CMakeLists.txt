@@ -1,12 +1,14 @@
 project(GSLexerLibrary)
 
+set(LEXER_DIR ${SOURCE_DIR}/Lexer)
+
 set(GS_LEXER_SOURCE
-        ../../src/Lexer/GS_Lexer.cpp
-        ../../src/Lexer/GS_Keywords.cpp
-        ../../src/Lexer/GS_Regex.cpp
-        ../../src/Lexer/GS_Token.cpp
-        ../../src/Lexer/GS_Position.cpp
-        ../../src/Lexer/GS_Coordinate.cpp)
+        ${LEXER_DIR}/GS_Lexer.cpp
+        ${LEXER_DIR}/GS_Keywords.cpp
+        ${LEXER_DIR}/GS_Regex.cpp
+        ${LEXER_DIR}/GS_Token.cpp
+        ${LEXER_DIR}/GS_Position.cpp
+        ${LEXER_DIR}/GS_Coordinate.cpp)
 
 add_library(
 #       Library name
@@ -17,4 +19,4 @@ add_library(
         ${GS_LEXER_SOURCE}
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE ../Lexer)
+target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR}/Lexer)

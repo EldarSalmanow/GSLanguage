@@ -1,4 +1,4 @@
-#include <Debug/GS_Timer.h>
+#include <GS_Timer.h>
 
 namespace Debug {
 
