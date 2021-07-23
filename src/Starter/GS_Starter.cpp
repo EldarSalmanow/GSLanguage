@@ -87,99 +87,91 @@ namespace Starter {
         }
     }
 
+    GSVoid GS_Starter::runWithTimer(std::function<GSVoid()> &function, GSString messageForProfiling) {
+        GS_Timer timer;
+
+        timer.start();
+
+        function();
+
+        timer.stop();
+
+        _timer.addResult(messageForProfiling + std::to_string(timer.result().count()) + " microseconds\n");
+    }
+
     GSVoid GS_Starter::startReader() {
-        GSReaderPointer reader = std::make_shared<GS_Reader>(_compilerData.argumentsOptions.getInputFilename());
+        auto reader = std::make_shared<GS_Reader>(_compilerData.argumentsOptions.getInputFilename());
+
+        std::function<GSVoid()> function = [reader] () -> GSVoid {
+            _compilerData.inputSource = reader->readFile();
+        };
 
         if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
-            GS_Timer readerTimer;
-
-            readerTimer.start();
-
-            _compilerData.inputSource = reader->readFile();
-
-            readerTimer.stop();
-
-            _timer.addResult("Reading input time: \t\t\t\t" + std::to_string(readerTimer.result().count()) + " microseconds\n");
+            runWithTimer(function, "Reading input time: \t\t\t\t");
         } else {
-            _compilerData.inputSource = reader->readFile();
+            function();
         }
     }
 
     GSVoid GS_Starter::startLexer() {
-        GSLexerPointer lexer = std::make_shared<GS_Lexer>(_compilerData.inputSource);
+        auto lexer = std::make_shared<GS_Lexer>(_compilerData.inputSource);
+
+        std::function<GSVoid()> function = [lexer] () -> GSVoid {
+            _compilerData.lexerTokens = lexer->tokenize();
+        };
 
         if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
-            GS_Timer lexerTimer;
-
-            lexerTimer.start();
-
-            _compilerData.lexerTokens = lexer->tokenize();
-
-            lexerTimer.stop();
-
-            _timer.addResult("Lexer analyzing time: \t\t\t\t" + std::to_string(lexerTimer.result().count()) + " microseconds\n");
+            runWithTimer(function, "Lexer analyzing time: \t\t\t\t");
         } else {
-            _compilerData.lexerTokens = lexer->tokenize();
+            function();
         }
     }
 
     GSVoid GS_Starter::startParser() {
-        GSParserPointer parser = std::make_shared<GS_Parser>(_compilerData.lexerTokens);
+        auto parser = std::make_shared<GS_Parser>(_compilerData.lexerTokens);
+
+        std::function<GSVoid()> function = [parser] () -> GSVoid {
+            _compilerData.parserStatements = parser->parse();
+        };
 
         if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
-            GS_Timer parserTimer;
-
-            parserTimer.start();
-
-            _compilerData.parserStatements = parser->parse();
-
-            parserTimer.stop();
-
-            _timer.addResult("Parsing tokens time: \t\t\t\t" + std::to_string(parserTimer.result().count()) + " microseconds\n");
+            runWithTimer(function, "Parsing tokens time: \t\t\t\t");
         } else {
-            _compilerData.parserStatements = parser->parse();
+            function();
         }
     }
 
     GSVoid GS_Starter::startOptimizer() {
-        GSOptimizerPointer optimizer = std::make_shared<GS_Optimizer>(_compilerData.parserStatements);
+        auto optimizer = std::make_shared<GS_Optimizer>(_compilerData.parserStatements);
+
+        std::function<GSVoid()> function = [optimizer] () -> GSVoid {
+            _compilerData.optimizedParserStatements = optimizer->optimize();
+        };
 
         if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
-            GS_Timer optimizerTimer;
-
-            optimizerTimer.start();
-
-            _compilerData.optimizedParserStatements = optimizer->optimize();
-
-            optimizerTimer.stop();
-
-            _timer.addResult("Optimizing parser statements time: \t\t" + std::to_string(optimizerTimer.result().count()) + " microseconds\n");
+            runWithTimer(function, "Optimizing parser statements time: \t\t");
         } else {
-            _compilerData.optimizedParserStatements = optimizer->optimize();
+            function();
         }
     }
 
     GSVoid GS_Starter::generateCode() {
-        GSCodeGeneratorPointer codeGenerator = std::make_shared<GS_CodeGenerator>(_compilerData.optimizedParserStatements);
+        auto codeGenerator = std::make_shared<GS_CodeGenerator>(_compilerData.optimizedParserStatements);
+
+        std::function<GSVoid()> function = [codeGenerator] () -> GSVoid {
+            _compilerData.codeGeneratorVMImage = codeGenerator->codegen();
+        };
 
         if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
-            GS_Timer codeGeneratorTimer;
-
-            codeGeneratorTimer.start();
-
-            _compilerData.codeGeneratorByteCode = codeGenerator->codegen();
-
-            codeGeneratorTimer.stop();
-
-            _timer.addResult("Code generation time: \t\t\t\t" + std::to_string(codeGeneratorTimer.result().count()) + " microseconds\n");
+            runWithTimer(function, "Code generation time: \t\t\t\t");
         } else {
-            _compilerData.codeGeneratorByteCode = codeGenerator->codegen();
+            function();
         }
 
         std::ofstream out(_compilerData.argumentsOptions.getOutputGSVMFilename(), std::ios::binary);
 
         if (out.is_open()) {
-            for (auto &byte : _compilerData.codeGeneratorByteCode) {
+            for (auto &byte : _compilerData.codeGeneratorVMImage.getByteCode()) {
                 out << byte;
             }
         }
@@ -188,7 +180,7 @@ namespace Starter {
     }
 
     GSVoid GS_Starter::parseArguments(GSInt argc, GSChar *argv[]) {
-        GSArgumentsPointer argumentsParser = std::make_shared<GS_Arguments>(argc, argv);
+        auto argumentsParser = std::make_shared<GS_Arguments>(argc, argv);
 
         _compilerData.argumentsOptions = argumentsParser->parseArguments();
 
@@ -200,25 +192,21 @@ namespace Starter {
     }
 
     GSVoid GS_Starter::startDebugMode() {
-        GS_Timer debugTimer;
+        std::function<GSVoid()> function = [] () -> GSVoid {
+            GS_Debug::printDebugInformation("\n----------READER OUT START----------\n", "\n----------READER OUT END----------\n",
+                                            &GS_DebugFunctions::printReaderDebugInfo, _compilerData.inputSource);
 
-        debugTimer.start();
+            GS_Debug::printDebugInformation("\n----------LEXER OUT START----------\n", "\n----------LEXER OUT END----------\n",
+                                            &GS_DebugFunctions::printLexerDebugInfo, _compilerData.lexerTokens);
 
-        GS_Debug::printDebugInformation("\n----------READER OUT START----------\n", "\n----------READER OUT END----------\n",
-                                        &GS_DebugFunctions::printReaderDebugInfo, _compilerData.inputSource);
+            GS_Debug::printDebugInformation("\n----------PARSER OUT START----------\n", "\n----------PARSER OUT END----------\n",
+                                            &GS_DebugFunctions::printParserDebugInfo, _compilerData.parserStatements);
 
-        GS_Debug::printDebugInformation("\n----------LEXER OUT START----------\n", "\n----------LEXER OUT END----------\n",
-                                        &GS_DebugFunctions::printLexerDebugInfo, _compilerData.lexerTokens);
+            GS_Debug::printDebugInformation("\n----------OPTIMIZATION OUT START----------\n", "\n----------OPTIMIZATION OUT END----------\n",
+                                            &GS_DebugFunctions::printOptimizerDebugInfo, _compilerData.optimizedParserStatements);
+        };
 
-        GS_Debug::printDebugInformation("\n----------PARSER OUT START----------\n", "\n----------PARSER OUT END----------\n",
-                                        &GS_DebugFunctions::printParserDebugInfo, _compilerData.parserStatements);
-
-        GS_Debug::printDebugInformation("\n----------OPTIMIZATION OUT START----------\n", "\n----------OPTIMIZATION OUT END----------\n",
-                                        &GS_DebugFunctions::printOptimizerDebugInfo, _compilerData.optimizedParserStatements);
-
-        debugTimer.stop();
-
-        _timer.addResult("Printing debug info time: \t\t\t" + std::to_string(debugTimer.result().count()) + " microseconds\n");
+        runWithTimer(function, "Printing debug info time: \t\t\t");
     }
 
 }

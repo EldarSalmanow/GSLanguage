@@ -75,6 +75,12 @@ namespace GSLanguageCompiler::Optimizer {
                 case Parser::BinaryOperation::MINUS:
                     value = firstValueNode->getValue()->getData<int>() - secondValueNode->getValue()->getData<int>();
                     break;
+                case Parser::BinaryOperation::STAR:
+                    value = firstValueNode->getValue()->getData<int>() * secondValueNode->getValue()->getData<int>();
+                    break;
+                case Parser::BinaryOperation::SLASH:
+                    value = firstValueNode->getValue()->getData<int>() / secondValueNode->getValue()->getData<int>();
+                    break;
             }
 
             return std::make_shared<Parser::GS_ValueNode>(std::make_shared<Parser::GS_IntegerValue>(value));

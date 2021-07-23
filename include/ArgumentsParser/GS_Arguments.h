@@ -187,8 +187,6 @@ namespace GSLanguageCompiler {
         GSChar **_argv;
     };
 
-    typedef std::shared_ptr<GS_Arguments> GSArgumentsPointer;
-
 }
 
 #endif //GSLANGUAGE_GS_ARGUMENTS_H

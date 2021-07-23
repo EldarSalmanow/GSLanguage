@@ -2,6 +2,7 @@
 #define GSLANGUAGE_GS_PLATFORMTYPES_H
 
 #include <string>
+#include <vector>
 
 #include <CrossPlatform/GS_PlatformDefines.h>
 
@@ -33,6 +34,13 @@
     typedef unsigned long long GSULongLong;
 
     typedef std::string GSString;
+
+    namespace GSLanguageCompiler::CodeGenerator {
+        typedef char GSByte;
+
+        typedef std::vector<GSByte> GSByteCode;
+    }
+
 #endif
 
 #endif //GSLANGUAGE_GS_PLATFORMTYPES_H

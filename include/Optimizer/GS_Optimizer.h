@@ -56,8 +56,6 @@ namespace GSLanguageCompiler::Optimizer {
         Parser::GSNodePtrArray _nodes;
     };
 
-    typedef std::shared_ptr<GS_Optimizer> GSOptimizerPointer;
-
 }
 
 #endif //GSLANGUAGE_GS_OPTIMIZER_H

@@ -3,32 +3,9 @@
 
 #include <Parser/GS_Parser.h>
 
+#include <CodeGenerator/GS_VMImage.h>
+
 namespace GSLanguageCompiler::CodeGenerator {
-
-    typedef unsigned char Byte;
-
-    typedef std::vector<Byte> GSByteCode;
-
-    enum class Opcode {
-        PUSH,
-        POP,
-
-        ADD,
-        SUB,
-
-        TO_REG_1,
-        FROM_REG_1,
-
-        TO_REG_2,
-        FROM_REG_2,
-
-        TO_REG_3,
-        FROM_REG_3,
-
-        DONE
-    };
-
-    extern std::map<Opcode, Byte> opcodeToByte;
 
     /**
      *
@@ -48,7 +25,7 @@ namespace GSLanguageCompiler::CodeGenerator {
          *
          * @return
          */
-        GSByteCode codegen();
+        GS_VMImage codegen();
 
     private:
 
@@ -92,10 +69,8 @@ namespace GSLanguageCompiler::CodeGenerator {
         /**
          *
          */
-        GSByteCode _bytecode;
+        GS_VMImage _vmImage;
     };
-
-    typedef std::shared_ptr<GS_CodeGenerator> GSCodeGeneratorPointer;
 
 }
 

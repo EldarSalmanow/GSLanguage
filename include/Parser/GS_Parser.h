@@ -118,8 +118,6 @@ namespace GSLanguageCompiler::Parser {
         Lexer::GSTokenArray::iterator _tokenIterator;
     };
 
-    typedef std::shared_ptr<GS_Parser> GSParserPointer;
-
 }
 
 #endif //GSLANGUAGE_GS_PARSER_H

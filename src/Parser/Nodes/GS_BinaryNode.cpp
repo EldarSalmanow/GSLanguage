@@ -50,7 +50,7 @@ namespace GSLanguageCompiler::Parser {
 //    }
 
     GSString GS_BinaryNode::toString() {
-        return "["
+        return "[ "
                + _firstNode->toString()
                + " "
                + binaryOperationToString[_operation]

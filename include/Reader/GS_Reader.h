@@ -45,8 +45,6 @@ namespace GSLanguageCompiler {
         GSString _filename;
     };
 
-    typedef std::shared_ptr<GS_Reader> GSReaderPointer;
-
 }
 
 #endif //GSLANGUAGE_GS_READER_H

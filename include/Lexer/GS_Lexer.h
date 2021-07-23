@@ -160,8 +160,6 @@ namespace GSLanguageCompiler::Lexer {
         GSString _symbol;
     };
 
-    typedef std::shared_ptr<GS_Lexer> GSLexerPointer;
-
 }
 
 #endif //GSLANGUAGE_GS_LEXER_H

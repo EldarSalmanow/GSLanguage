@@ -2,25 +2,6 @@
 
 namespace GSLanguageCompiler::CodeGenerator {
 
-    std::map<Opcode, Byte> opcodeToByte = {
-            {Opcode::PUSH,       0x0},
-            {Opcode::POP,        0x1},
-
-            {Opcode::ADD,        0x2},
-            {Opcode::SUB,        0x3},
-
-            {Opcode::TO_REG_1,   0xf},
-            {Opcode::FROM_REG_1, 0xf1},
-
-            {Opcode::TO_REG_2,   0xf2},
-            {Opcode::FROM_REG_2, 0xf3},
-
-            {Opcode::TO_REG_3,   0xf4},
-            {Opcode::FROM_REG_3, 0xf5},
-
-            {Opcode::DONE,       0xff},
-    };
-
     GS_CodeGenerator::GS_CodeGenerator(Parser::GSNodePtrArray &nodes)
             : _nodes(nodes), _nodeIterator(_nodes.begin()) {}
 
@@ -29,7 +10,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         return *dynamic_cast<Out*>(ptr.get());
     }
 
-    GSByteCode GS_CodeGenerator::codegen() {
+    GS_VMImage GS_CodeGenerator::codegen() {
         while (_nodeIterator != _nodes.end()) {
             switch (_nodeIterator[0]->getNodeType()) {
                 case Parser::NodeType::VALUE_NODE:
@@ -46,9 +27,9 @@ namespace GSLanguageCompiler::CodeGenerator {
             ++_nodeIterator;
         }
 
-	_bytecode.emplace_back(opcodeToByte[Opcode::DONE]);
+        _vmImage.emitOpcode(Opcode::DONE);
 
-        return _bytecode;
+        return _vmImage;
     }
 
     GSVoid GS_CodeGenerator::_generateNode(Parser::GSNodePtr node) {
@@ -66,17 +47,18 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
 
     GSVoid GS_CodeGenerator::_generateValueNode() {
-        auto valueNode = castNodePtrTo<Parser::GS_ValueNode>(_nodeIterator[0]);
+        _vmImage.emitOpcode(Opcode::PUSH);
 
-        _bytecode.emplace_back(opcodeToByte[Opcode::PUSH]);
-
-        auto byteValue = static_cast<Byte>(valueNode.getValue()->getData<int>());
-
-        _bytecode.emplace_back(byteValue);
+        _vmImage.emitValue(static_cast<GSByte>(
+                castNodePtrTo<Parser::GS_ValueNode>(
+                        _nodeIterator[0]).getValue()->getData<int>()));
     }
 
     GSVoid GS_CodeGenerator::_generateUnaryNode() {
-        throw Exceptions::GS_Exception("Generating bytecode for unary node not supported!");
+//        auto unaryNode = castNodePtrTo<Parser::GS_UnaryNode>(_nodeIterator[0]);
+
+//        _generateNode(unaryNode.getNode());
+        throw Exceptions::GS_Exception("Generating bytecode for unary nodes not supported!");
     }
 
     GSVoid GS_CodeGenerator::_generateBinaryNode() {
@@ -85,22 +67,24 @@ namespace GSLanguageCompiler::CodeGenerator {
         _generateNode(binaryNode.getFirstNode());
         _generateNode(binaryNode.getSecondNode());
 
-        Byte operation;
+        Opcode operation;
 
         switch (binaryNode.getBinaryOperation()) {
             case Parser::BinaryOperation::PLUS:
-                operation = opcodeToByte[Opcode::ADD];
+                operation = Opcode::ADD;
                 break;
             case Parser::BinaryOperation::MINUS:
-                operation = opcodeToByte[Opcode::SUB];
+                operation = Opcode::SUB;
                 break;
             case Parser::BinaryOperation::STAR:
-                throw Exceptions::GS_Exception("Generating for star operation in binary node not supported!");
+                operation = Opcode::MUL;
+                break;
             case Parser::BinaryOperation::SLASH:
-                throw Exceptions::GS_Exception("Generating for slash operation in binary node not supported!");
+                operation = Opcode::DIV;
+                break;
         }
 
-        _bytecode.emplace_back(operation);
+        _vmImage.emitOpcode(operation);
     }
 
 }

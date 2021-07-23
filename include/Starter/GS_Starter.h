@@ -96,9 +96,9 @@ namespace Starter {
         GSNodePtrArray optimizedParserStatements;
 
         /**
-         * Bytecode for GSVirtualMachine before code generator
+         * VM image for GSVirtualMachine before code generator
          */
-        GSByteCode codeGeneratorByteCode;
+        GS_VMImage codeGeneratorVMImage;
     };
 
     /**
@@ -130,6 +130,14 @@ namespace Starter {
         * @return Configs for compiling
         */
         static GSVoid parseArguments(GSInt argc, GSChar **argv);
+
+        /**
+         * Function for run any function with profiling and writing profiling result
+         * @param function Function for running with profiling
+         * @param messageForProfiling Message for adding profiling result
+         * @return
+         */
+        static GSVoid runWithTimer(std::function<void()> &function, GSString messageForProfiling);
 
         /**
          * Start reading source from file
