@@ -3,4 +3,7 @@
 /cmake-build-release-mingw/
 
 # IDE files
-.idea/
+/.idea
+
+# Binary directory
+/bin

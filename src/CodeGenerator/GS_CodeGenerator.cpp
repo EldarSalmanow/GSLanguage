@@ -27,6 +27,9 @@ namespace GSLanguageCompiler::CodeGenerator {
             ++_nodeIterator;
         }
 
+        _vmImage.emitConstantValue(0, 12);
+        _vmImage.emitVariable(0, "x");
+
         _vmImage.emitOpcode(Opcode::DONE);
 
         return _vmImage;
@@ -55,9 +58,6 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
 
     GSVoid GS_CodeGenerator::_generateUnaryNode() {
-//        auto unaryNode = castNodePtrTo<Parser::GS_UnaryNode>(_nodeIterator[0]);
-
-//        _generateNode(unaryNode.getNode());
         throw Exceptions::GS_Exception("Generating bytecode for unary nodes not supported!");
     }
 

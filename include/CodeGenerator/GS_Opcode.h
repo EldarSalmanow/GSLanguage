@@ -19,6 +19,9 @@ namespace GSLanguageCompiler::CodeGenerator {
         TO_REG,
         FROM_REG,
 
+        CONSTANT,
+        VARIABLE,
+
         DONE
     };
 
