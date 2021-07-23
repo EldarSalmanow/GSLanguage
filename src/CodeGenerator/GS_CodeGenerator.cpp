@@ -27,9 +27,6 @@ namespace GSLanguageCompiler::CodeGenerator {
             ++_nodeIterator;
         }
 
-        _vmImage.emitConstantValue(0, 12);
-        _vmImage.emitVariable(0, "x");
-
         _vmImage.emitOpcode(Opcode::DONE);
 
         return _vmImage;
