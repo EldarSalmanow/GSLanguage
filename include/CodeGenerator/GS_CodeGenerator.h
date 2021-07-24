@@ -3,7 +3,7 @@
 
 #include <Parser/GS_Parser.h>
 
-#include <CodeGenerator/GS_VMImage.h>
+#include <CodeGenerator/GS_VMImageEncoder.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
@@ -25,7 +25,7 @@ namespace GSLanguageCompiler::CodeGenerator {
          *
          * @return
          */
-        GS_VMImage codegen();
+        GS_VMImageEncoder codegen();
 
     private:
 
@@ -69,7 +69,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         /**
          *
          */
-        GS_VMImage _vmImage;
+        GS_VMImageEncoder _vmImage;
     };
 
 }

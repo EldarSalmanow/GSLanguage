@@ -1,5 +1,5 @@
-#ifndef GSLANGUAGE_GS_VMIMAGE_H
-#define GSLANGUAGE_GS_VMIMAGE_H
+#ifndef GSLANGUAGE_GS_VMIMAGEENCODER_H
+#define GSLANGUAGE_GS_VMIMAGEENCODER_H
 
 #include <CodeGenerator/GS_Opcode.h>
 
@@ -8,13 +8,13 @@ namespace GSLanguageCompiler::CodeGenerator {
     /**
      *
      */
-    class GS_VMImage {
+    class GS_VMImageEncoder {
     public:
 
         /**
          *
          */
-        GS_VMImage();
+        GS_VMImageEncoder();
 
     public:
 
@@ -43,6 +43,14 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         /**
          *
+         * @param index
+         * @param functionName
+         * @return
+         */
+        GSVoid emitFunction(GSInt index, GSString functionName);
+
+        /**
+         *
          * @param byte
          * @return
          */
@@ -66,7 +74,12 @@ namespace GSLanguageCompiler::CodeGenerator {
         /**
          *
          */
-        GSByteCode _variablesTable;
+        GSByteCode _variableTable;
+
+        /**
+         *
+         */
+        GSByteCode _functionTable;
 
         /**
          *
@@ -76,4 +89,4 @@ namespace GSLanguageCompiler::CodeGenerator {
 
 }
 
-#endif //GSLANGUAGE_GS_VMIMAGE_H
+#endif //GSLANGUAGE_GS_VMIMAGEENCODER_H

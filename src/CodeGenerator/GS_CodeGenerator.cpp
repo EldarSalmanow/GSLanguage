@@ -10,7 +10,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         return *dynamic_cast<Out*>(ptr.get());
     }
 
-    GS_VMImage GS_CodeGenerator::codegen() {
+    GS_VMImageEncoder GS_CodeGenerator::codegen() {
         while (_nodeIterator != _nodes.end()) {
             switch (_nodeIterator[0]->getNodeType()) {
                 case Parser::NodeType::VALUE_NODE:

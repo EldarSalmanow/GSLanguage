@@ -98,7 +98,7 @@ namespace Starter {
         /**
          * VM image for GSVirtualMachine before code generator
          */
-        GS_VMImage codeGeneratorVMImage;
+        GS_VMImageEncoder codeGeneratorVMImage;
     };
 
     /**

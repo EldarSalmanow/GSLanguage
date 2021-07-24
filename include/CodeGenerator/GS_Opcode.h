@@ -7,6 +7,9 @@
 
 namespace GSLanguageCompiler::CodeGenerator {
 
+    /**
+     *
+     */
     enum class Opcode {
         PUSH,
         POP,
@@ -16,19 +19,26 @@ namespace GSLanguageCompiler::CodeGenerator {
         MUL,
         DIV,
 
+        CALL,
+
         TO_REG,
         FROM_REG,
 
         CONSTANT,
         VARIABLE,
+        FUNCTION,
 
         DONE
     };
 
+    /**
+     *
+     */
     extern std::map<Opcode, GSByte> opcodeToByte;
 
-    extern std::map<GSByte, Opcode> byteToOpcode;
-
+    /**
+     *
+     */
     extern std::map<Opcode, GSString> opcodeToString;
 
 }
