@@ -13,8 +13,13 @@ namespace GSLanguageCompiler::Parser {
      */
     enum class NodeType {
         VALUE_NODE,
+
         UNARY_NODE,
-        BINARY_NODE
+        BINARY_NODE,
+
+        VARIABLE_NODE,
+
+        PRINT_NODE
     };
 
     /**

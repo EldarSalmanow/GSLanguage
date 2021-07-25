@@ -75,6 +75,10 @@ namespace GSLanguageCompiler::Parser {
             expression = std::make_shared<GS_ValueNode>(std::make_shared<GS_IntegerValue>(std::stoi(_currentToken().getValue())));
 
             _nextToken();
+        } else if (_checkTokenType(Lexer::TokenType::LITERAL_STRING)) {
+            expression = std::make_shared<GS_ValueNode>(std::make_shared<GS_StringValue>(_currentToken().getValue()));
+
+            _nextToken();
         } else if (_checkTokenType(Lexer::TokenType::SYMBOL_LEFT_PARENTHESES)) {
             _nextToken();
 

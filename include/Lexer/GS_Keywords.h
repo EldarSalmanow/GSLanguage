@@ -19,11 +19,12 @@ namespace GSLanguageCompiler::Lexer {
         LITERAL_STRING,           // "hello"
         LITERAL_NUMBER,           // 12
 
-        KEYWORD_TYPE_INT,         // Int
-        KEYWORD_TYPE_STRING,      // String
+//        KEYWORD_TYPE_INT,         // Int
+//        KEYWORD_TYPE_STRING,      // String
 
         KEYWORD_VAR,              // var
         KEYWORD_IF,               // if
+        KEYWORD_PRINT,            // print
 
         SYMBOL_LEFT_PARENTHESES,  // (
         SYMBOL_RIGHT_PARENTHESES, // )

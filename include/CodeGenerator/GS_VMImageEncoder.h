@@ -31,7 +31,15 @@ namespace GSLanguageCompiler::CodeGenerator {
          * @param value
          * @return
          */
-        GSVoid emitConstantValue(GSInt index, GSInt value);
+        GSVoid emitNumberConstant(GSInt index, GSInt value);
+
+        /**
+         *
+         * @param index
+         * @param value
+         * @return
+         */
+        GSVoid emitStringConstant(GSInt index, GSString value);
 
         /**
          *
@@ -39,7 +47,15 @@ namespace GSLanguageCompiler::CodeGenerator {
          * @param variableName
          * @return
          */
-        GSVoid emitVariable(GSInt index, GSString variableName);
+        GSVoid emitNumberVariable(GSInt index, GSString variableName);
+
+        /**
+         *
+         * @param index
+         * @param variableName
+         * @return
+         */
+        GSVoid emitStringVariable(GSInt index, GSString variableName);
 
         /**
          *

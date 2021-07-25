@@ -8,16 +8,40 @@ namespace GSLanguageCompiler::CodeGenerator {
         _bytecode.emplace_back(opcodeToByte[opcode]);
     }
 
-    GSVoid GS_VMImageEncoder::emitConstantValue(GSInt index, GSInt value) {
-        _constantTable.emplace_back(opcodeToByte[Opcode::CONSTANT]);
+    GSVoid GS_VMImageEncoder::emitNumberConstant(GSInt index, GSInt value) {
+        _constantTable.emplace_back(opcodeToByte[Opcode::CONSTANT_NUMBER]);
 
         _constantTable.emplace_back(static_cast<GSByte>(index));
 
         _constantTable.emplace_back(static_cast<GSByte>(value));
     }
 
-    GSVoid GS_VMImageEncoder::emitVariable(GSInt index, GSString variableName) {
-        _variableTable.emplace_back(opcodeToByte[Opcode::VARIABLE]);
+    GSVoid GS_VMImageEncoder::emitStringConstant(GSInt index, GSString value) {
+        _constantTable.emplace_back(opcodeToByte[Opcode::CONSTANT_STRING]);
+
+        _constantTable.emplace_back(static_cast<GSByte>(index));
+
+        for (GSInt i = 0; i < value.size(); ++i) {
+            _constantTable.emplace_back(value[i]);
+        }
+
+        _constantTable.emplace_back(0x0);
+    }
+
+    GSVoid GS_VMImageEncoder::emitNumberVariable(GSInt index, GSString variableName) {
+        _variableTable.emplace_back(opcodeToByte[Opcode::VARIABLE_NUMBER]);
+
+        _variableTable.emplace_back(static_cast<GSByte>(index));
+
+        for (GSInt i = 0; i < variableName.size(); ++i) {
+            _variableTable.emplace_back(variableName[i]);
+        }
+
+        _variableTable.emplace_back(0x0);
+    }
+
+    GSVoid GS_VMImageEncoder::emitStringVariable(GSInt index, GSString variableName) {
+        _variableTable.emplace_back(opcodeToByte[Opcode::VARIABLE_STRING]);
 
         _variableTable.emplace_back(static_cast<GSByte>(index));
 

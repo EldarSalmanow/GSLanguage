@@ -37,22 +37,35 @@ namespace GSLanguageCompiler::CodeGenerator {
         GSVoid _generateNode(Parser::GSNodePtr node);
 
         /**
-         *
+         * @param node
          * @return
          */
-        GSVoid _generateValueNode();
+        GSVoid _generateValueNode(Parser::GSNodePtr node);
+
+        /**
+         * @param node
+         * @return
+         */
+        GSVoid _generateUnaryNode(Parser::GSNodePtr node);
+
+        /**
+         * @param node
+         * @return
+         */
+        GSVoid _generateBinaryNode(Parser::GSNodePtr node);
+
+        /**
+         * @param node
+         * @return
+         */
+        GSVoid _generateVariableNode(Parser::GSNodePtr node);
 
         /**
          *
+         * @param node
          * @return
          */
-        GSVoid _generateUnaryNode();
-
-        /**
-         *
-         * @return
-         */
-        GSVoid _generateBinaryNode();
+        GSVoid _generatePrintNode(Parser::GSNodePtr node);
 
     private:
 
@@ -69,7 +82,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         /**
          *
          */
-        GS_VMImageEncoder _vmImage;
+        GS_VMImageEncoder _encoder;
     };
 
 }

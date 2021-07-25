@@ -2,9 +2,8 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    GS_Lexer::GS_Lexer(GSText &input) {
-        this->_input = input;
-    }
+    GS_Lexer::GS_Lexer(GSText &input)
+            : _input(input) {}
 
     GSTokenArray GS_Lexer::tokenize() {
         // setting the iterator to the beginning of the text

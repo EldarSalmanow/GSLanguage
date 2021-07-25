@@ -172,9 +172,11 @@ namespace Starter {
 
         if (out.is_open()) {
             for (auto &byte : _compilerData.codeGeneratorVMImage.getByteCode()) {
-                out << byte;
+                out.put(byte);
             }
         }
+
+        out.put(1);
 
         out.close();
     }

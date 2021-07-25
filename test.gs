@@ -1,1 +1,5 @@
-12 / 2 + 34 * 2
+print("Hello, World!")
+
+print("Hello!")
+
+var a: Int = 12 + 34

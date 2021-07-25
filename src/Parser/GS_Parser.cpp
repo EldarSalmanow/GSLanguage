@@ -28,7 +28,54 @@ namespace GSLanguageCompiler::Parser {
     GSNodePtr GS_Parser::_node() {
         // var
         if (_checkTokenType(Lexer::TokenType::KEYWORD_VAR)) {
-            throw Exceptions::GS_Exception("Unsupported parsing for variables declaration in this version!");
+            _nextToken(); // skip 'var'
+
+            auto name = _currentToken().getValue();
+
+            _nextToken(); // skip name
+
+            if (_checkTokenType(Lexer::TokenType::SYMBOL_COLON)) {
+                _nextToken(); // skip ':'
+
+                auto type = _currentToken().getValue();
+
+                _nextToken(); // skip type
+
+                if (_checkTokenType(Lexer::TokenType::SYMBOL_EQ)) {
+                    _nextToken(); // skip '='
+
+                    auto node = _expression();
+
+                    return std::make_shared<GS_VariableNode>(name, type, node);
+                } else {
+                    return std::make_shared<GS_VariableNode>(name, type);
+                }
+            } else if (_checkTokenType(Lexer::TokenType::SYMBOL_EQ)) {
+                _nextToken(); // skip '='
+
+                auto node = _expression();
+
+                return std::make_shared<GS_VariableNode>(name, node);
+            } else {
+                return std::make_shared<GS_VariableNode>(name);
+            }
+        }
+        else if (_checkTokenType(Lexer::TokenType::KEYWORD_PRINT)) {
+            _nextToken(); // skip 'print'
+
+            _nextToken(); // skip '('
+
+            auto node = _primary(); // string value
+
+            auto valueNode = *dynamic_cast<GS_ValueNode*>(node.get());
+
+            auto value = *dynamic_cast<GS_StringValue*>(valueNode.getValue().get());
+
+            _nextToken(); // skip ')'
+
+            _nextToken();
+
+            return std::make_shared<GS_PrintNode>(value);
         }
         // new line
         else if (_checkTokenType(Lexer::TokenType::NEW_LINE)) {

@@ -11,11 +11,12 @@ namespace GSLanguageCompiler::Lexer {
             {TokenType::LITERAL_STRING,           "LITERAL_STRING"},
             {TokenType::LITERAL_NUMBER,           "LITERAL_NUMBER"},
 
-            {TokenType::KEYWORD_TYPE_INT,         "KEYWORD_TYPE_INT"},
-            {TokenType::KEYWORD_TYPE_STRING,      "KEYWORD_TYPE_STRING"},
+//            {TokenType::KEYWORD_TYPE_INT,         "KEYWORD_TYPE_INT"},
+//            {TokenType::KEYWORD_TYPE_STRING,      "KEYWORD_TYPE_STRING"},
 
             {TokenType::KEYWORD_VAR,              "KEYWORD_VAR"},
             {TokenType::KEYWORD_IF,               "KEYWORD_IF"},
+            {TokenType::KEYWORD_PRINT,            "KEYWORD_PRINT"},
 
             {TokenType::SYMBOL_LEFT_PARENTHESES,  "SYMBOL_LEFT_PARENTHESES"},
             {TokenType::SYMBOL_RIGHT_PARENTHESES, "SYMBOL_RIGHT_PARENTHESES"},
@@ -38,11 +39,12 @@ namespace GSLanguageCompiler::Lexer {
     };
 
     std::map<GSString, TokenType> reserved = {
-            {"Int",   TokenType::KEYWORD_TYPE_INT},
-            {"String",TokenType::KEYWORD_TYPE_STRING},
+//            {"Int",   TokenType::KEYWORD_TYPE_INT},
+//            {"String",TokenType::KEYWORD_TYPE_STRING},
 
             {"var",   TokenType::KEYWORD_VAR},
             {"if",    TokenType::KEYWORD_IF},
+            {"print", TokenType::KEYWORD_PRINT},
 
             {"(",     TokenType::SYMBOL_LEFT_PARENTHESES},
             {")",     TokenType::SYMBOL_RIGHT_PARENTHESES},

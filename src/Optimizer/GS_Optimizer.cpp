@@ -21,6 +21,10 @@ namespace GSLanguageCompiler::Optimizer {
                 return optimizeUnaryNode(node);
             case Parser::NodeType::BINARY_NODE:
                 return optimizeBinaryNode(node);
+            case Parser::NodeType::VARIABLE_NODE:
+                return node;
+            case Parser::NodeType::PRINT_NODE:
+                return node;
             default:
                 throw Exceptions::GS_Exception("Unknown node type for optimization!");
         }
