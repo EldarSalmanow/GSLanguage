@@ -10,6 +10,7 @@
 #include <Parser/GS_Parser.h>
 #include <Optimizer/GS_Optimizer.h>
 #include <CodeGenerator/GS_CodeGenerator.h>
+#include <Interpreter/GS_Interpreter.h>
 
 namespace Starter {
 
@@ -19,6 +20,7 @@ namespace Starter {
     using namespace Parser;
     using namespace Optimizer;
     using namespace CodeGenerator;
+    using namespace Interpreter;
 
     using namespace Debug;
 
@@ -96,9 +98,9 @@ namespace Starter {
         GSNodePtrArray optimizedParserStatements;
 
         /**
-         * VM image for GSVirtualMachine before code generator
+         * Bytecode for GSVirtualMachine before code generator
          */
-        GS_VMImageEncoder codeGeneratorVMImage;
+        GSByteCode codeGeneratorByteCode;
     };
 
     /**
@@ -137,7 +139,7 @@ namespace Starter {
          * @param messageForProfiling Message for adding profiling result
          * @return
          */
-        static GSVoid runWithTimer(std::function<void()> &function, GSString messageForProfiling);
+        static GSVoid runWithTimer(std::function<GSVoid()> &function, GSString messageForProfiling);
 
         /**
          * Start reading source from file
@@ -163,6 +165,11 @@ namespace Starter {
          * Start code generator for generating output code
          */
         static GSVoid generateCode();
+
+        /**
+         * Starting interpreter
+         */
+        static GSVoid startInterpreter();
 
         /**
          * Start debug functions

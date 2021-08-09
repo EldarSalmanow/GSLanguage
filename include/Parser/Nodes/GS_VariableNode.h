@@ -3,6 +3,10 @@
 
 #include <Parser/Nodes/GS_Node.h>
 
+#include <Interpreter/GS_TableOfSymbols.h>
+
+#include <Exceptions/GS_Exception.h>
+
 #include <CrossPlatform/GS_ClassUtilities.h>
 
 namespace GSLanguageCompiler::Parser {
@@ -22,7 +26,7 @@ namespace GSLanguageCompiler::Parser {
          *
          * @param name
          */
-        GS_VariableNode(GSString name);
+        explicit GS_VariableNode(GSString name);
 
         /**
          *
@@ -73,6 +77,18 @@ namespace GSLanguageCompiler::Parser {
          * @return
          */
         NodeType getNodeType() override;
+
+        /**
+         *
+         * @return
+         */
+        CodeGenerator::GSByteCode codegen() override;
+
+        /**
+         *
+         * @return
+         */
+        GSValuePtr interpret() override;
 
         /**
          *

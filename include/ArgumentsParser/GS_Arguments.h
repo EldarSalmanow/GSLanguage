@@ -29,12 +29,12 @@ namespace GSLanguageCompiler {
          * @param isEnableTesting
          * @param isEnableProfiling
          */
-        GS_ArgumentsOptions(const GSString &inputFilename,
-                            const GSString &outputFilename = "",
-                            const GSBool isForVM = false,
-                            const GSBool isEnableTesting = false,
-                            const GSBool isEnableProfiling = false,
-                            const GSBool isInvalidArguments = false);
+        explicit GS_ArgumentsOptions(GSString inputFilename,
+                                     GSString outputFilename = "",
+                                     GSBool isForVM = false,
+                                     GSBool isEnableTesting = false,
+                                     GSBool isEnableProfiling = false,
+                                     GSBool isInvalidArguments = false);
 
     public:
 
@@ -48,31 +48,13 @@ namespace GSLanguageCompiler {
          *
          * @return
          */
-        GSString getOutputAsmFilename();
-
-        /**
-         *
-         * @return
-         */
-        GSString getOutputObjFilename();
-
-        /**
-         *
-         * @return
-         */
-        GSString getOutputExeFilename();
-
-        /**
-         *
-         * @return
-         */
         GSString getOutputGSVMFilename();
 
         /**
          *
          * @return
          */
-        GSBool getIsForVM();
+        GSBool getIsInterpret();
 
         /**
          *
@@ -111,27 +93,12 @@ namespace GSLanguageCompiler {
         /**
          *
          */
-        GSString _outputAsmFilename;
-
-        /**
-         *
-         */
-        GSString _outputObjFilename;
-
-        /**
-         *
-         */
-        GSString _outputExeFilename;
-
-        /**
-         *
-         */
         GSString _outputGSVMFilename;
 
         /**
          *
          */
-        GSBool _isForVM;
+        GSBool _isInterpret;
 
         /**
          *

@@ -7,7 +7,7 @@ namespace GSLanguageCompiler::Parser {
     };
 
     GS_UnaryNode::GS_UnaryNode(UnaryOperation operation, GSNodePtr node)
-            : _operation(operation), _node(node) {}
+            : _operation(operation), _node(std::move(node)) {}
 
     UnaryOperation GS_UnaryNode::getUnaryOperation() {
         return _operation;
@@ -21,9 +21,18 @@ namespace GSLanguageCompiler::Parser {
         return NodeType::UNARY_NODE;
     }
 
-//    GSString GS_UnaryNode::codegen() {
-//        throw std::runtime_error("Generating code for unary nodes not supported!");
-//    }
+    CodeGenerator::GSByteCode GS_UnaryNode::codegen() {
+        throw Exceptions::GS_Exception("Generating code for unary nodes not supported!");
+    }
+
+    GSValuePtr GS_UnaryNode::interpret() {
+        auto value = dynamic_cast<GS_IntegerValue*>(_node->interpret().get())->getData<GSInt>();
+
+        switch (_operation) {
+            case UnaryOperation::MINUS:
+                return std::make_shared<GS_IntegerValue>(-value);
+        }
+    }
 
     GSString GS_UnaryNode::toString() {
         return "["

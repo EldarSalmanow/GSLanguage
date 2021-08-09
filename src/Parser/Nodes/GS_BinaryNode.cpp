@@ -28,26 +28,41 @@ namespace GSLanguageCompiler::Parser {
         return NodeType::BINARY_NODE;
     }
 
-//    GSString GS_BinaryNode::codegen() {
-//        GSString code = _firstNode->codegen() + _secondNode->codegen();
-//
-//        switch (_operation) {
-//            case BinaryOperation::PLUS:
-//                code += "add\n";
-//                break;
-//            case BinaryOperation::MINUS:
-//                code += "sub\n";
-//                break;
-//            case BinaryOperation::STAR:
-//                code += "mul\n";
-//                break;
-//            case BinaryOperation::SLASH:
-//                code += "div\n";
-//                break;
-//        }
-//
-//        return code;
-//    }
+    CodeGenerator::GSByteCode GS_BinaryNode::codegen() {
+        CodeGenerator::GSByteCode bytecode;
+
+        for (auto &byte : _secondNode->codegen()) {
+            bytecode.emplace_back(byte);
+        }
+
+        for (auto &byte : _firstNode->codegen()) {
+            bytecode.emplace_back(byte);
+        }
+
+        bytecode.emplace_back(CodeGenerator::opcodeToByte[CodeGenerator::Opcode::ADD]);
+
+        return bytecode;
+    }
+
+    GSValuePtr GS_BinaryNode::interpret() {
+        auto firstValue = dynamic_cast<GS_IntegerValue*>(_firstNode->interpret().get())->getData<GSInt>();
+        auto secondValue = dynamic_cast<GS_IntegerValue*>(_secondNode->interpret().get())->getData<GSInt>();
+
+        switch (_operation) {
+            case BinaryOperation::PLUS:
+                return std::make_shared<GS_IntegerValue>(firstValue + secondValue);
+            case BinaryOperation::MINUS:
+                return std::make_shared<GS_IntegerValue>(firstValue - secondValue);
+            case BinaryOperation::STAR:
+                return std::make_shared<GS_IntegerValue>(firstValue * secondValue);
+            case BinaryOperation::SLASH:
+                if (secondValue == 0) {
+                    throw Exceptions::GS_Exception("Division by zero!");
+                }
+
+                return std::make_shared<GS_IntegerValue>(firstValue / secondValue);
+        }
+    }
 
     GSString GS_BinaryNode::toString() {
         return "[ "

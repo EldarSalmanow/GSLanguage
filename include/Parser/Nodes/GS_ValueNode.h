@@ -3,8 +3,6 @@
 
 #include <Parser/Nodes/GS_Node.h>
 
-#include <Parser/Nodes/GS_Value.h>
-
 #include <Exceptions/GS_Exception.h>
 
 namespace GSLanguageCompiler::Parser {
@@ -19,7 +17,7 @@ namespace GSLanguageCompiler::Parser {
          * Constructor for value node
          * @param value Value ptr
          */
-        GS_ValueNode(GSValuePtr value);
+        explicit GS_ValueNode(GSValuePtr value);
 
     public:
 
@@ -41,7 +39,13 @@ namespace GSLanguageCompiler::Parser {
          * Codegen function
          * @return Generated code
          */
-//        GSString codegen() override;
+        CodeGenerator::GSByteCode codegen() override;
+
+        /**
+         *
+         * @return
+         */
+        GSValuePtr interpret() override;
 
         /**
          * Getter for string node data

@@ -20,6 +20,14 @@ namespace GSLanguageCompiler::Parser {
         return NodeType::VARIABLE_NODE;
     }
 
+    CodeGenerator::GSByteCode GS_VariableNode::codegen() {
+        throw Exceptions::GS_Exception("Generating for variable nodes not supported!");
+    }
+
+    GSValuePtr GS_VariableNode::interpret() {
+        Interpreter::tableOfSymbols.addVariable(_name, _node->interpret());
+    }
+
     GSString GS_VariableNode::toString() {
         return "[ "
                + _name

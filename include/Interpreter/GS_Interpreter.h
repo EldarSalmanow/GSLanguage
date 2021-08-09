@@ -1,21 +1,21 @@
-#ifndef GSLANGUAGE_GS_CODEGENERATOR_H
-#define GSLANGUAGE_GS_CODEGENERATOR_H
+#ifndef GSLANGUAGE_GS_INTERPRETER_H
+#define GSLANGUAGE_GS_INTERPRETER_H
 
 #include <Parser/GS_Parser.h>
 
-namespace GSLanguageCompiler::CodeGenerator {
+namespace GSLanguageCompiler::Interpreter {
 
     /**
      *
      */
-    class GS_CodeGenerator {
+    class GS_Interpreter {
     public:
 
         /**
          *
          * @param nodes
          */
-        explicit GS_CodeGenerator(Parser::GSNodePtrArray nodes);
+        explicit GS_Interpreter(Parser::GSNodePtrArray nodes);
 
     public:
 
@@ -23,7 +23,7 @@ namespace GSLanguageCompiler::CodeGenerator {
          *
          * @return
          */
-        GSByteCode codegen();
+        GSVoid startInterpret();
 
     private:
 
@@ -35,4 +35,4 @@ namespace GSLanguageCompiler::CodeGenerator {
 
 }
 
-#endif //GSLANGUAGE_GS_CODEGENERATOR_H
+#endif //GSLANGUAGE_GS_INTERPRETER_H

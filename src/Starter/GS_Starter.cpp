@@ -78,8 +78,13 @@ namespace Starter {
         // optimizing parser AST
         startOptimizer();
 
-        // generating code from AST
-        generateCode();
+        if (_compilerData.argumentsOptions.getIsInterpret()) {
+            // start interpreter
+            startInterpreter();
+        } else {
+            // generating code from AST
+            generateCode();
+        }
 
         if (_compilerData.argumentsOptions.getIsEnableTesting()) {
             // start debug mode
@@ -96,7 +101,7 @@ namespace Starter {
 
         timer.stop();
 
-        _timer.addResult(messageForProfiling + std::to_string(timer.result().count()) + " microseconds\n");
+        _timer.addResult(std::move(messageForProfiling) + std::to_string(timer.result().count()) + " microseconds\n");
     }
 
     GSVoid GS_Starter::startReader() {
@@ -159,7 +164,7 @@ namespace Starter {
         auto codeGenerator = std::make_shared<GS_CodeGenerator>(_compilerData.optimizedParserStatements);
 
         std::function<GSVoid()> function = [codeGenerator] () -> GSVoid {
-            _compilerData.codeGeneratorVMImage = codeGenerator->codegen();
+            _compilerData.codeGeneratorByteCode = codeGenerator->codegen();
         };
 
         if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
@@ -171,14 +176,26 @@ namespace Starter {
         std::ofstream out(_compilerData.argumentsOptions.getOutputGSVMFilename(), std::ios::binary);
 
         if (out.is_open()) {
-            for (auto &byte : _compilerData.codeGeneratorVMImage.getByteCode()) {
+            for (auto &byte : _compilerData.codeGeneratorByteCode) {
                 out.put(byte);
             }
         }
 
-        out.put(1);
-
         out.close();
+    }
+
+    GSVoid GS_Starter::startInterpreter() {
+        auto interpreter = std::make_shared<GS_Interpreter>(_compilerData.optimizedParserStatements);
+
+        std::function<GSVoid()> function = [interpreter] () -> GSVoid {
+            interpreter->startInterpret();
+        };
+
+        if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
+            runWithTimer(function, "Running program time: \t\t\t\t");
+        } else {
+            function();
+        }
     }
 
     GSVoid GS_Starter::parseArguments(GSInt argc, GSChar *argv[]) {

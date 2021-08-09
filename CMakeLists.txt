@@ -20,6 +20,7 @@ set(PROJECT_LIBRARIES
         GSParserLibrary
         GSOptimizerLibrary
         GSCodeGeneratorLibrary
+        GSInterpreterLibrary
         GSCrossPlatformLibrary
         GSDebugLibrary)
 
@@ -35,6 +36,7 @@ add_subdirectory(${INCLUDE_DIR}/Lexer)
 add_subdirectory(${INCLUDE_DIR}/Parser)
 add_subdirectory(${INCLUDE_DIR}/Optimizer)
 add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
+add_subdirectory(${INCLUDE_DIR}/Interpreter)
 add_subdirectory(${INCLUDE_DIR}/ArgumentsParser)
 add_subdirectory(${INCLUDE_DIR}/CrossPlatform)
 

@@ -1,9 +1,13 @@
 #ifndef GSLANGUAGE_GS_PRINTNODE_H
 #define GSLANGUAGE_GS_PRINTNODE_H
 
+#include <iostream>
+
 #include <Parser/Nodes/GS_StringValue.h>
 
 #include <Parser/Nodes/GS_Node.h>
+
+#include <Exceptions/GS_Exception.h>
 
 namespace GSLanguageCompiler::Parser {
 
@@ -17,7 +21,7 @@ namespace GSLanguageCompiler::Parser {
          *
          * @param stringValue
          */
-        GS_PrintNode(GS_StringValue &stringValue);
+        explicit GS_PrintNode(GS_StringValue stringValue);
 
     public:
 
@@ -30,6 +34,18 @@ namespace GSLanguageCompiler::Parser {
          * @return
          */
         NodeType getNodeType() override;
+
+        /**
+         *
+         * @return
+         */
+        CodeGenerator::GSByteCode codegen() override;
+
+        /**
+         *
+         * @return
+         */
+        GSValuePtr interpret() override;
 
         /**
          *

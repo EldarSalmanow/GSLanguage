@@ -5,6 +5,10 @@
 
 #include <Parser/Nodes/GS_Node.h>
 
+#include <Parser/Nodes/GS_IntegerValue.h>
+
+#include <Exceptions/GS_Exception.h>
+
 namespace GSLanguageCompiler::Parser {
 
     /**
@@ -68,7 +72,13 @@ namespace GSLanguageCompiler::Parser {
          *
          * @return
          */
-//        GSString codegen() override;
+        CodeGenerator::GSByteCode codegen() override;
+
+        /**
+         *
+         * @return
+         */
+        GSValuePtr interpret() override;
 
         /**
          *

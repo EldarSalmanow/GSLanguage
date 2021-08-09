@@ -4,7 +4,9 @@
 #include <memory>
 #include <vector>
 
-#include <CrossPlatform/GS_PlatformTypes.h>
+#include <Parser/Nodes/GS_Value.h>
+
+#include <CodeGenerator/GS_Opcode.h>
 
 namespace GSLanguageCompiler::Parser {
 
@@ -38,7 +40,13 @@ namespace GSLanguageCompiler::Parser {
          * Virtual function for generating code
          * @return Generated code
          */
-//        virtual GSString codegen() = 0;
+        virtual CodeGenerator::GSByteCode codegen() = 0;
+
+        /**
+         *
+         * @return
+         */
+        virtual GSValuePtr interpret() = 0;
 
         /**
          * Method for convert parser node to string
