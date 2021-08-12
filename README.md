@@ -45,3 +45,8 @@ Run with setting output filename. Output file: {outputFilename}.gsvm.
 ```shell
 GSLanguage --file {pathToInputFile}.gs --out {outputFilename}
 ```
+
+Run with interpreter.
+```shell
+GSLanguage --file {pathToInputFile}.gs --interpret
+```
