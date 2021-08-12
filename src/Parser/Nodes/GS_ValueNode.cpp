@@ -1,7 +1,5 @@
 #include <Nodes/GS_ValueNode.h>
 
-#include <utility>
-
 namespace GSLanguageCompiler::Parser {
 
     GS_ValueNode::GS_ValueNode(GSValuePtr value)
@@ -15,20 +13,14 @@ namespace GSLanguageCompiler::Parser {
         return NodeType::VALUE_NODE;
     }
 
-    CodeGenerator::GSByteCode GS_ValueNode::codegen() {
-        CodeGenerator::GSByteCode bytecode;
-
+    GSVoid GS_ValueNode::codegen(CodeGenerator::GS_BCBuilder &builder) {
         auto type = _value->getType();
 
         if (type == "Int") {
-            bytecode.emplace_back(CodeGenerator::opcodeToByte[CodeGenerator::Opcode::PUSH]);
-
-            bytecode.emplace_back(_value->getData<GSInt>());
+            builder.createPush(_value->getData<GSInt>());
         } else if (type == "String") {
-            throw Exceptions::GS_Exception("Generating string constant not supported!");
+            builder.createConstant(_value->getData<GSString>(), tableOfConstants.getIdByValue(_value->getData<GSString>()));
         }
-
-        return bytecode;
     }
 
     GSValuePtr GS_ValueNode::interpret() {
@@ -39,7 +31,7 @@ namespace GSLanguageCompiler::Parser {
         GSString string;
 
         if (_value->getType() == "Int") {
-            string = std::to_string(_value->getData<int>());
+            string = std::to_string(_value->getData<GSInt>());
         } else {
             throw Exceptions::GS_Exception("Unknown type for casting to string!");
         }

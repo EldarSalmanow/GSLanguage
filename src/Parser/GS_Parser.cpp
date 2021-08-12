@@ -69,7 +69,7 @@ namespace GSLanguageCompiler::Parser {
 
             auto valueNode = *dynamic_cast<GS_ValueNode*>(node.get());
 
-            auto value = *dynamic_cast<GS_StringValue*>(valueNode.getValue().get());
+            auto value = valueNode.getValue();
 
             _nextToken(); // skip ')'
 
@@ -92,7 +92,7 @@ namespace GSLanguageCompiler::Parser {
         Lexer::GS_Position position = _currentToken().getPosition();
 
         throw Exceptions::GS_Exception(
-                errorMessage
+                std::move(errorMessage)
                 + "\nCode: "
                 + position.getCode()
                 + "\nLine: "

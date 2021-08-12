@@ -28,20 +28,24 @@ namespace GSLanguageCompiler::Parser {
         return NodeType::BINARY_NODE;
     }
 
-    CodeGenerator::GSByteCode GS_BinaryNode::codegen() {
-        CodeGenerator::GSByteCode bytecode;
+    GSVoid GS_BinaryNode::codegen(CodeGenerator::GS_BCBuilder &builder) {
+        _firstNode->codegen(builder);
+        _secondNode->codegen(builder);
 
-        for (auto &byte : _secondNode->codegen()) {
-            bytecode.emplace_back(byte);
+        switch (_operation) {
+            case BinaryOperation::PLUS:
+                builder.createAdd();
+                break;
+            case BinaryOperation::MINUS:
+                builder.createSub();
+                break;
+            case BinaryOperation::STAR:
+                builder.createMul();
+                break;
+            case BinaryOperation::SLASH:
+                builder.createDiv();
+                break;
         }
-
-        for (auto &byte : _firstNode->codegen()) {
-            bytecode.emplace_back(byte);
-        }
-
-        bytecode.emplace_back(CodeGenerator::opcodeToByte[CodeGenerator::Opcode::ADD]);
-
-        return bytecode;
     }
 
     GSValuePtr GS_BinaryNode::interpret() {

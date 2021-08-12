@@ -2,19 +2,27 @@
 
 namespace GSLanguageCompiler::Parser {
 
-    GS_PrintNode::GS_PrintNode(GS_StringValue stringValue)
-            : _string(std::move(stringValue)) {}
+    GS_PrintNode::GS_PrintNode(GSValuePtr value)
+            : _value(std::move(value)) {}
 
     NodeType GS_PrintNode::getNodeType() {
         return NodeType::PRINT_NODE;
     }
 
-    CodeGenerator::GSByteCode GS_PrintNode::codegen() {
-        throw Exceptions::GS_Exception("Generating code for print node not supported!");
+    GSVoid GS_PrintNode::codegen(CodeGenerator::GS_BCBuilder &builder) {
+        builder.createConstant(_value->getData<GSString>(),
+                tableOfConstants.getIdByValue(_value->getData<GSString>()));
+
+        builder.createPushConstant(tableOfConstants.getIdByValue(_value->getData<GSString>()));
+        builder.createToReg(1);
+
+        builder.createPush(0);
+        builder.createToReg(0);
+        builder.createCall();
     }
 
     GSValuePtr GS_PrintNode::interpret() {
-        std::cout << _string.getData<GSString>();
+        std::cout << _value->getData<GSString>();
 
         return nullptr;
     }
@@ -24,7 +32,7 @@ namespace GSLanguageCompiler::Parser {
                + GSString("print")
                + " ("
                + " \""
-               + _string.getData<GSString>()
+               + _value->getData<GSString>()
                + "\""
                + " )"
                + " ]";

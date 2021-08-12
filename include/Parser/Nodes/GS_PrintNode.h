@@ -19,13 +19,13 @@ namespace GSLanguageCompiler::Parser {
 
         /**
          *
-         * @param stringValue
+         * @param value
          */
-        explicit GS_PrintNode(GS_StringValue stringValue);
+        explicit GS_PrintNode(GSValuePtr value);
 
     public:
 
-        GETTER(GS_StringValue, string, String)
+        GETTER(GSValuePtr, value, Value)
 
     public:
 
@@ -37,9 +37,10 @@ namespace GSLanguageCompiler::Parser {
 
         /**
          *
+         * @param builder
          * @return
          */
-        CodeGenerator::GSByteCode codegen() override;
+        GSVoid codegen(CodeGenerator::GS_BCBuilder &builder) override;
 
         /**
          *
@@ -58,7 +59,7 @@ namespace GSLanguageCompiler::Parser {
         /**
          *
          */
-        GS_StringValue _string;
+        GSValuePtr _value;
     };
 
 }

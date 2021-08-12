@@ -11,21 +11,27 @@ namespace GSLanguageCompiler::Parser {
             : _name(std::move(name)), _type(std::move(type)) {}
 
     GS_VariableNode::GS_VariableNode(GSString name, GSNodePtr node)
-            : _name(std::move(name)), _node(std::move(node)) {}
+            : _name(std::move(name)), _node(std::move(node)) {
+        tableOfVariables.addVariable(_name, _node->interpret());
+    }
 
     GS_VariableNode::GS_VariableNode(GSString name, GSString type, GSNodePtr node)
-            : _name(std::move(name)), _type(std::move(type)), _node(std::move(node)) {}
+            : _name(std::move(name)), _type(std::move(type)), _node(std::move(node)) {
+        tableOfVariables.addVariable(_name, _node->interpret());
+    }
 
     NodeType GS_VariableNode::getNodeType() {
         return NodeType::VARIABLE_NODE;
     }
 
-    CodeGenerator::GSByteCode GS_VariableNode::codegen() {
-        throw Exceptions::GS_Exception("Generating for variable nodes not supported!");
+    GSVoid GS_VariableNode::codegen(CodeGenerator::GS_BCBuilder &builder) {
+        builder.createVariable(_name, _node->interpret()->getData<GSInt>());
     }
 
     GSValuePtr GS_VariableNode::interpret() {
         Interpreter::tableOfSymbols.addVariable(_name, _node->interpret());
+
+        return nullptr;
     }
 
     GSString GS_VariableNode::toString() {

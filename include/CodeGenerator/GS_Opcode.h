@@ -14,6 +14,11 @@ namespace GSLanguageCompiler::CodeGenerator {
         PUSH,
         POP,
 
+        PUSH_CONSTANT,
+
+        TO_REG,
+        FROM_REG,
+
         ADD,
         SUB,
         MUL,
@@ -21,16 +26,12 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         CALL,
 
-        TO_REG,
-        FROM_REG,
-
-        CONSTANT_NUMBER,
         CONSTANT_STRING,
 
         VARIABLE_NUMBER,
-        VARIABLE_STRING,
 
-        FUNCTION,
+        SAVE,
+        GET,
 
         DONE
     };

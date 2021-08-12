@@ -58,11 +58,13 @@ namespace GSLanguageCompiler::Parser {
          */
         NodeType getNodeType() override;
 
+
         /**
          *
+         * @param builder
          * @return
          */
-        CodeGenerator::GSByteCode codegen() override;
+        GSVoid codegen(CodeGenerator::GS_BCBuilder &builder) override;
 
         /**
          *

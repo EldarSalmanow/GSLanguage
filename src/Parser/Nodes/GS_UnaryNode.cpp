@@ -21,7 +21,7 @@ namespace GSLanguageCompiler::Parser {
         return NodeType::UNARY_NODE;
     }
 
-    CodeGenerator::GSByteCode GS_UnaryNode::codegen() {
+    GSVoid GS_UnaryNode::codegen(CodeGenerator::GS_BCBuilder &builder) {
         throw Exceptions::GS_Exception("Generating code for unary nodes not supported!");
     }
 

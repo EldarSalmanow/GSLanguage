@@ -103,6 +103,8 @@ namespace Starter {
         GSByteCode codeGeneratorByteCode;
     };
 
+    typedef std::function<GSVoid()> RunningFunction;
+
     /**
      * Class for starting GSLanguageCompiler
      */
@@ -139,7 +141,7 @@ namespace Starter {
          * @param messageForProfiling Message for adding profiling result
          * @return
          */
-        static GSVoid runWithTimer(std::function<GSVoid()> &function, GSString messageForProfiling);
+        static GSVoid runWithTimer(RunningFunction &function, GSString messageForProfiling);
 
         /**
          * Start reading source from file

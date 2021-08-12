@@ -6,15 +6,11 @@ namespace GSLanguageCompiler::CodeGenerator {
             : _nodes(std::move(nodes)) {}
 
     GSByteCode GS_CodeGenerator::codegen() {
-        GSByteCode bytecode;
-
         for (auto &node : _nodes) {
-            for (auto &byte : node->codegen()) {
-                bytecode.emplace_back(byte);
-            }
+            node->codegen(_builder);
         }
 
-        return bytecode;
+        return _builder.createByteCode();
     }
 
 }

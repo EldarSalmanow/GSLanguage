@@ -6,6 +6,6 @@
  * @param argv Arguments array
  * @return Status number for operation system
  */
-int main(int argc, char *argv[]) {
+GSInt main(GSInt argc, GSChar *argv[]) {
     return Starter::GS_Starter::start(argc, argv);
 }

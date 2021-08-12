@@ -37,9 +37,9 @@ namespace GSLanguageCompiler::Parser {
 
         /**
          * Codegen function
-         * @return Generated code
+         * @param builder
          */
-        CodeGenerator::GSByteCode codegen() override;
+        GSVoid codegen(CodeGenerator::GS_BCBuilder &builder) override;
 
         /**
          *

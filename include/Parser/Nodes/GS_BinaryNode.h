@@ -72,7 +72,7 @@ namespace GSLanguageCompiler::Parser {
          *
          * @return
          */
-        CodeGenerator::GSByteCode codegen() override;
+        GSVoid codegen(CodeGenerator::GS_BCBuilder &builder) override;
 
         /**
          *

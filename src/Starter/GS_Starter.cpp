@@ -22,7 +22,7 @@ namespace Starter {
         std::cerr << statement->toString() << std::endl;
     }
 
-    void printException(Exceptions::GS_Exception &exception) {
+    GSVoid printException(Exceptions::GS_Exception &exception) {
         Platform::GS_CrossPlatform::setConsoleColor(Platform::GS_CrossPlatform::BLACK, Platform::GS_CrossPlatform::RED);
 
         std::cerr << exception.what() << std::endl;
@@ -34,22 +34,16 @@ namespace Starter {
         try {
             parseArguments(argc, argv);
 
+            RunningFunction function = startCompiling;
+
             if (_compilerData.argumentsOptions.getIsInvalidArguments()) {
                 return 1;
             } else if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
-                GS_Timer totalTimer;
-
-                totalTimer.start();
-
-                startCompiling();
-
-                totalTimer.stop();
-
-                _timer.addResult("Total time: \t\t\t\t\t" + std::to_string(totalTimer.result().count()) + " microseconds\n");
+                runWithTimer(function, "Total time: \t\t\t\t\t");
 
                 _timer.printResults();
             } else {
-                startCompiling();
+                function();
             }
 
         } catch (Exceptions::GS_Exception &exception) {
@@ -92,7 +86,7 @@ namespace Starter {
         }
     }
 
-    GSVoid GS_Starter::runWithTimer(std::function<GSVoid()> &function, GSString messageForProfiling) {
+    GSVoid GS_Starter::runWithTimer(RunningFunction &function, GSString messageForProfiling) {
         GS_Timer timer;
 
         timer.start();
@@ -107,7 +101,7 @@ namespace Starter {
     GSVoid GS_Starter::startReader() {
         auto reader = std::make_shared<GS_Reader>(_compilerData.argumentsOptions.getInputFilename());
 
-        std::function<GSVoid()> function = [reader] () -> GSVoid {
+        RunningFunction function = [reader] () -> GSVoid {
             _compilerData.inputSource = reader->readFile();
         };
 
@@ -121,7 +115,7 @@ namespace Starter {
     GSVoid GS_Starter::startLexer() {
         auto lexer = std::make_shared<GS_Lexer>(_compilerData.inputSource);
 
-        std::function<GSVoid()> function = [lexer] () -> GSVoid {
+        RunningFunction function = [lexer] () -> GSVoid {
             _compilerData.lexerTokens = lexer->tokenize();
         };
 
@@ -135,7 +129,7 @@ namespace Starter {
     GSVoid GS_Starter::startParser() {
         auto parser = std::make_shared<GS_Parser>(_compilerData.lexerTokens);
 
-        std::function<GSVoid()> function = [parser] () -> GSVoid {
+        RunningFunction function = [parser] () -> GSVoid {
             _compilerData.parserStatements = parser->parse();
         };
 
@@ -149,7 +143,7 @@ namespace Starter {
     GSVoid GS_Starter::startOptimizer() {
         auto optimizer = std::make_shared<GS_Optimizer>(_compilerData.parserStatements);
 
-        std::function<GSVoid()> function = [optimizer] () -> GSVoid {
+        RunningFunction function = [optimizer] () -> GSVoid {
             _compilerData.optimizedParserStatements = optimizer->optimize();
         };
 
@@ -163,7 +157,7 @@ namespace Starter {
     GSVoid GS_Starter::generateCode() {
         auto codeGenerator = std::make_shared<GS_CodeGenerator>(_compilerData.optimizedParserStatements);
 
-        std::function<GSVoid()> function = [codeGenerator] () -> GSVoid {
+        RunningFunction function = [codeGenerator] () -> GSVoid {
             _compilerData.codeGeneratorByteCode = codeGenerator->codegen();
         };
 
@@ -187,7 +181,7 @@ namespace Starter {
     GSVoid GS_Starter::startInterpreter() {
         auto interpreter = std::make_shared<GS_Interpreter>(_compilerData.optimizedParserStatements);
 
-        std::function<GSVoid()> function = [interpreter] () -> GSVoid {
+        RunningFunction function = [interpreter] () -> GSVoid {
             interpreter->startInterpret();
         };
 
@@ -211,7 +205,7 @@ namespace Starter {
     }
 
     GSVoid GS_Starter::startDebugMode() {
-        std::function<GSVoid()> function = [] () -> GSVoid {
+        RunningFunction function = [] () -> GSVoid {
             GS_Debug::printDebugInformation("\n----------READER OUT START----------\n", "\n----------READER OUT END----------\n",
                                             &GS_DebugFunctions::printReaderDebugInfo, _compilerData.inputSource);
 

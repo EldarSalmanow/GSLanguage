@@ -3,6 +3,8 @@
 
 #include <Parser/GS_Parser.h>
 
+#include <CodeGenerator/GS_BCBuilder.h>
+
 namespace GSLanguageCompiler::CodeGenerator {
 
     /**
@@ -31,6 +33,11 @@ namespace GSLanguageCompiler::CodeGenerator {
          *
          */
         Parser::GSNodePtrArray _nodes;
+
+        /**
+         *
+         */
+        GS_BCBuilder _builder;
     };
 
 }

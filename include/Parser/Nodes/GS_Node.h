@@ -4,9 +4,9 @@
 #include <memory>
 #include <vector>
 
-#include <Parser/Nodes/GS_Value.h>
+#include <Parser/GS_TablesOfSymbols.h>
 
-#include <CodeGenerator/GS_Opcode.h>
+#include <CodeGenerator/GS_BCBuilder.h>
 
 namespace GSLanguageCompiler::Parser {
 
@@ -38,9 +38,9 @@ namespace GSLanguageCompiler::Parser {
 
         /**
          * Virtual function for generating code
-         * @return Generated code
+         * @param builder
          */
-        virtual CodeGenerator::GSByteCode codegen() = 0;
+        virtual GSVoid codegen(CodeGenerator::GS_BCBuilder &builder) = 0;
 
         /**
          *

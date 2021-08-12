@@ -3,6 +3,8 @@
 
 #include <Parser/Nodes/GS_Value.h>
 
+#include <Parser/GS_TablesOfSymbols.h>
+
 namespace GSLanguageCompiler::Parser {
 
     /**
