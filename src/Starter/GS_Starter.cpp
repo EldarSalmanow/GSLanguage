@@ -15,11 +15,15 @@ namespace Starter {
     }
 
     GSVoid GS_DebugFunctions::printParserDebugInfo(GSNodePtr &statement) {
-        std::cerr << statement->toString() << std::endl;
+        static GS_PrintVisitor visitor;
+
+        statement->accept(&visitor);
     }
 
     GSVoid GS_DebugFunctions::printOptimizerDebugInfo(GSNodePtr &statement) {
-        std::cerr << statement->toString() << std::endl;
+        static GS_PrintVisitor visitor;
+
+        statement->accept(&visitor);
     }
 
     GSVoid printException(Exceptions::GS_Exception &exception) {
@@ -167,15 +171,9 @@ namespace Starter {
             function();
         }
 
-        std::ofstream out(_compilerData.argumentsOptions.getOutputGSVMFilename(), std::ios::binary);
+        GSBCCodeGen::GS_BCWriter writer(_compilerData.argumentsOptions.getOutputGSVMFilename());
 
-        if (out.is_open()) {
-            for (auto &byte : _compilerData.codeGeneratorByteCode) {
-                out.put(byte);
-            }
-        }
-
-        out.close();
+        writer.write(_compilerData.codeGeneratorByteCode);
     }
 
     GSVoid GS_Starter::startInterpreter() {
@@ -217,6 +215,9 @@ namespace Starter {
 
             GS_Debug::printDebugInformation("\n----------OPTIMIZATION OUT START----------\n", "\n----------OPTIMIZATION OUT END----------\n",
                                             &GS_DebugFunctions::printOptimizerDebugInfo, _compilerData.optimizedParserStatements);
+
+            GS_Debug::printCodeGeneratorDebugInfo("\n----------CODE GENERATOR OUT START----------\n", "\n----------CODE GENERATOR OUT END----------\n",
+                                                  _compilerData.codeGeneratorByteCode);
         };
 
         runWithTimer(function, "Printing debug info time: \t\t\t");

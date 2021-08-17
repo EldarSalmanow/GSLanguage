@@ -35,11 +35,11 @@
 
     typedef std::string GSString;
 
-    namespace GSLanguageCompiler::CodeGenerator {
-        typedef char GSByte;
-
-        typedef std::vector<GSByte> GSByteCode;
-    }
+//    namespace GSLanguageCompiler::CodeGenerator {
+//        typedef char GSByte;
+//
+//        typedef std::vector<GSByte> GSByteCode;
+//    }
 
 #endif
 

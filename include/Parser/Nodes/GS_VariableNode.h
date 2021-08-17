@@ -82,12 +82,6 @@ namespace GSLanguageCompiler::Parser {
          *
          * @return
          */
-        GSVoid codegen(CodeGenerator::GS_BCBuilder &builder) override;
-
-        /**
-         *
-         * @return
-         */
         GSValuePtr interpret() override;
 
         /**
@@ -95,6 +89,13 @@ namespace GSLanguageCompiler::Parser {
          * @return
          */
         GSString toString() override;
+
+        /**
+         *
+         * @param visitor
+         * @return
+         */
+        GSVoid accept(GS_Visitor *visitor) override;
 
     private:
 

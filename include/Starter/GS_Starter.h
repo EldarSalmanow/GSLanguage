@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_STARTER_H
 #define GSLANGUAGE_GS_STARTER_H
 
+#include <GSBCCodeGen/GS_BCWriter.h>
+
 #include <Debug/GS_Timer.h>
 #include <Debug/GS_Debug.h>
 
@@ -8,6 +10,7 @@
 #include <Reader/GS_Reader.h>
 #include <Lexer/GS_Lexer.h>
 #include <Parser/GS_Parser.h>
+#include <Parser/Nodes/Visitors/GS_PrintVisitor.h>
 #include <Optimizer/GS_Optimizer.h>
 #include <CodeGenerator/GS_CodeGenerator.h>
 #include <Interpreter/GS_Interpreter.h>

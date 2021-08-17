@@ -13,16 +13,6 @@ namespace GSLanguageCompiler::Parser {
         return NodeType::VALUE_NODE;
     }
 
-    GSVoid GS_ValueNode::codegen(CodeGenerator::GS_BCBuilder &builder) {
-        auto type = _value->getType();
-
-        if (type == "Int") {
-            builder.createPush(_value->getData<GSInt>());
-        } else if (type == "String") {
-            builder.createConstant(_value->getData<GSString>(), tableOfConstants.getIdByValue(_value->getData<GSString>()));
-        }
-    }
-
     GSValuePtr GS_ValueNode::interpret() {
         return _value;
     }
@@ -37,6 +27,10 @@ namespace GSLanguageCompiler::Parser {
         }
 
         return string;
+    }
+
+    GSVoid GS_ValueNode::accept(GS_Visitor *visitor) {
+        visitor->visit(this);
     }
 
 }

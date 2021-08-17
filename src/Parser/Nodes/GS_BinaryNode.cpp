@@ -28,26 +28,6 @@ namespace GSLanguageCompiler::Parser {
         return NodeType::BINARY_NODE;
     }
 
-    GSVoid GS_BinaryNode::codegen(CodeGenerator::GS_BCBuilder &builder) {
-        _firstNode->codegen(builder);
-        _secondNode->codegen(builder);
-
-        switch (_operation) {
-            case BinaryOperation::PLUS:
-                builder.createAdd();
-                break;
-            case BinaryOperation::MINUS:
-                builder.createSub();
-                break;
-            case BinaryOperation::STAR:
-                builder.createMul();
-                break;
-            case BinaryOperation::SLASH:
-                builder.createDiv();
-                break;
-        }
-    }
-
     GSValuePtr GS_BinaryNode::interpret() {
         auto firstValue = dynamic_cast<GS_IntegerValue*>(_firstNode->interpret().get())->getData<GSInt>();
         auto secondValue = dynamic_cast<GS_IntegerValue*>(_secondNode->interpret().get())->getData<GSInt>();
@@ -76,6 +56,10 @@ namespace GSLanguageCompiler::Parser {
                + " "
                + _secondNode->toString()
                + " ]";
+    }
+
+    GSVoid GS_BinaryNode::accept(GS_Visitor *visitor) {
+        visitor->visit(this);
     }
 
 }

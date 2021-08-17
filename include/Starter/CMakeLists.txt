@@ -15,3 +15,5 @@ add_library(
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR}/Starter)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${GS_BC_CODEGEN_LIBRARY_NAME})

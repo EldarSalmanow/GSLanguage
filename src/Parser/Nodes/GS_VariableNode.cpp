@@ -24,10 +24,6 @@ namespace GSLanguageCompiler::Parser {
         return NodeType::VARIABLE_NODE;
     }
 
-    GSVoid GS_VariableNode::codegen(CodeGenerator::GS_BCBuilder &builder) {
-        builder.createVariable(_name, _node->interpret()->getData<GSInt>());
-    }
-
     GSValuePtr GS_VariableNode::interpret() {
         Interpreter::tableOfSymbols.addVariable(_name, _node->interpret());
 
@@ -42,6 +38,10 @@ namespace GSLanguageCompiler::Parser {
                + " = "
                + _node->toString()
                + " ]";
+    }
+
+    GSVoid GS_VariableNode::accept(GS_Visitor *visitor) {
+        visitor->visit(this);
     }
 
 }

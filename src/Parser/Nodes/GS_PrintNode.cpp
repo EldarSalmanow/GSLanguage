@@ -9,18 +9,6 @@ namespace GSLanguageCompiler::Parser {
         return NodeType::PRINT_NODE;
     }
 
-    GSVoid GS_PrintNode::codegen(CodeGenerator::GS_BCBuilder &builder) {
-        builder.createConstant(_value->getData<GSString>(),
-                tableOfConstants.getIdByValue(_value->getData<GSString>()));
-
-        builder.createPushConstant(tableOfConstants.getIdByValue(_value->getData<GSString>()));
-        builder.createToReg(1);
-
-        builder.createPush(0);
-        builder.createToReg(0);
-        builder.createCall();
-    }
-
     GSValuePtr GS_PrintNode::interpret() {
         std::cout << _value->getData<GSString>();
 
@@ -36,6 +24,10 @@ namespace GSLanguageCompiler::Parser {
                + "\""
                + " )"
                + " ]";
+    }
+
+    GSVoid GS_PrintNode::accept(GS_Visitor *visitor) {
+        visitor->visit(this);
     }
 
 }

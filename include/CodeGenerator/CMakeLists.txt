@@ -4,7 +4,7 @@ set(CODEGENERATOR_DIR ${SOURCE_DIR}/CodeGenerator)
 
 set(GS_CODEGENERATOR_SOURCE
         ${CODEGENERATOR_DIR}/GS_CodeGenerator.cpp
-        ${CODEGENERATOR_DIR}/GS_Opcode.cpp)
+        ${CODEGENERATOR_DIR}/GS_CodeGenVisitor.cpp)
 
 add_library(
 #       Library name

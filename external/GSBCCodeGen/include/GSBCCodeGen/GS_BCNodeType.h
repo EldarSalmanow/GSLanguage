@@ -1,0 +1,20 @@
+#ifndef GSBCCODEGEN_GS_BCNODETYPE_H
+#define GSBCCODEGEN_GS_BCNODETYPE_H
+
+namespace GSBCCodeGen {
+
+    enum class BCNodeType {
+        ROOT_NODE,
+
+        BLOCK_NODE,
+
+        VALUE_NODE,
+
+        INSTRUCTION_NODE,
+        INSTRUCTION_WITH_OPERAND_NODE,
+        INSTRUCTION_WITH_TWO_OPERANDS_NODE
+    };
+
+}
+
+#endif //GSBCCODEGEN_GS_BCNODETYPE_H

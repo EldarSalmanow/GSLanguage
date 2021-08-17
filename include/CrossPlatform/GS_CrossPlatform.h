@@ -36,8 +36,8 @@ namespace Platform {
             CYAN = 3,
             RED = 4,
             MAGENTA = 5,
-            YELLOW = 14,
-            WHITE = 15
+            YELLOW = 6,
+            WHITE = 7
         };
 #endif
 

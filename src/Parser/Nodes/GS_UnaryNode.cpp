@@ -21,10 +21,6 @@ namespace GSLanguageCompiler::Parser {
         return NodeType::UNARY_NODE;
     }
 
-    GSVoid GS_UnaryNode::codegen(CodeGenerator::GS_BCBuilder &builder) {
-        throw Exceptions::GS_Exception("Generating code for unary nodes not supported!");
-    }
-
     GSValuePtr GS_UnaryNode::interpret() {
         auto value = dynamic_cast<GS_IntegerValue*>(_node->interpret().get())->getData<GSInt>();
 
@@ -40,6 +36,10 @@ namespace GSLanguageCompiler::Parser {
                + " "
                + _node->toString()
                + " ]";
+    }
+
+    GSVoid GS_UnaryNode::accept(GS_Visitor *visitor) {
+        visitor->visit(this);
     }
 
 }

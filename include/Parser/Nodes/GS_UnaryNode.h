@@ -58,14 +58,6 @@ namespace GSLanguageCompiler::Parser {
          */
         NodeType getNodeType() override;
 
-
-        /**
-         *
-         * @param builder
-         * @return
-         */
-        GSVoid codegen(CodeGenerator::GS_BCBuilder &builder) override;
-
         /**
          *
          * @return
@@ -77,6 +69,13 @@ namespace GSLanguageCompiler::Parser {
          * @return
          */
         GSString toString() override;
+
+        /**
+         *
+         * @param visitor
+         * @return
+         */
+        GSVoid accept(GS_Visitor *visitor) override;
 
     private:
 

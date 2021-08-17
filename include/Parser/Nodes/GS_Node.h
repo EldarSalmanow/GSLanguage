@@ -1,12 +1,11 @@
 #ifndef GSLANGUAGE_GS_NODE_H
 #define GSLANGUAGE_GS_NODE_H
 
-#include <memory>
 #include <vector>
 
-#include <Parser/GS_TablesOfSymbols.h>
+#include <Parser/Nodes/GS_Visitor.h>
 
-#include <CodeGenerator/GS_BCBuilder.h>
+#include <Parser/GS_TablesOfSymbols.h>
 
 namespace GSLanguageCompiler::Parser {
 
@@ -37,12 +36,6 @@ namespace GSLanguageCompiler::Parser {
         virtual NodeType getNodeType() = 0;
 
         /**
-         * Virtual function for generating code
-         * @param builder
-         */
-        virtual GSVoid codegen(CodeGenerator::GS_BCBuilder &builder) = 0;
-
-        /**
          *
          * @return
          */
@@ -53,6 +46,13 @@ namespace GSLanguageCompiler::Parser {
          * @return String node data
          */
         virtual GSString toString() = 0;
+
+        /**
+         *
+         * @param visitor
+         * @return
+         */
+        virtual GSVoid accept(GS_Visitor *visitor) = 0;
     };
 
     typedef std::shared_ptr<GS_Node> GSNodePtr;
