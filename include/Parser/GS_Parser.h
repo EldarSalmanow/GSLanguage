@@ -5,7 +5,7 @@
 
 #include <Parser/GS_IncludeNodes.h>
 
-#include <Exceptions/GS_Exception.h>
+#include <Exceptions/GS_ErrorHandler.h>
 #include <Exceptions/GS_NewLineException.h>
 
 namespace GSLanguageCompiler::Parser {
@@ -20,14 +20,14 @@ namespace GSLanguageCompiler::Parser {
          * Constructor for GS_Parser
          * @param tokens Container with tokens, before lexing analyzing
          */
-        GS_Parser(Lexer::GSTokenArray &tokens);
+        explicit GS_Parser(Lexer::GSTokenArray tokens);
 
     public:
 
         /**
          * Function for parsing input tokens
          */
-        GSNodePtrArray parse();
+        GSNodePtr parse();
 
     private:
 
@@ -85,12 +85,6 @@ namespace GSLanguageCompiler::Parser {
 
         /**
          *
-         * @param statement
-         */
-        inline GSVoid _addNode(GSNodePtr &statement);
-
-        /**
-         *
          */
         GSVoid _nextToken();
 
@@ -106,11 +100,6 @@ namespace GSLanguageCompiler::Parser {
          * Input tokens, before lexing analyzing
          */
         Lexer::GSTokenArray _tokens;
-
-        /**
-         *
-         */
-        GSNodePtrArray _statements;
 
         /**
          * Iterator _input container with tokens

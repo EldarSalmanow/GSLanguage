@@ -3,7 +3,7 @@
 
 #include <Parser/Nodes/GS_Node.h>
 
-#include <Exceptions/GS_Exception.h>
+#include <Exceptions/GS_ErrorHandler.h>
 
 namespace GSLanguageCompiler::Parser {
 
@@ -42,17 +42,15 @@ namespace GSLanguageCompiler::Parser {
         GSValuePtr interpret() override;
 
         /**
-         * Getter for string node data
-         * @return String node data
-         */
-        GSString toString() override;
-
-        /**
          *
          * @param visitor
          * @return
          */
         GSVoid accept(GS_Visitor *visitor) override;
+
+        GSNodePtr accept(Optimizer::GS_OptimizerPass *pass) override {
+            return pass->visit(this);
+        }
 
     private:
 

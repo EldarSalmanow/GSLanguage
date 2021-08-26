@@ -5,6 +5,8 @@
 
 #include <GSBCCodeGen/GS_BCCompiler.h>
 
+#include <Exceptions/GS_ErrorHandler.h>
+
 namespace GSLanguageCompiler::CodeGenerator {
 
     class GS_CodeGenVisitor : public Parser::GS_Visitor {
@@ -21,6 +23,10 @@ namespace GSLanguageCompiler::CodeGenerator {
         GSByteCode getBytecode();
 
     public:
+
+        GSVoid visit(Parser::GS_RootNode *rootNode) override;
+
+        GSVoid visit(Parser::GS_BlockNode *blockNode) override;
 
         GSVoid visit(Parser::GS_ValueNode *valueNode) override;
 

@@ -10,7 +10,7 @@ namespace GSLanguageCompiler::Parser {
     };
 
     GS_BinaryNode::GS_BinaryNode(BinaryOperation operation, GSNodePtr firstNode, GSNodePtr secondNode)
-            : _operation(operation), _firstNode(firstNode), _secondNode(secondNode) {}
+            : _operation(operation), _firstNode(std::move(firstNode)), _secondNode(std::move(secondNode)) {}
 
     BinaryOperation GS_BinaryNode::getBinaryOperation() {
         return _operation;
@@ -41,21 +41,14 @@ namespace GSLanguageCompiler::Parser {
                 return std::make_shared<GS_IntegerValue>(firstValue * secondValue);
             case BinaryOperation::SLASH:
                 if (secondValue == 0) {
-                    throw Exceptions::GS_Exception("Division by zero!");
+                    Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                                   "Division by zero!");
+
+                    Exceptions::errorHandler.throw_();
                 }
 
                 return std::make_shared<GS_IntegerValue>(firstValue / secondValue);
         }
-    }
-
-    GSString GS_BinaryNode::toString() {
-        return "[ "
-               + _firstNode->toString()
-               + " "
-               + binaryOperationToString[_operation]
-               + " "
-               + _secondNode->toString()
-               + " ]";
     }
 
     GSVoid GS_BinaryNode::accept(GS_Visitor *visitor) {

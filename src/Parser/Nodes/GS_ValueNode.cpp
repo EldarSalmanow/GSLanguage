@@ -17,18 +17,6 @@ namespace GSLanguageCompiler::Parser {
         return _value;
     }
 
-    GSString GS_ValueNode::toString() {
-        GSString string;
-
-        if (_value->getType() == "Int") {
-            string = std::to_string(_value->getData<GSInt>());
-        } else {
-            throw Exceptions::GS_Exception("Unknown type for casting to string!");
-        }
-
-        return string;
-    }
-
     GSVoid GS_ValueNode::accept(GS_Visitor *visitor) {
         visitor->visit(this);
     }

@@ -1,14 +1,15 @@
 #ifndef GSLANGUAGE_GS_DEBUG_H
 #define GSLANGUAGE_GS_DEBUG_H
 
-#include <iostream>
-
 #include <Lexer/GS_Keywords.h>
 
-#include <CrossPlatform/GS_CrossPlatform.h>
+#include <Parser/Nodes/GS_Node.h>
+#include <Parser/Nodes/Visitors/GS_PrintVisitor.h>
 
-#include <GSBCCodeGen/GS_BCHighDecompiler.h>
-#include <GSBCCodeGen/GS_BCVisitors.h>
+//#include <GSBCCodeGen/GS_BCHighDecompiler.h>
+//#include <GSBCCodeGen/GS_BCVisitors.h>
+
+#include <CrossPlatform/GS_CrossPlatform.h>
 
 namespace Debug {
 
@@ -34,17 +35,25 @@ namespace Debug {
                                            const GSString &endMessage,
                                            GSVoid (*function)(_ElementType &),
                                            _ContType &data) {
-             GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::RED);
-
-             std::cerr << startMessage << std::endl;
+             std::cout << startMessage << std::endl;
 
              for (auto &element : data) {
                  function(element);
              }
 
-             std::cerr << endMessage << std::endl;
+             std::cout << endMessage << std::endl;
+         }
 
-             GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::WHITE);
+         static GSVoid printASTDebugInfo(const GSString &startMessage,
+                                  const GSString &endMessage,
+                                  GSLanguageCompiler::Parser::GSNodePtr &root) {
+             std::cout << startMessage << std::endl;
+
+             GSLanguageCompiler::Parser::GS_PrintVisitor printVisitor;
+
+             root->accept(&printVisitor);
+
+             std::cout << endMessage << std::endl;
          }
 
          /**
@@ -54,23 +63,23 @@ namespace Debug {
           * @param bytecode
           * @return
           */
-         static GSVoid printCodeGeneratorDebugInfo(const GSString &startMessage,
-                                                   const GSString &endMessage,
-                                                   GSByteCode &bytecode) {
-             GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::RED);
-
-             std::cerr << startMessage << std::endl;
-
-             GSBCCodeGen::GS_BCHighDecompiler decompiler(bytecode);
-
-             GSBCCodeGen::GS_BCPrintVisitor visitor;
-
-             visitor.visit(decompiler.decompile());
-
-             std::cerr << endMessage << std::endl;
-
-             GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::WHITE);
-         }
+//         static GSVoid printCodeGeneratorDebugInfo(const GSString &startMessage,
+//                                                   const GSString &endMessage,
+//                                                   GSByteCode &bytecode) {
+//             GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::RED);
+//
+//             std::cerr << startMessage << std::endl;
+//
+//             GSBCCodeGen::GS_BCHighDecompiler decompiler(bytecode);
+//
+//             GSBCCodeGen::GS_BCPrintVisitor visitor;
+//
+//             visitor.visit(decompiler.decompile());
+//
+//             std::cerr << endMessage << std::endl;
+//
+//             GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::WHITE);
+//         }
     };
 
 }

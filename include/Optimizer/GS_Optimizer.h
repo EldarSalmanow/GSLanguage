@@ -3,6 +3,8 @@
 
 #include <Parser/GS_Parser.h>
 
+#include <Optimizer/GS_ConstantFoldingPass.h>
+
 namespace GSLanguageCompiler::Optimizer {
 
     /**
@@ -14,8 +16,9 @@ namespace GSLanguageCompiler::Optimizer {
         /**
          *
          * @param nodes
+         * @param passes
          */
-        explicit GS_Optimizer(Parser::GSNodePtrArray nodes);
+        explicit GS_Optimizer(Parser::GSNodePtr nodes, GSOptimizerPassPtrArray passes);
 
     public:
 
@@ -23,37 +26,19 @@ namespace GSLanguageCompiler::Optimizer {
          *
          * @return
          */
-        Parser::GSNodePtrArray optimize();
-
-    private:
-
-        /**
-         *
-         * @param node
-         * @return
-         */
-        Parser::GSNodePtr optimizeNode(Parser::GSNodePtr &node);
-
-        /**
-         *
-         * @param node
-         * @return
-         */
-        Parser::GSNodePtr optimizeUnaryNode(Parser::GSNodePtr &node);
-
-        /**
-         *
-         * @param node
-         * @return
-         */
-        Parser::GSNodePtr optimizeBinaryNode(Parser::GSNodePtr &node);
+        Parser::GSNodePtr optimize();
 
     private:
 
         /**
          *
          */
-        Parser::GSNodePtrArray _nodes;
+        Parser::GSNodePtr _nodes;
+
+        /**
+         *
+         */
+        GSOptimizerPassPtrArray _passes;
     };
 
 }

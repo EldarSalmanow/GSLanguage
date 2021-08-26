@@ -7,6 +7,8 @@
 
 namespace GSLanguageCompiler::Parser {
 
+    class GS_RootNode;
+    class GS_BlockNode;
     class GS_ValueNode;
     class GS_UnaryNode;
     class GS_BinaryNode;
@@ -20,6 +22,10 @@ namespace GSLanguageCompiler::Parser {
 
     public:
 
+        virtual GSVoid visit(GS_RootNode *rootNode) = 0;
+
+        virtual GSVoid visit(GS_BlockNode *blockNode) = 0;
+
         virtual GSVoid visit(GS_ValueNode *valueNode) = 0;
 
         virtual GSVoid visit(GS_UnaryNode *unaryNode) = 0;
@@ -30,8 +36,6 @@ namespace GSLanguageCompiler::Parser {
 
         virtual GSVoid visit(GS_PrintNode *printNode) = 0;
     };
-
-    typedef std::shared_ptr<GS_Visitor> GSVisitorPtr;
 
 }
 

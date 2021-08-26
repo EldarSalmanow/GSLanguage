@@ -12,35 +12,59 @@ namespace GSBCCodeGen {
 
     public:
 
-        GSBCNodePtr createConstant(GSInt id, GSString string);
+        GS_BCValueNode *createInt(GSInt value);
 
-        GSBCNodePtr createVariable(GSInt id, GSString name);
+        GS_BCValueNode *createString(GSString value);
 
-        GSBCNodePtr createPush(GSInt value);
+        GS_BCInstructionWithTwoOperandsNode *createConstant(GS_BCValueNode id, GS_BCValueNode string);
 
-        GSBCNodePtr createPop();
+        GS_BCInstructionWithTwoOperandsNode *createVariable(GS_BCValueNode id, GS_BCValueNode name);
 
-        GSBCNodePtr createPushConstant(GSInt id);
+        GS_BCInstructionWithOperandNode *createPush(GS_BCValueNode value);
 
-        GSBCNodePtr createToReg(GSInt registerNumber);
+        GS_BCInstructionNode *createPop();
 
-        GSBCNodePtr createFromReg(GSInt registerNumber);
+        GS_BCInstructionWithOperandNode *createToReg(GS_BCValueNode registerNumber);
 
-        GSBCNodePtr createSave(GSInt variableId);
+        GS_BCInstructionWithOperandNode *createFromReg(GS_BCValueNode registerNumber);
 
-        GSBCNodePtr createGet(GSInt variableId);
+        GS_BCInstructionWithOperandNode *createSave(GS_BCValueNode variableId);
 
-        GSBCNodePtr createCall(GSInt functionId);
+        GS_BCInstructionWithOperandNode *createGet(GS_BCValueNode variableId);
 
-        GSBCNodePtr createAdd();
+        GS_BCInstructionNode *createCmp();
 
-        GSBCNodePtr createSub();
+        GS_BCCFInstructionNode *createJmp(GS_BCLabelNode label);
 
-        GSBCNodePtr createMul();
+        GS_BCCFInstructionNode *createJie(GS_BCLabelNode label);
 
-        GSBCNodePtr createDiv();
+        GS_BCCFInstructionNode *createJine(GS_BCLabelNode label);
 
-        GSBCNodePtr createDone();
+        GS_BCCFInstructionNode *createJig(GS_BCLabelNode label);
+
+        GS_BCCFInstructionNode *createJil(GS_BCLabelNode label);
+
+        GS_BCCFInstructionNode *createJieg(GS_BCLabelNode label);
+
+        GS_BCCFInstructionNode *createJiel(GS_BCLabelNode label);
+
+        GS_BCInstructionWithOperandNode *createCall(GS_BCValueNode functionId);
+
+        GS_BCInstructionNode *createI2s();
+
+        GS_BCInstructionNode *createS2i();
+
+        GS_BCInstructionNode *createAdd();
+
+        GS_BCInstructionNode *createSub();
+
+        GS_BCInstructionNode *createMul();
+
+        GS_BCInstructionNode *createDiv();
+
+        GS_BCInstructionNode *createDone();
+
+        GS_BCLabelNode *createLabel(GS_BCValueNode name);
     };
 
 }

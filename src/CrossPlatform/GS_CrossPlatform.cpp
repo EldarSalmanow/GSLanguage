@@ -1,15 +1,26 @@
+#include <rang/rang.hpp>
+
 #include <GS_CrossPlatform.h>
 
 namespace Platform {
 
-    void GS_CrossPlatform::setConsoleColor(ConsoleColor background, ConsoleColor text) {
-#if defined(OS_WINDOWS)
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD) ((background << 4) | text));
-#endif
+    std::map<ConsoleColor, rang::fg> consoleColorToFgColor = {
+            {ConsoleColor::BLACK,   rang::fg::black},
+            {ConsoleColor::RED,     rang::fg::red},
+            {ConsoleColor::GREEN,   rang::fg::green},
+            {ConsoleColor::YELLOW,  rang::fg::yellow},
+            {ConsoleColor::BLUE,    rang::fg::blue},
+            {ConsoleColor::MAGENTA, rang::fg::magenta},
+            {ConsoleColor::CYAN,    rang::fg::cyan},
+            {ConsoleColor::GRAY,    rang::fg::gray}
+    };
 
-#if defined(OS_LINUX)
-        std::cout << "\x1b[" << text + 30 << ";" << background + 40 << "m";
-#endif
+    GSVoid GS_CrossPlatform::setConsoleColor(ConsoleColor text) {
+        std::cout << rang::style::bold << consoleColorToFgColor[text];
+    }
+
+    GSVoid GS_CrossPlatform::resetConsoleColor() {
+        std::cout << rang::fg::reset << rang::style::reset;
     }
 
 }

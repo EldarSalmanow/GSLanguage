@@ -4,9 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include <CrossPlatform/GS_PlatformTypes.h>
-
-#include <Exceptions/GS_Exception.h>
+#include <Exceptions/GS_ErrorHandler.h>
 
 namespace GSLanguageCompiler {
 

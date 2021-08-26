@@ -24,9 +24,9 @@ namespace GSBCCodeGen {
 
         GSVoid createPush(GSInt value);
 
-        GSVoid createPop();
+        GSVoid createPush(GSString value);
 
-        GSVoid createPushConstant(GSInt id);
+        GSVoid createPop();
 
         GSVoid createToReg(GSInt registerNumber);
 
@@ -36,7 +36,27 @@ namespace GSBCCodeGen {
 
         GSVoid createGet(GSInt variableId);
 
+        GSVoid createCmp();
+
+        GSVoid createJmp(GS_BCLabelNode *label);
+
+        GSVoid createJie(GS_BCLabelNode *label);
+
+        GSVoid createJine(GS_BCLabelNode *label);
+
+        GSVoid createJig(GS_BCLabelNode *label);
+
+        GSVoid createJil(GS_BCLabelNode *label);
+
+        GSVoid createJieg(GS_BCLabelNode *label);
+
+        GSVoid createJiel(GS_BCLabelNode *label);
+
         GSVoid createCall(GSInt functionId);
+
+        GSVoid createI2s();
+
+        GSVoid createS2i();
 
         GSVoid createAdd();
 
@@ -47,6 +67,10 @@ namespace GSBCCodeGen {
         GSVoid createDiv();
 
         GSVoid createDone();
+
+        GS_BCLabelNode *createLabel(GSString name);
+
+        GSVoid bindLabel(GS_BCLabelNode *label);
 
     public:
 

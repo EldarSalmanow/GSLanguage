@@ -30,14 +30,6 @@ namespace GSLanguageCompiler::Parser {
         }
     }
 
-    GSString GS_UnaryNode::toString() {
-        return "["
-               + unaryOperationToString[_operation]
-               + " "
-               + _node->toString()
-               + " ]";
-    }
-
     GSVoid GS_UnaryNode::accept(GS_Visitor *visitor) {
         visitor->visit(this);
     }

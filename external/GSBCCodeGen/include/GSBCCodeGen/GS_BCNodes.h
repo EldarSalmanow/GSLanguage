@@ -78,6 +78,8 @@ namespace GSBCCodeGen {
     class GS_BCValueNode : public GS_BCNode {
     public:
 
+        GS_BCValueNode();
+
         explicit GS_BCValueNode(GSInt value);
 
         explicit GS_BCValueNode(GSString value);
@@ -166,6 +168,54 @@ namespace GSBCCodeGen {
     private:
 
         GS_BCValueNode _firstValueNode, _secondValueNode;
+    };
+
+    class GS_BCLabelNode : public GS_BCNode {
+    public:
+
+        explicit GS_BCLabelNode(GS_BCValueNode name);
+
+    public:
+
+        GS_BCValueNode getName();
+
+    public:
+
+        BCNodeType getNodeType() override;
+
+        GSVoid accept(GS_BCVisitor *visitor) override;
+
+    private:
+
+        GS_BCValueNode _name;
+    };
+
+    class GS_BCCFInstructionNode : public GS_BCInstructionNode {
+    public:
+
+        GS_BCCFInstructionNode(BCOpcodeType opcode, GS_BCLabelNode to);
+
+        GS_BCCFInstructionNode(BCOpcodeType opcode, GS_BCValueNode from, GS_BCLabelNode to);
+
+    public:
+
+        GS_BCValueNode getFrom();
+
+        GSVoid setFrom(GS_BCValueNode from);
+
+        GS_BCLabelNode getTo();
+
+    public:
+
+        BCNodeType getNodeType() override;
+
+        GSVoid accept(GS_BCVisitor *visitor) override;
+
+    private:
+
+        GS_BCValueNode _from;
+
+        GS_BCLabelNode _to;
     };
 
 }

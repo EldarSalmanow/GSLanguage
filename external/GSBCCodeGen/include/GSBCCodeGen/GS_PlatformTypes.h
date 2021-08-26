@@ -6,10 +6,6 @@
 
 #include "GS_PlatformDefines.h"
 
-/*
- * TODO write here
- */
-
 #if defined(OS_WINDOWS)
     typedef void GSVoid;
 
@@ -22,6 +18,8 @@
     typedef std::string GSString;
 
     typedef unsigned char GSByte;
+
+    typedef GSByte* GSBytePtr;
 
     typedef std::vector<GSByte> GSByteCode;
 

@@ -3,81 +3,115 @@
 namespace GSBCCodeGen {
 
     std::map<BCOpcodeType, GSByte> opcodeToByte = {
-            {BCOpcodeType::CONSTANT_STRING, 0x0},
+            {BCOpcodeType::CONSTANT, 0x10},
 
-            {BCOpcodeType::VARIABLE_NUMBER, 0x1},
+            {BCOpcodeType::VARIABLE, 0x11},
 
-            {BCOpcodeType::PUSH,            0x2},
-            {BCOpcodeType::POP,             0x3},
+            {BCOpcodeType::PUSH_I,   0x12},
+            {BCOpcodeType::PUSH_S,   0x13},
+            {BCOpcodeType::POP,      0x14},
 
-            {BCOpcodeType::PUSH_CONSTANT,   0x4},
+            {BCOpcodeType::TO_REG,   0x15},
+            {BCOpcodeType::FROM_REG, 0x16},
 
-            {BCOpcodeType::TO_REG,          0x5},
-            {BCOpcodeType::FROM_REG,        0x6},
+            {BCOpcodeType::SAVE,     0x17},
+            {BCOpcodeType::GET,      0x18},
 
-            {BCOpcodeType::SAVE,            0x7},
-            {BCOpcodeType::GET,             0x8},
+            {BCOpcodeType::CMP,      0x19},
 
-            {BCOpcodeType::CALL,            0x9},
+            {BCOpcodeType::JMP,      0x1a},
+            {BCOpcodeType::JIE,      0x1b},
+            {BCOpcodeType::JINE,     0x1c},
+            {BCOpcodeType::JIG,      0x1e},
+            {BCOpcodeType::JIL,      0x1f},
+            {BCOpcodeType::JIEG,     0x21},
+            {BCOpcodeType::JIEL,     0x22},
 
-            {BCOpcodeType::ADD,             0xa},
-            {BCOpcodeType::SUB,             0xb},
-            {BCOpcodeType::MUL,             0xc},
-            {BCOpcodeType::DIV,             0xd},
+            {BCOpcodeType::CALL,     0x23},
 
-            {BCOpcodeType::DONE,            0xff}
+            {BCOpcodeType::I2S,      0x24},
+            {BCOpcodeType::S2I,      0x25},
+
+            {BCOpcodeType::ADD,      0x26},
+            {BCOpcodeType::SUB,      0x27},
+            {BCOpcodeType::MUL,      0x28},
+            {BCOpcodeType::DIV,      0x29},
+
+            {BCOpcodeType::DONE,     0xff}
     };
 
     std::map<GSByte, BCOpcodeType> byteToOpcode = {
-            {0x0,  BCOpcodeType::CONSTANT_STRING},
+            {0x10, BCOpcodeType::CONSTANT},
 
-            {0x1,  BCOpcodeType::VARIABLE_NUMBER},
+            {0x11, BCOpcodeType::VARIABLE},
 
-            {0x2,  BCOpcodeType::PUSH},
-            {0x3,  BCOpcodeType::POP},
+            {0x12, BCOpcodeType::PUSH_I},
+            {0x13, BCOpcodeType::PUSH_S},
+            {0x14, BCOpcodeType::POP},
 
-            {0x4,  BCOpcodeType::PUSH_CONSTANT},
+            {0x15, BCOpcodeType::TO_REG},
+            {0x16, BCOpcodeType::FROM_REG},
 
-            {0x5,  BCOpcodeType::TO_REG},
-            {0x6,  BCOpcodeType::FROM_REG},
+            {0x17, BCOpcodeType::SAVE},
+            {0x18, BCOpcodeType::GET},
 
-            {0x7,  BCOpcodeType::SAVE},
-            {0x8,  BCOpcodeType::GET},
+            {0x19, BCOpcodeType::CMP},
 
-            {0x9,  BCOpcodeType::CALL},
+            {0x1a, BCOpcodeType::JMP},
+            {0x1b, BCOpcodeType::JIE},
+            {0x1c, BCOpcodeType::JINE},
+            {0x1e, BCOpcodeType::JIG},
+            {0x1f, BCOpcodeType::JIL},
+            {0x21, BCOpcodeType::JIEG},
+            {0x22, BCOpcodeType::JIEL},
 
-            {0xa,  BCOpcodeType::ADD},
-            {0xb,  BCOpcodeType::SUB},
-            {0xc,  BCOpcodeType::MUL},
-            {0xd,  BCOpcodeType::DIV},
+            {0x23, BCOpcodeType::CALL},
+
+            {0x24, BCOpcodeType::I2S},
+            {0x25, BCOpcodeType::S2I},
+
+            {0x26, BCOpcodeType::ADD},
+            {0x27, BCOpcodeType::SUB},
+            {0x28, BCOpcodeType::MUL},
+            {0x29, BCOpcodeType::DIV},
 
             {0xff, BCOpcodeType::DONE}
     };
 
     std::map<BCOpcodeType, GSString> opcodeToString = {
-            {BCOpcodeType::CONSTANT_STRING, "CONSTANT_STRING"},
+            {BCOpcodeType::CONSTANT, "CONSTANT"},
 
-            {BCOpcodeType::VARIABLE_NUMBER, "VARIABLE_NUMBER"},
+            {BCOpcodeType::VARIABLE, "VARIABLE"},
 
-            {BCOpcodeType::PUSH,            "PUSH"},
-            {BCOpcodeType::POP,             "POP"},
+            {BCOpcodeType::PUSH_I,   "PUSH_I"},
+            {BCOpcodeType::PUSH_S,   "PUSH_S"},
+            {BCOpcodeType::POP,      "POP"},
 
-            {BCOpcodeType::PUSH_CONSTANT,   "PUSH_CONSTANT"},
+            {BCOpcodeType::TO_REG,   "TO_REG"},
+            {BCOpcodeType::FROM_REG, "FROM_REG"},
 
-            {BCOpcodeType::TO_REG,          "TO_REG"},
-            {BCOpcodeType::FROM_REG,        "FROM_REG"},
+            {BCOpcodeType::SAVE,     "SAVE"},
+            {BCOpcodeType::GET,      "GET"},
 
-            {BCOpcodeType::SAVE,            "SAVE"},
-            {BCOpcodeType::GET,             "GET"},
+            {BCOpcodeType::JMP,      "JMP"},
+            {BCOpcodeType::JIE,      "JIE"},
+            {BCOpcodeType::JINE,     "JINE"},
+            {BCOpcodeType::JIG,      "JIG"},
+            {BCOpcodeType::JIL,      "JIL"},
+            {BCOpcodeType::JIEG,     "JIEG"},
+            {BCOpcodeType::JIEL,     "JIEL"},
 
-            {BCOpcodeType::CALL,            "CALL"},
+            {BCOpcodeType::CALL,     "CALL"},
 
-            {BCOpcodeType::ADD,             "ADD"},
-            {BCOpcodeType::SUB,             "SUB"},
-            {BCOpcodeType::MUL,             "MUL"},
-            {BCOpcodeType::DIV,             "DIV"},
+            {BCOpcodeType::I2S,      "I2S"},
+            {BCOpcodeType::S2I,      "S2I"},
 
-            {BCOpcodeType::DONE,            "DONE"}
+            {BCOpcodeType::ADD,      "ADD"},
+            {BCOpcodeType::SUB,      "SUB"},
+            {BCOpcodeType::MUL,      "MUL"},
+            {BCOpcodeType::DIV,      "DIV"},
+
+            {BCOpcodeType::DONE,     "DONE"}
     };
 
 }

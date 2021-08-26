@@ -1,9 +1,9 @@
 #ifndef GSLANGUAGE_GS_NODE_H
 #define GSLANGUAGE_GS_NODE_H
 
-#include <vector>
-
 #include <Parser/Nodes/GS_Visitor.h>
+
+#include <Optimizer/GS_OptimizerPass.h>
 
 #include <Parser/GS_TablesOfSymbols.h>
 
@@ -13,6 +13,10 @@ namespace GSLanguageCompiler::Parser {
      * For typing parser nodes
      */
     enum class NodeType {
+        ROOT_NODE,
+
+        BLOCK_NODE,
+
         VALUE_NODE,
 
         UNARY_NODE,
@@ -42,17 +46,18 @@ namespace GSLanguageCompiler::Parser {
         virtual GSValuePtr interpret() = 0;
 
         /**
-         * Method for convert parser node to string
-         * @return String node data
-         */
-        virtual GSString toString() = 0;
-
-        /**
          *
          * @param visitor
          * @return
          */
         virtual GSVoid accept(GS_Visitor *visitor) = 0;
+
+        /**
+         *
+         * @param pass
+         * @return
+         */
+        virtual GSNodePtr accept(Optimizer::GS_OptimizerPass *pass) = 0;
     };
 
     typedef std::shared_ptr<GS_Node> GSNodePtr;

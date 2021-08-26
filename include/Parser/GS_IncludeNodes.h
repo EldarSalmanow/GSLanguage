@@ -6,6 +6,10 @@
 
 #include <Parser/Nodes/GS_Node.h>
 
+#include <Parser/Nodes/GS_RootNode.h>
+
+#include <Parser/Nodes/GS_BlockNode.h>
+
 #include <Parser/Nodes/GS_ValueNode.h>
 
 #include <Parser/Nodes/GS_UnaryNode.h>

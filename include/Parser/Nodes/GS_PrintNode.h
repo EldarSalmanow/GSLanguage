@@ -43,16 +43,14 @@ namespace GSLanguageCompiler::Parser {
 
         /**
          *
-         * @return
-         */
-        GSString toString() override;
-
-        /**
-         *
          * @param visitor
          * @return
          */
         GSVoid accept(GS_Visitor *visitor) override;
+
+        GSNodePtr accept(Optimizer::GS_OptimizerPass *pass) override {
+            return pass->visit(this);
+        }
 
     private:
 

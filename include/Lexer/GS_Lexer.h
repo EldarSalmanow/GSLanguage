@@ -6,7 +6,7 @@
 #include <Lexer/GS_Token.h>
 #include <Lexer/GS_Regex.h>
 
-#include <Exceptions/GS_Exception.h>
+#include <Exceptions/GS_ErrorHandler.h>
 
 namespace GSLanguageCompiler::Lexer {
 
@@ -22,7 +22,7 @@ namespace GSLanguageCompiler::Lexer {
          * Constructor for GS_Lexer
          * @param input Lines of code from input file
          */
-        GS_Lexer(GSText &input);
+        explicit GS_Lexer(GSText &input);
 
     public:
 

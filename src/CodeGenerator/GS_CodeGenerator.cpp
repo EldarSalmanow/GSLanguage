@@ -2,15 +2,13 @@
 
 namespace GSLanguageCompiler::CodeGenerator {
 
-    GS_CodeGenerator::GS_CodeGenerator(Parser::GSNodePtrArray nodes)
+    GS_CodeGenerator::GS_CodeGenerator(Parser::GSNodePtr nodes)
             : _nodes(std::move(nodes)) {}
 
     GSByteCode GS_CodeGenerator::codegen() {
         GS_CodeGenVisitor visitor;
 
-        for (auto &node : _nodes) {
-            node->accept(&visitor);
-        }
+        _nodes->accept(&visitor);
 
         visitor.createBytecode();
 

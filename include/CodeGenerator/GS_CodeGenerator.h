@@ -17,7 +17,7 @@ namespace GSLanguageCompiler::CodeGenerator {
          *
          * @param nodes
          */
-        explicit GS_CodeGenerator(Parser::GSNodePtrArray nodes);
+        explicit GS_CodeGenerator(Parser::GSNodePtr nodes);
 
     public:
 
@@ -32,7 +32,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         /**
          *
          */
-        Parser::GSNodePtrArray _nodes;
+        Parser::GSNodePtr _nodes;
     };
 
 }

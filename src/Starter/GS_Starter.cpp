@@ -5,33 +5,13 @@ namespace Starter {
     GSVoid GS_DebugFunctions::printReaderDebugInfo(GSString &string) {
         static GSInt line = 1;
 
-        std::cerr << line << ": " << string << std::endl;
+        std::cout << line << ": " << string << std::endl;
 
         ++line;
     }
 
     GSVoid GS_DebugFunctions::printLexerDebugInfo(GS_Token &token) {
-        std::cerr << tokenTypeToString[token.getType()] << std::endl;
-    }
-
-    GSVoid GS_DebugFunctions::printParserDebugInfo(GSNodePtr &statement) {
-        static GS_PrintVisitor visitor;
-
-        statement->accept(&visitor);
-    }
-
-    GSVoid GS_DebugFunctions::printOptimizerDebugInfo(GSNodePtr &statement) {
-        static GS_PrintVisitor visitor;
-
-        statement->accept(&visitor);
-    }
-
-    GSVoid printException(Exceptions::GS_Exception &exception) {
-        Platform::GS_CrossPlatform::setConsoleColor(Platform::GS_CrossPlatform::BLACK, Platform::GS_CrossPlatform::RED);
-
-        std::cerr << exception.what() << std::endl;
-
-        Platform::GS_CrossPlatform::setConsoleColor(Platform::GS_CrossPlatform::BLACK, Platform::GS_CrossPlatform::WHITE);
+        std::cout << tokenTypeToString[token.getType()] << std::endl;
     }
 
     GSInt GS_Starter::start(GSInt argc, GSChar **argv) {
@@ -51,13 +31,25 @@ namespace Starter {
             }
 
         } catch (Exceptions::GS_Exception &exception) {
-            printException(exception);
-
             return 1;
         } catch (std::exception &exception) {
-            std::cerr << "System error!\n" << exception.what() << std::endl;
+            Exceptions::errorHandler.print(GSLanguageCompiler::Exceptions::ErrorLevel::FATAL_LVL,
+                                                 exception.what());
+
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                           "Please, report this fatal error to GSLanguageCompiler repository.");
+
+            Exceptions::errorHandler.throw_();
 
             return 1;
+        } catch (...) {
+            Exceptions::errorHandler.print(GSLanguageCompiler::Exceptions::ErrorLevel::FATAL_LVL,
+                                           "Unknown fatal error!");
+
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                           "Please, report this fatal error to GSLanguageCompiler repository.");
+
+            Exceptions::errorHandler.throw_();
         }
 
         return 0;
@@ -145,7 +137,11 @@ namespace Starter {
     }
 
     GSVoid GS_Starter::startOptimizer() {
-        auto optimizer = std::make_shared<GS_Optimizer>(_compilerData.parserStatements);
+        GSOptimizerPassPtrArray passes = {
+                std::make_shared<GS_ConstantFoldingPass>()
+        };
+
+        auto optimizer = std::make_shared<GS_Optimizer>(_compilerData.parserStatements, passes);
 
         RunningFunction function = [optimizer] () -> GSVoid {
             _compilerData.optimizedParserStatements = optimizer->optimize();
@@ -203,6 +199,8 @@ namespace Starter {
     }
 
     GSVoid GS_Starter::startDebugMode() {
+        GS_CrossPlatform::setConsoleColor(ConsoleColor::RED);
+
         RunningFunction function = [] () -> GSVoid {
             GS_Debug::printDebugInformation("\n----------READER OUT START----------\n", "\n----------READER OUT END----------\n",
                                             &GS_DebugFunctions::printReaderDebugInfo, _compilerData.inputSource);
@@ -210,17 +208,19 @@ namespace Starter {
             GS_Debug::printDebugInformation("\n----------LEXER OUT START----------\n", "\n----------LEXER OUT END----------\n",
                                             &GS_DebugFunctions::printLexerDebugInfo, _compilerData.lexerTokens);
 
-            GS_Debug::printDebugInformation("\n----------PARSER OUT START----------\n", "\n----------PARSER OUT END----------\n",
-                                            &GS_DebugFunctions::printParserDebugInfo, _compilerData.parserStatements);
+            GS_Debug::printASTDebugInfo("\n----------PARSER OUT START----------\n", "\n----------PARSER OUT END----------\n",
+                                            _compilerData.parserStatements);
 
-            GS_Debug::printDebugInformation("\n----------OPTIMIZATION OUT START----------\n", "\n----------OPTIMIZATION OUT END----------\n",
-                                            &GS_DebugFunctions::printOptimizerDebugInfo, _compilerData.optimizedParserStatements);
-
-            GS_Debug::printCodeGeneratorDebugInfo("\n----------CODE GENERATOR OUT START----------\n", "\n----------CODE GENERATOR OUT END----------\n",
-                                                  _compilerData.codeGeneratorByteCode);
+            GS_Debug::printASTDebugInfo("\n----------OPTIMIZATION OUT START----------\n", "\n----------OPTIMIZATION OUT END----------\n",
+                                            _compilerData.optimizedParserStatements);
+//
+//            GS_Debug::printCodeGeneratorDebugInfo("\n----------CODE GENERATOR OUT START----------\n", "\n----------CODE GENERATOR OUT END----------\n",
+//                                                  _compilerData.codeGeneratorByteCode);
         };
 
         runWithTimer(function, "Printing debug info time: \t\t\t");
+
+        GS_CrossPlatform::resetConsoleColor();
     }
 
 }

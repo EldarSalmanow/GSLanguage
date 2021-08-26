@@ -8,7 +8,16 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     GSVoid GS_CodeGenVisitor::createBytecode() {
         if (!_bytecode.empty()) {
-            throw Exceptions::GS_Exception("Bytecode is not empty!");
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                           "Bytecode is created and not empty!");
+
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                           "Please, use \"getBytecode()\" for get bytecode.");
+
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                           "If you see this error, please report error to GSLanguageCompiler repository.");
+
+            Exceptions::errorHandler.throw_();
         }
 
         _compiler.createDone();
@@ -20,6 +29,16 @@ namespace GSLanguageCompiler::CodeGenerator {
         return _bytecode;
     }
 
+    GSVoid GS_CodeGenVisitor::visit(Parser::GS_RootNode *rootNode) {
+        rootNode->getNode()->accept(this);
+    }
+
+    GSVoid GS_CodeGenVisitor::visit(Parser::GS_BlockNode *blockNode) {
+        for (auto &node : blockNode->getNodes()) {
+            node->accept(this);
+        }
+    }
+
     GSVoid GS_CodeGenVisitor::visit(Parser::GS_ValueNode *valueNode) {
         auto value = valueNode->getValue();
         
@@ -28,20 +47,32 @@ namespace GSLanguageCompiler::CodeGenerator {
         if (type == "Int") {
             _compiler.createPush(value->getData<GSInt>());
         } else if (type == "String") {
-            auto string = value->getData<GSString>();
-            
-            auto stringId = Parser::tableOfConstants.getIdByValue(string);
-            
-            _compiler.createConstant(stringId, string);
-            
-            _compiler.createPushConstant(stringId);
+//            auto string = value->getData<GSString>();
+//
+//            auto stringId = Parser::tableOfConstants.getIdByValue(string);
+//
+//            _compiler.createConstant(stringId, string);
+//
+            _compiler.createPush(value->getData<GSString>());
         } else {
-            throw Exceptions::GS_Exception("Invalid type for code generation!");
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                           "Invalid type for generate code for value!");
+
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                           "Type: \"" + type + "\".");
+
+            Exceptions::errorHandler.throw_();
         }
     }
     
     GSVoid GS_CodeGenVisitor::visit(Parser::GS_UnaryNode *unaryNode) {
-        throw Exceptions::GS_Exception("Generating unary nodes for GSVirtualMachine not supported!");
+        Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                       "Generating code for unary expressions not supported!");
+
+        Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                       "Please, not use unary operations in your code.");
+
+        Exceptions::errorHandler.throw_();
     }
     
     GSVoid GS_CodeGenVisitor::visit(Parser::GS_BinaryNode *binaryNode) {
@@ -75,17 +106,25 @@ namespace GSLanguageCompiler::CodeGenerator {
         auto type = printNode->getValue()->getType();
 
         if (type != "String") {
-            throw Exceptions::GS_Exception("Unknown type for printing!");
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                           "Invalid type for print value to console!");
+
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                           "Type: \"" + type + "\".");
+
+            Exceptions::errorHandler.throw_();
         }
 
-        auto string = printNode->getValue()->getData<GSString>();
+//        auto string = printNode->getValue()->getData<GSString>();
+//
+//        auto stringId = Parser::tableOfConstants.getIdByValue(string);
+//
+//        _compiler.createConstant(stringId, string);
+//
+//        _compiler.createPushConstant(stringId);
+//        _compiler.createToReg(0);
 
-        auto stringId = Parser::tableOfConstants.getIdByValue(string);
-
-        _compiler.createConstant(stringId, string);
-
-        _compiler.createPushConstant(stringId);
-        _compiler.createToReg(0);
+        _compiler.createPush(printNode->getValue()->getData<GSString>());
 
         _compiler.createCall(0);
     }

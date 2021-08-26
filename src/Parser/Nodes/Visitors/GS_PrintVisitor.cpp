@@ -4,12 +4,45 @@
 
 namespace GSLanguageCompiler::Parser {
 
-    GS_PrintVisitor::GS_PrintVisitor() = default;
+    GS_PrintVisitor::GS_PrintVisitor()
+            : _tabsCol(0) {};
+
+    GSVoid GS_PrintVisitor::visit(GS_RootNode *rootNode) {
+        std::cout << "RootNode {" << std::endl;
+
+        _incrTab();
+
+        rootNode->getNode()->accept(this);
+
+        _decrTab();
+
+        _printTabs();
+
+        std::cout << "}" << std::endl;
+    }
+
+    GSVoid GS_PrintVisitor::visit(GS_BlockNode *blockNode) {
+        _printTabs();
+
+        std::cout << "BlockNode {" << std::endl;
+
+        _incrTab();
+
+        for (auto &node : blockNode->getNodes()) {
+            node->accept(this);
+        }
+
+        _decrTab();
+
+        _printTabs();
+
+        std::cout << "}" << std::endl;
+    }
 
     GSVoid GS_PrintVisitor::visit(GS_ValueNode *valueNode) {
         _printTabs();
         
-        std::cerr << "ValueNode {" << std::endl;
+        std::cout << "ValueNode {" << std::endl;
         
         _incrTab();
         
@@ -20,34 +53,40 @@ namespace GSLanguageCompiler::Parser {
         _printTabs();
         
         if (type == "Int") {
-            std::cerr << "Value: " << value->getData<GSInt>() << std::endl;
+            std::cout << "Value: " << value->getData<GSInt>() << std::endl;
         } else if (type == "String") {
-            std::cerr << "Value: \"" << value->getData<GSString>() << "\"" << std::endl;
+            std::cout << "Value: \"" << value->getData<GSString>() << "\"" << std::endl;
         } else {
-            throw Exceptions::GS_Exception("Invalid type for printing node information!");
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                           "Invalid type for printing node information!");
+
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                           "Please, report this error to GSLanguageCompiler repository.");
+
+            Exceptions::errorHandler.throw_();
         }
         
         _printTabs();
         
-        std::cerr << "Type: " << type << std::endl;
+        std::cout << "Type: " << type << std::endl;
         
         _decrTab();
         
         _printTabs();
         
-        std::cerr << "}" << std::endl;
+        std::cout << "}" << std::endl;
     }
 
     GSVoid GS_PrintVisitor::visit(GS_UnaryNode *unaryNode) {
         _printTabs();
         
-        std::cerr << "UnaryNode: {" << std::endl;
+        std::cout << "UnaryNode: {" << std::endl;
         
         _incrTab();
         
         _printTabs();
         
-        std::cerr << "UnaryOperation: " << unaryOperationToString[unaryNode->getUnaryOperation()] << std::endl;
+        std::cout << "UnaryOperation: " << unaryOperationToString[unaryNode->getUnaryOperation()] << std::endl;
         
         unaryNode->getNode()->accept(this);
         
@@ -55,19 +94,19 @@ namespace GSLanguageCompiler::Parser {
         
         _printTabs();
         
-        std::cerr << "}" << std::endl;
+        std::cout << "}" << std::endl;
     }
 
     GSVoid GS_PrintVisitor::visit(GS_BinaryNode *binaryNode) {
         _printTabs();
         
-        std::cerr << "BinaryNode: {" << std::endl;
+        std::cout << "BinaryNode: {" << std::endl;
         
         _incrTab();
 
         _printTabs();
         
-        std::cerr << "BinaryOperation: " << binaryOperationToString[binaryNode->getBinaryOperation()] << std::endl;
+        std::cout << "BinaryOperation: " << binaryOperationToString[binaryNode->getBinaryOperation()] << std::endl;
         
         binaryNode->getFirstNode()->accept(this);
         
@@ -77,23 +116,23 @@ namespace GSLanguageCompiler::Parser {
         
         _printTabs();
         
-        std::cerr << "}" << std::endl;
+        std::cout << "}" << std::endl;
     }
     
     GSVoid GS_PrintVisitor::visit(GS_VariableNode *variableNode) {
         _printTabs();
         
-        std::cerr << "VariableNode {" << std::endl;
+        std::cout << "VariableNode {" << std::endl;
         
         _incrTab();
         
         _printTabs();
         
-        std::cerr << "Name: " << variableNode->getName() << std::endl;
+        std::cout << "Name: " << variableNode->getName() << std::endl;
         
         _printTabs();
         
-        std::cerr << "Type: " << variableNode->getType() << std::endl;
+        std::cout << "Type: " << variableNode->getType() << std::endl;
         
         variableNode->getNode()->accept(this);
         
@@ -101,13 +140,13 @@ namespace GSLanguageCompiler::Parser {
         
         _printTabs();
         
-        std::cerr << "}" << std::endl;
+        std::cout << "}" << std::endl;
     }
 
     GSVoid GS_PrintVisitor::visit(GS_PrintNode *printNode) {
         _printTabs();
         
-        std::cerr << "PrintNode {" << std::endl;
+        std::cout << "PrintNode {" << std::endl;
         
         _incrTab();
         
@@ -118,27 +157,33 @@ namespace GSLanguageCompiler::Parser {
         auto type = value->getType();
         
         if (type == "Int") {
-            std::cerr << "Value: " << value->getData<GSInt>() << std::endl;
+            std::cout << "Value: " << value->getData<GSInt>() << std::endl;
         } else if (type == "String") {
-            std::cerr << "Value: \"" << value->getData<GSString>() << "\"" << std::endl;
+            std::cout << "Value: \"" << value->getData<GSString>() << "\"" << std::endl;
         } else {
-            throw Exceptions::GS_Exception("Invalid type for printing node information!");
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                           "Invalid type for printing node information!");
+
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                           "Please, report this error to GSLanguageCompiler repository.");
+
+            Exceptions::errorHandler.throw_();
         }
         
         _printTabs();
         
-        std::cerr << "Type: " << type << std::endl;
+        std::cout << "Type: " << type << std::endl;
         
         _decrTab();
         
         _printTabs();
         
-        std::cerr << "}" << std::endl;
+        std::cout << "}" << std::endl;
     }
     
     GSVoid GS_PrintVisitor::_printTabs() {
         for (GSInt number = 0; number < _tabsCol; ++number) {
-            std::cerr << "\t";
+            std::cout << "\t";
         }
     }
 

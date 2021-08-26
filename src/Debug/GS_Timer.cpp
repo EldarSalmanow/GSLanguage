@@ -23,13 +23,13 @@ namespace Debug {
     }
 
     GSVoid GS_Timer::printResults() {
-        Platform::GS_CrossPlatform::setConsoleColor(Platform::GS_CrossPlatform::BLACK, Platform::GS_CrossPlatform::GREEN);
+        Platform::GS_CrossPlatform::setConsoleColor(Platform::ConsoleColor::GREEN);
 
         for (auto &result : _results) {
-            std::cerr << result << std::endl;
+            std::cout << result << std::endl;
         }
 
-        Platform::GS_CrossPlatform::setConsoleColor(Platform::GS_CrossPlatform::BLACK, Platform::GS_CrossPlatform::WHITE);
+        Platform::GS_CrossPlatform::resetConsoleColor();
     }
 
 }

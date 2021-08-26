@@ -8,14 +8,14 @@
 namespace GSBCCodeGen {
 
     enum class BCOpcodeType {
-        CONSTANT_STRING,
+        CONSTANT,
 
-        VARIABLE_NUMBER,
+        VARIABLE,
 
-        PUSH,
+        PUSH_I,
+        PUSH_S,
+
         POP,
-
-        PUSH_CONSTANT,
 
         TO_REG,
         FROM_REG,
@@ -23,7 +23,20 @@ namespace GSBCCodeGen {
         SAVE,
         GET,
 
+        CMP,
+
+        JMP,
+        JIE,
+        JINE,
+        JIG,
+        JIL,
+        JIEG,
+        JIEL,
+
         CALL,
+
+        I2S,
+        S2I,
 
         ADD,
         SUB,

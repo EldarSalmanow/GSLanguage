@@ -12,12 +12,20 @@ namespace GSLanguageCompiler {
         GSBool isEnableTesting;
         GSBool isEnableProfiling;
 
-        for (GSInt index = 1; index < this->_argc; ++index) {
-            GSString argument = this->_argv[index];
+        for (GSInt index = 1; index < _argc; ++index) {
+            GSString argument = _argv[index];
+
             if (argument == "-f" || argument == "--file") {
                 ++index;
-                if (this->_argc < index) {
-                    throw Exceptions::GS_Exception(("Invalid argument \"" + argument + "\"!").c_str());
+
+                if (_argc <= index) {
+                    Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                                   "Invalid param for input filename argument (-f or --file)!");
+
+                    Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                                   "Specify param for input filename argument.");
+
+                    Exceptions::errorHandler.throw_();
                 }
 
                 inputFilename = _argv[index];
@@ -25,8 +33,15 @@ namespace GSLanguageCompiler {
                 continue;
             } else if (argument == "-o" || argument == "--out") {
                 ++index;
-                if (this->_argc < index) {
-                    throw Exceptions::GS_Exception(("Invalid argument \"" + argument + "\"!").c_str());
+
+                if (_argc <= index) {
+                    Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                                   "Invalid param for output filename argument (-o or --out)!");
+
+                    Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                                   "Specify param for output filename argument.");
+
+                    Exceptions::errorHandler.throw_();
                 }
 
                 outputFilename = _argv[index];
@@ -37,7 +52,7 @@ namespace GSLanguageCompiler {
 
                 continue;
             } else if (argument == "-h" || argument == "--help") {
-                this->printUsage();
+                printUsage();
 
                 break;
             } else if (argument == "-t" || argument == "--test") {
@@ -49,7 +64,13 @@ namespace GSLanguageCompiler {
 
                 continue;
             } else {
-                    throw Exceptions::GS_Exception("Invalid arguments!");
+                Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                               "Unknown argument \"" + argument + "\"!");
+
+                Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                               "Please, read help information about GSLanguageCompiler and arguments (-h or --help).");
+
+                Exceptions::errorHandler.throw_();
             }
         }
 
@@ -91,11 +112,11 @@ namespace GSLanguageCompiler {
     }
 
     GSString GS_ArgumentsOptions::getInputFilename() {
-        return this->_inputFilename;
+        return _inputFilename;
     }
 
     GSString GS_ArgumentsOptions::getOutputGSVMFilename() {
-        return this->_outputGSVMFilename;
+        return _outputGSVMFilename;
     }
 
     GSBool GS_ArgumentsOptions::getIsInterpret() {

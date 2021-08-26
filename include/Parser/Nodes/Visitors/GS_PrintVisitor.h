@@ -12,6 +12,10 @@ namespace GSLanguageCompiler::Parser {
 
     public:
 
+        GSVoid visit(GS_RootNode *rootNode) override;
+
+        GSVoid visit(GS_BlockNode *blockNode) override;
+
         GSVoid visit(GS_ValueNode *valueNode) override;
 
         GSVoid visit(GS_UnaryNode *unaryNode) override;

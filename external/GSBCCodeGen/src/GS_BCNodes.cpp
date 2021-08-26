@@ -47,6 +47,9 @@ namespace GSBCCodeGen {
         visitor->visit(this);
     }
 
+    GS_BCValueNode::GS_BCValueNode()
+            : _type("Void") {}
+
     GS_BCValueNode::GS_BCValueNode(GSInt value)
             : _value(value), _type("Int") {}
 
@@ -115,6 +118,47 @@ namespace GSBCCodeGen {
     }
 
     GSVoid GS_BCInstructionWithTwoOperandsNode::accept(GS_BCVisitor *visitor) {
+        visitor->visit(this);
+    }
+
+    GS_BCLabelNode::GS_BCLabelNode(GS_BCValueNode name)
+            : _name(std::move(name)) {}
+
+    GS_BCValueNode GS_BCLabelNode::getName() {
+        return _name;
+    }
+
+    BCNodeType GS_BCLabelNode::getNodeType() {
+        return BCNodeType::LABEL_NODE;
+    }
+
+    GSVoid GS_BCLabelNode::accept(GS_BCVisitor *visitor) {
+        visitor->visit(this);
+    }
+
+    GS_BCCFInstructionNode::GS_BCCFInstructionNode(BCOpcodeType opcode, GS_BCLabelNode to)
+            : GS_BCInstructionNode(opcode), _to(std::move(to)){}
+
+    GS_BCCFInstructionNode::GS_BCCFInstructionNode(BCOpcodeType opcode, GS_BCValueNode from, GS_BCLabelNode to)
+            : GS_BCInstructionNode(opcode), _from(std::move(from)), _to(std::move(to)) {}
+
+    GS_BCValueNode GS_BCCFInstructionNode::getFrom() {
+        return _from;
+    }
+
+    GSVoid GS_BCCFInstructionNode::setFrom(GS_BCValueNode from) {
+        _from = std::move(from);
+    }
+
+    GS_BCLabelNode GS_BCCFInstructionNode::getTo() {
+        return _to;
+    }
+
+    BCNodeType GS_BCCFInstructionNode::getNodeType() {
+        return BCNodeType::CF_INSTRUCTION_NODE;
+    }
+
+    GSVoid GS_BCCFInstructionNode::accept(GS_BCVisitor *visitor) {
         visitor->visit(this);
     }
 

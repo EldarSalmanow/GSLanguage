@@ -46,20 +46,6 @@ namespace Starter {
          * @return
          */
         static GSVoid printLexerDebugInfo(GS_Token &token);
-
-        /**
-         *
-         * @param nodePtr
-         * @return
-         */
-        static GSVoid printParserDebugInfo(GSNodePtr &nodePtr);
-
-        /**
-         *
-         * @param nodePtr
-         * @return
-         */
-        static GSVoid printOptimizerDebugInfo(GSNodePtr &nodePtr);
     };
 
     /**
@@ -93,12 +79,12 @@ namespace Starter {
         /**
          * Statements before parser analyzing
          */
-        GSNodePtrArray parserStatements;
+        GSNodePtr parserStatements;
 
         /**
          * Optimized statements
          */
-        GSNodePtrArray optimizedParserStatements;
+        GSNodePtr optimizedParserStatements;
 
         /**
          * Bytecode for GSVirtualMachine before code generator

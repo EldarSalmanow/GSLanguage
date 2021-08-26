@@ -5,6 +5,8 @@
 
 namespace GSLanguageCompiler::Interpreter {
 
+    // todo remove interpreter from project
+
     /**
      *
      */
@@ -15,7 +17,7 @@ namespace GSLanguageCompiler::Interpreter {
          *
          * @param nodes
          */
-        explicit GS_Interpreter(Parser::GSNodePtrArray nodes);
+        explicit GS_Interpreter(Parser::GSNodePtr nodes);
 
     public:
 
@@ -30,7 +32,7 @@ namespace GSLanguageCompiler::Interpreter {
         /**
          *
          */
-        Parser::GSNodePtrArray _nodes;
+        Parser::GSNodePtr _nodes;
     };
 
 }

@@ -2,10 +2,12 @@
 
 namespace GSLanguageCompiler::Parser {
 
-    GS_Parser::GS_Parser(Lexer::GSTokenArray &tokens)
-            : _tokens(tokens), _tokenIterator(_tokens.begin()) {}
+    GS_Parser::GS_Parser(Lexer::GSTokenArray tokens)
+            : _tokens(std::move(tokens)), _tokenIterator(_tokens.begin()) {}
 
-    GSNodePtrArray GS_Parser::parse() {
+    GSNodePtr GS_Parser::parse() {
+        GSNodePtrArray nodes;
+
         while (!_checkTokenType(Lexer::TokenType::END_OF_FILE)) {
             GSNodePtr node;
 
@@ -17,10 +19,14 @@ namespace GSLanguageCompiler::Parser {
                 continue;
             }
 
-            _addNode(node);
+            nodes.emplace_back(node);
         }
 
-        return _statements;
+        auto blockNode = std::make_shared<GS_BlockNode>(nodes);
+
+        auto rootNode = std::make_shared<GS_RootNode>(blockNode);
+
+        return rootNode;
     }
 
 //--------------------------------------------------------------------------
@@ -60,6 +66,7 @@ namespace GSLanguageCompiler::Parser {
                 return std::make_shared<GS_VariableNode>(name);
             }
         }
+        // print
         else if (_checkTokenType(Lexer::TokenType::KEYWORD_PRINT)) {
             _nextToken(); // skip 'print'
 
@@ -79,34 +86,30 @@ namespace GSLanguageCompiler::Parser {
         }
         // new line
         else if (_checkTokenType(Lexer::TokenType::NEW_LINE)) {
-            throw Exceptions::GS_NewLineException();
+            _nextToken();
+
+            return _node();
         }
         else {
-            return _expression();
+            _throwException("Unknown statement!");
         }
+//        else {
+//            return _expression();
+//        }
     }
 
 //--------------------------------------------------------------------------------
 
     GSVoid GS_Parser::_throwException(GSString errorMessage) {
-        Lexer::GS_Position position = _currentToken().getPosition();
+        Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                       _currentToken().getPosition(),
+                                       std::move(errorMessage));
 
-        throw Exceptions::GS_Exception(
-                std::move(errorMessage)
-                + "\nCode: "
-                + position.getCode()
-                + "\nLine: "
-                + std::to_string(position.getEndPosition().getLine())
-                + "\nColumn: "
-                + std::to_string(position.getEndPosition().getColumn()));
+        Exceptions::errorHandler.throw_();
     }
 
     GSBool GS_Parser::_checkTokenType(Lexer::TokenType typeForCheck, GSInt numberOfToken) {
         return _tokenIterator[numberOfToken].getType() == typeForCheck;
-    }
-
-    inline GSVoid GS_Parser::_addNode(GSNodePtr &statement) {
-        _statements.emplace_back(statement);
     }
 
     Lexer::GS_Token GS_Parser::_currentToken() {

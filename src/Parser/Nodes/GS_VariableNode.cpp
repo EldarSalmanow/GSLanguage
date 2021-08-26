@@ -30,16 +30,6 @@ namespace GSLanguageCompiler::Parser {
         return nullptr;
     }
 
-    GSString GS_VariableNode::toString() {
-        return "[ "
-               + _name
-               + ": "
-               + _type
-               + " = "
-               + _node->toString()
-               + " ]";
-    }
-
     GSVoid GS_VariableNode::accept(GS_Visitor *visitor) {
         visitor->visit(this);
     }

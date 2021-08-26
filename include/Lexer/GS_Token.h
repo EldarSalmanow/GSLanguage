@@ -33,7 +33,7 @@ namespace GSLanguageCompiler::Lexer {
          * @param word
          * @param position
          */
-        GS_Token(TokenType type, GSString &word, GS_Position position);
+        GS_Token(TokenType type, GSString word, GS_Position position);
 
     public:
 
@@ -72,8 +72,6 @@ namespace GSLanguageCompiler::Lexer {
          */
         GS_Position _position;
     };
-
-    typedef std::shared_ptr<GS_Token> GSTokenPointer;
 
     typedef std::vector<GS_Token> GSTokenArray;
 

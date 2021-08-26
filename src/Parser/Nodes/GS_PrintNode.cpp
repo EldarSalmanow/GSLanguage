@@ -15,17 +15,6 @@ namespace GSLanguageCompiler::Parser {
         return nullptr;
     }
 
-    GSString GS_PrintNode::toString() {
-        return "[ "
-               + GSString("print")
-               + " ("
-               + " \""
-               + _value->getData<GSString>()
-               + "\""
-               + " )"
-               + " ]";
-    }
-
     GSVoid GS_PrintNode::accept(GS_Visitor *visitor) {
         visitor->visit(this);
     }

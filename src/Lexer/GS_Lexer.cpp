@@ -72,10 +72,17 @@ namespace GSLanguageCompiler::Lexer {
                 continue;
             }
 
-            throw Exceptions::GS_Exception(("Unknown symbol \'" + _symbol + "\'!" +
-                                            "\nCode: " + _codeIterator[0] +
-                                            "\nLine: " + std::to_string(_line) +
-                                            "\nColumn: " + std::to_string(_column)).c_str());
+            GS_Position position(_codeIterator[0], GS_Coordinate(_line, _column), GS_Coordinate(_line, _column));
+
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                           position,
+                                           "Unknown symbol in code!");
+
+            Exceptions::errorHandler.throw_();
+
+//            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+//                                           position,
+//                                           "Symbol: ")
         }
 
         _addToken(TokenType::NEW_LINE);
@@ -153,9 +160,20 @@ namespace GSLanguageCompiler::Lexer {
             _nextSymbol();
         }
 
-        throw Exceptions::GS_Exception(("Missed \"!" +
-        std::to_string(_line) +
-        std::to_string(_column)).c_str());
+        GS_Position position(_codeIterator[0], GS_Coordinate(_startLine, _startColumn), GS_Coordinate(_line, _column));
+
+        Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                       position,
+                                       "Can`t tokenize string without end \"!");
+
+        Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                       "String literal must be end \"!");
+
+        Exceptions::errorHandler.throw_();
+
+//        throw Exceptions::GS_Exception(("Missed \"!" +
+//        std::to_string(_line) +
+//        std::to_string(_column)).c_str());
     }
 
 //-----------------------------------------------------------------

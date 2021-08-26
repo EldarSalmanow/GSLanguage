@@ -33,17 +33,33 @@ namespace GSLanguageCompiler::Parser {
     GSNodePtr GS_Parser::_multiplicative() {
         GSNodePtr expression = _unary();
 
+//        if (!expression) {
+//            _throwException("Error with parsing multiplicative expression!");
+//        }
+
         while (true) {
             if (_checkTokenType(Lexer::TokenType::SYMBOL_STAR)) {
                 _nextToken();
 
-                expression = std::make_shared<GS_BinaryNode>(BinaryOperation::STAR, expression, _unary());
+                auto node = _unary();
+
+//                if (!node) {
+//                    _throwException("Error with parsing multiplicative expression!");
+//                }
+
+                expression = std::make_shared<GS_BinaryNode>(BinaryOperation::STAR, expression, node);
 
                 continue;
             } else if (_checkTokenType(Lexer::TokenType::SYMBOL_SLASH)) {
                 _nextToken();
 
-                expression = std::make_shared<GS_BinaryNode>(BinaryOperation::SLASH, expression, _unary());
+                auto node = _unary();
+
+//                if (!node) {
+//                    _throwException("Error with parsing multiplicative expression!");
+//                }
+
+                expression = std::make_shared<GS_BinaryNode>(BinaryOperation::SLASH, expression, node);
 
                 continue;
             }
@@ -58,7 +74,13 @@ namespace GSLanguageCompiler::Parser {
         if (_checkTokenType(Lexer::TokenType::SYMBOL_MINUS)) {
             _nextToken();
 
-            return std::make_shared<GS_UnaryNode>(UnaryOperation::MINUS, _primary());
+            auto node = _primary();
+
+//            if (!node) {
+//                _throwException("Error with parsing unary expression!");
+//            }
+
+            return std::make_shared<GS_UnaryNode>(UnaryOperation::MINUS, node);
         }
 
         return _primary();
@@ -68,7 +90,9 @@ namespace GSLanguageCompiler::Parser {
         GSNodePtr expression = nullptr;
 
         if (_checkTokenType(Lexer::TokenType::NEW_LINE)) {
-            throw Exceptions::GS_NewLineException();
+            _nextToken();
+
+            return _primary();
         }
 
         if (_checkTokenType(Lexer::TokenType::LITERAL_NUMBER)) {

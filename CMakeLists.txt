@@ -14,6 +14,7 @@ set(BINARY_DIR    ${PROJECT_DIR}/bin)
 set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
 
 add_subdirectory(${EXTERNAL_DIR}/GSBCCodeGen)
+add_subdirectory(${EXTERNAL_DIR}/rang)
 
 set(PROJECT_LIBRARIES
         GSStarterLibrary
@@ -25,12 +26,14 @@ set(PROJECT_LIBRARIES
         GSCodeGeneratorLibrary
         GSInterpreterLibrary
         GSCrossPlatformLibrary
-        GSDebugLibrary)
+        GSDebugLibrary
+        GSExceptionsLibrary)
 
 add_executable(${PROJECT_NAME}
         ${PROJECT_DIR}/main.cpp)
 
 include_directories(${GS_BC_CODEGEN_INCLUDE_DIR})
+include_directories(${RANG_INCLUDE_DIR})
 include_directories(${INCLUDE_DIR})
 
 add_subdirectory(${INCLUDE_DIR}/Debug)
@@ -43,6 +46,7 @@ add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
 add_subdirectory(${INCLUDE_DIR}/Interpreter)
 add_subdirectory(${INCLUDE_DIR}/ArgumentsParser)
 add_subdirectory(${INCLUDE_DIR}/CrossPlatform)
+add_subdirectory(${INCLUDE_DIR}/Exceptions)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${PROJECT_LIBRARIES})
 

@@ -1,22 +1,25 @@
 #ifndef GSLANGUAGE_GS_CROSSPLATFORM_H
 #define GSLANGUAGE_GS_CROSSPLATFORM_H
 
+#include <map>
+
 #include <CrossPlatform/GS_PlatformTypes.h>
 
-#if defined(OS_WINDOWS)
-#  if defined(COMPILER_MSVC)
-#    include <Windows.h>
-#  endif
-#  if defined(COMPILER_MINGW)
-#    include <windows.h>
-#  endif
-#endif
-
-#if defined(OS_LINUX)
-#  include <iostream>
-#endif
-
 namespace Platform {
+
+    /**
+     *
+     */
+    enum class ConsoleColor {
+        BLACK,
+        RED,
+        GREEN,
+        YELLOW,
+        BLUE,
+        MAGENTA,
+        CYAN,
+        GRAY
+    };
 
     /**
      * A class for erasing a boundary in the operating system.
@@ -26,42 +29,16 @@ namespace Platform {
     public:
 
         /**
-         * Available console colors for coloring console
-         */
-#if defined(OS_WINDOWS)
-        enum ConsoleColor {
-            BLACK = 0,
-            BLUE = 1,
-            GREEN = 2,
-            CYAN = 3,
-            RED = 4,
-            MAGENTA = 5,
-            YELLOW = 6,
-            WHITE = 7
-        };
-#endif
-
-#if defined(OS_LINUX)
-        enum ConsoleColor {
-            BLACK = 0,
-            RED = 1,
-            GREEN = 2,
-            YELLOW = 3,
-            BLUE = 4,
-            MAGENTA = 5,
-            CYAN = 6,
-            WHITE = 7
-        };
-#endif
-
-    public:
-
-        /**
          * Setting console color
-         * @param background Background color
          * @param text Text color
          */
-        static GSVoid setConsoleColor(ConsoleColor background, ConsoleColor text);
+        static GSVoid setConsoleColor(ConsoleColor text);
+
+        /**
+         *
+         * @return
+         */
+        static GSVoid resetConsoleColor();
 
     };
 

@@ -3,7 +3,7 @@ project(GSInterpreterLibrary)
 set(INTERPRETER_DIR ${SOURCE_DIR}/Interpreter)
 
 set(GS_INTERPRETER_SOURCE
-        ${INTERPRETER_DIR}/GS_Interpreter.cpp ../../src/Interpreter/GS_TableOfSymbols.cpp)
+        ${INTERPRETER_DIR}/GS_Interpreter.cpp ../../src/Interpreter/GS_TableOfSymbols.cpp ../../src/Interpreter/GS_InterpreterVisitor.cpp)
 
 add_library(
 #       Library name

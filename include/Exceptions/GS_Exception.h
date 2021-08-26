@@ -15,10 +15,8 @@ namespace GSLanguageCompiler::Exceptions {
 
         /**
          *
-         * @param errorMessage
          */
-        GS_Exception(GSString errorMessage)
-        : _errorMessage(std::move(errorMessage)) {}
+        GS_Exception() = default;
 
     public:
 
@@ -27,15 +25,8 @@ namespace GSLanguageCompiler::Exceptions {
          * @return
          */
         const GSChar *what() {
-            return _errorMessage.c_str();
+            return "Error or fatal exception! Please, stop program, if you catch this error!";
         }
-
-    private:
-
-        /**
-         *
-         */
-        GSString _errorMessage;
     };
 
 }

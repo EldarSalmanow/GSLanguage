@@ -2,17 +2,15 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    GS_Coordinate::GS_Coordinate(GSULongLong line, GSULongLong column) {
-        this->_line = line;
-        this->_column = column;
-    }
+    GS_Coordinate::GS_Coordinate(GSULongLong line, GSULongLong column)
+            : _line(line), _column(column) {}
 
     GSULongLong GS_Coordinate::getLine() {
-        return this->_line;
+        return _line;
     }
 
     GSULongLong GS_Coordinate::getColumn() {
-        return this->_column;
+        return _column;
     }
 
 }

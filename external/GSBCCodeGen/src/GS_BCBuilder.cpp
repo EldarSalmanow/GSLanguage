@@ -4,75 +4,152 @@ namespace GSBCCodeGen {
 
     GS_BCBuilder::GS_BCBuilder() = default;
 
-    GSBCNodePtr GS_BCBuilder::createConstant(GSInt id, GSString string) {
-        return new GS_BCInstructionWithTwoOperandsNode(BCOpcodeType::CONSTANT_STRING,
-                                                       GS_BCValueNode(id),
-                                                       GS_BCValueNode(std::move(string)));
+    GS_BCValueNode *GS_BCBuilder::createInt(GSInt value) {
+        return new GS_BCValueNode(value);
     }
 
-    GSBCNodePtr GS_BCBuilder::createVariable(GSInt id, GSString name) {
-        return new GS_BCInstructionWithTwoOperandsNode(BCOpcodeType::VARIABLE_NUMBER,
-                                                       GS_BCValueNode(id),
-                                                       GS_BCValueNode(std::move(name)));
+    GS_BCValueNode *GS_BCBuilder::createString(GSString value) {
+        return new GS_BCValueNode(std::move(value));
     }
 
-    GSBCNodePtr GS_BCBuilder::createPush(GSInt value) {
-        return new GS_BCInstructionWithOperandNode(BCOpcodeType::PUSH,
-                                                   GS_BCValueNode(value));
+    GS_BCInstructionWithTwoOperandsNode *GS_BCBuilder::createConstant(GS_BCValueNode id, GS_BCValueNode string) {
+        if (id.getType() != "Int" || string.getType() != "String") {
+            throw std::runtime_error("Invalid values for generating constant!");
+        }
+
+        return new GS_BCInstructionWithTwoOperandsNode(BCOpcodeType::CONSTANT, id, string);
     }
 
-    GSBCNodePtr GS_BCBuilder::createPop() {
+    GS_BCInstructionWithTwoOperandsNode *GS_BCBuilder::createVariable(GS_BCValueNode id, GS_BCValueNode name) {
+        if (id.getType() != "Int" || name.getType() != "String") {
+            throw std::runtime_error("Invalid values for generating variable!");
+        }
+
+        return new GS_BCInstructionWithTwoOperandsNode(BCOpcodeType::VARIABLE, id, name);
+    }
+
+    GS_BCInstructionWithOperandNode *GS_BCBuilder::createPush(GS_BCValueNode value) {
+        auto type = value.getType();
+
+        if (type == "Int") {
+            return new GS_BCInstructionWithOperandNode(BCOpcodeType::PUSH_I, value);
+        } else if (type == "String") {
+            return new GS_BCInstructionWithOperandNode(BCOpcodeType::PUSH_S, value);
+        } else {
+            throw std::runtime_error("Invalid type for generating push instruction!");
+        }
+    }
+
+    GS_BCInstructionNode *GS_BCBuilder::createPop() {
         return new GS_BCInstructionNode(BCOpcodeType::POP);
     }
 
-    GSBCNodePtr GS_BCBuilder::createPushConstant(GSInt id) {
-        return new GS_BCInstructionWithOperandNode(BCOpcodeType::PUSH_CONSTANT,
-                                                   GS_BCValueNode(id));
+    GS_BCInstructionWithOperandNode *GS_BCBuilder::createToReg(GS_BCValueNode registerNumber) {
+        if (registerNumber.getType() != "Int") {
+            throw std::runtime_error("Invalid type for generating to reg instruction!");
+        }
+
+        return new GS_BCInstructionWithOperandNode(BCOpcodeType::TO_REG, registerNumber);
     }
 
-    GSBCNodePtr GS_BCBuilder::createToReg(GSInt registerNumber) {
-        return new GS_BCInstructionWithOperandNode(BCOpcodeType::TO_REG,
-                                                   GS_BCValueNode(registerNumber));
+    GS_BCInstructionWithOperandNode *GS_BCBuilder::createFromReg(GS_BCValueNode registerNumber) {
+        if (registerNumber.getType() != "Int") {
+            throw std::runtime_error("Invalid type for generating from reg instruction!");
+        }
+
+        return new GS_BCInstructionWithOperandNode(BCOpcodeType::FROM_REG, registerNumber);
     }
 
-    GSBCNodePtr GS_BCBuilder::createFromReg(GSInt registerNumber) {
-        return new GS_BCInstructionWithOperandNode(BCOpcodeType::FROM_REG,
-                                                   GS_BCValueNode(registerNumber));
+    GS_BCInstructionWithOperandNode *GS_BCBuilder::createSave(GS_BCValueNode variableId) {
+        if (variableId.getType() != "Int") {
+            throw std::runtime_error("Invalid type for generating save instruction!");
+        }
+
+        return new GS_BCInstructionWithOperandNode(BCOpcodeType::SAVE, variableId);
     }
 
-    GSBCNodePtr GS_BCBuilder::createSave(GSInt variableId) {
-        return new GS_BCInstructionWithOperandNode(BCOpcodeType::SAVE,
-                                                   GS_BCValueNode(variableId));
+    GS_BCInstructionWithOperandNode *GS_BCBuilder::createGet(GS_BCValueNode variableId) {
+        if (variableId.getType() != "Int") {
+            throw std::runtime_error("Invalid type for generating get instruction!");
+        }
+
+        return new GS_BCInstructionWithOperandNode(BCOpcodeType::GET, variableId);
     }
 
-    GSBCNodePtr GS_BCBuilder::createGet(GSInt variableId) {
-        return new GS_BCInstructionWithOperandNode(BCOpcodeType::GET,
-                                                   GS_BCValueNode(variableId));
+    GS_BCInstructionNode *GS_BCBuilder::createCmp() {
+        return new GS_BCInstructionNode(BCOpcodeType::CMP);
     }
 
-    GSBCNodePtr GS_BCBuilder::createCall(GSInt functionId) {
-        return new GS_BCInstructionWithOperandNode(BCOpcodeType::CALL,
-                                                   GS_BCValueNode(functionId));
+    GS_BCCFInstructionNode *GS_BCBuilder::createJmp(GS_BCLabelNode label) {
+        return new GS_BCCFInstructionNode(BCOpcodeType::JMP, std::move(label));
     }
 
-    GSBCNodePtr GS_BCBuilder::createAdd() {
+    GS_BCCFInstructionNode *GS_BCBuilder::createJie(GS_BCLabelNode label) {
+        return new GS_BCCFInstructionNode(BCOpcodeType::JIE, std::move(label));
+    }
+
+    GS_BCCFInstructionNode *GS_BCBuilder::createJine(GS_BCLabelNode label) {
+        return new GS_BCCFInstructionNode(BCOpcodeType::JINE, std::move(label));
+    }
+
+    GS_BCCFInstructionNode *GS_BCBuilder::createJig(GS_BCLabelNode label) {
+        return new GS_BCCFInstructionNode(BCOpcodeType::JIG, std::move(label));
+    }
+
+    GS_BCCFInstructionNode *GS_BCBuilder::createJil(GS_BCLabelNode label) {
+        return new GS_BCCFInstructionNode(BCOpcodeType::JIL, std::move(label));
+    }
+
+    GS_BCCFInstructionNode *GS_BCBuilder::createJieg(GS_BCLabelNode label) {
+        return new GS_BCCFInstructionNode(BCOpcodeType::JIEG, std::move(label));
+    }
+
+    GS_BCCFInstructionNode *GS_BCBuilder::createJiel(GS_BCLabelNode label) {
+        return new GS_BCCFInstructionNode(BCOpcodeType::JIEL, std::move(label));
+    }
+
+    GS_BCInstructionWithOperandNode *GS_BCBuilder::createCall(GS_BCValueNode functionId) {
+        if (functionId.getType() != "Int") {
+            throw std::runtime_error("Invalid type for generating call instruction!");
+        }
+
+        return new GS_BCInstructionWithOperandNode(BCOpcodeType::CALL, functionId);
+    }
+
+    GS_BCInstructionNode *GS_BCBuilder::createI2s() {
+        return new GS_BCInstructionNode(BCOpcodeType::I2S);
+    }
+
+    GS_BCInstructionNode *GS_BCBuilder::createS2i() {
+        return new GS_BCInstructionNode(BCOpcodeType::S2I);
+    }
+
+    GS_BCInstructionNode *GS_BCBuilder::createAdd() {
         return new GS_BCInstructionNode(BCOpcodeType::ADD);
     }
 
-    GSBCNodePtr GS_BCBuilder::createSub() {
+    GS_BCInstructionNode *GS_BCBuilder::createSub() {
         return new GS_BCInstructionNode(BCOpcodeType::SUB);
     }
 
-    GSBCNodePtr GS_BCBuilder::createMul() {
+    GS_BCInstructionNode *GS_BCBuilder::createMul() {
         return new GS_BCInstructionNode(BCOpcodeType::MUL);
     }
 
-    GSBCNodePtr GS_BCBuilder::createDiv() {
+    GS_BCInstructionNode *GS_BCBuilder::createDiv() {
         return new GS_BCInstructionNode(BCOpcodeType::DIV);
     }
 
-    GSBCNodePtr GS_BCBuilder::createDone() {
+    GS_BCInstructionNode *GS_BCBuilder::createDone() {
         return new GS_BCInstructionNode(BCOpcodeType::DONE);
+    }
+
+    GS_BCLabelNode *GS_BCBuilder::createLabel(GS_BCValueNode name) {
+        if (name.getType() != "String") {
+            throw std::runtime_error("Invalid type for generating label!");
+        }
+
+        return new GS_BCLabelNode(std::move(name));
     }
 
 }

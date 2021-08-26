@@ -3,21 +3,27 @@
 namespace GSLanguageCompiler {
 
     GS_Reader::GS_Reader(GSString filename)
-            : _filename(filename) {}
+            : _filename(std::move(filename)) {}
 
     GSText GS_Reader::readFile() {
         GSChar symbol;
         GSString line;
         std::ifstream stream;
 
+        stream.open(_filename, std::ios::binary);
+
+        if (!stream.is_open()) {
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                           "Not found file for reading!");
+
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                           "Filename: \"" + _filename + "\"!");
+
+            Exceptions::errorHandler.throw_();
+        }
+
 #if defined(OS_WINDOWS)
         try {
-            stream.open(_filename, std::ios::binary);
-
-            if (!stream.is_open()) {
-                throw Exceptions::GS_Exception(("Not found file \'" + _filename + "\'!").c_str());
-            }
-
             while (true) {
                 stream.get(symbol);
 
@@ -44,7 +50,21 @@ namespace GSLanguageCompiler {
                 stream.close();
             }
 
-            throw Exceptions::GS_Exception(exception.what());
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::FATAL_LVL,
+                                           exception.what());
+
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                           "Please, report this fatal error to GSLanguageCompiler repository.");
+
+            Exceptions::errorHandler.throw_();
+        } catch (...) {
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::FATAL_LVL,
+                                           "Unknown fatal reading file error!");
+
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+                                           "Please, report this fatal error to GSLanguageCompiler repository.");
+
+            Exceptions::errorHandler.throw_();
         }
 #endif
 
