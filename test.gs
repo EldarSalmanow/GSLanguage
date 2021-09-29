@@ -1,3 +1,6 @@
-var a = 123 + 23 - 34
+var a = 23 - 54
 
-print("Hello!")
+var b = 4
+
+var c = a + b - 10
+

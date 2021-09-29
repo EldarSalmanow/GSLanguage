@@ -22,6 +22,21 @@ namespace Platform {
     };
 
     /**
+     *
+     */
+    enum class ConsoleStyle {
+        BOLD,
+        DIM,
+        ITALIC,
+        UNDERLINE,
+        BLINK,
+        RBLINK,
+        REVERSED,
+        CONCEAL,
+        CROSSED
+    };
+
+    /**
      * A class for erasing a boundary in the operating system.
      * Contains functions for working with the system on different operating systems.
      */
@@ -29,16 +44,43 @@ namespace Platform {
     public:
 
         /**
-         * Setting console color
-         * @param text Text color
+         *
+         * @param fg
+         * @return
          */
-        static GSVoid setConsoleColor(ConsoleColor text);
+        static GSVoid setFgConsoleColor(ConsoleColor fg);
+
+        /**
+         *
+         * @param bg
+         * @return
+         */
+        static GSVoid setBgConsoleColor(ConsoleColor bg);
+
+        /**
+         *
+         * @param style
+         * @return
+         */
+        static GSVoid setConsoleStyle(ConsoleStyle style);
 
         /**
          *
          * @return
          */
-        static GSVoid resetConsoleColor();
+        static GSVoid resetFgConsoleColor();
+
+        /**
+         *
+         * @return
+         */
+        static GSVoid resetBgConsoleColor();
+
+        /**
+         *
+         * @return
+         */
+        static GSVoid resetConsoleStyle();
 
     };
 

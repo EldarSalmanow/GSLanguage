@@ -1,11 +1,11 @@
 #ifndef GSLANGUAGE_GS_KEYWORDS_H
 #define GSLANGUAGE_GS_KEYWORDS_H
 
-#include <map>
-
-#include <CrossPlatform/GS_PlatformTypes.h>
+#include <GSCrossPlatform/GS_CrossPlatformTypes.h>
 
 namespace GSLanguageCompiler::Lexer {
+
+    using SymbolT = CharType;
 
     /**
      * Type of token
@@ -18,9 +18,6 @@ namespace GSLanguageCompiler::Lexer {
 
         LITERAL_STRING,           // "hello"
         LITERAL_NUMBER,           // 12
-
-//        KEYWORD_TYPE_INT,         // Int
-//        KEYWORD_TYPE_STRING,      // String
 
         KEYWORD_VAR,              // var
         KEYWORD_IF,               // if
@@ -49,12 +46,17 @@ namespace GSLanguageCompiler::Lexer {
     /**
      * Token type to string
      */
-    extern std::map<TokenType, GSString> tokenTypeToString;
+    extern Map<TokenType, String> tokenTypeToString;
 
     /**
-     * Reserved letters and symbols
+     * Reserved letters
      */
-    extern std::map<GSString, TokenType> reserved;
+    extern Map<String, TokenType> reservedWords;
+
+    /**
+     * Reserved symbols
+     */
+    extern Map<SymbolT, TokenType> reservedSymbols;
 
 }
 

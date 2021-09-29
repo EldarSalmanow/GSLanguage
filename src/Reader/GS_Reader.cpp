@@ -1,74 +1,82 @@
 #include <Reader/GS_Reader.h>
 
-namespace GSLanguageCompiler {
+namespace GSLanguageCompiler::Reader {
 
-    GS_Reader::GS_Reader(GSString filename)
-            : _filename(std::move(filename)) {}
+    GS_Reader::GS_Reader(StreamT stream, String filename)
+            : _stream(std::move(stream)), _filename(std::move(filename)), _line(1), _column(1) {}
 
-    GSText GS_Reader::readFile() {
-        GSChar symbol;
-        GSString line;
-        std::ifstream stream;
+    GS_Code GS_Reader::read() {
+        _openFile();
 
-        stream.open(_filename, std::ios::binary);
+        Vector<GS_Line> lines;
 
-        if (!stream.is_open()) {
-            Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
-                                           "Not found file for reading!");
+        while (!_stream.eof()) {
+            auto line = _getLine();
 
-            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
-                                           "Filename: \"" + _filename + "\"!");
-
-            Exceptions::errorHandler.throw_();
+            lines.emplace_back(line);
         }
 
+        return GS_Code(lines);
+    }
+
+    Void GS_Reader::_openFile() {
+        _stream.open(_filename);
+
+        if (!_stream.is_open()) {
+//            Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+//                                           "Can`t open file for reading!");
+//
+//            SStream stream;
+//
+//            stream << "Filename: \"" << _filename << "\"!";
+//
+//            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
+//                                           stream.str());
+//
+//            Exceptions::errorHandler.throw_(); todo add throwing exception
+        }
+    }
+
+    GS_Line GS_Reader::_getLine() {
+        Vector<GS_Symbol> symbols;
+
+        for (auto symbol = _getSymbol(); symbol.getSymbol() != '\n' && !_stream.eof(); symbol = _getSymbol()) {
 #if defined(OS_WINDOWS)
-        try {
-            while (true) {
-                stream.get(symbol);
-
-                if (stream.eof()) {
-                    _input.emplace_back(line);
-
-                    break;
-                }
-
-                if (symbol == '\r') {
-                    _input.emplace_back(line);
-
-                    line.clear();
-
-                    stream.get(); // skipping '\n' (specific for Windows system)
-
-                    continue;
-                } else {
-                    line += symbol;
-                }
+            if (symbol.getSymbol() == '\r') {
+                continue;
             }
-        } catch (std::exception &exception) {
-            if (stream.is_open()) {
-                stream.close();
-            }
-
-            Exceptions::errorHandler.print(Exceptions::ErrorLevel::FATAL_LVL,
-                                           exception.what());
-
-            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
-                                           "Please, report this fatal error to GSLanguageCompiler repository.");
-
-            Exceptions::errorHandler.throw_();
-        } catch (...) {
-            Exceptions::errorHandler.print(Exceptions::ErrorLevel::FATAL_LVL,
-                                           "Unknown fatal reading file error!");
-
-            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
-                                           "Please, report this fatal error to GSLanguageCompiler repository.");
-
-            Exceptions::errorHandler.throw_();
-        }
 #endif
 
-    	return _input;
+            symbols.emplace_back(symbol);
+        }
+
+        symbols.emplace_back(GS_Symbol('\n', _line, _column));
+
+        _nextLine();
+
+        _column = 1;
+
+        return GS_Line(symbols);
+    }
+
+    GS_Symbol GS_Reader::_getSymbol() {
+        StreamCharType charSymbol;
+
+        _stream.read(&charSymbol, 1);
+
+        _nextSymbol();
+
+        GS_Symbol symbol(charSymbol, _line, _column);
+
+        return symbol;
+    }
+
+    Void GS_Reader::_nextLine() {
+        ++_line;
+    }
+
+    Void GS_Reader::_nextSymbol() {
+        ++_column;
     }
 
 }

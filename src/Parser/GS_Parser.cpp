@@ -2,103 +2,176 @@
 
 namespace GSLanguageCompiler::Parser {
 
-    GS_Parser::GS_Parser(Lexer::GSTokenArray tokens)
-            : _tokens(std::move(tokens)), _tokenIterator(_tokens.begin()) {}
+    GS_Parser::GS_Parser() = default;
 
-    GSNodePtr GS_Parser::parse() {
+    GSVoid GS_Parser::run(Starter::GSContextPtr &context) {
+        _tokens = context->getTokens();
+
+        _tokenIterator = _tokens.begin();
+
+        auto root = _parseRoot();
+
+        context->setRootNode(root);
+    }
+
+    GSNodePtr GS_Parser::_parseRoot() {
+        auto block = _parseBlock();
+
+        return std::make_shared<GS_RootNode>(block);
+    }
+
+    GSNodePtr GS_Parser::_parseBlock() {
         GSNodePtrArray nodes;
 
         while (!_checkTokenType(Lexer::TokenType::END_OF_FILE)) {
-            GSNodePtr node;
+            nodes.emplace_back(_parseNode());
+        }
 
-            try {
-                node = _node();
-            } catch (Exceptions::GS_NewLineException) {
+        return std::make_shared<GS_BlockNode>(nodes);
+    }
+
+    GSNodePtr GS_Parser::_parseNode() {
+        return _parseAssignmentNode();
+    }
+
+    GSNodePtr GS_Parser::_parseAssignmentNode() {
+        std::vector<std::function<GSNodePtr(GS_Parser*)>> parserFunctions = {
+                std::function<GSNodePtr(GS_Parser*)>(&GS_Parser::_parseVariableDeclarationNode),
+                std::function<GSNodePtr(GS_Parser*)>(&GS_Parser::_parseVariableUsingNode)
+        };
+
+        for (auto &function : parserFunctions) {
+            auto node = function(this);
+
+            if (node && !_checkTokenType(Lexer::TokenType::SYMBOL_EQ)) {
+                return node;
+            }
+
+            if (_checkTokenType(Lexer::TokenType::SYMBOL_EQ)) {
+                _nextToken(); // skip '='
+
+                auto expression = _parseExpression();
+
+                return std::make_shared<GS_AssignmentNode>(node, expression);
+            } else {
+                _throwException("Unknown node!");
+            }
+        }
+
+        return nullptr;
+    }
+
+    GSNodePtr GS_Parser::_parseVariableDeclarationNode() {
+        if (_checkTokenType(Lexer::TokenType::KEYWORD_VAR)) {
+            _nextToken(); // skip 'var'
+
+            if (!_checkTokenType(Lexer::TokenType::WORD)) {
+                _throwException("Variable name must be valid id!");
+
+                return nullptr;
+            }
+
+            auto name = _currentToken().getValue();
+
+            _nextToken(); // skip variable name
+
+            return std::make_shared<GS_VariableDeclarationNode>(name);
+        }
+
+        return nullptr;
+    }
+
+    GSNodePtr GS_Parser::_parseVariableUsingNode() {
+        return nullptr; // todo add code
+    }
+
+    GSNodePtr GS_Parser::_parseExpression() {
+        return _parseBinaryExpression();
+    }
+
+    GSNodePtr GS_Parser::_parseBinaryExpression() {
+        return _parseAdditiveExpression();
+    }
+
+    GSNodePtr GS_Parser::_parseAdditiveExpression() {
+        auto expression = _parseMultiplicativeExpression();
+
+        while (true) {
+            if (_checkTokenType(Lexer::TokenType::SYMBOL_PLUS)) {
                 _nextToken();
+
+                expression = std::make_shared<GS_BinaryNode>(BinaryOperation::PLUS, expression, _parseMultiplicativeExpression());
+
+                continue;
+            } else if (_checkTokenType(Lexer::TokenType::SYMBOL_MINUS)) {
+                _nextToken();
+
+                expression = std::make_shared<GS_BinaryNode>(BinaryOperation::MINUS, expression, _parseMultiplicativeExpression());
 
                 continue;
             }
 
-            nodes.emplace_back(node);
+            break;
         }
 
-        auto blockNode = std::make_shared<GS_BlockNode>(nodes);
-
-        auto rootNode = std::make_shared<GS_RootNode>(blockNode);
-
-        return rootNode;
+        return expression;
     }
 
-//--------------------------------------------------------------------------
+    GSNodePtr GS_Parser::_parseMultiplicativeExpression() {
+        auto expression = _parseUnaryExpression();
 
-    GSNodePtr GS_Parser::_node() {
-        // var
-        if (_checkTokenType(Lexer::TokenType::KEYWORD_VAR)) {
-            _nextToken(); // skip 'var'
+        while (true) {
+            if (_checkTokenType(Lexer::TokenType::SYMBOL_STAR)) {
+                _nextToken();
 
-            auto name = _currentToken().getValue();
+                expression = std::make_shared<GS_BinaryNode>(BinaryOperation::STAR, expression, _parseUnaryExpression());
 
-            _nextToken(); // skip name
+                continue;
+            } else if (_checkTokenType(Lexer::TokenType::SYMBOL_SLASH)) {
+                _nextToken();
 
-            if (_checkTokenType(Lexer::TokenType::SYMBOL_COLON)) {
-                _nextToken(); // skip ':'
+                expression = std::make_shared<GS_BinaryNode>(BinaryOperation::SLASH, expression, _parseUnaryExpression());
 
-                auto type = _currentToken().getValue();
-
-                _nextToken(); // skip type
-
-                if (_checkTokenType(Lexer::TokenType::SYMBOL_EQ)) {
-                    _nextToken(); // skip '='
-
-                    auto node = _expression();
-
-                    return std::make_shared<GS_VariableNode>(name, type, node);
-                } else {
-                    return std::make_shared<GS_VariableNode>(name, type);
-                }
-            } else if (_checkTokenType(Lexer::TokenType::SYMBOL_EQ)) {
-                _nextToken(); // skip '='
-
-                auto node = _expression();
-
-                return std::make_shared<GS_VariableNode>(name, node);
-            } else {
-                return std::make_shared<GS_VariableNode>(name);
+                continue;
             }
+
+            break;
         }
-        // print
-        else if (_checkTokenType(Lexer::TokenType::KEYWORD_PRINT)) {
-            _nextToken(); // skip 'print'
 
-            _nextToken(); // skip '('
-
-            auto node = _primary(); // string value
-
-            auto valueNode = *dynamic_cast<GS_ValueNode*>(node.get());
-
-            auto value = valueNode.getValue();
-
-            _nextToken(); // skip ')'
-
-            _nextToken();
-
-            return std::make_shared<GS_PrintNode>(value);
-        }
-        // new line
-        else if (_checkTokenType(Lexer::TokenType::NEW_LINE)) {
-            _nextToken();
-
-            return _node();
-        }
-        else {
-            _throwException("Unknown statement!");
-        }
-//        else {
-//            return _expression();
-//        }
+        return expression;
     }
 
-//--------------------------------------------------------------------------------
+    GSNodePtr GS_Parser::_parseUnaryExpression() {
+        if (_checkTokenType(Lexer::TokenType::SYMBOL_MINUS)) {
+            _nextToken();
+
+            auto node = _parseLiteralExpression();
+
+            return std::make_shared<GS_UnaryNode>(UnaryOperation::MINUS, node);
+        }
+
+        return _parseLiteralExpression();
+    }
+
+    GSNodePtr GS_Parser::_parseLiteralExpression() {
+        GSValuePtr value;
+
+        if (_checkTokenType(Lexer::TokenType::LITERAL_NUMBER)) {
+            value = std::make_shared<GS_IntegerValue>(std::stoi(_currentToken().getValue()));
+
+            _nextToken();
+        } else if (_checkTokenType(Lexer::TokenType::LITERAL_STRING)) {
+            value = std::make_shared<GS_StringValue>(_currentToken().getValue());
+
+            _nextToken();
+        } else {
+            _throwException("Invalid literal!");
+
+            return nullptr;
+        }
+
+        return std::make_shared<GS_ValueNode>(value);
+    }
 
     GSVoid GS_Parser::_throwException(GSString errorMessage) {
         Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,

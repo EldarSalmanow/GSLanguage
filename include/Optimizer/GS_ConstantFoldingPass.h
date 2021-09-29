@@ -16,7 +16,7 @@ namespace GSLanguageCompiler::Optimizer {
 
         Parser::GSNodePtr visit(Parser::GS_BinaryNode *binaryNode) override;
 
-        Parser::GSNodePtr visit(Parser::GS_VariableNode *variableNode) override;
+        Parser::GSNodePtr visit(Parser::GS_AssignmentNode *assignmentNode) override;
     };
 
 }

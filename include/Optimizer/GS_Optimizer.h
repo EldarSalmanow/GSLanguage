@@ -1,44 +1,23 @@
 #ifndef GSLANGUAGE_GS_OPTIMIZER_H
 #define GSLANGUAGE_GS_OPTIMIZER_H
 
-#include <Parser/GS_Parser.h>
+#include <Starter/GS_Runnable.h>
 
 #include <Optimizer/GS_ConstantFoldingPass.h>
 
 namespace GSLanguageCompiler::Optimizer {
 
     /**
-     *
+     * Class for optimizing program AST
      */
-    class GS_Optimizer {
+    class GS_Optimizer : public Starter::GS_Runnable {
     public:
 
-        /**
-         *
-         * @param nodes
-         * @param passes
-         */
-        explicit GS_Optimizer(Parser::GSNodePtr nodes, GSOptimizerPassPtrArray passes);
+        GS_Optimizer();
 
     public:
 
-        /**
-         *
-         * @return
-         */
-        Parser::GSNodePtr optimize();
-
-    private:
-
-        /**
-         *
-         */
-        Parser::GSNodePtr _nodes;
-
-        /**
-         *
-         */
-        GSOptimizerPassPtrArray _passes;
+        GSVoid run(Starter::GSContextPtr &context) override;
     };
 
 }

@@ -2,7 +2,7 @@
 
 namespace GSLanguageCompiler::Parser {
 
-    std::map<BinaryOperation, GSString> binaryOperationToString{
+    std::map<BinaryOperation, GSString> binaryOperationToString = {
             {BinaryOperation::PLUS,  "+"},
             {BinaryOperation::MINUS, "-"},
             {BinaryOperation::STAR,  "*"},
@@ -28,31 +28,16 @@ namespace GSLanguageCompiler::Parser {
         return NodeType::BINARY_NODE;
     }
 
-    GSValuePtr GS_BinaryNode::interpret() {
-        auto firstValue = dynamic_cast<GS_IntegerValue*>(_firstNode->interpret().get())->getData<GSInt>();
-        auto secondValue = dynamic_cast<GS_IntegerValue*>(_secondNode->interpret().get())->getData<GSInt>();
-
-        switch (_operation) {
-            case BinaryOperation::PLUS:
-                return std::make_shared<GS_IntegerValue>(firstValue + secondValue);
-            case BinaryOperation::MINUS:
-                return std::make_shared<GS_IntegerValue>(firstValue - secondValue);
-            case BinaryOperation::STAR:
-                return std::make_shared<GS_IntegerValue>(firstValue * secondValue);
-            case BinaryOperation::SLASH:
-                if (secondValue == 0) {
-                    Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
-                                                   "Division by zero!");
-
-                    Exceptions::errorHandler.throw_();
-                }
-
-                return std::make_shared<GS_IntegerValue>(firstValue / secondValue);
-        }
+    llvm::Value *GS_BinaryNode::accept(GS_Visitor<llvm::Value*> *visitor) {
+        return visitor->visit(this);
     }
 
-    GSVoid GS_BinaryNode::accept(GS_Visitor *visitor) {
-        visitor->visit(this);
+    GSVoid GS_BinaryNode::accept(GS_Visitor<GSVoid> *visitor) {
+        return visitor->visit(this);
+    }
+
+    GSNodePtr GS_BinaryNode::accept(GS_Visitor<GSNodePtr> *visitor) {
+        return visitor->visit(this);
     }
 
 }

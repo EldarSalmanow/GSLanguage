@@ -2,17 +2,14 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    std::map<TokenType, GSString> tokenTypeToString = {
-            {TokenType::END_OF_FILE,             "END_OF_FILE"},
-            {TokenType::NEW_LINE,                "NEW_LINE"},
+    Map<TokenType, String> tokenTypeToString = {
+            {TokenType::END_OF_FILE,              "END_OF_FILE"},
+            {TokenType::NEW_LINE,                 "NEW_LINE"},
 
             {TokenType::WORD,                     "WORD"},
 
             {TokenType::LITERAL_STRING,           "LITERAL_STRING"},
             {TokenType::LITERAL_NUMBER,           "LITERAL_NUMBER"},
-
-//            {TokenType::KEYWORD_TYPE_INT,         "KEYWORD_TYPE_INT"},
-//            {TokenType::KEYWORD_TYPE_STRING,      "KEYWORD_TYPE_STRING"},
 
             {TokenType::KEYWORD_VAR,              "KEYWORD_VAR"},
             {TokenType::KEYWORD_IF,               "KEYWORD_IF"},
@@ -38,32 +35,31 @@ namespace GSLanguageCompiler::Lexer {
             {TokenType::SYMBOL_EQ,                "SYMBOL_EQ"}
     };
 
-    std::map<GSString, TokenType> reserved = {
-//            {"Int",   TokenType::KEYWORD_TYPE_INT},
-//            {"String",TokenType::KEYWORD_TYPE_STRING},
-
+    Map<String, TokenType> reservedWords = {
             {"var",   TokenType::KEYWORD_VAR},
             {"if",    TokenType::KEYWORD_IF},
             {"print", TokenType::KEYWORD_PRINT},
+    };
 
-            {"(",     TokenType::SYMBOL_LEFT_PARENTHESES},
-            {")",     TokenType::SYMBOL_RIGHT_PARENTHESES},
-            {"{",     TokenType::SYMBOL_LBRACE},
-            {"}",     TokenType::SYMBOL_RBRACE},
+    Map<SymbolT, TokenType> reservedSymbols = {
+            {'(',     TokenType::SYMBOL_LEFT_PARENTHESES},
+            {')',     TokenType::SYMBOL_RIGHT_PARENTHESES},
+            {'{',     TokenType::SYMBOL_LBRACE},
+            {'}',     TokenType::SYMBOL_RBRACE},
 
-            {"<",     TokenType::SYMBOL_LT},
-            {">",     TokenType::SYMBOL_GT},
+            {'<',     TokenType::SYMBOL_LT},
+            {'>',     TokenType::SYMBOL_GT},
 
-            {".",     TokenType::SYMBOL_DOT},
-            {":",     TokenType::SYMBOL_COLON},
-            {"\'",    TokenType::SYMBOL_QUOTES},
-            {"\"",    TokenType::SYMBOL_DOUBLE_QUOTES},
+            {'.',     TokenType::SYMBOL_DOT},
+            {':',     TokenType::SYMBOL_COLON},
+            {'\'',    TokenType::SYMBOL_QUOTES},
+            {'\"',    TokenType::SYMBOL_DOUBLE_QUOTES},
 
-            {"+",     TokenType::SYMBOL_PLUS},
-            {"-",     TokenType::SYMBOL_MINUS},
-            {"*",     TokenType::SYMBOL_STAR},
-            {"/",     TokenType::SYMBOL_SLASH},
-            {"=",     TokenType::SYMBOL_EQ}
+            {'+',     TokenType::SYMBOL_PLUS},
+            {'-',     TokenType::SYMBOL_MINUS},
+            {'*',     TokenType::SYMBOL_STAR},
+            {'/',     TokenType::SYMBOL_SLASH},
+            {'=',     TokenType::SYMBOL_EQ}
     };
 
 }

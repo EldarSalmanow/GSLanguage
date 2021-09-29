@@ -4,42 +4,38 @@
 #include <memory>
 #include <vector>
 
+#include <Parser/Visitors/GS_Visitor.h>
+
 namespace GSLanguageCompiler::Parser {
 
     class GS_Node;
 
     typedef std::shared_ptr<GS_Node> GSNodePtr;
 
-    typedef std::vector<GSNodePtr> GSNodePtrArray;
-
-    class GS_RootNode;
-    class GS_BlockNode;
-    class GS_ValueNode;
-    class GS_UnaryNode;
-    class GS_BinaryNode;
-    class GS_VariableNode;
-    class GS_PrintNode;
-
 }
 
 namespace GSLanguageCompiler::Optimizer {
 
-    class GS_OptimizerPass {
+    class GS_OptimizerPass : public Parser::GS_Visitor<Parser::GSNodePtr> {
     public:
 
-        virtual Parser::GSNodePtr visit(Parser::GS_RootNode *rootNode);
+        GSVoid setup(Starter::GSContextPtr &context) override;
 
-        virtual Parser::GSNodePtr visit(Parser::GS_BlockNode *blockNode);
+        Parser::GSNodePtr visit(Parser::GS_RootNode *rootNode) override;
 
-        virtual Parser::GSNodePtr visit(Parser::GS_ValueNode *valueNode);
+        Parser::GSNodePtr visit(Parser::GS_BlockNode *blockNode) override;
 
-        virtual Parser::GSNodePtr visit(Parser::GS_UnaryNode *unaryNode);
+        Parser::GSNodePtr visit(Parser::GS_ValueNode *valueNode) override;
 
-        virtual Parser::GSNodePtr visit(Parser::GS_BinaryNode *binaryNode);
+        Parser::GSNodePtr visit(Parser::GS_UnaryNode *unaryNode) override;
 
-        virtual Parser::GSNodePtr visit(Parser::GS_VariableNode *variableNode);
+        Parser::GSNodePtr visit(Parser::GS_BinaryNode *binaryNode) override;
 
-        virtual Parser::GSNodePtr visit(Parser::GS_PrintNode *printNode);
+        Parser::GSNodePtr visit(Parser::GS_AssignmentNode *assignmentNode) override;
+
+        Parser::GSNodePtr visit(Parser::GS_VariableDeclarationNode *variableDeclarationNode) override;
+
+        Parser::GSNodePtr visit(Parser::GS_VariableUsingNode *variableUsingNode) override;
     };
 
     typedef std::shared_ptr<GS_OptimizerPass> GSOptimizerPassPtr;

@@ -6,50 +6,58 @@
 namespace GSLanguageCompiler::Parser {
 
     /**
-     *
+     * Class for root AST node
      */
     class GS_RootNode : public GS_Node {
     public:
 
         /**
-         *
-         * @param node
+         * Constructor for root node
+         * @param node Node ptr
          */
-        explicit GS_RootNode(GSNodePtr node)
-                : _node(std::move(node)) {}
+        explicit GS_RootNode(GSNodePtr node);
 
     public:
 
         /**
-         *
-         * @return
+         * Getter for node ptr
+         * @return Node ptr
          */
-        GSNodePtr getNode() {
-            return _node;
-        }
+        GSNodePtr getNode();
 
     public:
 
-        NodeType getNodeType() override {
-            return NodeType::ROOT_NODE;
-        }
+        /**
+         * Getter for node type
+         * @return Node type
+         */
+        NodeType getNodeType() override;
 
-        GSVoid accept(GS_Visitor *visitor) override {
-            visitor->visit(this);
-        }
+        /**
+         * Acceptor for code generation visitors
+         * @param visitor Codegen visitor
+         * @return LLVM IR instructions
+         */
+        llvm::Value *accept(GS_Visitor<llvm::Value*> *visitor) override;
 
-        GSNodePtr accept(Optimizer::GS_OptimizerPass *pass) override {
-            return pass->visit(this);
-        }
+        /**
+         * Acceptor for semantic visitors
+         * @param visitor Semantic visitor
+         * @return
+         */
+        GSVoid accept(GS_Visitor<GSVoid> *visitor) override;
 
-        GSValuePtr interpret() override {
-
-        }
+        /**
+         * Acceptor for optimizer visitors
+         * @param visitor Optimizing visitor
+         * @return Optimized node
+         */
+        GSNodePtr accept(GS_Visitor<GSNodePtr> *visitor) override;
 
     private:
 
         /**
-         *
+         * Node ptr
          */
         GSNodePtr _node;
     };

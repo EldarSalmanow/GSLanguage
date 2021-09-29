@@ -3,7 +3,9 @@ project(GSReaderLibrary)
 set(READER_DIR ${SOURCE_DIR}/Reader)
 
 set(GS_READER_SOURCE
-        ${READER_DIR}/GS_Reader.cpp)
+#        ${READER_DIR}/GS_ReaderRunner.cpp
+        ${READER_DIR}/GS_Reader.cpp
+        ${READER_DIR}/GS_Code.cpp)
 
 add_library(
 #       Library name

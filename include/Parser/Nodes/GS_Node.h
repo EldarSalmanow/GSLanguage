@@ -1,11 +1,15 @@
 #ifndef GSLANGUAGE_GS_NODE_H
 #define GSLANGUAGE_GS_NODE_H
 
-#include <Parser/Nodes/GS_Visitor.h>
+#include <Parser/Visitors/GS_Visitor.h>
 
-#include <Optimizer/GS_OptimizerPass.h>
+#include <CrossPlatform/GS_PlatformTypes.h>
 
-#include <Parser/GS_TablesOfSymbols.h>
+namespace llvm {
+
+    class Value;
+
+}
 
 namespace GSLanguageCompiler::Parser {
 
@@ -22,15 +26,30 @@ namespace GSLanguageCompiler::Parser {
         UNARY_NODE,
         BINARY_NODE,
 
-        VARIABLE_NODE,
+        ASSIGNMENT_NODE,
 
-        PRINT_NODE
+        VARIABLE_DECLARATION_NODE,
+
+        VARIABLE_USING_NODE
     };
 
+    class GS_Node;
+
+    typedef std::shared_ptr<GS_Node> GSNodePtr;
+
+    typedef std::vector<GSNodePtr> GSNodePtrArray;
+
     /**
-     * Base class for all parser nodes
+     * Base class for all AST nodes
      */
     class GS_Node {
+    public:
+
+        /**
+         * Virtual destructor for supporting inheritance
+         */
+        virtual ~GS_Node();
+
     public:
 
         /**
@@ -40,29 +59,26 @@ namespace GSLanguageCompiler::Parser {
         virtual NodeType getNodeType() = 0;
 
         /**
-         *
-         * @return
+         * Acceptor for code generation visitors
+         * @param visitor Codegen visitor
+         * @return LLVM IR instructions
          */
-        virtual GSValuePtr interpret() = 0;
+        virtual llvm::Value *accept(GS_Visitor<llvm::Value*> *visitor) = 0;
 
         /**
-         *
-         * @param visitor
+         * Acceptor for semantic visitors
+         * @param visitor Semantic visitor
          * @return
          */
-        virtual GSVoid accept(GS_Visitor *visitor) = 0;
+        virtual GSVoid accept(GS_Visitor<GSVoid> *visitor) = 0;
 
         /**
-         *
-         * @param pass
-         * @return
+         * Acceptor for optimizer visitors
+         * @param visitor Optimizing visitor
+         * @return Optimized node
          */
-        virtual GSNodePtr accept(Optimizer::GS_OptimizerPass *pass) = 0;
+        virtual GSNodePtr accept(GS_Visitor<GSNodePtr> *visitor) = 0;
     };
-
-    typedef std::shared_ptr<GS_Node> GSNodePtr;
-
-    typedef std::vector<GSNodePtr> GSNodePtrArray;
 
 }
 

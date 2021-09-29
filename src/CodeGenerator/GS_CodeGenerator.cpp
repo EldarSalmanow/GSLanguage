@@ -1,18 +1,33 @@
+#include <llvm/Bitcode/BitcodeWriter.h>
+
 #include <GS_CodeGenerator.h>
+
+#include <Parser/Nodes/GS_Node.h>
+
+#include <Exceptions/GS_ErrorHandler.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
-    GS_CodeGenerator::GS_CodeGenerator(Parser::GSNodePtr nodes)
-            : _nodes(std::move(nodes)) {}
+    GS_CodeGenerator::GS_CodeGenerator() = default;
 
-    GSByteCode GS_CodeGenerator::codegen() {
-        GS_CodeGenVisitor visitor;
+    GSVoid GS_CodeGenerator::run(Starter::GSContextPtr &context) {
+        GS_LLVMCodeGenVisitor visitor;
 
-        _nodes->accept(&visitor);
+        visitor.setup(context);
 
-        visitor.createBytecode();
+        context->getOptimizedRootNode()->accept(&visitor);
 
-        return visitor.getBytecode();
+        std::error_code errorCode;
+        llvm::raw_fd_ostream stream("test.bc", errorCode);
+
+        if (errorCode) {
+            Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
+                                           errorCode.message());
+
+            Exceptions::errorHandler.throw_();
+        }
+
+        llvm::WriteBitcodeToFile(*context->getLLVMModule(), stream);
     }
 
 }

@@ -1,15 +1,14 @@
 #ifndef GSLANGUAGE_GS_READER_H
 #define GSLANGUAGE_GS_READER_H
 
-#include <fstream>
-#include <vector>
-#include <memory>
+#include <Reader/GS_Code.h>
 
-#include <Exceptions/GS_ErrorHandler.h>
+namespace GSLanguageCompiler::Reader {
 
-namespace GSLanguageCompiler {
-
-    typedef std::vector<GSString> GSText;
+    /**
+     * Stream type
+     */
+    using StreamT = IFStream;
 
     /**
      * Reader for read files
@@ -19,28 +18,67 @@ namespace GSLanguageCompiler {
 
         /**
          * Constructor for GS_Reader
-         * @param filename Name of the main file to read
+         * @param stream Input stream
+         * @param filename Filename
          */
-        GS_Reader(GSString filename);
+        GS_Reader(StreamT stream, String filename);
+
+    public:
 
         /**
-         * The file read function takes the file name from the GS_Reader class object and line by line
-         * reads a file through a file I/O stream.
-         * @return Lines code from file
+         * Reading source code and converting code to GS_Code
+         * @return Code from stream
          */
-        GSText readFile();
+        GS_Code read();
 
     private:
 
         /**
-         * Code from file
+         * Open file
+         * @return
          */
-        GSText _input;
+        Void _openFile();
 
         /**
-         * The name of the file being read
+         * Read line from stream
+         * @return Line from stream
          */
-        GSString _filename;
+        GS_Line _getLine();
+
+        /**
+         * Read symbol from stream
+         * @return Symbol from stream
+         */
+        GS_Symbol _getSymbol();
+
+        /**
+         * Next line from stream
+         * @return
+         */
+        Void _nextLine();
+
+        /**
+         * Next symbol from stream
+         * @return
+         */
+        Void _nextSymbol();
+
+    private:
+
+        /**
+         * Stream for reading code
+         */
+        StreamT _stream;
+
+        /**
+         * Filename
+         */
+        String _filename;
+
+        /**
+         * Line and column in source code
+         */
+        IndexT _line, _column;
     };
 
 }

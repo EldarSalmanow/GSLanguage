@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_CODEGENERATOR_H
 #define GSLANGUAGE_GS_CODEGENERATOR_H
 
-#include <Parser/GS_Parser.h>
+#include <Starter/GS_Runnable.h>
 
 #include <CodeGenerator/GS_CodeGenVisitor.h>
 
@@ -10,29 +10,14 @@ namespace GSLanguageCompiler::CodeGenerator {
     /**
      *
      */
-    class GS_CodeGenerator {
+    class GS_CodeGenerator : public Starter::GS_Runnable {
     public:
 
-        /**
-         *
-         * @param nodes
-         */
-        explicit GS_CodeGenerator(Parser::GSNodePtr nodes);
+        GS_CodeGenerator();
 
     public:
 
-        /**
-         *
-         * @return
-         */
-        GSByteCode codegen();
-
-    private:
-
-        /**
-         *
-         */
-        Parser::GSNodePtr _nodes;
+        GSVoid run(Starter::GSContextPtr &context) override;
     };
 
 }

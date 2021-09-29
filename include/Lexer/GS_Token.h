@@ -1,13 +1,65 @@
 #ifndef GSLANGUAGE_GS_TOKEN_H
 #define GSLANGUAGE_GS_TOKEN_H
 
-#include <vector>
-#include <memory>
+#include <Reader/GS_Code.h>
 
 #include <Lexer/GS_Keywords.h>
-#include <Lexer/GS_Position.h>
 
 namespace GSLanguageCompiler::Lexer {
+
+    using IndexT = U64;
+
+    /**
+     * Class for displaying information about the location of a character in the source file
+     */
+    class GS_Position {
+    public:
+
+        /**
+         * Default constructor for GS_Position
+         */
+        GS_Position() = default;
+
+        /**
+         * Constructor for GS_Position
+         * @param code String code
+         * @param line Line in code
+         * @param column Column in code
+         */
+        GS_Position(String code, IndexT line, IndexT column);
+
+    public:
+
+        /**
+         * Getter for string with code
+         * @return Code line
+         */
+        String getCode();
+
+        /**
+         * Getter for line
+         * @return Line
+         */
+        IndexT getLine();
+
+        /**
+         * Getter for column
+         * @return Column
+         */
+        IndexT getColumn();
+
+    private:
+
+        /**
+         * Code line from source file
+         */
+        String _code;
+
+        /**
+         * Position in source file
+         */
+        IndexT _line, _column;
+    };
 
     /**
      * Class for issuing information about the token
@@ -33,7 +85,7 @@ namespace GSLanguageCompiler::Lexer {
          * @param word
          * @param position
          */
-        GS_Token(TokenType type, GSString word, GS_Position position);
+        GS_Token(TokenType type, String word, GS_Position position);
 
     public:
 
@@ -47,7 +99,7 @@ namespace GSLanguageCompiler::Lexer {
          * Getter for value
          * @return Token value
          */
-        GSString getValue();
+        String getValue();
 
         /**
          * Getter for position in source file
@@ -65,15 +117,15 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * String value or name
          */
-        GSString _value;
+        String _value;
 
         /**
-         * Start and end token position
+         * Token position
          */
         GS_Position _position;
     };
 
-    typedef std::vector<GS_Token> GSTokenArray;
+    using GSTokenArray = Vector<GS_Token>;
 
 }
 

@@ -4,6 +4,10 @@
 
 namespace GSLanguageCompiler::Optimizer {
 
+    GSVoid GS_OptimizerPass::setup(Starter::GSContextPtr &context) {
+        _context = context;
+    }
+
     Parser::GSNodePtr GS_OptimizerPass::visit(Parser::GS_RootNode *rootNode) {
         auto node = rootNode->getNode()->accept(this);
 
@@ -32,12 +36,16 @@ namespace GSLanguageCompiler::Optimizer {
         return std::make_shared<Parser::GS_BinaryNode>(*binaryNode);
     }
 
-    Parser::GSNodePtr GS_OptimizerPass::visit(Parser::GS_VariableNode *variableNode) {
-        return std::make_shared<Parser::GS_VariableNode>(*variableNode);
+    Parser::GSNodePtr GS_OptimizerPass::visit(Parser::GS_AssignmentNode *assignmentNode) {
+        return std::make_shared<Parser::GS_AssignmentNode>(*assignmentNode);
     }
 
-    Parser::GSNodePtr GS_OptimizerPass::visit(Parser::GS_PrintNode *printNode) {
-        return std::make_shared<Parser::GS_PrintNode>(*printNode);
+    Parser::GSNodePtr GS_OptimizerPass::visit(Parser::GS_VariableDeclarationNode *variableDeclarationNode) {
+        return std::make_shared<Parser::GS_VariableDeclarationNode>(*variableDeclarationNode);
+    }
+
+    Parser::GSNodePtr GS_OptimizerPass::visit(Parser::GS_VariableUsingNode *variableUsingNode) {
+        return std::make_shared<Parser::GS_VariableUsingNode>(*variableUsingNode);
     }
 
 }

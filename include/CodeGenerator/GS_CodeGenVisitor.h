@@ -1,48 +1,47 @@
 #ifndef GSLANGUAGE_GS_CODEGENVISITOR_H
 #define GSLANGUAGE_GS_CODEGENVISITOR_H
 
-#include <Parser/Nodes/GS_Visitor.h>
+#include <llvm/IR/IRBuilder.h>
+//#include <llvm/IR/LegacyPassManager.h>
+//#include <llvm/Transforms/InstCombine/InstCombine.h>
+//#include <llvm/Transforms/Scalar.h>
 
-#include <GSBCCodeGen/GS_BCCompiler.h>
-
-#include <Exceptions/GS_ErrorHandler.h>
+#include <Parser/Visitors/GS_Visitor.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
-    class GS_CodeGenVisitor : public Parser::GS_Visitor {
+    class GS_LLVMCodeGenVisitor : public Parser::GS_Visitor<llvm::Value*> {
     public:
 
-        GS_CodeGenVisitor();
-
-    public:
-
-        GSVoid createBytecode();
+        GS_LLVMCodeGenVisitor();
 
     public:
 
-        GSByteCode getBytecode();
+        GSVoid setup(Starter::GSContextPtr &context) override;
 
-    public:
+        llvm::Value *visit(Parser::GS_RootNode *rootNode) override;
 
-        GSVoid visit(Parser::GS_RootNode *rootNode) override;
+        llvm::Value *visit(Parser::GS_BlockNode *blockNode) override;
 
-        GSVoid visit(Parser::GS_BlockNode *blockNode) override;
+        llvm::Value *visit(Parser::GS_ValueNode *valueNode) override;
 
-        GSVoid visit(Parser::GS_ValueNode *valueNode) override;
+        llvm::Value *visit(Parser::GS_UnaryNode *unaryNode) override;
 
-        GSVoid visit(Parser::GS_UnaryNode *unaryNode) override;
+        llvm::Value *visit(Parser::GS_BinaryNode *binaryNode) override;
 
-        GSVoid visit(Parser::GS_BinaryNode *binaryNode) override;
+        llvm::Value *visit(Parser::GS_AssignmentNode *assignmentNode) override;
 
-        GSVoid visit(Parser::GS_VariableNode *variableNode) override;
+        llvm::Value *visit(Parser::GS_VariableDeclarationNode *variableDeclarationNode) override;
 
-        GSVoid visit(Parser::GS_PrintNode *printNode) override;
+        llvm::Value *visit(Parser::GS_VariableUsingNode *variableUsingNode) override;
 
     private:
 
-        GSBCCodeGen::GS_BCCompiler _compiler;
+        std::shared_ptr<llvm::LLVMContext> _llvmContext;
 
-        GSByteCode _bytecode;
+        std::shared_ptr<llvm::Module> _llvmModule;
+
+        std::shared_ptr<llvm::IRBuilder<>> _llvmBuilder;
     };
 
 }

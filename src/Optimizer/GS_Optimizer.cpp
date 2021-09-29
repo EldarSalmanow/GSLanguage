@@ -1,16 +1,22 @@
 #include <GS_Optimizer.h>
 
+#include <Parser/Nodes/GS_Node.h>
+
 namespace GSLanguageCompiler::Optimizer {
 
-    GS_Optimizer::GS_Optimizer(Parser::GSNodePtr nodes, GSOptimizerPassPtrArray passes)
-            : _nodes(std::move(nodes)), _passes(std::move(passes)) {}
+    GS_Optimizer::GS_Optimizer() = default;
 
-    Parser::GSNodePtr GS_Optimizer::optimize() {
-        for (auto &pass : _passes) {
-            _nodes = _nodes->accept(pass.get());
+    GSVoid GS_Optimizer::run(Starter::GSContextPtr &context) {
+        auto root = context->getRootNode();
+        auto passes = context->getOptimizerPasses();
+
+        for (auto &pass : passes) {
+            pass->setup(context);
+
+            root = root->accept(pass.get());
         }
 
-        return _nodes;
+        context->setOptimizedRootNode(root);
     }
 
 }

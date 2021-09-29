@@ -1,19 +1,38 @@
 #ifndef GSLANGUAGE_GS_DEBUG_H
 #define GSLANGUAGE_GS_DEBUG_H
 
-#include <Lexer/GS_Keywords.h>
+#include <memory>
+#include <iostream>
 
-#include <Parser/Nodes/GS_Node.h>
-#include <Parser/Nodes/Visitors/GS_PrintVisitor.h>
+#include <CrossPlatform/GS_PlatformTypes.h>
 
-//#include <GSBCCodeGen/GS_BCHighDecompiler.h>
-//#include <GSBCCodeGen/GS_BCVisitors.h>
+namespace GSLanguageCompiler {
 
-#include <CrossPlatform/GS_CrossPlatform.h>
+    namespace Reader {
+
+        typedef std::vector<GSString> GSText;
+
+    }
+
+    namespace Lexer {
+
+        class GS_Token;
+
+        typedef std::vector<GS_Token> GSTokenArray;
+
+    }
+
+    namespace Parser {
+
+        class GS_Node;
+
+        typedef std::shared_ptr<GS_Node> GSNodePtr;
+
+    }
+
+}
 
 namespace Debug {
-
-    using namespace Platform;
 
     /**
      * Class for debugging and testing input and output compilation parameters GSLanguageCompiler
@@ -21,65 +40,44 @@ namespace Debug {
     class GS_Debug {
     public:
 
-         /**
-          *
-          * @tparam _ContType
-          * @tparam _ElementType
-          * @param startMessage
-          * @param endMessage
-          * @param function
-          * @param data
-          */
-         template<typename _ContType, typename _ElementType>
-         static GSVoid printDebugInformation(const GSString &startMessage,
-                                           const GSString &endMessage,
-                                           GSVoid (*function)(_ElementType &),
-                                           _ContType &data) {
-             std::cout << startMessage << std::endl;
+        GS_Debug();
 
-             for (auto &element : data) {
-                 function(element);
-             }
+    public:
 
-             std::cout << endMessage << std::endl;
-         }
+        /**
+         *
+         * @param message
+         * @return
+         */
+        GSVoid printMessage(const GSString &message);
 
-         static GSVoid printASTDebugInfo(const GSString &startMessage,
-                                  const GSString &endMessage,
-                                  GSLanguageCompiler::Parser::GSNodePtr &root) {
-             std::cout << startMessage << std::endl;
+        /**
+         *
+         * @param text
+         * @return
+         */
+        GSVoid startReaderDebugMode(GSLanguageCompiler::Reader::GSText &text);
 
-             GSLanguageCompiler::Parser::GS_PrintVisitor printVisitor;
+        /**
+         *
+         * @param tokens
+         * @return
+         */
+        GSVoid startLexerDebugMode(GSLanguageCompiler::Lexer::GSTokenArray &tokens);
 
-             root->accept(&printVisitor);
+        /**
+         *
+         * @param root
+         * @return
+         */
+        GSVoid startParserDebugMode(GSLanguageCompiler::Parser::GSNodePtr &root);
 
-             std::cout << endMessage << std::endl;
-         }
-
-         /**
-          *
-          * @param startMessage
-          * @param endMessage
-          * @param bytecode
-          * @return
-          */
-//         static GSVoid printCodeGeneratorDebugInfo(const GSString &startMessage,
-//                                                   const GSString &endMessage,
-//                                                   GSByteCode &bytecode) {
-//             GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::RED);
-//
-//             std::cerr << startMessage << std::endl;
-//
-//             GSBCCodeGen::GS_BCHighDecompiler decompiler(bytecode);
-//
-//             GSBCCodeGen::GS_BCPrintVisitor visitor;
-//
-//             visitor.visit(decompiler.decompile());
-//
-//             std::cerr << endMessage << std::endl;
-//
-//             GS_CrossPlatform::setConsoleColor(GS_CrossPlatform::BLACK, GS_CrossPlatform::WHITE);
-//         }
+        /**
+         *
+         * @param optimizedRoot
+         * @return
+         */
+        GSVoid startOptimizerDebugMode(GSLanguageCompiler::Parser::GSNodePtr &optimizedRoot);
     };
 
 }

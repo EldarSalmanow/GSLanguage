@@ -1,47 +1,39 @@
 #include <Starter/GS_Starter.h>
 
-namespace Starter {
+namespace GSLanguageCompiler::Starter {
 
-    GSVoid GS_DebugFunctions::printReaderDebugInfo(GSString &string) {
-        static GSInt line = 1;
+    static llvm::cl::opt<std::string> inputFilename("f",
+                                                    llvm::cl::Required,
+                                                    llvm::cl::ValueRequired,
+                                                    llvm::cl::desc("Input filename"),
+                                                    llvm::cl::value_desc("filename"));
 
-        std::cout << line << ": " << string << std::endl;
+    static llvm::cl::opt<std::string> outputFilename("o",
+                                                     llvm::cl::ValueRequired,
+                                                     llvm::cl::desc("Output filename"),
+                                                     llvm::cl::value_desc("filename"));
 
-        ++line;
-    }
-
-    GSVoid GS_DebugFunctions::printLexerDebugInfo(GS_Token &token) {
-        std::cout << tokenTypeToString[token.getType()] << std::endl;
-    }
+    static llvm::cl::opt<bool> testingFlag("t",
+                                           llvm::cl::desc("Testing mode"));
 
     GSInt GS_Starter::start(GSInt argc, GSChar **argv) {
         try {
-            parseArguments(argc, argv);
+            llvm::cl::ParseCommandLineOptions(argc, argv);
 
-            RunningFunction function = startCompiling;
-
-            if (_compilerData.argumentsOptions.getIsInvalidArguments()) {
-                return 1;
-            } else if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
-                runWithTimer(function, "Total time: \t\t\t\t\t");
-
-                _timer.printResults();
-            } else {
-                function();
-            }
-
+            GS_Context context;
+//            startCompiling();
         } catch (Exceptions::GS_Exception &exception) {
             return 1;
         } catch (std::exception &exception) {
             Exceptions::errorHandler.print(GSLanguageCompiler::Exceptions::ErrorLevel::FATAL_LVL,
-                                                 exception.what());
+                                           exception.what());
 
             Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
                                            "Please, report this fatal error to GSLanguageCompiler repository.");
 
             Exceptions::errorHandler.throw_();
 
-            return 1;
+            return 2;
         } catch (...) {
             Exceptions::errorHandler.print(GSLanguageCompiler::Exceptions::ErrorLevel::FATAL_LVL,
                                            "Unknown fatal error!");
@@ -50,6 +42,8 @@ namespace Starter {
                                            "Please, report this fatal error to GSLanguageCompiler repository.");
 
             Exceptions::errorHandler.throw_();
+
+            return 3;
         }
 
         return 0;
@@ -65,75 +59,49 @@ namespace Starter {
         // parsing tokens to AST
         startParser();
 
+        // semantic analyzing AST
+        startSemanticAnalyzer();
+
         // optimizing parser AST
         startOptimizer();
 
-        if (_compilerData.argumentsOptions.getIsInterpret()) {
-            // start interpreter
-            startInterpreter();
-        } else {
-            // generating code from AST
-            generateCode();
-        }
+        // generating code from AST
+        generateCode();
 
-        if (_compilerData.argumentsOptions.getIsEnableTesting()) {
+        if (testingFlag.getValue()) {
             // start debug mode
             startDebugMode();
         }
     }
 
-    GSVoid GS_Starter::runWithTimer(RunningFunction &function, GSString messageForProfiling) {
-        GS_Timer timer;
-
-        timer.start();
-
-        function();
-
-        timer.stop();
-
-        _timer.addResult(std::move(messageForProfiling) + std::to_string(timer.result().count()) + " microseconds\n");
-    }
-
     GSVoid GS_Starter::startReader() {
-        auto reader = std::make_shared<GS_Reader>(_compilerData.argumentsOptions.getInputFilename());
+        auto reader = std::make_shared<GS_Reader>(inputFilename.getValue());
 
-        RunningFunction function = [reader] () -> GSVoid {
-            _compilerData.inputSource = reader->readFile();
-        };
-
-        if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
-            runWithTimer(function, "Reading input time: \t\t\t\t");
-        } else {
-            function();
-        }
+        _compilerData.inputSource = reader->readFile();
     }
 
     GSVoid GS_Starter::startLexer() {
         auto lexer = std::make_shared<GS_Lexer>(_compilerData.inputSource);
 
-        RunningFunction function = [lexer] () -> GSVoid {
-            _compilerData.lexerTokens = lexer->tokenize();
-        };
-
-        if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
-            runWithTimer(function, "Lexer analyzing time: \t\t\t\t");
-        } else {
-            function();
-        }
+        _compilerData.lexerTokens = lexer->tokenize();
     }
 
     GSVoid GS_Starter::startParser() {
         auto parser = std::make_shared<GS_Parser>(_compilerData.lexerTokens);
 
-        RunningFunction function = [parser] () -> GSVoid {
-            _compilerData.parserStatements = parser->parse();
+        _compilerData.parserStatements = parser->parse();
+    }
+
+    GSVoid GS_Starter::startSemanticAnalyzer() {
+        GSSemanticPassPtrArray passes = {
+                std::make_shared<GS_TypePlaceholderPass>(),
+                std::make_shared<GS_TypeCheckerPass>(),
+                std::make_shared<GS_VariablesPlaceholderPass>()
         };
 
-        if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
-            runWithTimer(function, "Parsing tokens time: \t\t\t\t");
-        } else {
-            function();
-        }
+        auto semanticAnalyzer = std::make_shared<GS_Semantic>(_compilerData.parserStatements, passes);
+
+        semanticAnalyzer->analyze();
     }
 
     GSVoid GS_Starter::startOptimizer() {
@@ -143,84 +111,37 @@ namespace Starter {
 
         auto optimizer = std::make_shared<GS_Optimizer>(_compilerData.parserStatements, passes);
 
-        RunningFunction function = [optimizer] () -> GSVoid {
-            _compilerData.optimizedParserStatements = optimizer->optimize();
-        };
-
-        if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
-            runWithTimer(function, "Optimizing parser statements time: \t\t");
-        } else {
-            function();
-        }
+        _compilerData.optimizedParserStatements = optimizer->optimize();
     }
 
     GSVoid GS_Starter::generateCode() {
         auto codeGenerator = std::make_shared<GS_CodeGenerator>(_compilerData.optimizedParserStatements);
 
-        RunningFunction function = [codeGenerator] () -> GSVoid {
-            _compilerData.codeGeneratorByteCode = codeGenerator->codegen();
-        };
-
-        if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
-            runWithTimer(function, "Code generation time: \t\t\t\t");
-        } else {
-            function();
-        }
-
-        GSBCCodeGen::GS_BCWriter writer(_compilerData.argumentsOptions.getOutputGSVMFilename());
-
-        writer.write(_compilerData.codeGeneratorByteCode);
-    }
-
-    GSVoid GS_Starter::startInterpreter() {
-        auto interpreter = std::make_shared<GS_Interpreter>(_compilerData.optimizedParserStatements);
-
-        RunningFunction function = [interpreter] () -> GSVoid {
-            interpreter->startInterpret();
-        };
-
-        if (_compilerData.argumentsOptions.getIsEnableProfiling()) {
-            runWithTimer(function, "Running program time: \t\t\t\t");
-        } else {
-            function();
-        }
-    }
-
-    GSVoid GS_Starter::parseArguments(GSInt argc, GSChar *argv[]) {
-        auto argumentsParser = std::make_shared<GS_Arguments>(argc, argv);
-
-        _compilerData.argumentsOptions = argumentsParser->parseArguments();
-
-        if (argc < 3 || _compilerData.argumentsOptions.getInputFilename().empty()) {
-            argumentsParser->printUsage();
-
-            _compilerData.argumentsOptions.setIsInvalidArguments(true);
-        }
+        codeGenerator->codegen();
     }
 
     GSVoid GS_Starter::startDebugMode() {
-        GS_CrossPlatform::setConsoleColor(ConsoleColor::RED);
+        GS_CrossPlatform::setFgConsoleColor(ConsoleColor::RED);
+        GS_CrossPlatform::setConsoleStyle(ConsoleStyle::BOLD);
 
-        RunningFunction function = [] () -> GSVoid {
-            GS_Debug::printDebugInformation("\n----------READER OUT START----------\n", "\n----------READER OUT END----------\n",
-                                            &GS_DebugFunctions::printReaderDebugInfo, _compilerData.inputSource);
+        _debug.printMessage("\n!Reader debug info!\n");
 
-            GS_Debug::printDebugInformation("\n----------LEXER OUT START----------\n", "\n----------LEXER OUT END----------\n",
-                                            &GS_DebugFunctions::printLexerDebugInfo, _compilerData.lexerTokens);
+        _debug.startReaderDebugMode(_compilerData.inputSource);
 
-            GS_Debug::printASTDebugInfo("\n----------PARSER OUT START----------\n", "\n----------PARSER OUT END----------\n",
-                                            _compilerData.parserStatements);
+        _debug.printMessage("\n!Lexer debug info!\n");
 
-            GS_Debug::printASTDebugInfo("\n----------OPTIMIZATION OUT START----------\n", "\n----------OPTIMIZATION OUT END----------\n",
-                                            _compilerData.optimizedParserStatements);
-//
-//            GS_Debug::printCodeGeneratorDebugInfo("\n----------CODE GENERATOR OUT START----------\n", "\n----------CODE GENERATOR OUT END----------\n",
-//                                                  _compilerData.codeGeneratorByteCode);
-        };
+        _debug.startLexerDebugMode(_compilerData.lexerTokens);
 
-        runWithTimer(function, "Printing debug info time: \t\t\t");
+        _debug.printMessage("\n!Parser debug info!\n");
 
-        GS_CrossPlatform::resetConsoleColor();
+        _debug.startParserDebugMode(_compilerData.parserStatements);
+
+        _debug.printMessage("\n!Optimizer debug info!\n");
+
+        _debug.startOptimizerDebugMode(_compilerData.optimizedParserStatements);
+
+        GS_CrossPlatform::resetConsoleStyle();
+        GS_CrossPlatform::resetFgConsoleColor();
     }
 
 }

@@ -32,7 +32,7 @@ namespace GSLanguageCompiler::Exceptions {
 
         std::cout << textConsoleStyle << textConsoleColor;
 
-        std::cout << "| " << position.getEndPosition().getLine() << ": " << stringErrorLevel << " >>  ";
+        std::cout << "| " << position.getLine() << ": " << stringErrorLevel << " >>  ";
 
         std::cout << codeConsoleColor;
 
@@ -42,8 +42,8 @@ namespace GSLanguageCompiler::Exceptions {
 
         std::cout << "|";
 
-        for (int i = 0; i < position.getEndPosition().getColumn()
-        + std::to_string(position.getEndPosition().getLine()).size()
+        for (int i = 0; i < position.getColumn()
+        + std::to_string(position.getLine()).size()
         + stringErrorLevel.size() + 7; ++i) {
             std::cout << " ";
         }

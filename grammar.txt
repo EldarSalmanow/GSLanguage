@@ -1,0 +1,5 @@
+node = block_node | var_decl_node | var_assign_node | var_using_node
+block = node...
+var_decl_node = 'var' id
+var_assign_node = var_decl_node '=' expr | var_using_node '=' expr
+var_using_node = id

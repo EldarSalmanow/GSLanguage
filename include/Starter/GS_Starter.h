@@ -1,52 +1,32 @@
 #ifndef GSLANGUAGE_GS_STARTER_H
 #define GSLANGUAGE_GS_STARTER_H
 
-#include <GSBCCodeGen/GS_BCWriter.h>
+#include <Starter/GS_Context.h>
 
-#include <Debug/GS_Timer.h>
+#include <llvm/Support/CommandLine.h>
+
 #include <Debug/GS_Debug.h>
 
-#include <ArgumentsParser/GS_Arguments.h>
 #include <Reader/GS_Reader.h>
 #include <Lexer/GS_Lexer.h>
 #include <Parser/GS_Parser.h>
-#include <Parser/Nodes/Visitors/GS_PrintVisitor.h>
+#include <Semantic/GS_Semantic.h>
 #include <Optimizer/GS_Optimizer.h>
 #include <CodeGenerator/GS_CodeGenerator.h>
-#include <Interpreter/GS_Interpreter.h>
 
-namespace Starter {
+#include <CrossPlatform/GS_CrossPlatform.h>
 
-    using namespace GSLanguageCompiler;
+namespace GSLanguageCompiler::Starter {
 
     using namespace Lexer;
     using namespace Parser;
+    using namespace Semantic;
     using namespace Optimizer;
     using namespace CodeGenerator;
-    using namespace Interpreter;
 
     using namespace Debug;
 
-    /**
-     *
-     */
-    class GS_DebugFunctions {
-    public:
-
-        /**
-         *
-         * @param string
-         * @return
-         */
-        static GSVoid printReaderDebugInfo(GSString &string);
-
-        /**
-         *
-         * @param token
-         * @return
-         */
-        static GSVoid printLexerDebugInfo(GS_Token &token);
-    };
+    using namespace Platform;
 
     /**
      * Class for containing compiler data
@@ -60,11 +40,6 @@ namespace Starter {
         GS_CompilerData() = default;
 
     public:
-
-        /**
-         * Command line arguments
-         */
-        GS_ArgumentsOptions argumentsOptions;
 
         /**
          * Source from file
@@ -85,14 +60,7 @@ namespace Starter {
          * Optimized statements
          */
         GSNodePtr optimizedParserStatements;
-
-        /**
-         * Bytecode for GSVirtualMachine before code generator
-         */
-        GSByteCode codeGeneratorByteCode;
     };
-
-    typedef std::function<GSVoid()> RunningFunction;
 
     /**
      * Class for starting GSLanguageCompiler
@@ -117,22 +85,6 @@ namespace Starter {
         static GSVoid startCompiling();
 
         /**
-        * Function for parsing command line arguments and generating config for compiling
-        * @param argc Number of arguments
-        * @param argv Array of arguments
-        * @return Configs for compiling
-        */
-        static GSVoid parseArguments(GSInt argc, GSChar **argv);
-
-        /**
-         * Function for run any function with profiling and writing profiling result
-         * @param function Function for running with profiling
-         * @param messageForProfiling Message for adding profiling result
-         * @return
-         */
-        static GSVoid runWithTimer(RunningFunction &function, GSString messageForProfiling);
-
-        /**
          * Start reading source from file
          */
         static GSVoid startReader();
@@ -148,6 +100,11 @@ namespace Starter {
         static GSVoid startParser();
 
         /**
+         *
+         */
+        static GSVoid startSemanticAnalyzer();
+
+        /**
          * Start optimizer for optimize AST
          */
         static GSVoid startOptimizer();
@@ -156,11 +113,6 @@ namespace Starter {
          * Start code generator for generating output code
          */
         static GSVoid generateCode();
-
-        /**
-         * Starting interpreter
-         */
-        static GSVoid startInterpreter();
 
         /**
          * Start debug functions
@@ -175,9 +127,11 @@ namespace Starter {
         inline static GS_CompilerData _compilerData;
 
         /**
-         * Timer for profiling
+         *
          */
-        inline static GS_Timer _timer;
+        inline static GS_Debug _debug;
+
+        static GS_Context _context;
     };
 
 }

@@ -1,9 +1,7 @@
 #ifndef GSLANGUAGE_GS_ERRORHANDLER_H
 #define GSLANGUAGE_GS_ERRORHANDLER_H
 
-#include <map>
-
-#include <Lexer/GS_Position.h>
+#include <Lexer/GS_Token.h>
 
 #include <Exceptions/GS_Exception.h>
 

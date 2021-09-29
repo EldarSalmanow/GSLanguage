@@ -4,15 +4,24 @@ set(PARSER_DIR ${SOURCE_DIR}/Parser)
 
 set(GS_PARSER_SOURCE
         ${PARSER_DIR}/GS_Parser.cpp
-        ${PARSER_DIR}/GS_ExpressionParser.cpp
 
-        ${PARSER_DIR}/Nodes/GS_Value.cpp
-        ${PARSER_DIR}/Nodes/GS_IntegerValue.cpp
+        ${PARSER_DIR}/Nodes/GS_Node.cpp
+
+        ${PARSER_DIR}/Nodes/GS_RootNode.cpp
+
+        ${PARSER_DIR}/Nodes/GS_BlockNode.cpp
 
         ${PARSER_DIR}/Nodes/GS_ValueNode.cpp
 
         ${PARSER_DIR}/Nodes/GS_BinaryNode.cpp
-        ${PARSER_DIR}/Nodes/GS_UnaryNode.cpp ../../src/Parser/Nodes/GS_VariableNode.cpp ../../src/Parser/Nodes/GS_PrintNode.cpp ../../src/Parser/Nodes/GS_StringValue.cpp ../../src/Parser/GS_TablesOfSymbols.cpp ../../src/Parser/Nodes/Visitors/GS_PrintVisitor.cpp)
+        ${PARSER_DIR}/Nodes/GS_UnaryNode.cpp
+
+        ${PARSER_DIR}/Nodes/GS_AssignmentNode.cpp
+
+        ${PARSER_DIR}/Nodes/GS_VariableDeclarationNode.cpp
+        ${PARSER_DIR}/Nodes/GS_VariableUsingNode.cpp
+
+        ${PARSER_DIR}/Visitors/GS_PrintVisitor.cpp)
 
 add_library(
 #       Library name

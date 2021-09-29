@@ -6,50 +6,58 @@
 namespace GSLanguageCompiler::Parser {
 
     /**
-     *
+     * Class for block AST node
      */
     class GS_BlockNode : public GS_Node {
     public:
 
         /**
-         *
-         * @param nodes
+         * Constructor for block node
+         * @param nodes Node ptr array
          */
-        explicit GS_BlockNode(GSNodePtrArray nodes)
-                : _nodes(std::move(nodes)) {}
+        explicit GS_BlockNode(GSNodePtrArray nodes);
 
     public:
 
         /**
-         *
-         * @return
+         * Getter for node ptr array
+         * @return Node ptr array
          */
-        GSNodePtrArray getNodes() {
-            return _nodes;
-        }
+        GSNodePtrArray getNodes();
 
     public:
 
-        NodeType getNodeType() override {
-            return NodeType::BLOCK_NODE;
-        }
+        /**
+         * Getter for node type
+         * @return Node type
+         */
+        NodeType getNodeType() override;
 
-        GSVoid accept(GS_Visitor *visitor) override {
-            visitor->visit(this);
-        }
+        /**
+         * Acceptor for code generation visitors
+         * @param visitor Codegen visitor
+         * @return LLVM IR instructions
+         */
+        llvm::Value *accept(GS_Visitor<llvm::Value*> *visitor) override;
 
-        GSNodePtr accept(Optimizer::GS_OptimizerPass *pass) override {
-            return pass->visit(this);
-        }
+        /**
+         * Acceptor for semantic visitors
+         * @param visitor Semantic visitor
+         * @return
+         */
+        GSVoid accept(GS_Visitor<GSVoid> *visitor) override;
 
-        GSValuePtr interpret() override {
-
-        }
+        /**
+         * Acceptor for optimizer visitors
+         * @param visitor Optimizing visitor
+         * @return Optimized node
+         */
+        GSNodePtr accept(GS_Visitor<GSNodePtr> *visitor) override;
 
     private:
 
         /**
-         *
+         * Node ptr array
          */
         GSNodePtrArray _nodes;
     };

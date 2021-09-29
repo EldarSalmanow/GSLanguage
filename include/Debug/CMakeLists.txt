@@ -3,7 +3,7 @@ project(GSDebugLibrary)
 set(DEBUG_DIR ${SOURCE_DIR}/Debug)
 
 set(GS_DEBUG_SOURCE
-        ${DEBUG_DIR}/GS_Timer.cpp)
+        ${DEBUG_DIR}/GS_Debug.cpp)
 
 add_library(
 #       Library name

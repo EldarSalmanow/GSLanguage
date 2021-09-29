@@ -2,7 +2,7 @@
 
 namespace GSLanguageCompiler::Parser {
 
-    std::map<UnaryOperation, GSString> unaryOperationToString{
+    std::map<UnaryOperation, GSString> unaryOperationToString = {
             {UnaryOperation::MINUS, "-"}
     };
 
@@ -21,17 +21,16 @@ namespace GSLanguageCompiler::Parser {
         return NodeType::UNARY_NODE;
     }
 
-    GSValuePtr GS_UnaryNode::interpret() {
-        auto value = dynamic_cast<GS_IntegerValue*>(_node->interpret().get())->getData<GSInt>();
-
-        switch (_operation) {
-            case UnaryOperation::MINUS:
-                return std::make_shared<GS_IntegerValue>(-value);
-        }
+    llvm::Value *GS_UnaryNode::accept(GS_Visitor<llvm::Value*> *visitor) {
+        return visitor->visit(this);
     }
 
-    GSVoid GS_UnaryNode::accept(GS_Visitor *visitor) {
-        visitor->visit(this);
+    GSVoid GS_UnaryNode::accept(GS_Visitor<GSVoid> *visitor) {
+        return visitor->visit(this);
+    }
+
+    GSNodePtr GS_UnaryNode::accept(GS_Visitor<GSNodePtr> *visitor) {
+        return visitor->visit(this);
     }
 
 }

@@ -2,6 +2,8 @@
 
 #include <Parser/GS_IncludeNodes.h>
 
+#include <Semantic/GS_TableOfVariables.h>
+
 namespace GSLanguageCompiler::Optimizer {
 
     GS_ConstantFoldingPass::GS_ConstantFoldingPass() = default;
@@ -10,7 +12,7 @@ namespace GSLanguageCompiler::Optimizer {
         auto optimizedNode = unaryNode->getNode()->accept(this);
 
         if (optimizedNode->getNodeType() == Parser::NodeType::VALUE_NODE) {
-            auto valueNode = dynamic_cast<Parser::GS_ValueNode *>(optimizedNode.get());
+            auto valueNode = std::reinterpret_pointer_cast<Parser::GS_ValueNode>(optimizedNode);
 
             Parser::GSValuePtr value;
 
@@ -18,6 +20,8 @@ namespace GSLanguageCompiler::Optimizer {
                 case Parser::UnaryOperation::MINUS:
                     value = std::make_shared<Parser::GS_IntegerValue>(-valueNode->getValue()->getData<GSInt>());
 
+                    break;
+                default:
                     break;
             }
 
@@ -33,8 +37,8 @@ namespace GSLanguageCompiler::Optimizer {
 
         if (firstOptimizedNode->getNodeType() == Parser::NodeType::VALUE_NODE &&
             secondOptimizedNode->getNodeType() == Parser::NodeType::VALUE_NODE) {
-            auto firstValue = dynamic_cast<Parser::GS_ValueNode*>(firstOptimizedNode.get())->getValue();
-            auto secondValue = dynamic_cast<Parser::GS_ValueNode*>(secondOptimizedNode.get())->getValue();
+            auto firstValue = std::reinterpret_pointer_cast<Parser::GS_ValueNode>(firstOptimizedNode)->getValue();
+            auto secondValue = std::reinterpret_pointer_cast<Parser::GS_ValueNode>(secondOptimizedNode)->getValue();
 
             Parser::GSValuePtr value;
 
@@ -67,10 +71,19 @@ namespace GSLanguageCompiler::Optimizer {
         return std::make_shared<Parser::GS_BinaryNode>(binaryNode->getBinaryOperation(), firstOptimizedNode, secondOptimizedNode);
     }
 
-    Parser::GSNodePtr GS_ConstantFoldingPass::visit(Parser::GS_VariableNode *variableNode) {
-        auto optimizedNode = variableNode->getNode()->accept(this);
+    Parser::GSNodePtr GS_ConstantFoldingPass::visit(Parser::GS_AssignmentNode *assignmentNode) {
+        auto declaration = assignmentNode->getNode();
+        auto expression = assignmentNode->getExpression();
 
-        return std::make_shared<Parser::GS_VariableNode>(variableNode->getName(), variableNode->getType(), optimizedNode);
+        auto optimizedExpression = expression->accept(this);
+
+        if (declaration->getNodeType() == Parser::NodeType::VARIABLE_DECLARATION_NODE) {
+            auto variableDeclaration = std::reinterpret_pointer_cast<Parser::GS_VariableDeclarationNode>(declaration);
+
+            _context->getTableOfVariables()->setNodePtrByName(variableDeclaration->getName(), optimizedExpression);
+        }
+
+        return std::make_shared<Parser::GS_AssignmentNode>(declaration, optimizedExpression);
     }
 
 }
