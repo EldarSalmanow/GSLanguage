@@ -1,6 +1,8 @@
 # Project exclude paths
 /cmake-build-debug-mingw/
 /cmake-build-release-mingw/
+/cmake-build-debug-visual-studio/
+/cmake-build-release-visual-studio/
 
 # IDE files
 /.idea
