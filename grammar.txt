@@ -1,5 +1,10 @@
-node = block_node | var_decl_node | var_assign_node | var_using_node
-block = node...
-var_decl_node = 'var' id
-var_assign_node = var_decl_node '=' expr | var_using_node '=' expr
-var_using_node = id
+program : declarations
+
+declarations : declaration...
+declaration : function_declaration
+function_declaration : 'func' id '(' params ')' '{' statements '}'
+
+statements : statement...
+statement : variable_assignment_statement, variable_declaration_statement, expression
+variable_assignment_statement : variable_declaration_statement '=' expression | variable_using_expression '=' expression
+variable_declaration_statement : 'var' id

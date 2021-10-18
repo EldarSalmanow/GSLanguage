@@ -1,67 +1,103 @@
 #ifndef GSLANGUAGE_GS_INPUTTEXTANALYZER_H
 #define GSLANGUAGE_GS_INPUTTEXTANALYZER_H
 
-#include <cctype>
-
 #include <Reader/GS_Code.h>
 
 #include <Lexer/GS_Keywords.h>
 
 namespace GSLanguageCompiler::Lexer {
 
+    /**
+     * Symbol type
+     */
+    using SymbolT = CharType;
+
+    /**
+     * Special symbol type
+     */
     enum class SymbolType {
-        NEW_LINE = 10
+        NewLine = 10
     };
 
+    /**
+     * Analyzing type
+     */
     enum class AnalyzingType {
-        IS_SPACE,
+        IsSpace,
 
-        IS_NUMBER,
+        IsNumber,
 
-        IS_CHARACTER
+        IsCharacter
     };
 
+    /**
+     * Class for analyzing input data and matching data with language grammar
+     */
     class GS_InputTextAnalyzer {
     public:
 
-        GS_InputTextAnalyzer() = default;
+        /**
+         * Default constructor for GS_InputTextAnalyzer
+         */
+        GS_InputTextAnalyzer();
 
     public:
 
-        static Bool isSymbol(Reader::GS_Symbol symbol, SymbolType type) {
-            return static_cast<I32>(symbol.getSymbol()) == static_cast<I32>(type);
-        }
+        /**
+         * Checking symbol type
+         * @param symbol Input symbol
+         * @param type Symbol type
+         * @return Is the symbol suitable for symbol type
+         */
+        Bool isSymbol(Reader::GS_Symbol symbol, SymbolType type);
 
-        static Bool analyzeSymbol(Reader::GS_Symbol symbol, AnalyzingType type) {
-            auto charSymbol = symbol.getSymbol();
+        /**
+         * Analyzing symbol
+         * @param symbol Input symbol
+         * @param type Analyzing type
+         * @return Is the symbol suitable for analysis
+         */
+        Bool analyzeSymbol(Reader::GS_Symbol symbol, AnalyzingType type);
 
-            switch (type) {
-                case AnalyzingType::IS_SPACE:
-                    return std::isspace(charSymbol);
-                case AnalyzingType::IS_NUMBER:
-                    return std::isdigit(charSymbol);
-                case AnalyzingType::IS_CHARACTER:
-                    return std::isalpha(charSymbol);
-                default:
-                    return false;
-            }
-        }
+        /**
+         * Is reserved symbol in grammar
+         * @param symbol Input symbol
+         * @return Is reserved symbol
+         */
+        Bool isReserved(Reader::GS_Symbol symbol);
 
-        static Bool isReserved(Reader::GS_Symbol symbol) {
-            return reservedSymbols.find(symbol.getSymbol()) != reservedSymbols.end();
-        }
+        /**
+         * Is reserved string in grammar
+         * @param word Input string
+         * @return Is reserved string
+         */
+        Bool isReserved(String &word);
 
-        static Bool isReserved(StringRef word) {
-            return reservedWords.find(word) != reservedWords.end();
-        }
+        /**
+         * Converting symbol to reserved type
+         * @param symbol Input symbol
+         * @return Reserved type
+         */
+        TokenType reservedType(Reader::GS_Symbol symbol);
 
-        static TokenType reservedType(Reader::GS_Symbol symbol) {
-            return reservedSymbols[symbol.getSymbol()];
-        }
+        /**
+         * Converting string to reserved type
+         * @param word Input string
+         * @return Reserved type
+         */
+        TokenType reservedType(String &word);
 
-        static TokenType reservedType(StringRef word) {
-            return reservedWords[word];
-        }
+    private:
+
+        /**
+         * Reserved words in grammar
+         */
+        Map<String, TokenType> _reservedWords;
+
+        /**
+         * Reserved symbols in grammar
+         */
+        Map<SymbolT, TokenType> _reservedSymbols;
     };
 
 }

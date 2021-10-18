@@ -2,7 +2,7 @@
 
 #include <GS_CodeGenVisitor.h>
 
-#include <Parser/GS_IncludeNodes.h>
+#include <AST/GS_IncludeNodes.h>
 
 #include <Semantic/GS_TableOfVariables.h>
 

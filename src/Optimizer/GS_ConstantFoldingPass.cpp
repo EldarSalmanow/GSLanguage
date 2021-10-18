@@ -1,6 +1,6 @@
 #include <GS_ConstantFoldingPass.h>
 
-#include <Parser/GS_IncludeNodes.h>
+#include <AST/GS_IncludeNodes.h>
 
 #include <Semantic/GS_TableOfVariables.h>
 

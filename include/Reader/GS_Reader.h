@@ -19,9 +19,8 @@ namespace GSLanguageCompiler::Reader {
         /**
          * Constructor for GS_Reader
          * @param stream Input stream
-         * @param filename Filename
          */
-        GS_Reader(StreamT stream, String filename);
+        explicit GS_Reader(StreamT stream);
 
     public:
 
@@ -32,12 +31,6 @@ namespace GSLanguageCompiler::Reader {
         GS_Code read();
 
     private:
-
-        /**
-         * Open file
-         * @return
-         */
-        Void _openFile();
 
         /**
          * Read line from stream
@@ -69,11 +62,6 @@ namespace GSLanguageCompiler::Reader {
          * Stream for reading code
          */
         StreamT _stream;
-
-        /**
-         * Filename
-         */
-        String _filename;
 
         /**
          * Line and column in source code

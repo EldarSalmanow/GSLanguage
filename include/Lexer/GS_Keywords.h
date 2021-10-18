@@ -5,58 +5,34 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    using SymbolT = CharType;
-
     /**
      * Type of token
      */
     enum class TokenType {
-        END_OF_FILE,
-        NEW_LINE,
+        EndOfFile,
 
-        WORD,                     // main
+        Identifier,             // main
 
-        LITERAL_STRING,           // "hello"
-        LITERAL_NUMBER,           // 12
+        LiteralNumber,          // 12
 
-        KEYWORD_VAR,              // var
-        KEYWORD_IF,               // if
-        KEYWORD_PRINT,            // print
+        KeywordVar,             // var
+        KeywordFunc,            // func
 
-        SYMBOL_LEFT_PARENTHESES,  // (
-        SYMBOL_RIGHT_PARENTHESES, // )
-        SYMBOL_LBRACE,            // {
-        SYMBOL_RBRACE,            // }
+        SymbolLeftParen,        // (
+        SymbolRightParen,       // )
+        SymbolLeftBrace,        // {
+        SymbolRightBrace,       // }
 
-        SYMBOL_LT,                // <
-        SYMBOL_GT,                // >
+        SymbolDoubleQuotes,     // "
+        SymbolColon,            // :
+        SymbolComma,            // ,
 
-        SYMBOL_DOT,               // .
-        SYMBOL_COLON,             // :
-        SYMBOL_QUOTES,            // '
-        SYMBOL_DOUBLE_QUOTES,     // "
-
-        SYMBOL_PLUS,              // +
-        SYMBOL_MINUS,             // -
-        SYMBOL_STAR,              // *
-        SYMBOL_SLASH,             // /
-        SYMBOL_EQ                 // =
+        SymbolPlus,             // +
+        SymbolMinus,            // -
+        SymbolStar,             // *
+        SymbolSlash,            // /
+        SymbolEq                // =
     };
-
-    /**
-     * Token type to string
-     */
-    extern Map<TokenType, String> tokenTypeToString;
-
-    /**
-     * Reserved letters
-     */
-    extern Map<String, TokenType> reservedWords;
-
-    /**
-     * Reserved symbols
-     */
-    extern Map<SymbolT, TokenType> reservedSymbols;
 
 }
 

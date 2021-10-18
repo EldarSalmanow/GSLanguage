@@ -2,7 +2,7 @@
 
 #include <Lexer/GS_Token.h>
 
-#include <Parser/Nodes/GS_Node.h>
+#include <AST/GS_Node.h>
 #include <Parser/Visitors/GS_PrintVisitor.h>
 
 namespace Debug {

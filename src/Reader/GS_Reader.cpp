@@ -2,12 +2,10 @@
 
 namespace GSLanguageCompiler::Reader {
 
-    GS_Reader::GS_Reader(StreamT stream, String filename)
-            : _stream(std::move(stream)), _filename(std::move(filename)), _line(1), _column(1) {}
+    GS_Reader::GS_Reader(StreamT stream)
+            : _stream(std::move(stream)), _line(1), _column(1) {}
 
     GS_Code GS_Reader::read() {
-        _openFile();
-
         Vector<GS_Line> lines;
 
         while (!_stream.eof()) {
@@ -19,29 +17,11 @@ namespace GSLanguageCompiler::Reader {
         return GS_Code(lines);
     }
 
-    Void GS_Reader::_openFile() {
-        _stream.open(_filename);
-
-        if (!_stream.is_open()) {
-//            Exceptions::errorHandler.print(Exceptions::ErrorLevel::ERROR_LVL,
-//                                           "Can`t open file for reading!");
-//
-//            SStream stream;
-//
-//            stream << "Filename: \"" << _filename << "\"!";
-//
-//            Exceptions::errorHandler.print(Exceptions::ErrorLevel::NOTE_LVL,
-//                                           stream.str());
-//
-//            Exceptions::errorHandler.throw_(); todo add throwing exception
-        }
-    }
-
     GS_Line GS_Reader::_getLine() {
         Vector<GS_Symbol> symbols;
 
         for (auto symbol = _getSymbol(); symbol.getSymbol() != '\n' && !_stream.eof(); symbol = _getSymbol()) {
-#if defined(OS_WINDOWS)
+#if defined(GS_OS_WINDOWS)
             if (symbol.getSymbol() == '\r') {
                 continue;
             }
@@ -60,13 +40,11 @@ namespace GSLanguageCompiler::Reader {
     }
 
     GS_Symbol GS_Reader::_getSymbol() {
-        StreamCharType charSymbol;
-
-        _stream.read(&charSymbol, 1);
+        auto charSymbol = _stream.get();
 
         _nextSymbol();
 
-        GS_Symbol symbol(charSymbol, _line, _column);
+        GS_Symbol symbol(static_cast<SymbolT>(charSymbol), _line, _column);
 
         return symbol;
     }

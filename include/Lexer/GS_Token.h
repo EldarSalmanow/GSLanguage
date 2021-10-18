@@ -7,6 +7,9 @@
 
 namespace GSLanguageCompiler::Lexer {
 
+    /**
+     * Index type
+     */
     using IndexT = U64;
 
     /**
@@ -18,7 +21,7 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Default constructor for GS_Position
          */
-        GS_Position() = default;
+        GS_Position();
 
         /**
          * Constructor for GS_Position
@@ -73,17 +76,17 @@ namespace GSLanguageCompiler::Lexer {
         GS_Token() = default;
 
         /**
-         *
-         * @param type
-         * @param position
+         * Constructor for GS_Token
+         * @param type Token type
+         * @param position Token position
          */
         GS_Token(TokenType type, GS_Position position);
 
         /**
-         *
-         * @param type
-         * @param word
-         * @param position
+         * Constructor for GS_Token
+         * @param type Token type
+         * @param word Value
+         * @param position Token position
          */
         GS_Token(TokenType type, String word, GS_Position position);
 
@@ -125,6 +128,9 @@ namespace GSLanguageCompiler::Lexer {
         GS_Position _position;
     };
 
+    /**
+     * Token array type
+     */
     using GSTokenArray = Vector<GS_Token>;
 
 }

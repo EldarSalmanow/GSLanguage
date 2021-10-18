@@ -1,6 +1,6 @@
 #include <GS_TypeCheckerPass.h>
 
-#include <Parser/GS_IncludeNodes.h>
+#include <AST/GS_IncludeNodes.h>
 
 namespace GSLanguageCompiler::Semantic {
 

@@ -1,6 +1,6 @@
 #include <GS_TableOfVariables.h>
 
-#include <Parser/Nodes/GS_VariableDeclarationNode.h>
+#include <AST/Statements/GS_VariableDeclarationStatement.h>
 
 namespace GSLanguageCompiler::Semantic {
 

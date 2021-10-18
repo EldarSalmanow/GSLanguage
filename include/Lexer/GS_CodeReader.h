@@ -12,67 +12,89 @@ namespace GSLanguageCompiler::Lexer {
     class GS_CodeReader {
     public:
 
-        explicit GS_CodeReader(Reader::GS_Code code)
-                : _code(std::move(code)), _codeIterator(_code.getStartIterator()), _lineIterator(_codeIterator[0].getStartIterator()) {}
+        /**
+         * Constructor for GS_CodeReader
+         * @param code Source code
+         */
+        explicit GS_CodeReader(Reader::GS_Code code);
 
     public:
 
-        Reader::GS_Line currentLine() {
-            return _codeIterator[0];
-        }
+        /**
+         * Current line in source code
+         * @return Line in source code
+         */
+        Reader::GS_Line currentLine();
 
-        Reader::GS_Symbol currentSymbol() {
-            return _lineIterator[0];
-        }
+        /**
+         * Current symbol in source code
+         * @return Symbol in source code
+         */
+        Reader::GS_Symbol currentSymbol();
 
-        GS_Position currentPosition() {
-            return {currentLine().getLineAsString(), getLineNumber(), getColumnNumber()};
-        }
+        /**
+         * Current position
+         * @return Current position
+         */
+        GS_Position currentPosition();
 
-        Void nextLine() {
-            ++_codeIterator;
+        /**
+         * Next line
+         * @return
+         */
+        Void nextLine();
 
-            if (!codeIteratorInBounds()) {
-                return;
-            }
+        /**
+         * Next symbol
+         * @return
+         */
+        Void nextSymbol();
 
-            _lineIterator = _codeIterator[0].getStartIterator();
-        }
+        /**
+         * Prev symbol
+         * @return
+         */
+        Void prevSymbol();
 
-        Void nextSymbol() {
-            ++_lineIterator;
+        /**
+         * Is not end in source code
+         * @return Is not end in source code
+         */
+        Bool codeIteratorInBounds();
 
-            if (!lineIteratorInBounds()) {
-                return;
-            }
-        }
+        /**
+         * Is not end in source code line
+         * @return Is not end in source code line
+         */
+        Bool lineIteratorInBounds();
 
-        Void prevSymbol() {
-            --_lineIterator;
-        }
+        /**
+         * Getter for current line number
+         * @return Current line number
+         */
+        IndexT getLineNumber();
 
-        Bool codeIteratorInBounds() {
-            return _codeIterator != _code.getEndIterator();
-        }
-
-        Bool lineIteratorInBounds() {
-            return _lineIterator != _codeIterator[0].getEndIterator();
-        }
-
-        IndexT getLineNumber() {
-            return currentSymbol().getLine();
-        }
-
-        IndexT getColumnNumber() {
-            return currentSymbol().getColumn();
-        }
+        /**
+         * Getter for current column number
+         * @return Current column number
+         */
+        IndexT getColumnNumber();
 
     private:
 
+        /**
+         * Source code
+         */
         Reader::GS_Code _code;
 
+        /**
+         * Source code iterator
+         */
         VectorIterator<Reader::GS_Line> _codeIterator;
 
+        /**
+         * Source code line iterator
+         */
         VectorIterator<Reader::GS_Symbol> _lineIterator;
     };
 

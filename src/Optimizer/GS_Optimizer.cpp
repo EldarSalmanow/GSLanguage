@@ -1,6 +1,6 @@
 #include <GS_Optimizer.h>
 
-#include <Parser/Nodes/GS_Node.h>
+#include <AST/GS_Node.h>
 
 namespace GSLanguageCompiler::Optimizer {
 

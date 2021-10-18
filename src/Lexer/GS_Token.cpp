@@ -2,6 +2,9 @@
 
 namespace GSLanguageCompiler::Lexer {
 
+    GS_Position::GS_Position()
+            : _line(0), _column(0) {}
+
     GS_Position::GS_Position(String code, IndexT line, IndexT column)
             : _code(std::move(code)), _line(line), _column(column) {}
 

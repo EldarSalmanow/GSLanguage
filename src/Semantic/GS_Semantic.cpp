@@ -1,6 +1,6 @@
 #include <GS_Semantic.h>
 
-#include <Parser/Nodes/GS_Node.h>
+#include <AST/GS_Node.h>
 
 namespace GSLanguageCompiler::Semantic {
 

@@ -2,7 +2,7 @@
 
 #include <GS_CodeGenerator.h>
 
-#include <Parser/Nodes/GS_Node.h>
+#include <AST/GS_Node.h>
 
 #include <Exceptions/GS_ErrorHandler.h>
 

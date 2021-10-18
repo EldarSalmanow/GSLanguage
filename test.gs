@@ -1,6 +1,4 @@
-var a = 23 - 54
-
-var b = 4
-
-var c = a + b - 10
-
+func main() {
+    var a: I32 = 12 + 343 * (2 - 3) + -1
+    var b: I32 = a + 23 - -1
+}

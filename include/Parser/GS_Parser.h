@@ -1,79 +1,120 @@
 #ifndef GSLANGUAGE_GS_PARSER_H
 #define GSLANGUAGE_GS_PARSER_H
 
-#include <functional>
-
-#include <Starter/GS_Runnable.h>
-
 #include <Lexer/GS_Token.h>
 
-#include <Parser/GS_IncludeNodes.h>
-
-#include <Exceptions/GS_ErrorHandler.h>
+#include <AST/GS_IncludeAll.h>
 
 namespace GSLanguageCompiler::Parser {
 
     /**
-     * Class for generating AST and parsing AST
+     * Class for generating and parsing AST
      */
-    class GS_Parser : public Starter::GS_Runnable {
+    class GS_Parser {
     public:
 
-        GS_Parser();
+        /**
+         * Constructor for GS_Parser
+         * @param tokens Input tokens
+         */
+        explicit GS_Parser(Lexer::GSTokenArray tokens);
 
     public:
 
-        GSVoid run(Starter::GSContextPtr &context) override;
-
-    private:
-
-        GSNodePtr _parseRoot();
-
-        GSNodePtr _parseBlock();
-
-        GSNodePtr _parseNode();
-
-        GSNodePtr _parseAssignmentNode();
-
-        GSNodePtr _parseVariableDeclarationNode();
-
-        GSNodePtr _parseVariableUsingNode();
-
-        GSNodePtr _parseExpression();
-
-        GSNodePtr _parseBinaryExpression();
-
-        GSNodePtr _parseAdditiveExpression();
-
-        GSNodePtr _parseMultiplicativeExpression();
-
-        GSNodePtr _parseUnaryExpression();
-
-        GSNodePtr _parseLiteralExpression();
+        /**
+         * Main function for start parsing
+         * @return Program AST
+         */
+        AST::GSDeclarationPtrArray parse();
 
     private:
 
         /**
-         *
-         * @param typeForCheck
-         * @param numberOfToken
+         * Parse program
+         * @return Program AST
+         */
+        AST::GSDeclarationPtrArray _parseProgram();
+
+        /**
+         * Parse declaration
+         * @return Declaration node
+         */
+        AST::GSDeclarationPtr _parseDeclaration();
+
+        /**
+         * Parse function declaration
+         * @return Function declaration node
+         */
+        AST::GSDeclarationPtr _parseFunctionDeclaration();
+
+        /**
+         * Parse statement
+         * @return Statement node
+         */
+        AST::GSStatementPtr _parseStatement();
+
+        /**
+         * Parse variable declaration statement
+         * @return Variable declaration statement node
+         */
+        AST::GSStatementPtr _parseVariableDeclarationStatement();
+
+        /**
+         * Parse assignment statement
+         * @return Assignment statement node
+         */
+        AST::GSStatementPtr _parseAssignmentStatement();
+
+        /**
+         * Parse expression
+         * @return Expression node
+         */
+        AST::GSExpressionPtr _parseExpression();
+
+        /**
+         * Parse binary expression
+         * @param expressionPrecedence Expression precedence
+         * @param expression Expression
+         * @return Binary expression node
+         */
+        AST::GSExpressionPtr _parseBinaryExpression(I32 expressionPrecedence, AST::GSExpressionPtr expression);
+
+        /**
+         * Parse unary expression
+         * @return Unary expression node
+         */
+        AST::GSExpressionPtr _parseUnaryExpression();
+
+        /**
+         * Parse primary expression
+         * @return Primary expression nodes
+         */
+        AST::GSExpressionPtr _parsePrimaryExpression();
+
+    private:
+
+        /**
+         * Current token precedence
+         * @return Current token precedence
+         */
+        I32 _currentTokenPrecedence();
+
+        /**
+         * Token type checker
+         * @param typeForCheck Type for check
+         * @param numberOfToken Number for offset in container
+         * @return Is equals types
+         */
+        Bool _checkTokenType(Lexer::TokenType typeForCheck, I32 numberOfToken = 0);
+
+        /**
+         * Next token
          * @return
          */
-        GSBool _checkTokenType(Lexer::TokenType typeForCheck, GSInt numberOfToken = 0);
+        Void _nextToken();
 
         /**
-         *
-         * @param errorMessage
-         */
-        GSVoid _throwException(GSString errorMessage);
-
-        /**
-         *
-         */
-        GSVoid _nextToken();
-
-        /**
-         *
+         * Current token from tokens container
          * @return
          */
         Lexer::GS_Token _currentToken();
@@ -86,14 +127,14 @@ namespace GSLanguageCompiler::Parser {
         Lexer::GSTokenArray _tokens;
 
         /**
-         * Iterator _input container with tokens
+         * Iterator input container with tokens
          */
         Lexer::GSTokenArray::iterator _tokenIterator;
 
         /**
-         * AST nodes
+         * Operators precedence
          */
-        GSNodePtrArray _nodes;
+        Map<Lexer::TokenType, I32> _operatorsPrecedence;
     };
 
 }
