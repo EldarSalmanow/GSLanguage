@@ -25,6 +25,10 @@ namespace GSLanguageCompiler::AST {
         return _value;
     }
 
+    Void GS_ConstantExpression::accept(GS_Visitor *visitor) {
+        visitor->visit(this);
+    }
+
     ExpressionType GS_ConstantExpression::getExpressionType() {
         return ExpressionType::ConstantExpression;
     }

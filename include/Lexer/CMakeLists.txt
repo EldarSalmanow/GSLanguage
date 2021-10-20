@@ -6,7 +6,7 @@ set(GS_LEXER_SOURCE
         ${LEXER_DIR}/GS_Lexer.cpp
         ${LEXER_DIR}/GS_Token.cpp
         ${LEXER_DIR}/GS_CodeReader.cpp
-        ${LEXER_DIR}/GS_InputTextAnalyzer.cpp)
+        ${LEXER_DIR}/GS_InputTextAnalyzer.cpp ../../src/Lexer/GS_TokenStream.cpp)
 
 add_library(
 #       Library name

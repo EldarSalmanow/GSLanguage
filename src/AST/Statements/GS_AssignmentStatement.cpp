@@ -13,6 +13,10 @@ namespace GSLanguageCompiler::AST {
         return _expression;
     }
 
+    Void GS_AssignmentStatement::accept(GS_Visitor *visitor) {
+        visitor->visit(this);
+    }
+
     StatementType GS_AssignmentStatement::getStatementType() {
         return StatementType::AssignmentStatement;
     }

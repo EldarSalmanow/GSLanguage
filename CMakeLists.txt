@@ -10,7 +10,7 @@ set(PROJECT_DIR  ${PROJECT_SOURCE_DIR})
 set(INCLUDE_DIR  ${PROJECT_DIR}/include)
 set(SOURCE_DIR   ${PROJECT_DIR}/src)
 set(EXTERNAL_DIR ${PROJECT_DIR}/external)
-set(BINARY_DIR   ${PROJECT_BINARY_DIR})
+set(BINARY_DIR   ${PROJECT_DIR}/bin)
 
 message(STATUS "GSLanguage")
 message(STATUS "    BinaryName:  ${BINARY_NAME}")

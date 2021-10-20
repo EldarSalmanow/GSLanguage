@@ -19,19 +19,142 @@ Lexer::GSTokenArray tokenize(Reader::GS_Code code) {
     return lexer.tokenize();
 }
 
-AST::GSDeclarationPtrArray parse(Lexer::GSTokenArray tokens) {
-    Parser::GS_Parser parser(std::move(tokens));
+AST::GSDeclarationPtrArray parse(Lexer::GS_TokenStream stream) {
+    Parser::GS_Parser parser(stream);
 
     return parser.parse();
 }
 
-int main() {
+class GS_Pass {
+public:
+
+    explicit GS_Pass(AST::GS_Visitor *visitor)
+            : _visitor(visitor) {}
+
+public:
+
+    virtual ~GS_Pass() = default;
+
+public:
+
+    virtual Void run(AST::GSDeclarationPtrArray &declarations) {}
+
+protected:
+
+    AST::GS_Visitor *_visitor;
+};
+
+class CalculateVariablesPass;
+
+Void incrementVariablesNumberInPass(CalculateVariablesPass *pass);
+
+class CalculateVariablesVisitor : public AST::GS_Visitor {
+public:
+
+    explicit CalculateVariablesVisitor(CalculateVariablesPass *pass)
+            : _pass(pass) {}
+
+public:
+
+    Void visit(AST::GS_VariableDeclarationStatement *variableDeclarationStatement) override {
+        incrementVariablesNumberInPass(_pass);
+    }
+
+protected:
+
+    CalculateVariablesPass *_pass;
+};
+
+class CalculateVariablesPass : public GS_Pass {
+public:
+
+    CalculateVariablesPass()
+            : GS_Pass(new CalculateVariablesVisitor(this)), _variablesNumber(0) {}
+
+public:
+
+    Void run(AST::GSDeclarationPtrArray &declarations) override {
+        for (auto &declaration : declarations) {
+            declaration->accept(_visitor);
+        }
+
+        std::cout << "Variables Number: " << _variablesNumber << std::endl;
+    }
+
+public:
+
+    I32 _variablesNumber;
+};
+
+Void incrementVariablesNumberInPass(CalculateVariablesPass *pass) {
+    ++pass->_variablesNumber;
+}
+
+class CalculateVariableUsingPass;
+
+Void incrementVariableUsingNumberInPass(CalculateVariableUsingPass *pass);
+
+class CalculateVariableUsingVisitor : public AST::GS_Visitor {
+public:
+
+    explicit CalculateVariableUsingVisitor(CalculateVariableUsingPass *pass)
+            : _pass(pass) {}
+
+public:
+
+    Void visit(AST::GS_VariableUsingExpression *variableUsingExpression) override {
+        incrementVariableUsingNumberInPass(_pass);
+    }
+
+protected:
+
+    CalculateVariableUsingPass *_pass;
+};
+
+class CalculateVariableUsingPass : public GS_Pass {
+public:
+
+    CalculateVariableUsingPass()
+            : GS_Pass(new CalculateVariableUsingVisitor(this)), _variableUsingNumber(0) {}
+
+public:
+
+    void run(AST::GSDeclarationPtrArray &declarations) override {
+        for (auto &declaration : declarations) {
+            declaration->accept(_visitor);
+        }
+
+        std::cout << "Variable Using Number: " << _variableUsingNumber << std::endl;
+    }
+
+public:
+
+    I32 _variableUsingNumber;
+};
+
+Void incrementVariableUsingNumberInPass(CalculateVariableUsingPass *pass) {
+    ++pass->_variableUsingNumber;
+}
+
+I32 main() {
     try {
-        auto code = read("../../test.gs");
+        auto code = read("../test.gs");
 
         auto tokens = tokenize(code);
 
-        auto ast = parse(tokens);
+        auto tokenIterator = tokens.begin();
+
+        auto tokenStream = Lexer::GS_TokenStream(tokenIterator);
+
+        auto ast = parse(tokenStream);
+
+        CalculateVariablesPass calculateVariablesPass;
+
+        calculateVariablesPass.run(ast);
+
+        CalculateVariableUsingPass calculateVariableUsingPass;
+
+        calculateVariableUsingPass.run(ast);
     } catch (std::exception &exception) {
         std::cerr << exception.what() << std::endl;
 

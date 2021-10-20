@@ -13,6 +13,10 @@ namespace GSLanguageCompiler::AST {
         return _body;
     }
 
+    Void GS_FunctionDeclaration::accept(GS_Visitor *visitor) {
+        visitor->visit(this);
+    }
+
     DeclarationType GS_FunctionDeclaration::getDeclarationType() {
         return DeclarationType::FunctionDeclaration;
     }

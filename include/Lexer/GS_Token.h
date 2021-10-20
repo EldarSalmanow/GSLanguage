@@ -133,6 +133,11 @@ namespace GSLanguageCompiler::Lexer {
      */
     using GSTokenArray = Vector<GS_Token>;
 
+    /**
+     * Token array iterator type
+     */
+    using GSTokenArrayIterator = Vector<GS_Token>::iterator;
+
 }
 
 #endif //GSLANGUAGE_GS_TOKEN_H

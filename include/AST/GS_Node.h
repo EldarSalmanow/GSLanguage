@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_NODE_H
 #define GSLANGUAGE_GS_NODE_H
 
-#include <GSCrossPlatform/GS_CrossPlatformTypes.h>
+#include <AST/GS_Visitor.h>
 
 namespace GSLanguageCompiler::AST {
 
@@ -35,6 +35,13 @@ namespace GSLanguageCompiler::AST {
          * @return
          */
         virtual Bool isExpression();
+
+        /**
+         *
+         * @param visitor
+         * @return
+         */
+        virtual Void accept(GS_Visitor *visitor) = 0;
     };
 
     /**

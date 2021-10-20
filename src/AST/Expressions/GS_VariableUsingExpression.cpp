@@ -9,6 +9,10 @@ namespace GSLanguageCompiler::AST {
         return _name;
     }
 
+    Void GS_VariableUsingExpression::accept(GS_Visitor *visitor) {
+        visitor->visit(this);
+    }
+
     ExpressionType GS_VariableUsingExpression::getExpressionType() {
         return ExpressionType::VariableUsingExpression;
     }

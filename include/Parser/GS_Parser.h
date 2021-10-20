@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_PARSER_H
 #define GSLANGUAGE_GS_PARSER_H
 
-#include <Lexer/GS_Token.h>
+#include <Lexer/GS_TokenStream.h>
 
 #include <AST/GS_IncludeAll.h>
 
@@ -15,9 +15,9 @@ namespace GSLanguageCompiler::Parser {
 
         /**
          * Constructor for GS_Parser
-         * @param tokens Input tokens
+         * @param stream Input tokens stream
          */
-        explicit GS_Parser(Lexer::GSTokenArray tokens);
+        explicit GS_Parser(Lexer::GS_TokenStream stream);
 
     public:
 
@@ -99,37 +99,12 @@ namespace GSLanguageCompiler::Parser {
          */
         I32 _currentTokenPrecedence();
 
-        /**
-         * Token type checker
-         * @param typeForCheck Type for check
-         * @param numberOfToken Number for offset in container
-         * @return Is equals types
-         */
-        Bool _checkTokenType(Lexer::TokenType typeForCheck, I32 numberOfToken = 0);
-
-        /**
-         * Next token
-         * @return
-         */
-        Void _nextToken();
-
-        /**
-         * Current token from tokens container
-         * @return
-         */
-        Lexer::GS_Token _currentToken();
-
     private:
 
         /**
-         * Input tokens, before lexing analyzing
+         * Input tokens stream
          */
-        Lexer::GSTokenArray _tokens;
-
-        /**
-         * Iterator input container with tokens
-         */
-        Lexer::GSTokenArray::iterator _tokenIterator;
+        Lexer::GS_TokenStream _tokenStream;
 
         /**
          * Operators precedence

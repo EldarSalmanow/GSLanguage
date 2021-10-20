@@ -13,6 +13,10 @@ namespace GSLanguageCompiler::AST {
         return _expression;
     }
 
+    Void GS_UnaryExpression::accept(GS_Visitor *visitor) {
+        visitor->visit(this);
+    }
+
     ExpressionType GS_UnaryExpression::getExpressionType() {
         return ExpressionType::UnaryExpression;
     }

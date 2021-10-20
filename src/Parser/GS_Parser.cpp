@@ -2,8 +2,8 @@
 
 namespace GSLanguageCompiler::Parser {
 
-    GS_Parser::GS_Parser(Lexer::GSTokenArray tokens)
-            : _tokens(std::move(tokens)), _tokenIterator(_tokens.begin()) {
+    GS_Parser::GS_Parser(Lexer::GS_TokenStream stream)
+            : _tokenStream(stream) {
         _operatorsPrecedence[Lexer::TokenType::SymbolStar]  = 2;
         _operatorsPrecedence[Lexer::TokenType::SymbolSlash] = 2;
         _operatorsPrecedence[Lexer::TokenType::SymbolPlus]  = 1;
@@ -17,7 +17,7 @@ namespace GSLanguageCompiler::Parser {
     AST::GSDeclarationPtrArray GS_Parser::_parseProgram() {
         AST::GSDeclarationPtrArray declarations;
 
-        while (!_checkTokenType(Lexer::TokenType::EndOfFile)) {
+        while (!_tokenStream.isEqualTypes(Lexer::TokenType::EndOfFile)) {
             declarations.emplace_back(_parseDeclaration());
         }
 
@@ -25,7 +25,7 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSDeclarationPtr GS_Parser::_parseDeclaration() {
-        if (_checkTokenType(Lexer::TokenType::KeywordFunc)) {
+        if (_tokenStream.isEqualTypes(Lexer::TokenType::KeywordFunc)) {
             return _parseFunctionDeclaration();
         } else {
             throw std::runtime_error("Unknown declaration!");
@@ -33,81 +33,78 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSDeclarationPtr GS_Parser::_parseFunctionDeclaration() {
-        _nextToken(); // skip 'func'
+        _tokenStream.next(); // skip 'func'
 
-        if (!_checkTokenType(Lexer::TokenType::Identifier)) {
+        if (!_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
             throw std::runtime_error("Invalid function name!");
         }
 
-        auto functionName = _currentToken().getValue();
+        auto functionName = _tokenStream.tokenValue();
 
-        _nextToken(); // skip function name
+        _tokenStream.next(); // skip function name
 
-        if (!_checkTokenType(Lexer::TokenType::SymbolLeftParen)) {
+        if (!_tokenStream.isEqualTypes(Lexer::TokenType::SymbolLeftParen)) {
             throw std::runtime_error("Missing \'(\'!");
         }
 
-        _nextToken(); // skip '('
+        _tokenStream.next(); // skip '('
 
-        if (!_checkTokenType(Lexer::TokenType::SymbolRightParen)) {
+        if (!_tokenStream.isEqualTypes(Lexer::TokenType::SymbolRightParen)) {
             throw std::runtime_error("Missing \')\'!");
         }
 
-        _nextToken(); // skip ')'
+        _tokenStream.next(); // skip ')'
 
-        if (!_checkTokenType(Lexer::TokenType::SymbolLeftBrace)) {
+        if (!_tokenStream.isEqualTypes(Lexer::TokenType::SymbolLeftBrace)) {
             throw std::runtime_error("Missing \'{\'!");
         }
 
-        _nextToken(); // skip '{'
+        _tokenStream.next(); // skip '{'
 
         AST::GSStatementPtrArray functionBody;
 
-        while (!_checkTokenType(Lexer::TokenType::SymbolRightBrace)) {
+        while (!_tokenStream.isEqualTypes(Lexer::TokenType::SymbolRightBrace)) {
             auto statement = _parseStatement();
 
             functionBody.emplace_back(statement);
         }
 
-        _nextToken(); // skip '}'
+        _tokenStream.next(); // skip '}'
 
         return std::make_shared<AST::GS_FunctionDeclaration>(functionName, functionBody);
     }
 
     AST::GSStatementPtr GS_Parser::_parseStatement() {
-        if (_checkTokenType(Lexer::TokenType::KeywordVar) || _checkTokenType(Lexer::TokenType::Identifier)) {
-            auto statement = _parseAssignmentStatement();
-
-            if (statement) {
-                return statement;
-            }
+        if (_tokenStream.isEqualTypes(Lexer::TokenType::KeywordVar)
+         || _tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
+            return _parseAssignmentStatement();
+        } else {
+            return std::make_shared<AST::GS_ExpressionStatement>(_parseExpression());
         }
-
-        return std::make_shared<AST::GS_ExpressionStatement>(_parseExpression());
     }
 
     AST::GSStatementPtr GS_Parser::_parseVariableDeclarationStatement() {
-        _nextToken(); // skip 'var'
+        _tokenStream.next(); // skip 'var'
 
-        if (!_checkTokenType(Lexer::TokenType::Identifier)) {
+        if (!_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
             throw std::runtime_error("Invalid variable name!");
         }
 
-        auto variableName = _currentToken().getValue();
+        auto variableName = _tokenStream.tokenValue();
 
-        _nextToken(); // skip variable name
+        _tokenStream.next(); // skip variable name
 
-        if (!_checkTokenType(Lexer::TokenType::SymbolColon)) {
+        if (!_tokenStream.isEqualTypes(Lexer::TokenType::SymbolColon)) {
             throw std::runtime_error("Can`t declare variable without type!");
         }
 
-        _nextToken(); // skip ':'
+        _tokenStream.next(); // skip ':'
 
-        if (!_checkTokenType(Lexer::TokenType::Identifier)) {
+        if (!_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
             throw std::runtime_error("Invalid type name!");
         }
 
-        auto typeName = _currentToken().getValue();
+        auto typeName = _tokenStream.tokenValue();
 
         AST::GSTypePtr variableType;
 
@@ -119,35 +116,29 @@ namespace GSLanguageCompiler::Parser {
             throw std::runtime_error("Unknown type name!");
         }
 
-        _nextToken(); // skip variable type
+        _tokenStream.next(); // skip variable type
 
         return std::make_shared<AST::GS_VariableDeclarationStatement>(variableName, variableType);
     }
 
     AST::GSStatementPtr GS_Parser::_parseAssignmentStatement() {
-        auto statement = _parseVariableDeclarationStatement();
+        AST::GSStatementPtr statement;
 
-        if (statement) {
-            goto assignment;
+        if (_tokenStream.isEqualTypes(Lexer::TokenType::KeywordVar)) {
+            statement = _parseVariableDeclarationStatement();
+        } else if (_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
+            statement = std::make_shared<AST::GS_ExpressionStatement>(_parsePrimaryExpression());
         }
 
-
-        statement =
-
-        if (statement) {
-
-        }
-
-        assignment:
-        if (_checkTokenType(Lexer::TokenType::SymbolEq)) {
-            _nextToken(); // skip '='
+        if (_tokenStream.isEqualTypes(Lexer::TokenType::SymbolEq)) {
+            _tokenStream.next(); // skip '='
 
             auto expression = _parseExpression();
 
-            return std::make_shared<AST::GS_AssignmentStatement>(declarationOrUsing, expression);
+            return std::make_shared<AST::GS_AssignmentStatement>(statement, expression);
         }
 
-        return declarationOrUsing;
+        return statement;
     }
 
     AST::GSExpressionPtr GS_Parser::_parseExpression() {
@@ -166,7 +157,7 @@ namespace GSLanguageCompiler::Parser {
 
             AST::BinaryOperation binaryOperator;
 
-            switch (_currentToken().getType()) {
+            switch (_tokenStream.tokenType()) {
                 case Lexer::TokenType::SymbolPlus:
                     binaryOperator = AST::BinaryOperation::Plus;
 
@@ -187,7 +178,7 @@ namespace GSLanguageCompiler::Parser {
                     throw std::runtime_error("Unknown binary operator!");
             }
 
-            _nextToken(); // skip binary operator
+            _tokenStream.next(); // skip binary operator
 
             auto secondExpression = _parseUnaryExpression();
 
@@ -202,8 +193,8 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSExpressionPtr GS_Parser::_parseUnaryExpression() {
-        if (_checkTokenType(Lexer::TokenType::SymbolMinus)) {
-            _nextToken();
+        if (_tokenStream.isEqualTypes(Lexer::TokenType::SymbolMinus)) {
+            _tokenStream.next();
 
             return std::make_shared<AST::GS_UnaryExpression>(AST::UnaryOperation::Minus, _parsePrimaryExpression());
         }
@@ -212,28 +203,28 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSExpressionPtr GS_Parser::_parsePrimaryExpression() {
-        if (_checkTokenType(Lexer::TokenType::LiteralNumber)) {
-            auto value = _currentToken().getValue();
+        if (_tokenStream.isEqualTypes(Lexer::TokenType::LiteralNumber)) {
+            auto value = _tokenStream.tokenValue();
 
-            _nextToken();
+            _tokenStream.next();
 
             return std::make_shared<AST::GS_ConstantExpression>(std::make_shared<AST::GS_I32Value>(std::stoi(value)));
-        } else if (_checkTokenType(Lexer::TokenType::Identifier)) {
-            auto value = _currentToken().getValue();
+        } else if (_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
+            auto value = _tokenStream.tokenValue();
 
-            _nextToken();
+            _tokenStream.next();
 
             return std::make_shared<AST::GS_VariableUsingExpression>(value);
-        } else if (_checkTokenType(Lexer::TokenType::SymbolLeftParen)) {
-            _nextToken();
+        } else if (_tokenStream.isEqualTypes(Lexer::TokenType::SymbolLeftParen)) {
+            _tokenStream.next();
 
             auto expression = _parseExpression();
 
-            if (!_checkTokenType(Lexer::TokenType::SymbolRightParen)) {
+            if (!_tokenStream.isEqualTypes(Lexer::TokenType::SymbolRightParen)) {
                 throw std::runtime_error("Missed \')\'!");
             }
 
-            _nextToken();
+            _tokenStream.next();
 
             return expression;
         } else {
@@ -242,25 +233,13 @@ namespace GSLanguageCompiler::Parser {
     }
 
     I32 GS_Parser::_currentTokenPrecedence() {
-        auto precedence = _operatorsPrecedence[_currentToken().getType()];
+        auto precedence = _operatorsPrecedence[_tokenStream.tokenType()];
 
         if (!precedence) {
             return -1;
         }
 
         return precedence;
-    }
-
-    Bool GS_Parser::_checkTokenType(Lexer::TokenType typeForCheck, I32 numberOfToken) {
-        return _tokenIterator[numberOfToken].getType() == typeForCheck;
-    }
-
-    Lexer::GS_Token GS_Parser::_currentToken() {
-        return _tokenIterator[0];
-    }
-
-    Void GS_Parser::_nextToken() {
-        ++_tokenIterator;
     }
 
 }

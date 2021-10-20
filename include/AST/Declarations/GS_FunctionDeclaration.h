@@ -36,6 +36,14 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
+         *
+         * @param visitor
+         */
+        Void accept(GS_Visitor *visitor) override;
+
+    public:
+
+        /**
          * Getter for declaration type
          * @return Declaration type
          */

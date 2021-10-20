@@ -1,4 +1,4 @@
-#include <Statements/GS_VariableDeclarationStatement.h>
+#include <AST/Statements/GS_VariableDeclarationStatement.h>
 
 namespace GSLanguageCompiler::AST {
 
@@ -11,6 +11,10 @@ namespace GSLanguageCompiler::AST {
 
     GSTypePtr GS_VariableDeclarationStatement::getType() {
         return _type;
+    }
+
+    Void GS_VariableDeclarationStatement::accept(GS_Visitor *visitor) {
+        visitor->visit(this);
     }
 
     StatementType GS_VariableDeclarationStatement::getStatementType() {
