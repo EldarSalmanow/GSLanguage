@@ -54,8 +54,6 @@ I32 main() {
 
         pass.runForDeclarations(ast);
 
-        std::cout << "Testing TeamCity!";
-
         compilerUnit.getModule().print(llvm::errs(), nullptr);
     } catch (std::exception &exception) {
         std::cerr << exception.what() << std::endl;
