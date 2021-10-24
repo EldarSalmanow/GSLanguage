@@ -7,8 +7,5 @@
 # IDE files
 /.idea
 
-# External files
-/external
-
 # Binary directory
 /bin

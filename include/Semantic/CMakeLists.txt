@@ -3,15 +3,7 @@ project(GSSemanticLibrary)
 set(SEMANTIC_DIR ${SOURCE_DIR}/Semantic)
 
 set(GS_SEMANTIC_SOURCE
-        ${SEMANTIC_DIR}/GS_Semantic.cpp
-
-        ${SEMANTIC_DIR}/GS_SemanticPass.cpp
-
-        ${SEMANTIC_DIR}/GS_TypeCheckerPass.cpp
-        ${SEMANTIC_DIR}/GS_TypePlaceholderPass.cpp
-        ${SEMANTIC_DIR}/GS_VariablesPlaceholderPass.cpp
-
-        ${SEMANTIC_DIR}/GS_TableOfVariables.cpp)
+        ${SEMANTIC_DIR}/GS_TableOfSymbols.cpp ../../src/Semantic/Passes/GS_VariablesPlaceholderPass.cpp ../../src/Semantic/Visitors/GS_VariablesPlaceholderVisitor.cpp)
 
 add_library(
 #       Library name

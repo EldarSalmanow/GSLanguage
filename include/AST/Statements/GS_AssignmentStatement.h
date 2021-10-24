@@ -6,6 +6,15 @@
 
 namespace GSLanguageCompiler::AST {
 
+    // var a -> var_decl_stmt
+    // a -> var_using_expr
+    //                            |- var_decl_stmt
+    // var a = 12 -> assign_stmt --
+    //                            |- const_expr
+    //                        |- expr_stmt -> var_using_expr
+    // a = 23 -> assign_stmt --
+    //                        |- const_expr
+
     /**
      * Class for all assignments in language grammar
      */

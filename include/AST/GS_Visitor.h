@@ -46,6 +46,11 @@ namespace GSLanguageCompiler::AST {
         virtual Void visit(GS_FunctionCallingExpression *functionCallingExpression);
     };
 
+    /**
+     * Visitor ptr type
+     */
+    using GSVisitorPtr = SharedPtr<GS_Visitor>;
+
 }
 
 #endif //GSLANGUAGE_GS_VISITOR_H

@@ -13,6 +13,7 @@ set(GS_AST_SOURCE
 
         ${AST_DIR}/Statements/GS_VariableDeclarationStatement.cpp
         ${AST_DIR}/Statements/GS_AssignmentStatement.cpp
+        ${AST_DIR}/Statements/GS_ExpressionStatement.cpp
 
         ${AST_DIR}/Expressions/GS_ConstantExpression.cpp
         ${AST_DIR}/Expressions/GS_UnaryExpression.cpp
@@ -20,7 +21,9 @@ set(GS_AST_SOURCE
         ${AST_DIR}/Expressions/GS_VariableUsingExpression.cpp
         ${AST_DIR}/Expressions/GS_FunctionCallingExpression.cpp
 
-        ${AST_DIR}/GS_Type.cpp ../../src/AST/Statements/GS_ExpressionStatement.cpp ../../src/AST/GS_Visitor.cpp)
+        ${AST_DIR}/GS_Type.cpp
+
+        ${AST_DIR}/GS_Visitor.cpp ../../src/AST/GS_Pass.cpp)
 
 add_library(
 #       Library name

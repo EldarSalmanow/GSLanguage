@@ -36,6 +36,8 @@ namespace GSLanguageCompiler::AST {
          */
         virtual Bool isExpression();
 
+    public:
+
         /**
          *
          * @param visitor
