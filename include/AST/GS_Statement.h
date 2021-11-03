@@ -11,7 +11,8 @@ namespace GSLanguageCompiler::AST {
     enum class StatementType {
         VariableDeclarationStatement,
         AssignmentStatement,
-        ExpressionStatement
+        ExpressionStatement,
+        DeclarationStatement
     };
 
     /**
@@ -21,9 +22,10 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Default constructor for GS_Statement
+         *
+         * @param scope
          */
-        GS_Statement();
+        explicit GS_Statement(GSScopePtr scope);
 
     public:
 

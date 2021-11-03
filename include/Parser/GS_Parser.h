@@ -54,10 +54,10 @@ namespace GSLanguageCompiler::Parser {
         AST::GSStatementPtr _parseStatement();
 
         /**
-         * Parse variable declaration statement
-         * @return Variable declaration statement node
+         * Parse variable declaration
+         * @return Variable declaration node
          */
-        AST::GSStatementPtr _parseVariableDeclarationStatement();
+        AST::GSStatementPtr _parseVariableDeclaration();
 
         /**
          * Parse assignment statement

@@ -1,11 +1,12 @@
 program : declarations
 
 declarations : declaration...
-declaration : function_declaration
+declaration : function_declaration | variable_declaration
 function_declaration : 'func' id '(' params ')' '{' statements '}'
+variable_declaration : 'var' id ( ':' id ) ( '=' expression )
 
 statements : statement...
-statement : variable_assignment_statement, variable_declaration_statement, expression
+statement : ex
 variable_assignment_statement : variable_declaration_statement '=' expression | variable_using_expression '=' expression
 variable_declaration_statement : 'var' id
 variable_using_expression : id

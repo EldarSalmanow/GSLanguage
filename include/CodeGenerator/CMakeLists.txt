@@ -3,7 +3,7 @@ project(GSCodeGeneratorLibrary)
 set(CODEGENERATOR_DIR ${SOURCE_DIR}/CodeGenerator)
 
 set(GS_CODEGENERATOR_SOURCE
-        ${CODEGENERATOR_DIR}/GS_CodeGenerationPass.cpp ../../src/CodeGenerator/GS_CompilerUnit.cpp ../../src/CodeGenerator/GS_CodeGenerationVisitor.cpp)
+        ${CODEGENERATOR_DIR}/GS_CodeGenerationPass.cpp ../../src/CodeGenerator/GS_TranslationUnit.cpp ../../src/CodeGenerator/GS_CodeGenerationVisitor.cpp)
 
 add_library(
 #       Library name

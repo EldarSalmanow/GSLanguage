@@ -14,6 +14,10 @@ namespace GSLanguageCompiler::AST {
         }
     }
 
+    Void GS_Visitor::visit(GS_VariableDeclaration *variableDeclaration) {
+
+    }
+
     Void GS_Visitor::visit(GS_VariableDeclarationStatement *variableDeclarationStatement) {}
 
     Void GS_Visitor::visit(GS_AssignmentStatement *assignmentStatement) {

@@ -2,6 +2,7 @@
 #define GSLANGUAGE_GS_VARIABLEDECLARATIONSTATEMENT_H
 
 #include <AST/GS_Statement.h>
+#include <AST/GS_Expression.h>
 
 #include <AST/GS_Type.h>
 
@@ -17,8 +18,10 @@ namespace GSLanguageCompiler::AST {
          * Constructor for variable declaration statement
          * @param name Variable name
          * @param type Variable type
+         * @param expression Expression for variable
+         * @param scope Variable scope
          */
-        GS_VariableDeclarationStatement(String name, GSTypePtr type);
+        GS_VariableDeclarationStatement(String name, GSTypePtr type, GSExpressionPtr expression, GSScopePtr scope);
 
     public:
 
@@ -33,6 +36,12 @@ namespace GSLanguageCompiler::AST {
          * @return Variable type
          */
         GSTypePtr getType();
+
+        /**
+         * Getter for expression for variable
+         * @return Expression for variable
+         */
+        GSExpressionPtr getExpression();
 
     public:
 
@@ -62,6 +71,11 @@ namespace GSLanguageCompiler::AST {
          * Variable type
          */
         GSTypePtr _type;
+
+        /**
+         * Expression for variable
+         */
+        GSExpressionPtr _expression;
     };
 
 }

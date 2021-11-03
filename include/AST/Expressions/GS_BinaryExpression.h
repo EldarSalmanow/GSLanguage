@@ -12,7 +12,8 @@ namespace GSLanguageCompiler::AST {
         Plus,
         Minus,
         Star,
-        Slash
+        Slash,
+        Eq
     };
 
     /**

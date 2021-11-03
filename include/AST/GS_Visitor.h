@@ -6,9 +6,11 @@
 namespace GSLanguageCompiler::AST {
 
     class GS_FunctionDeclaration;
+    class GS_VariableDeclaration;
 
-    class GS_VariableDeclarationStatement;
-    class GS_AssignmentStatement;
+//    class GS_VariableDeclarationStatement;
+//    class GS_AssignmentStatement;
+    class GS_DeclarationStatement;
     class GS_ExpressionStatement;
 
     class GS_ConstantExpression;
@@ -29,9 +31,13 @@ namespace GSLanguageCompiler::AST {
 
         virtual Void visit(GS_FunctionDeclaration *functionDeclaration);
 
-        virtual Void visit(GS_VariableDeclarationStatement *variableDeclarationStatement);
+        virtual Void visit(GS_VariableDeclaration *variableDeclaration);
 
-        virtual Void visit(GS_AssignmentStatement *assignmentStatement);
+//        virtual Void visit(GS_VariableDeclarationStatement *variableDeclarationStatement);
+
+//        virtual Void visit(GS_AssignmentStatement *assignmentStatement);
+
+        virtual Void visit(GS_DeclarationStatement *declarationStatement);
 
         virtual Void visit(GS_ExpressionStatement *expressionStatement);
 

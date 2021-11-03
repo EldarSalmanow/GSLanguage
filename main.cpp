@@ -1,7 +1,6 @@
 #include <Reader/GS_Reader.h>
 #include <Lexer/GS_Lexer.h>
 #include <Parser/GS_Parser.h>
-#include <AST/GS_Pass.h>
 #include <CodeGenerator/GS_CompilerUnit.h>
 #include <CodeGenerator/GS_CodeGenerationPass.h>
 
@@ -28,15 +27,26 @@ AST::GSDeclarationPtrArray parse(Lexer::GS_TokenStream stream) {
     return parser.parse();
 }
 
-AST::GS_FunctionDeclaration *toFunctionDeclaration(AST::GSDeclarationPtr &declaration) {
-    if (declaration->getDeclarationType() == AST::DeclarationType::FunctionDeclaration) {
-        return std::reinterpret_pointer_cast<AST::GS_FunctionDeclaration>(declaration).get();
-    }
-
-    return nullptr;
-}
+#include <AST/Statements/GS_VariableDeclarationStatement.h>
+#include <AST/GS_TranslationUnit.h>
 
 I32 main() {
+    auto globalScope = std::make_shared<AST::GS_Scope>(nullptr);
+
+    auto functionScope = std::make_shared<AST::GS_Scope>(globalScope);
+
+    auto expression = std::make_shared<AST::GS_ConstantExpression>(std::make_shared<AST::GS_I32Value>(1));
+
+    AST::GSStatementPtrArray body = {
+            std::make_shared<AST::GS_VariableDeclarationStatement>("a", std::make_shared<AST::GS_I32Type>(), expression, functionScope)
+    };
+
+    AST::GSNodePtrArray nodes = {
+            std::make_shared<AST::GS_FunctionDeclaration>("a", body)
+    };
+
+    AST::GS_TranslationUnit translationUnit(nodes, nullptr);
+
     try {
         auto code = read("../test.gs");
 

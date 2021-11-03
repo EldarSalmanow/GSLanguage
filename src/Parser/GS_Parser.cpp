@@ -4,10 +4,11 @@ namespace GSLanguageCompiler::Parser {
 
     GS_Parser::GS_Parser(Lexer::GS_TokenStream stream)
             : _tokenStream(stream) {
-        _operatorsPrecedence[Lexer::TokenType::SymbolStar]  = 2;
-        _operatorsPrecedence[Lexer::TokenType::SymbolSlash] = 2;
-        _operatorsPrecedence[Lexer::TokenType::SymbolPlus]  = 1;
-        _operatorsPrecedence[Lexer::TokenType::SymbolMinus] = 1;
+        _operatorsPrecedence[Lexer::TokenType::SymbolStar]  = 3;
+        _operatorsPrecedence[Lexer::TokenType::SymbolSlash] = 3;
+        _operatorsPrecedence[Lexer::TokenType::SymbolPlus]  = 2;
+        _operatorsPrecedence[Lexer::TokenType::SymbolMinus] = 2;
+        _operatorsPrecedence[Lexer::TokenType::SymbolEq]    = 1;
     }
 
     AST::GSDeclarationPtrArray GS_Parser::parse() {
@@ -27,6 +28,8 @@ namespace GSLanguageCompiler::Parser {
     AST::GSDeclarationPtr GS_Parser::_parseDeclaration() {
         if (_tokenStream.isEqualTypes(Lexer::TokenType::KeywordFunc)) {
             return _parseFunctionDeclaration();
+        } else if (_tokenStream.isEqualTypes(Lexer::TokenType::KeywordVar)) {
+            return _parseVariableDeclaration();
         } else {
             throw std::runtime_error("Unknown declaration!");
         }
@@ -74,16 +77,7 @@ namespace GSLanguageCompiler::Parser {
         return std::make_shared<AST::GS_FunctionDeclaration>(functionName, functionBody);
     }
 
-    AST::GSStatementPtr GS_Parser::_parseStatement() {
-        if (_tokenStream.isEqualTypes(Lexer::TokenType::KeywordVar)
-         || _tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
-            return _parseAssignmentStatement();
-        } else {
-            return std::make_shared<AST::GS_ExpressionStatement>(_parseExpression());
-        }
-    }
-
-    AST::GSStatementPtr GS_Parser::_parseVariableDeclarationStatement() {
+    AST::GSStatementPtr GS_Parser::_parseVariableDeclaration() {
         _tokenStream.next(); // skip 'var'
 
         if (!_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
@@ -118,7 +112,16 @@ namespace GSLanguageCompiler::Parser {
 
         _tokenStream.next(); // skip variable type
 
-        return std::make_shared<AST::GS_VariableDeclarationStatement>(variableName, variableType);
+        return std::make_shared<AST::GS_VariableDeclaration>(variableName, variableType);
+    }
+
+    AST::GSStatementPtr GS_Parser::_parseStatement() {
+        if (_tokenStream.isEqualTypes(Lexer::TokenType::KeywordVar)
+         || _tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
+            return _parseAssignmentStatement();
+        } else {
+            return std::make_shared<AST::GS_ExpressionStatement>(_parseExpression());
+        }
     }
 
     AST::GSStatementPtr GS_Parser::_parseAssignmentStatement() {

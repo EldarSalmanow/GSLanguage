@@ -2,7 +2,8 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_Statement::GS_Statement() = default;
+    GS_Statement::GS_Statement(GSScopePtr scope)
+            : GS_Node(std::move(scope)) {}
 
     Bool GS_Statement::isStatement() {
         return true;

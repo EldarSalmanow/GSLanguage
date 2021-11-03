@@ -9,7 +9,8 @@ namespace GSLanguageCompiler::AST {
      * Declaration type
      */
     enum class DeclarationType {
-        FunctionDeclaration
+        FunctionDeclaration,
+        VariableDeclaration
     };
 
     /**
@@ -19,9 +20,10 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Default constructor for GS_Declaration
+         *
+         * @param scope
          */
-        GS_Declaration();
+        explicit GS_Declaration(GSScopePtr scope);
 
     public:
 

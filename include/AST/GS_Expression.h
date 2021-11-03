@@ -23,9 +23,10 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Default constructor for GS_Expression
+         *
+         * @param scope
          */
-        GS_Expression();
+        explicit GS_Expression(GSScopePtr scope);
 
     public:
 

@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_NODE_H
 #define GSLANGUAGE_GS_NODE_H
 
+#include <AST/GS_Scope.h>
+
 #include <AST/GS_Visitor.h>
 
 namespace GSLanguageCompiler::AST {
@@ -11,10 +13,22 @@ namespace GSLanguageCompiler::AST {
     class GS_Node {
     public:
 
+        explicit GS_Node(GSScopePtr scope);
+
+    public:
+
         /**
          * Virtual destructor for supporting inheritance
          */
         virtual ~GS_Node();
+
+    public:
+
+        /**
+         *
+         * @return
+         */
+        GSScopePtr getScope();
 
     public:
 
@@ -44,6 +58,13 @@ namespace GSLanguageCompiler::AST {
          * @return
          */
         virtual Void accept(GS_Visitor *visitor) = 0;
+
+    private:
+
+        /**
+         *
+         */
+        GSScopePtr _scope;
     };
 
     /**
