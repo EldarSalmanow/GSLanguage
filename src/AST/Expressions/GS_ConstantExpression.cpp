@@ -18,8 +18,8 @@ namespace GSLanguageCompiler::AST {
     GS_StringValue::GS_StringValue(String value)
             : GS_Value(std::make_shared<GS_StringType>(), std::move(value)) {}
 
-    GS_ConstantExpression::GS_ConstantExpression(GSValuePtr value)
-            : _value(std::move(value)) {}
+    GS_ConstantExpression::GS_ConstantExpression(GSValuePtr value, GSScopePtr scope)
+            : _value(std::move(value)), GS_Expression(std::move(scope)) {}
 
     GSValuePtr GS_ConstantExpression::getValue() {
         return _value;

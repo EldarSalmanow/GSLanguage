@@ -2,8 +2,8 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_VariableUsingExpression::GS_VariableUsingExpression(String name)
-            : _name(std::move(name)) {}
+    GS_VariableUsingExpression::GS_VariableUsingExpression(String name, GSScopePtr scope)
+            : _name(std::move(name)), GS_Expression(std::move(scope)) {}
 
     String GS_VariableUsingExpression::getName() {
         return _name;

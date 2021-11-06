@@ -109,8 +109,9 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for GS_ConstantExpression
          * @param value Value ptr
+         * @param scope Scope
          */
-        explicit GS_ConstantExpression(GSValuePtr value);
+        GS_ConstantExpression(GSValuePtr value, GSScopePtr scope);
 
     public:
 

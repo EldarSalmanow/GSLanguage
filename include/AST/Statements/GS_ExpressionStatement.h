@@ -15,8 +15,9 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for GS_ExpressionStatement
          * @param expression Expression ptr
+         * @param scope Scope
          */
-        explicit GS_ExpressionStatement(GSExpressionPtr expression);
+        GS_ExpressionStatement(GSExpressionPtr expression, GSScopePtr scope);
 
     public:
 

@@ -1,8 +1,10 @@
 #include <Reader/GS_Reader.h>
 #include <Lexer/GS_Lexer.h>
-#include <Parser/GS_Parser.h>
-#include <CodeGenerator/GS_CompilerUnit.h>
-#include <CodeGenerator/GS_CodeGenerationPass.h>
+#include <AST/GS_TranslationUnit.h>
+//#include <Parser/GS_Parser.h>
+#include <Parser/GS_NewParser.h>
+//#include <CodeGenerator/GS_CompilerUnit.h>
+//#include <CodeGenerator/GS_CodeGenerationPass.h>
 
 using namespace GSLanguageCompiler;
 
@@ -21,31 +23,54 @@ Lexer::GSTokenArray tokenize(Reader::GS_Code code) {
     return lexer.tokenize();
 }
 
-AST::GSDeclarationPtrArray parse(Lexer::GS_TokenStream stream) {
-    Parser::GS_Parser parser(stream);
+AST::GSDeclarationPtrArray parse(Lexer::GS_TokenStream *stream) {
+    Parser::New::GS_Parser parser;
 
-    return parser.parse();
+    auto declarations = parser.parseProgram(stream);
+
+    for (auto &error : parser.errors) {
+        COut << error.errorMessage() << std::endl;
+    }
+
+    return declarations;
 }
 
-#include <AST/Statements/GS_VariableDeclarationStatement.h>
-#include <AST/GS_TranslationUnit.h>
+//auto CreateScope(AST::GSScopePtr parent = nullptr) {
+//    return std::make_shared<AST::GS_Scope>(std::move(parent));
+//}
+//
+//auto CreateFunction(String name, AST::GSStatementPtrArray body, AST::GSScopePtr scope) {
+//    return std::make_shared<AST::GS_FunctionDeclaration>(std::move(name), std::move(body), std::move(scope));
+//}
+//
+//auto CreateConstant(I32 value, AST::GSScopePtr scope) {
+//    return std::make_shared<AST::GS_ConstantExpression>(std::make_shared<AST::GS_I32Value>(value), std::move(scope));
+//}
 
 I32 main() {
-    auto globalScope = std::make_shared<AST::GS_Scope>(nullptr);
+    /*
+     * func main() {
+     *      var a = 1
+     * }
+     */
 
-    auto functionScope = std::make_shared<AST::GS_Scope>(globalScope);
-
-    auto expression = std::make_shared<AST::GS_ConstantExpression>(std::make_shared<AST::GS_I32Value>(1));
-
-    AST::GSStatementPtrArray body = {
-            std::make_shared<AST::GS_VariableDeclarationStatement>("a", std::make_shared<AST::GS_I32Type>(), expression, functionScope)
-    };
-
-    AST::GSNodePtrArray nodes = {
-            std::make_shared<AST::GS_FunctionDeclaration>("a", body)
-    };
-
-    AST::GS_TranslationUnit translationUnit(nodes, nullptr);
+//    auto globalScope = CreateScope();
+//
+//    auto function = CreateFunction("main", {}, globalScope);
+//
+//    auto functionScope = CreateScope(globalScope);
+//
+//    auto expression = CreateConstant(1, functionScope);
+//
+//    AST::GSStatementPtrArray body = {
+//            std::make_shared<AST::GS_VariableDeclarationStatement>("a", std::make_shared<AST::GS_I32Type>(), expression, functionScope)
+//    };
+//
+//    AST::GSNodePtrArray nodes = {
+//            CreateFunction("main", body, globalScope)
+//    };
+//
+//    AST::GS_TranslationUnit translationUnit(nodes, nullptr);
 
     try {
         auto code = read("../test.gs");
@@ -56,15 +81,15 @@ I32 main() {
 
         auto tokenStream = Lexer::GS_TokenStream(tokenIterator);
 
-        auto ast = parse(tokenStream);
+        auto ast = parse(&tokenStream);
 
-        CodeGenerator::GS_CompilerUnit compilerUnit("GSModule");
+//        CodeGenerator::GS_CompilerUnit compilerUnit("GSModule");
 
-        CodeGenerator::GS_CodeGenerationPass pass(&compilerUnit);
-
-        pass.runForDeclarations(ast);
-
-        compilerUnit.getModule().print(llvm::errs(), nullptr);
+//        CodeGenerator::GS_CodeGenerationPass pass(&compilerUnit);
+//
+//        pass.runForDeclarations(ast);
+//
+//        compilerUnit.getModule().print(llvm::errs(), nullptr);
     } catch (std::exception &exception) {
         std::cerr << exception.what() << std::endl;
 

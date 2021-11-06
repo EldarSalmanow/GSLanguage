@@ -15,8 +15,9 @@ namespace GSLanguageCompiler::AST {
          * Constructor for GS_FunctionCallingExpression
          * @param name Function name
          * @param params Function params
+         * @param scope Scope
          */
-        GS_FunctionCallingExpression(String name, GSExpressionPtrArray params);
+        GS_FunctionCallingExpression(String name, GSExpressionPtrArray params, GSScopePtr scope);
 
     public:
 

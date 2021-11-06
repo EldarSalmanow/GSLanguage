@@ -4,11 +4,10 @@ namespace GSLanguageCompiler::Parser {
 
     GS_Parser::GS_Parser(Lexer::GS_TokenStream stream)
             : _tokenStream(stream) {
-        _operatorsPrecedence[Lexer::TokenType::SymbolStar]  = 3;
-        _operatorsPrecedence[Lexer::TokenType::SymbolSlash] = 3;
-        _operatorsPrecedence[Lexer::TokenType::SymbolPlus]  = 2;
-        _operatorsPrecedence[Lexer::TokenType::SymbolMinus] = 2;
-        _operatorsPrecedence[Lexer::TokenType::SymbolEq]    = 1;
+        _operatorsPrecedence[Lexer::TokenType::SymbolStar]  = 2;
+        _operatorsPrecedence[Lexer::TokenType::SymbolSlash] = 2;
+        _operatorsPrecedence[Lexer::TokenType::SymbolPlus]  = 1;
+        _operatorsPrecedence[Lexer::TokenType::SymbolMinus] = 1;
     }
 
     AST::GSDeclarationPtrArray GS_Parser::parse() {

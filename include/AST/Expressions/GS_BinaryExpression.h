@@ -12,8 +12,7 @@ namespace GSLanguageCompiler::AST {
         Plus,
         Minus,
         Star,
-        Slash,
-        Eq
+        Slash
     };
 
     /**
@@ -27,8 +26,9 @@ namespace GSLanguageCompiler::AST {
          * @param operation Binary operation
          * @param firstNode First expression ptr
          * @param secondNode Second expression ptr
+         * @param scope Scope
          */
-        GS_BinaryExpression(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression);
+        GS_BinaryExpression(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression, GSScopePtr scope);
 
     public:
 

@@ -16,8 +16,9 @@ namespace GSLanguageCompiler::AST {
          * Constructor for function declaration
          * @param name Function name
          * @param body Function code
+         * @param scope Function scope
          */
-        GS_FunctionDeclaration(String name, GSStatementPtrArray body);
+        GS_FunctionDeclaration(String name, GSStatementPtrArray body, GSScopePtr scope);
 
     public:
 

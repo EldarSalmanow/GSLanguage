@@ -14,8 +14,9 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for GS_VariableUsingExpression
          * @param name Variable name
+         * @param scope Scope
          */
-        explicit GS_VariableUsingExpression(String name);
+        GS_VariableUsingExpression(String name, GSScopePtr scope);
 
     public:
 

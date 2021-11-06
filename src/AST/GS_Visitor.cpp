@@ -14,18 +14,14 @@ namespace GSLanguageCompiler::AST {
         }
     }
 
-    Void GS_Visitor::visit(GS_VariableDeclaration *variableDeclaration) {
-
-    }
-
     Void GS_Visitor::visit(GS_VariableDeclarationStatement *variableDeclarationStatement) {}
 
     Void GS_Visitor::visit(GS_AssignmentStatement *assignmentStatement) {
-        auto statement = assignmentStatement->getStatement();
-        auto expression = assignmentStatement->getExpression();
+        auto lvalueExpression = assignmentStatement->getLValueExpression();
+        auto rvalueExpression = assignmentStatement->getRValueExpression();
 
-        statement->accept(this);
-        expression->accept(this);
+        lvalueExpression->accept(this);
+        rvalueExpression->accept(this);
     }
 
     Void GS_Visitor::visit(GS_ExpressionStatement *expressionStatement) {

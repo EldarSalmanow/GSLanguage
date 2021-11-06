@@ -31,9 +31,10 @@ set(PROJECT_LIBRARIES
         GSReaderLibrary
         GSLexerLibrary
         GSASTLibrary
-        GSCodeGeneratorLibrary
-        GSSemanticLibrary
-        GSParserLibrary)
+#        GSCodeGeneratorLibrary
+#        GSSemanticLibrary
+#        GSParserLibrary
+        )
 
 add_executable(${PROJECT_NAME}
         ${PROJECT_DIR}/main.cpp)
@@ -47,9 +48,9 @@ include_directories(${INCLUDE_DIR})
 add_subdirectory(${INCLUDE_DIR}/Reader)
 add_subdirectory(${INCLUDE_DIR}/Lexer)
 add_subdirectory(${INCLUDE_DIR}/AST)
-add_subdirectory(${INCLUDE_DIR}/Parser)
-add_subdirectory(${INCLUDE_DIR}/Semantic)
-add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
+#add_subdirectory(${INCLUDE_DIR}/Parser)
+#add_subdirectory(${INCLUDE_DIR}/Semantic)
+#add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CONAN_LIB_DIRS})
 

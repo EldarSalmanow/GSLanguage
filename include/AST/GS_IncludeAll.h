@@ -2,11 +2,9 @@
 #define GSLANGUAGE_GS_INCLUDEALL_H
 
 #include <AST/Declarations/GS_FunctionDeclaration.h>
-#include <AST/Declarations/GS_VariableDeclaration.h>
 
-//#include <AST/Statements/GS_VariableDeclarationStatement.h>
-//#include <AST/Statements/GS_AssignmentStatement.h>
-#include <AST/Statements/GS_DeclarationStatement.h>
+#include <AST/Statements/GS_VariableDeclarationStatement.h>
+#include <AST/Statements/GS_AssignmentStatement.h>
 #include <AST/Statements/GS_ExpressionStatement.h>
 
 #include <AST/Expressions/GS_ConstantExpression.h>

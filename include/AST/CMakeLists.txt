@@ -22,8 +22,12 @@ set(GS_AST_SOURCE
         ${AST_DIR}/Expressions/GS_FunctionCallingExpression.cpp
 
         ${AST_DIR}/GS_Type.cpp
+        ${AST_DIR}/GS_Scope.cpp
 
-        ${AST_DIR}/GS_Visitor.cpp ../../src/AST/GS_Pass.cpp ../../src/AST/Statements/GS_DeclarationStatement.cpp ../../src/AST/Declarations/GS_VariableDeclaration.cpp)
+        ${AST_DIR}/GS_Visitor.cpp
+        ${AST_DIR}/GS_Pass.cpp
+
+        ${AST_DIR}/GS_TranslationUnit.cpp)
 
 add_library(
 #       Library name

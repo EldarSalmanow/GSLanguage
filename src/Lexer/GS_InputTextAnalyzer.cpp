@@ -3,21 +3,21 @@
 namespace GSLanguageCompiler::Lexer {
 
     GS_InputTextAnalyzer::GS_InputTextAnalyzer() {
-        _reservedWords.insert(std::make_pair("var",   TokenType::KeywordVar));
-        _reservedWords.insert(std::make_pair("func",  TokenType::KeywordFunc));
+        _reservedWords.emplace("var",   TokenType::KeywordVar);
+        _reservedWords.emplace("func",  TokenType::KeywordFunc);
 
-        _reservedSymbols.insert(std::make_pair('(',   TokenType::SymbolLeftParen));
-        _reservedSymbols.insert(std::make_pair(')',   TokenType::SymbolRightParen));
-        _reservedSymbols.insert(std::make_pair('{',   TokenType::SymbolLeftBrace));
-        _reservedSymbols.insert(std::make_pair('}',   TokenType::SymbolRightBrace));
-        _reservedSymbols.insert(std::make_pair('\"',  TokenType::SymbolDoubleQuotes));
-        _reservedSymbols.insert(std::make_pair(':',   TokenType::SymbolColon));
-        _reservedSymbols.insert(std::make_pair(',',   TokenType::SymbolComma));
-        _reservedSymbols.insert(std::make_pair('+',   TokenType::SymbolPlus));
-        _reservedSymbols.insert(std::make_pair('-',   TokenType::SymbolMinus));
-        _reservedSymbols.insert(std::make_pair('*',   TokenType::SymbolStar));
-        _reservedSymbols.insert(std::make_pair('/',   TokenType::SymbolSlash));
-        _reservedSymbols.insert(std::make_pair('=',   TokenType::SymbolEq));
+        _reservedSymbols.emplace('(',   TokenType::SymbolLeftParen);
+        _reservedSymbols.emplace(')',   TokenType::SymbolRightParen);
+        _reservedSymbols.emplace('{',   TokenType::SymbolLeftBrace);
+        _reservedSymbols.emplace('}',   TokenType::SymbolRightBrace);
+        _reservedSymbols.emplace('\"',  TokenType::SymbolDoubleQuotes);
+        _reservedSymbols.emplace(':',   TokenType::SymbolColon);
+        _reservedSymbols.emplace(',',   TokenType::SymbolComma);
+        _reservedSymbols.emplace('+',   TokenType::SymbolPlus);
+        _reservedSymbols.emplace('-',   TokenType::SymbolMinus);
+        _reservedSymbols.emplace('*',   TokenType::SymbolStar);
+        _reservedSymbols.emplace('/',   TokenType::SymbolSlash);
+        _reservedSymbols.emplace('=',   TokenType::SymbolEq);
     }
 
     Bool GS_InputTextAnalyzer::isSymbol(Reader::GS_Symbol symbol, SymbolType type) {

@@ -6,15 +6,6 @@
 
 namespace GSLanguageCompiler::AST {
 
-    // var a -> var_decl_stmt
-    // a -> var_using_expr
-    //                            |- var_decl_stmt
-    // var a = 12 -> assign_stmt --
-    //                            |- const_expr
-    //                        |- expr_stmt -> var_using_expr
-    // a = 23 -> assign_stmt --
-    //                        |- const_expr
-
     /**
      * Class for all assignments in language grammar
      */
@@ -23,24 +14,25 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Constructor for GS_AssignmentStatement
-         * @param node Statement ptr
-         * @param expression Expression ptr
+         * @param lvalueExpression Left value expression ptr
+         * @param rvalueExpression Right value expression ptr
+         * @param scope Assignment scope
          */
-        GS_AssignmentStatement(GSStatementPtr statement, GSExpressionPtr expression);
+        GS_AssignmentStatement(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression, GSScopePtr scope);
 
     public:
 
         /**
-         * Getter for statement ptr
-         * @return Statement ptr
+         * Getter for left value expression ptr
+         * @return Left value expression ptr
          */
-        GSStatementPtr getStatement();
+        GSExpressionPtr getLValueExpression();
 
         /**
-         * Getter for expression ptr
-         * @return Expression ptr
+         * Getter for right value expression ptr
+         * @return Right value expression ptr
          */
-        GSExpressionPtr getExpression();
+        GSExpressionPtr getRValueExpression();
 
     public:
 
@@ -62,14 +54,14 @@ namespace GSLanguageCompiler::AST {
     private:
 
         /**
-         * Statement ptr
+         * Left value expression ptr
          */
-        GSStatementPtr _statement;
+        GSExpressionPtr _lvalueExpression;
 
         /**
-         * Expression ptr
+         * Right value expression ptr
          */
-        GSExpressionPtr _expression;
+        GSExpressionPtr _rvalueExpression;
     };
 
 }
