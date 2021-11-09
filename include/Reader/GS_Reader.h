@@ -8,7 +8,7 @@ namespace GSLanguageCompiler::Reader {
     /**
      * Stream type
      */
-    using StreamT = IFStream;
+    using StreamT = IStream*;
 
     /**
      * Reader for read files

@@ -52,6 +52,8 @@ add_subdirectory(${INCLUDE_DIR}/AST)
 #add_subdirectory(${INCLUDE_DIR}/Semantic)
 #add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
 
+add_subdirectory(tests)
+
 target_link_directories(${PROJECT_NAME} PRIVATE ${CONAN_LIB_DIRS})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS})

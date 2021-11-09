@@ -1,10 +1,7 @@
 #include <Reader/GS_Reader.h>
 #include <Lexer/GS_Lexer.h>
 #include <AST/GS_TranslationUnit.h>
-//#include <Parser/GS_Parser.h>
 #include <Parser/GS_NewParser.h>
-//#include <CodeGenerator/GS_CompilerUnit.h>
-//#include <CodeGenerator/GS_CodeGenerationPass.h>
 
 using namespace GSLanguageCompiler;
 
@@ -12,7 +9,7 @@ Reader::GS_Code read(const String &filename) {
     IFStream stream;
     stream.open(filename);
 
-    Reader::GS_Reader reader(std::move(stream));
+    Reader::GS_Reader reader(&stream);
 
     return reader.read();
 }
@@ -35,43 +32,7 @@ AST::GSDeclarationPtrArray parse(Lexer::GS_TokenStream *stream) {
     return declarations;
 }
 
-//auto CreateScope(AST::GSScopePtr parent = nullptr) {
-//    return std::make_shared<AST::GS_Scope>(std::move(parent));
-//}
-//
-//auto CreateFunction(String name, AST::GSStatementPtrArray body, AST::GSScopePtr scope) {
-//    return std::make_shared<AST::GS_FunctionDeclaration>(std::move(name), std::move(body), std::move(scope));
-//}
-//
-//auto CreateConstant(I32 value, AST::GSScopePtr scope) {
-//    return std::make_shared<AST::GS_ConstantExpression>(std::make_shared<AST::GS_I32Value>(value), std::move(scope));
-//}
-
 I32 main() {
-    /*
-     * func main() {
-     *      var a = 1
-     * }
-     */
-
-//    auto globalScope = CreateScope();
-//
-//    auto function = CreateFunction("main", {}, globalScope);
-//
-//    auto functionScope = CreateScope(globalScope);
-//
-//    auto expression = CreateConstant(1, functionScope);
-//
-//    AST::GSStatementPtrArray body = {
-//            std::make_shared<AST::GS_VariableDeclarationStatement>("a", std::make_shared<AST::GS_I32Type>(), expression, functionScope)
-//    };
-//
-//    AST::GSNodePtrArray nodes = {
-//            CreateFunction("main", body, globalScope)
-//    };
-//
-//    AST::GS_TranslationUnit translationUnit(nodes, nullptr);
-
     try {
         auto code = read("../test.gs");
 
@@ -82,14 +43,6 @@ I32 main() {
         auto tokenStream = Lexer::GS_TokenStream(tokenIterator);
 
         auto ast = parse(&tokenStream);
-
-//        CodeGenerator::GS_CompilerUnit compilerUnit("GSModule");
-
-//        CodeGenerator::GS_CodeGenerationPass pass(&compilerUnit);
-//
-//        pass.runForDeclarations(ast);
-//
-//        compilerUnit.getModule().print(llvm::errs(), nullptr);
     } catch (std::exception &exception) {
         std::cerr << exception.what() << std::endl;
 
@@ -98,15 +51,3 @@ I32 main() {
 
     return 0;
 }
-
-//#include <Starter/GS_Starter.h>
-
-/**
- * Main function in GSLanguageCompiler
- * @param argc Arguments count
- * @param argv Arguments array
- * @return Status number for operation system
- */
-//GSInt main(GSInt argc, GSChar *argv[]) {
-//    return Starter::GS_Starter::start(argc, argv);
-//}

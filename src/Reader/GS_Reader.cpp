@@ -3,12 +3,12 @@
 namespace GSLanguageCompiler::Reader {
 
     GS_Reader::GS_Reader(StreamT stream)
-            : _stream(std::move(stream)), _line(1), _column(1) {}
+            : _stream(stream), _line(1), _column(1) {}
 
     GS_Code GS_Reader::read() {
         Vector<GS_Line> lines;
 
-        while (!_stream.eof()) {
+        while (!_stream->eof()) {
             auto line = _getLine();
 
             lines.emplace_back(line);
@@ -20,7 +20,7 @@ namespace GSLanguageCompiler::Reader {
     GS_Line GS_Reader::_getLine() {
         Vector<GS_Symbol> symbols;
 
-        for (auto symbol = _getSymbol(); symbol.getSymbol() != '\n' && !_stream.eof(); symbol = _getSymbol()) {
+        for (auto symbol = _getSymbol(); symbol.getSymbol() != '\n' && !_stream->eof(); symbol = _getSymbol()) {
 #if defined(GS_OS_WINDOWS)
             if (symbol.getSymbol() == '\r') {
                 continue;
@@ -40,7 +40,7 @@ namespace GSLanguageCompiler::Reader {
     }
 
     GS_Symbol GS_Reader::_getSymbol() {
-        auto charSymbol = _stream.get();
+        auto charSymbol = _stream->get();
 
         _nextSymbol();
 
