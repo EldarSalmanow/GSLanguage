@@ -174,6 +174,20 @@ namespace GSLanguageCompiler::Reader {
         Vector<GS_Line> _lines;
     };
 
+    class GS_TextStream {
+    public:
+
+        explicit GS_TextStream(std::stringstream stream);
+
+    public:
+
+        Void operator>>(SymbolT &symbol);
+
+    private:
+
+        std::stringstream _sources;
+    };
+
 }
 
 #endif //GSLANGUAGE_GS_CODE_H

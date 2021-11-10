@@ -2,6 +2,25 @@
 
 namespace GSLanguageCompiler::Lexer {
 
+    namespace New {
+
+        GS_Token::~GS_Token() = default;
+
+        TokenType GS_Token::getTokenType() {
+            return TokenType::Invalid;
+        }
+
+        GS_BaseToken::GS_BaseToken(TokenType type)
+                : _type(type) {}
+
+        TokenType GS_BaseToken::getTokenType() {
+            return _type;
+        }
+
+
+
+    }
+
     GS_Position::GS_Position()
             : _line(0), _column(0) {}
 

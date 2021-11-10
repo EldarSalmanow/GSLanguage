@@ -7,6 +7,78 @@
 
 namespace GSLanguageCompiler::Lexer {
 
+    namespace New {
+
+        enum class TokenType {
+            Identifier,             // 'main'
+
+            LiteralNumber,          // '12'
+
+            KeywordVar,             // 'var'
+            KeywordFunc,            // 'func'
+
+            SymbolSpace,            // ' '
+
+            SymbolLeftParen,        // (
+            SymbolRightParen,       // )
+            SymbolLeftBrace,        // {
+            SymbolRightBrace,       // }
+
+            SymbolDoubleQuotes,     // "
+            SymbolColon,            // :
+            SymbolComma,            // ,
+
+            SymbolPlus,             // +
+            SymbolMinus,            // -
+            SymbolStar,             // *
+            SymbolSlash,            // /
+            SymbolEq,               // =
+
+            Invalid
+        };
+
+        class GS_Token {
+        public:
+
+            ~GS_Token();
+
+        public:
+
+            virtual TokenType getTokenType();
+        };
+
+        using GSTokenPtr = SharedPtr<GS_Token>;
+
+        class GS_BaseToken : public GS_Token {
+        public:
+
+            explicit GS_BaseToken(TokenType type);
+
+        public:
+
+            TokenType getTokenType() override;
+
+        private:
+
+            TokenType _type;
+        };
+
+        class GS_TokenWithValue : public GS_BaseToken {
+        public:
+
+            GS_TokenWithValue(TokenType type, String value);
+
+        public:
+
+            String getValue();
+
+        private:
+
+            String _value;
+        };
+
+    }
+
     /**
      * Index type
      */

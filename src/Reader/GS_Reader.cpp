@@ -21,16 +21,18 @@ namespace GSLanguageCompiler::Reader {
         Vector<GS_Symbol> symbols;
 
         for (auto symbol = _getSymbol(); symbol.getSymbol() != '\n' && !_stream->eof(); symbol = _getSymbol()) {
-#if defined(GS_OS_WINDOWS)
-            if (symbol.getSymbol() == '\r') {
-                continue;
-            }
-#endif
+//#if defined(GS_OS_WINDOWS)
+//            if (symbol.getSymbol() == '\r') {
+//                continue;
+//            }
+//#endif TODO Delete code
 
             symbols.emplace_back(symbol);
         }
 
-        symbols.emplace_back(GS_Symbol('\n', _line, _column));
+        if (!_stream->eof()) {
+            symbols.emplace_back(GS_Symbol('\n', _line, _column));
+        }
 
         _nextLine();
 

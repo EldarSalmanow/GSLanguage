@@ -73,4 +73,11 @@ namespace GSLanguageCompiler::Reader {
         return getEndIterator();
     }
 
+    GS_TextStream::GS_TextStream(std::stringstream stream)
+            : _sources(std::move(stream)) {}
+
+    Void GS_TextStream::operator>>(SymbolT &symbol) {
+        _sources >> symbol;
+    }
+
 }

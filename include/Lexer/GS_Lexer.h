@@ -16,7 +16,9 @@ namespace GSLanguageCompiler::Lexer {
          * Constructor for GS_Lexer
          * @param code Input code
          */
-        explicit GS_Lexer(Reader::GS_Code code);
+//        explicit GS_Lexer(Reader::GS_Code code);
+
+        explicit GS_Lexer(Reader::GS_TextStream textStream);
 
     public:
 
@@ -24,19 +26,23 @@ namespace GSLanguageCompiler::Lexer {
          * Tokenizing input code
          * @return Tokens array
          */
-        GSTokenArray tokenize();
+//        GSTokenArray tokenize();
+
+        New::GSTokenPtr getToken();
 
     private:
 
         /**
          * Interface for getting symbols from source code
          */
-        GS_CodeReader _codeReader;
+//        GS_CodeReader _codeReader;
 
         /**
          * Analyzer for input text
          */
-        GS_InputTextAnalyzer _textAnalyzer;
+//        GS_InputTextAnalyzer _textAnalyzer;
+
+        Reader::GS_TextStream _textStream;
     };
 
 }
