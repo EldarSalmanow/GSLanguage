@@ -13,7 +13,7 @@ namespace GSLanguageCompiler::Lexer {
         return _lineIterator[0];
     }
 
-    GS_Position GS_CodeReader::currentPosition() {
+    GS_Location GS_CodeReader::currentPosition() {
         return {currentLine().getLineAsString(), getLineNumber(), getColumnNumber()};
     }
 

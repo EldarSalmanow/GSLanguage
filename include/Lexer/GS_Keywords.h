@@ -9,29 +9,7 @@ namespace GSLanguageCompiler::Lexer {
      * Type of token
      */
     enum class TokenType {
-        EndOfFile,
-
-        Identifier,             // main
-
-        LiteralNumber,          // 12
-
-        KeywordVar,             // var
-        KeywordFunc,            // func
-
-        SymbolLeftParen,        // (
-        SymbolRightParen,       // )
-        SymbolLeftBrace,        // {
-        SymbolRightBrace,       // }
-
-        SymbolDoubleQuotes,     // "
-        SymbolColon,            // :
-        SymbolComma,            // ,
-
-        SymbolPlus,             // +
-        SymbolMinus,            // -
-        SymbolStar,             // *
-        SymbolSlash,            // /
-        SymbolEq                // =
+#include <Lexer/GS_Keywords.def>
     };
 
 }

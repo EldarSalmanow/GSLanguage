@@ -2,31 +2,17 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    GS_TokenStream::GS_TokenStream(GSTokenArrayIterator &tokenIterator)
-            : _tokenIterator(tokenIterator) {}
+    GS_TokenStream::GS_TokenStream(GS_Lexer lexer)
+            : _lexer(lexer) {}
 
-    GS_Token GS_TokenStream::currentToken() {
-        return _tokenIterator[0];
+    GS_Token GS_TokenStream::getToken() {
+        return _lexer.getToken();
     }
 
-    TokenType GS_TokenStream::tokenType(I32 offset) {
-        return _tokenIterator[offset].getType();
-    }
+    GS_TokenStream &GS_TokenStream::operator>>(GS_Token &token) {
+        token = getToken();
 
-    String GS_TokenStream::tokenValue(I32 offset) {
-        return _tokenIterator[offset].getValue();
-    }
-
-    Void GS_TokenStream::next() {
-        ++_tokenIterator;
-    }
-
-    Void GS_TokenStream::prev() {
-        --_tokenIterator;
-    }
-
-    Bool GS_TokenStream::isEqualTypes(TokenType type, I32 offset) {
-        return type == tokenType(offset);
+        return *this;
     }
 
 }

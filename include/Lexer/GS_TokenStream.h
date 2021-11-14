@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_TOKENSTREAM_H
 #define GSLANGUAGE_GS_TOKENSTREAM_H
 
-#include <Lexer/GS_Token.h>
+#include <Lexer/GS_Lexer.h>
 
 namespace GSLanguageCompiler::Lexer {
 
@@ -10,30 +10,24 @@ namespace GSLanguageCompiler::Lexer {
 
         /**
          *
-         * @param tokenIterator
+         * @param lexer
          */
-        explicit GS_TokenStream(GSTokenArrayIterator &tokenIterator);
+        explicit GS_TokenStream(GS_Lexer lexer);
 
     public:
 
-        GS_Token currentToken();
+        GS_Token getToken();
 
-        TokenType tokenType(I32 offset = 0);
+    public:
 
-        String tokenValue(I32 offset = 0);
-
-        Void next();
-
-        Void prev();
-
-        Bool isEqualTypes(TokenType type, I32 offset = 0);
+        GS_TokenStream &operator>>(GS_Token &token);
 
     private:
 
         /**
          *
          */
-        GSTokenArrayIterator _tokenIterator;
+        GS_Lexer _lexer;
     };
 
 }

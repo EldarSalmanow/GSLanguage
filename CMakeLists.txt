@@ -30,7 +30,7 @@ include(${EXTERNAL_DIR}/conanbuildinfo.cmake)
 set(PROJECT_LIBRARIES
         GSReaderLibrary
         GSLexerLibrary
-        GSASTLibrary
+#        GSASTLibrary
 #        GSCodeGeneratorLibrary
 #        GSSemanticLibrary
 #        GSParserLibrary
@@ -47,12 +47,12 @@ include_directories(${INCLUDE_DIR})
 
 add_subdirectory(${INCLUDE_DIR}/Reader)
 add_subdirectory(${INCLUDE_DIR}/Lexer)
-add_subdirectory(${INCLUDE_DIR}/AST)
+#add_subdirectory(${INCLUDE_DIR}/AST)
 #add_subdirectory(${INCLUDE_DIR}/Parser)
 #add_subdirectory(${INCLUDE_DIR}/Semantic)
 #add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
 
-add_subdirectory(tests)
+#add_subdirectory(tests)
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CONAN_LIB_DIRS})
 

@@ -1,0 +1,35 @@
+#ifndef GS_TOKENTYPE
+#define GS_TOKENTYPE(name) name
+#endif
+
+GS_TOKENTYPE(Unknown),
+
+GS_TOKENTYPE(EndOfFile),
+
+GS_TOKENTYPE(NewLine),
+
+GS_TOKENTYPE(Identifier),
+
+GS_TOKENTYPE(LiteralNumber),
+
+GS_TOKENTYPE(KeywordVar),
+GS_TOKENTYPE(KeywordFunc),
+
+GS_TOKENTYPE(SymbolLeftParen),
+GS_TOKENTYPE(SymbolRightParen),
+GS_TOKENTYPE(SymbolLeftBrace),
+GS_TOKENTYPE(SymbolRightBrace),
+
+GS_TOKENTYPE(SymbolDoubleQuotes),
+GS_TOKENTYPE(SymbolColon),
+GS_TOKENTYPE(SymbolComma),
+
+GS_TOKENTYPE(SymbolPlus),
+GS_TOKENTYPE(SymbolMinus),
+GS_TOKENTYPE(SymbolStar),
+GS_TOKENTYPE(SymbolSlash),
+GS_TOKENTYPE(SymbolEq),
+
+GS_TOKENTYPE(SymbolSpace)
+
+#undef GS_TOKENTYPE

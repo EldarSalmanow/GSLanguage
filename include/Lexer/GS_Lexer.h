@@ -1,8 +1,9 @@
 #ifndef GSLANGUAGE_GS_LEXER_H
 #define GSLANGUAGE_GS_LEXER_H
 
-#include <Lexer/GS_CodeReader.h>
-#include <Lexer/GS_InputTextAnalyzer.h>
+#include <Reader/GS_TextStream.h>
+
+#include <Lexer/GS_Token.h>
 
 namespace GSLanguageCompiler::Lexer {
 
@@ -13,36 +14,38 @@ namespace GSLanguageCompiler::Lexer {
     public:
 
         /**
-         * Constructor for GS_Lexer
-         * @param code Input code
+         *
+         * @param textStream
          */
-//        explicit GS_Lexer(Reader::GS_Code code);
-
         explicit GS_Lexer(Reader::GS_TextStream textStream);
 
     public:
 
         /**
-         * Tokenizing input code
-         * @return Tokens array
+         *
+         * @return
          */
-//        GSTokenArray tokenize();
-
-        New::GSTokenPtr getToken();
+        GS_Token getToken();
 
     private:
 
         /**
-         * Interface for getting symbols from source code
+         *
+         * @return
          */
-//        GS_CodeReader _codeReader;
+        Reader::SymbolT _getSymbol();
+
+    private:
 
         /**
-         * Analyzer for input text
+         *
          */
-//        GS_InputTextAnalyzer _textAnalyzer;
-
         Reader::GS_TextStream _textStream;
+
+        /**
+         *
+         */
+        IndexT _line, _column;
     };
 
 }
