@@ -31,21 +31,8 @@ namespace GSLanguageCompiler::Lexer {
 
         /**
          *
-         * @return
-         */
-        Reader::SymbolT _getSymbol();
-
-    private:
-
-        /**
-         *
          */
         Reader::GS_TextStream _textStream;
-
-        /**
-         *
-         */
-        IndexT _line, _column;
     };
 
 }

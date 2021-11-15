@@ -16,8 +16,14 @@ namespace GSLanguageCompiler::Lexer {
         return _column;
     }
 
+    GS_Token::GS_Token(TokenType type)
+            : _type(type) {}
+
     GS_Token::GS_Token(TokenType type, GS_Location location)
             : _type(type), _location(location) {}
+
+    GS_Token::GS_Token(TokenType type, String value)
+            : _type(type), _value(std::move(value)) {}
 
     GS_Token::GS_Token(TokenType type, String word, GS_Location location)
             : _type(type), _value(std::move(word)), _location(location) {}

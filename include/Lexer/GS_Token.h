@@ -62,11 +62,24 @@ namespace GSLanguageCompiler::Lexer {
         GS_Token() = default;
 
         /**
+         *
+         * @param type
+         */
+        GS_Token(TokenType type);
+
+        /**
          * Constructor for GS_Token
          * @param type Token type
          * @param location Token location
          */
         GS_Token(TokenType type, GS_Location location);
+
+        /**
+         *
+         * @param type
+         * @param value
+         */
+        GS_Token(TokenType type, String value);
 
         /**
          * Constructor for GS_Token

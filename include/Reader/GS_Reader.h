@@ -33,7 +33,19 @@ namespace GSLanguageCompiler::Reader {
          * Reading symbol from input stream
          * @return Symbol
          */
-        SymbolT getSymbol();
+        SymbolT currentSymbol();
+
+        /**
+         *
+         * @return
+         */
+        Void nextSymbol();
+
+        /**
+         *
+         * @return
+         */
+        Void prevSymbol();
 
     private:
 
@@ -41,6 +53,11 @@ namespace GSLanguageCompiler::Reader {
          * Stream for reading code
          */
         StreamT _stream;
+
+        /**
+         * Stream iterator for iterating symbols from stream
+         */
+        std::istreambuf_iterator<SymbolT> _streamIterator;
     };
 
 }
