@@ -6,7 +6,19 @@ namespace GSLanguageCompiler::Reader {
             : _reader(reader) {}
 
     SymbolT GS_TextStream::getSymbol() {
-        return _reader.getSymbol();
+        auto symbol = _reader.getSymbol();
+
+        _reader.nextSymbol();
+
+        return symbol;
+    }
+
+    SymbolT GS_TextStream::nextSymbol() {
+        return _reader.nextSymbol();
+    }
+
+    SymbolT GS_TextStream::prevSymbol() {
+        return _reader.prevSymbol();
     }
 
     GS_TextStream &GS_TextStream::operator>>(SymbolT &symbol) {

@@ -6,51 +6,6 @@
 namespace GSLanguageCompiler::Lexer {
 
     /**
-     * Index type
-     */
-    using IndexT = U64;
-
-    /**
-     * Class for displaying information about the location of a character in the source file
-     */
-    class GS_Location {
-    public:
-
-        /**
-         * Default constructor for GS_Position
-         */
-        GS_Location();
-
-        /**
-         * Constructor for GS_Position
-         * @param line Line in code
-         * @param column Column in code
-         */
-        GS_Location(IndexT line, IndexT column);
-
-    public:
-
-        /**
-         * Getter for line
-         * @return Line
-         */
-        IndexT getLine();
-
-        /**
-         * Getter for column
-         * @return Column
-         */
-        IndexT getColumn();
-
-    private:
-
-        /**
-         * Position in source file
-         */
-        IndexT _line, _column;
-    };
-
-    /**
      * Class for issuing information about the token
      */
     class GS_Token {
@@ -59,20 +14,13 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Default constructor for GS_Token
          */
-        GS_Token() = default;
+        GS_Token();
 
         /**
          *
          * @param type
          */
-        GS_Token(TokenType type);
-
-        /**
-         * Constructor for GS_Token
-         * @param type Token type
-         * @param location Token location
-         */
-        GS_Token(TokenType type, GS_Location location);
+        explicit GS_Token(TokenType type);
 
         /**
          *
@@ -80,14 +28,6 @@ namespace GSLanguageCompiler::Lexer {
          * @param value
          */
         GS_Token(TokenType type, String value);
-
-        /**
-         * Constructor for GS_Token
-         * @param type Token type
-         * @param word Value
-         * @param location Token location
-         */
-        GS_Token(TokenType type, String word, GS_Location location);
 
     public:
 
@@ -103,12 +43,6 @@ namespace GSLanguageCompiler::Lexer {
          */
         String getValue();
 
-        /**
-         * Getter for location in source file
-         * @return Location in source file
-         */
-        GS_Location getLocation();
-
     private:
 
         /**
@@ -120,11 +54,6 @@ namespace GSLanguageCompiler::Lexer {
          * String value or name
          */
         String _value;
-
-        /**
-         * Token location
-         */
-        GS_Location _location;
     };
 
     /**

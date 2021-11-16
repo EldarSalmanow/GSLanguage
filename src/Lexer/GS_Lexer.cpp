@@ -1,5 +1,7 @@
 #include <GS_Lexer.h>
 
+#include <utility>
+
 namespace GSLanguageCompiler::Lexer {
 
     Map<Reader::SymbolT, TokenType> ReservedSymbols = {
@@ -34,18 +36,10 @@ namespace GSLanguageCompiler::Lexer {
     GS_Token GS_Lexer::getToken() {
         auto symbol = _textStream.getSymbol();
 
-        _buffer += symbol;
-
         if (ReservedSymbols.find(symbol) != ReservedSymbols.end()) {
-            return {ReservedSymbols[symbol]};
+            return GS_Token(ReservedSymbols[symbol]);
         } else if (std::isalpha(symbol)) {
             String value;
-
-            value += symbol;
-
-            symbol = _textStream.getSymbol();
-
-            std::istreambuf_iterator
 
             while (std::isalpha(symbol) && symbol != EOF && symbol != ' ' && symbol != '\n') {
                 value += symbol;
@@ -53,17 +47,15 @@ namespace GSLanguageCompiler::Lexer {
                 symbol = _textStream.getSymbol();
             }
 
+            _textStream.prevSymbol();
+
             if (ReservedLetters.find(value) != ReservedLetters.end()) {
-                return {ReservedLetters[value]};
+                return GS_Token(ReservedLetters[value]);
             }
 
-            return {TokenType::Identifier,  value};
+            return GS_Token(TokenType::Identifier,  value);
         } else if (std::isdigit(symbol)) {
             String value;
-
-            value += symbol;
-
-            symbol = _textStream.getSymbol();
 
             while (std::isdigit(symbol) && symbol != EOF && symbol != ' ' && symbol != '\n') {
                 value += symbol;
@@ -71,10 +63,12 @@ namespace GSLanguageCompiler::Lexer {
                 symbol = _textStream.getSymbol();
             }
 
-            return {TokenType::LiteralNumber,  value};
+            _textStream.prevSymbol();
+
+            return GS_Token(TokenType::LiteralNumber,  value);
         }
 
-        return {TokenType::Unknown};
+        return {};
     }
 
 }

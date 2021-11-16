@@ -3,14 +3,18 @@
 namespace GSLanguageCompiler::Reader {
 
     GS_Reader::GS_Reader(StreamT stream)
-            : _stream(stream), _streamIterator(*_stream) {}
+            : _stream(stream) {}
 
-    SymbolT GS_Reader::currentSymbol() {
-        return *_streamIterator;
+    SymbolT GS_Reader::getSymbol() {
+        return static_cast<SymbolT>(_stream->rdbuf()->sgetc());
     }
 
-    Void GS_Reader::nextSymbol() {
-        --_streamIterator;
+    SymbolT GS_Reader::nextSymbol() {
+        return static_cast<SymbolT>(_stream->rdbuf()->snextc());
+    }
+
+    SymbolT GS_Reader::prevSymbol() {
+        return static_cast<SymbolT>(_stream->rdbuf()->sungetc());
     }
 
 }

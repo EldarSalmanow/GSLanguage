@@ -25,6 +25,18 @@ namespace GSLanguageCompiler::Reader {
          */
         SymbolT getSymbol();
 
+        /**
+         *
+         * @return
+         */
+        SymbolT nextSymbol();
+
+        /**
+         *
+         * @return
+         */
+        SymbolT prevSymbol();
+
     public:
 
         /**
