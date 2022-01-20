@@ -45,6 +45,16 @@ namespace GSLanguageCompiler::AST {
         GSScopePtr _globalScope;
     };
 
+    /**
+     *
+     */
+    using GSTranslationUnitPtr = SharedPtr<GS_TranslationUnit>;
+
+    /**
+     *
+     */
+    using GSTranslationUnitPtrArray = Vector<GSTranslationUnitPtr>;
+
 }
 
 #endif //GSLANGUAGE_GS_TRANSLATIONUNIT_H

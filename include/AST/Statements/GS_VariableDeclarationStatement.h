@@ -18,6 +18,22 @@ namespace GSLanguageCompiler::AST {
          * Constructor for variable declaration statement
          * @param name Variable name
          * @param type Variable type
+         * @param scope Variable scope
+         */
+        GS_VariableDeclarationStatement(UString name, GSTypePtr type, GSScopePtr scope);
+
+        /**
+         * Constructor for variable declaration statement
+         * @param name Variable name
+         * @param expression Expression for variable
+         * @param scope Variable scope
+         */
+        GS_VariableDeclarationStatement(UString name, GSExpressionPtr expression, GSScopePtr scope);
+
+        /**
+         * Constructor for variable declaration statement
+         * @param name Variable name
+         * @param type Variable type
          * @param expression Expression for variable
          * @param scope Variable scope
          */

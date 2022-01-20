@@ -18,7 +18,7 @@ namespace New {
 
     public:
 
-        AST::GS_TranslationUnit Parse() {
+        AST::GSTranslationUnitPtr Parse() {
             
         }
 
@@ -73,7 +73,9 @@ namespace New {
         }
 
         AST::GSStatementPtr ParseStatement(ConstLRef<AST::GSScopePtr> scope) {
-            NextToken();
+            if (IsTokenType(Lexer::TokenType::KeywordVar)) {
+                return ParseVariableDeclarationStatement(scope);
+            } else if ()
 
             return nullptr;
         }
@@ -89,7 +91,11 @@ namespace New {
 
             auto rvalueExpression = ParseRValueExpression(scope);
 
-            return std::make_shared<AST::GS_AssignmentStatement>(lvalueExpression, rvalueExpression, scope);
+            auto assignmentStatement = std::make_shared<AST::GS_AssignmentStatement>(lvalueExpression, rvalueExpression, scope);
+
+            scope->addNode(assignmentStatement);
+
+            return assignmentStatement;
         }
 
         SharedPtr<AST::GS_VariableDeclarationStatement> ParseVariableDeclarationStatement(ConstLRef<AST::GSScopePtr> scope) {
@@ -110,24 +116,48 @@ namespace New {
             if (IsTokenType(Lexer::TokenType::SymbolColon)) {
                 NextToken(); // skip ':'
 
-                if (!IsTokenType(Lexer::TokenType::Identifier)) {
+                auto variableType = ParseType();
+
+                if (variableType->getName() == U"Void") {
                     return nullptr;
                 }
 
-                auto stringVariableType = TokenValue();
+                if (IsTokenType(Lexer::TokenType::SymbolEq)) {
+                    NextToken(); // skip '='
 
-                AST::GSTypePtr variableType;
+                    auto variableExpression = ParseRValueExpression(scope);
 
-                if (stringVariableType == U"I32") {
-                    variableType = std::make_shared<AST::GS_I32Type>();
-                } else if (stringVariableType == U"String") {
-                    variableType = std::make_shared<AST::GS_StringType>();
-                } else if (stringVariableType == U"Void") {
-                    return nullptr;
-                } else {
-                    return nullptr;
+                    auto variable = std::make_shared<AST::GS_VariableDeclarationStatement>(variableName, variableType, variableExpression, scope);
+
+                    scope->addNode(variable);
+
+                    return variable;
                 }
+
+                auto variable = std::make_shared<AST::GS_VariableDeclarationStatement>(variableName, variableType, scope);
+
+                scope->addNode(variable);
+
+                return variable;
+            } else if (IsTokenType(Lexer::TokenType::SymbolEq)) {
+                NextToken(); // skip '='
+
+                auto variableExpression = ParseRValueExpression(scope);
+
+                auto variable = std::make_shared<AST::GS_VariableDeclarationStatement>(variableName, variableExpression, scope);
+
+                scope->addNode(variable);
+
+                return variable;
             }
+
+            return nullptr;
+        }
+
+        AST::GSExpressionPtr ParseExpression(ConstLRef<AST::GSScopePtr> scope) {
+            NextToken();
+
+            return nullptr;
         }
 
         AST::GSExpressionPtr ParseLValueExpression(ConstLRef<AST::GSScopePtr> scope) {
@@ -136,7 +166,11 @@ namespace New {
 
                 NextToken();
 
-                return std::make_shared<AST::GS_VariableUsingExpression>(variableName, scope);
+                auto variableUsingExpression = std::make_shared<AST::GS_VariableUsingExpression>(variableName, scope);
+
+                scope->addNode(variableUsingExpression);
+
+                return variableUsingExpression;
             }
 
             return nullptr;
@@ -146,6 +180,28 @@ namespace New {
             NextToken();
 
             return nullptr;
+        }
+
+        AST::GSTypePtr ParseType() {
+            if (!IsTokenType(Lexer::TokenType::Identifier)) {
+                return nullptr;
+            }
+
+            auto stringVariableType = TokenValue();
+
+            NextToken(); // skip variable type
+
+            AST::GSTypePtr variableType = nullptr;
+
+            if (stringVariableType == U"Void") {
+                variableType = std::make_shared<AST::GS_VoidType>();
+            } else if (stringVariableType == U"I32") {
+                variableType = std::make_shared<AST::GS_I32Type>();
+            } else if (stringVariableType == U"String") {
+                variableType = std::make_shared<AST::GS_StringType>();
+            }
+
+            return variableType;
         }
 
     public:
