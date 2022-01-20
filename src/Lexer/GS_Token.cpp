@@ -2,20 +2,17 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    GS_Token::GS_Token()
-            : _type(TokenType::Unknown) {}
-
     GS_Token::GS_Token(TokenType type)
             : _type(type) {}
 
-    GS_Token::GS_Token(TokenType type, String value)
-            : _type(type), _value(std::move(value)) {}
-
-    TokenType GS_Token::getType() {
+    TokenType GS_Token::getTokenType() const {
         return _type;
     }
 
-    String GS_Token::getValue() {
+    GS_ValueToken::GS_ValueToken(TokenType type, UString value)
+            : GS_Token(type), _value(std::move(value)) {}
+
+    UString GS_ValueToken::getValue() const {
         return _value;
     }
 

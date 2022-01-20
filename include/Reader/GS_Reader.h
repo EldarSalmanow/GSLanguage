@@ -1,19 +1,19 @@
 #ifndef GSLANGUAGE_GS_READER_H
 #define GSLANGUAGE_GS_READER_H
 
-#include <GSCrossPlatform/GS_CrossPlatformTypes.h>
+#include <GSCrossPlatform/GS_CrossPlatform.h>
 
 namespace GSLanguageCompiler::Reader {
 
     /**
      * Symbol type
      */
-    using SymbolT = CharType;
+    using SymbolT = USymbol;
 
     /**
      * Stream type
      */
-    using StreamT = IStream*;
+    using StreamT = UnicodeStream*;
 
     /**
      * Reader for read files
@@ -34,18 +34,6 @@ namespace GSLanguageCompiler::Reader {
          * @return Symbol
          */
         SymbolT getSymbol();
-
-        /**
-         * Reading next symbol from input stream
-         * @return Symbol
-         */
-        SymbolT nextSymbol();
-
-        /**
-         * Reading prev symbol from input stream
-         * @return Symbol
-         */
-        SymbolT prevSymbol();
 
     private:
 

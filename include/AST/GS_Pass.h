@@ -23,6 +23,9 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /**
+         *
+         */
         virtual ~GS_Pass();
 
     public:
@@ -31,7 +34,7 @@ namespace GSLanguageCompiler::AST {
          *
          * @return
          */
-        GSVisitorPtr getVisitor();
+        GSVisitorPtr getVisitor() const;
 
     public:
 
@@ -40,21 +43,21 @@ namespace GSLanguageCompiler::AST {
          * @param declarations
          * @return
          */
-        virtual Void runForDeclarations(GSDeclarationPtrArray &declarations);
+        virtual Void runForDeclarations(GSDeclarationPtrArray declarations);
 
         /**
          *
          * @param statements
          * @return
          */
-        virtual Void runForStatements(GSStatementPtrArray &statements);
+        virtual Void runForStatements(GSStatementPtrArray statements);
 
         /**
          *
          * @param expressions
          * @return
          */
-        virtual Void runForExpressions(GSExpressionPtrArray &expressions);
+        virtual Void runForExpressions(GSExpressionPtrArray expressions);
 
     private:
 

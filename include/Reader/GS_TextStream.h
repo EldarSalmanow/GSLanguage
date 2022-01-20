@@ -15,7 +15,7 @@ namespace GSLanguageCompiler::Reader {
          *
          * @param reader
          */
-        explicit GS_TextStream(GS_Reader reader);
+        explicit GS_TextStream(Ptr<GS_Reader> reader);
 
     public:
 
@@ -25,18 +25,6 @@ namespace GSLanguageCompiler::Reader {
          */
         SymbolT getSymbol();
 
-        /**
-         *
-         * @return
-         */
-        SymbolT nextSymbol();
-
-        /**
-         *
-         * @return
-         */
-        SymbolT prevSymbol();
-
     public:
 
         /**
@@ -44,14 +32,14 @@ namespace GSLanguageCompiler::Reader {
          * @param symbol
          * @return
          */
-        GS_TextStream &operator>>(SymbolT &symbol);
+        LRef<GS_TextStream> operator>>(LRef<SymbolT> symbol);
 
     private:
 
         /**
          *
          */
-        GS_Reader _reader;
+        Ptr<GS_Reader> _reader;
     };
 
 }

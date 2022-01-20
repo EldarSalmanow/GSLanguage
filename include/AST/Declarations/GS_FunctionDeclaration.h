@@ -13,12 +13,28 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
+         *
+         * @param name
+         * @param scope
+         */
+        GS_FunctionDeclaration(UString name, GSScopePtr scope);
+
+        /**
          * Constructor for function declaration
          * @param name Function name
          * @param body Function code
          * @param scope Function scope
          */
-        GS_FunctionDeclaration(String name, GSStatementPtrArray body, GSScopePtr scope);
+        GS_FunctionDeclaration(UString name, GSStatementPtrArray body, GSScopePtr scope);
+
+    public:
+
+        /**
+         * Adding statement to function body
+         * @param statement Statement
+         * @return
+         */
+        Void addStatement(GSStatementPtr statement);
 
     public:
 
@@ -26,13 +42,19 @@ namespace GSLanguageCompiler::AST {
          * Getter for function name
          * @return Function name
          */
-        String getName();
+        UString getName() const;
 
         /**
          * Getter for function code
          * @return Function code
          */
-        GSStatementPtrArray getBody();
+        GSStatementPtrArray getBody() const;
+
+        /**
+         * Getter for function scope
+         * @return Function scope
+         */
+        GSScopePtr getFunctionScope() const;
 
     public:
 
@@ -40,7 +62,7 @@ namespace GSLanguageCompiler::AST {
          *
          * @param visitor
          */
-        Void accept(GS_Visitor *visitor) override;
+        Void accept(Ptr<GS_Visitor> visitor) override;
 
     public:
 
@@ -48,19 +70,24 @@ namespace GSLanguageCompiler::AST {
          * Getter for declaration type
          * @return Declaration type
          */
-        DeclarationType getDeclarationType() override;
+        DeclarationType getDeclarationType() const override;
 
     private:
 
         /**
          * Function name
          */
-        String _name;
+        UString _name;
 
         /**
          * Function code
          */
         GSStatementPtrArray _body;
+
+        /**
+         * Function scope
+         */
+        GSScopePtr _functionScope;
     };
 
 }

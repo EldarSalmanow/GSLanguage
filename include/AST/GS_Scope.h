@@ -30,32 +30,74 @@ namespace GSLanguageCompiler {
         class GS_Scope {
         public:
 
+            /**
+             *
+             * @param parent
+             */
             explicit GS_Scope(GSScopePtr parent);
 
         public:
 
+            /**
+             *
+             * @param scope
+             * @return
+             */
             Void addScope(GSScopePtr scope);
 
+            /**
+             *
+             * @param node
+             * @return
+             */
             Void addNode(GSNodePtr node);
 
         public:
 
-            GSScopePtr getParent();
+            /**
+             *
+             * @return
+             */
+            GSScopePtr getParent() const;
 
-            GSScopePtrArray getScopes();
+            /**
+             *
+             * @return
+             */
+            GSScopePtrArray getScopes() const;
 
-            GSNodePtrArray getNodes();
+            /**
+             *
+             * @return
+             */
+            GSNodePtrArray getNodes() const;
 
-            Semantic::GSTableOfSymbolsPtr getTableOfSymbols();
+            /**
+             *
+             * @return
+             */
+            Semantic::GSTableOfSymbolsPtr getTableOfSymbols() const;
 
         private:
 
+            /**
+             *
+             */
             GSScopePtr _parent;
 
+            /**
+             *
+             */
             GSScopePtrArray _scopes;
 
+            /**
+             *
+             */
             GSNodePtrArray _nodes;
 
+            /**
+             *
+             */
             Semantic::GSTableOfSymbolsPtr _tableOfSymbols;
         };
 

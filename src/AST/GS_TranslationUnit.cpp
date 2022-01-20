@@ -5,11 +5,11 @@ namespace GSLanguageCompiler::AST {
     GS_TranslationUnit::GS_TranslationUnit(GSNodePtrArray nodes, GSScopePtr scope)
             : _nodes(std::move(nodes)), _globalScope(std::move(scope)) {}
 
-    GSNodePtrArray GS_TranslationUnit::getNodes() {
+    GSNodePtrArray GS_TranslationUnit::getNodes() const {
         return _nodes;
     }
 
-    GSScopePtr GS_TranslationUnit::getScope() {
+    GSScopePtr GS_TranslationUnit::getScope() const {
         return _globalScope;
     }
 

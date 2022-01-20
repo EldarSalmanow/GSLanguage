@@ -97,7 +97,7 @@ namespace GSLanguageCompiler::AST {
          * Constructor for String value
          * @param value String value
          */
-        explicit GS_StringValue(String value);
+        explicit GS_StringValue(UString value);
     };
 
     /**
@@ -119,7 +119,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for value ptr
          * @return Value ptr
          */
-        GSValuePtr getValue();
+        GSValuePtr getValue() const;
 
     public:
 
@@ -128,7 +128,7 @@ namespace GSLanguageCompiler::AST {
          * @param visitor
          * @return
          */
-        Void accept(GS_Visitor *visitor) override;
+        Void accept(Ptr<GS_Visitor> visitor) override;
 
     public:
 
@@ -136,7 +136,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for expression type
          * @return Expression type
          */
-        ExpressionType getExpressionType() override;
+        ExpressionType getExpressionType() const override;
 
     private:
 

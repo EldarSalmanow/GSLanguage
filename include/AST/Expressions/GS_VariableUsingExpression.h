@@ -16,7 +16,7 @@ namespace GSLanguageCompiler::AST {
          * @param name Variable name
          * @param scope Scope
          */
-        GS_VariableUsingExpression(String name, GSScopePtr scope);
+        GS_VariableUsingExpression(UString name, GSScopePtr scope);
 
     public:
 
@@ -24,7 +24,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for variable name
          * @return Variable name
          */
-        String getName();
+        UString getName() const;
 
     public:
 
@@ -33,7 +33,7 @@ namespace GSLanguageCompiler::AST {
          * @param visitor
          * @return
          */
-        Void accept(GS_Visitor *visitor) override;
+        Void accept(Ptr<GS_Visitor> visitor) override;
 
     public:
 
@@ -41,14 +41,14 @@ namespace GSLanguageCompiler::AST {
          * Getter for expression type
          * @return Expression type
          */
-        ExpressionType getExpressionType() override;
+        ExpressionType getExpressionType() const override;
 
     private:
 
         /**
          * Variable name
          */
-        String _name;
+        UString _name;
     };
 
 }

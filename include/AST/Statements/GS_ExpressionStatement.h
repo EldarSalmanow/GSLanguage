@@ -25,7 +25,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for expression ptr
          * @return Expression ptr
          */
-        GSExpressionPtr getExpression();
+        GSExpressionPtr getExpression() const;
 
     public:
 
@@ -34,7 +34,7 @@ namespace GSLanguageCompiler::AST {
          * @param visitor
          * @return
          */
-        Void accept(GS_Visitor *visitor) override;
+        Void accept(Ptr<GS_Visitor> visitor) override;
 
     public:
 
@@ -42,7 +42,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for statement type
          * @return Statement type
          */
-        StatementType getStatementType() override;
+        StatementType getStatementType() const override;
 
     private:
 

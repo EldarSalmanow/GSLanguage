@@ -28,7 +28,7 @@ namespace GSLanguageCompiler::AST {
          *
          * @return
          */
-        GSScopePtr getScope();
+        GSScopePtr getScope() const;
 
     public:
 
@@ -36,19 +36,19 @@ namespace GSLanguageCompiler::AST {
          *
          * @return
          */
-        virtual Bool isDeclaration();
+        virtual Bool isDeclaration() const;
 
         /**
          *
          * @return
          */
-        virtual Bool isStatement();
+        virtual Bool isStatement() const;
 
         /**
          *
          * @return
          */
-        virtual Bool isExpression();
+        virtual Bool isExpression() const;
 
     public:
 
@@ -57,7 +57,7 @@ namespace GSLanguageCompiler::AST {
          * @param visitor
          * @return
          */
-        virtual Void accept(GS_Visitor *visitor) = 0;
+        virtual Void accept(Ptr<GS_Visitor> visitor) = 0;
 
     private:
 

@@ -5,7 +5,7 @@ namespace GSLanguageCompiler::AST {
     GS_Expression::GS_Expression(GSScopePtr scope)
             : GS_Node(std::move(scope)) {}
 
-    Bool GS_Expression::isExpression() {
+    Bool GS_Expression::isExpression() const {
         return true;
     }
 

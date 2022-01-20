@@ -17,7 +17,7 @@ namespace GSLanguageCompiler::Parser {
          * Constructor for GS_Parser
          * @param stream Input tokens stream
          */
-        explicit GS_Parser(Lexer::GS_TokenStream stream);
+        explicit GS_Parser(Ptr<Lexer::GS_TokenStream> stream);
 
     public:
 
@@ -94,22 +94,35 @@ namespace GSLanguageCompiler::Parser {
     private:
 
         /**
+         *
+         * @return
+         */
+        Void _nextToken();
+
+        /**
          * Current token precedence
          * @return Current token precedence
          */
         I32 _currentTokenPrecedence();
+
+        /**
+         *
+         * @param type
+         * @return
+         */
+        Bool _isEqualTokenTypes(Lexer::TokenType type);
 
     private:
 
         /**
          * Input tokens stream
          */
-        Lexer::GS_TokenStream _tokenStream;
+        Ptr<Lexer::GS_TokenStream> _tokenStream;
 
         /**
-         * Operators precedence
+         *
          */
-        Map<Lexer::TokenType, I32> _operatorsPrecedence;
+        Lexer::GSTokenPtr _token;
     };
 
 }

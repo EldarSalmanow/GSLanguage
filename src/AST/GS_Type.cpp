@@ -2,24 +2,27 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_Type::GS_Type(String name)
+    GS_Type::GS_Type(UString name)
             : _name(std::move(name)) {}
 
-    String GS_Type::getName() {
+    UString GS_Type::getName() const {
         return _name;
     }
 
+    GS_VoidType::GS_VoidType()
+            : GS_Type(U"Void") {}
+
     GS_I32Type::GS_I32Type()
-            : GS_Type("I32") {}
+            : GS_Type(U"I32") {}
 
     GS_StringType::GS_StringType()
-            : GS_Type("String") {}
+            : GS_Type(U"String") {}
 
     Bool isBaseType(GSTypePtr type) {
         auto inputType = std::move(type);
         auto typeName = inputType->getName();
 
-        if (typeName == "Void" || typeName == "I32" || typeName == "String") {
+        if (typeName == U"Void" || typeName == U"I32" || typeName == U"String") {
             return true;
         } else {
             return false;

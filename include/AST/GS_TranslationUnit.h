@@ -5,21 +5,43 @@
 
 namespace GSLanguageCompiler::AST {
 
+    /**
+     *
+     */
     class GS_TranslationUnit {
     public:
 
+        /**
+         *
+         * @param nodes
+         * @param scope
+         */
         GS_TranslationUnit(GSNodePtrArray nodes, GSScopePtr scope);
 
     public:
 
-        GSNodePtrArray getNodes();
+        /**
+         *
+         * @return
+         */
+        GSNodePtrArray getNodes() const;
 
-        GSScopePtr getScope();
+        /**
+         *
+         * @return
+         */
+        GSScopePtr getScope() const;
 
     private:
 
+        /**
+         *
+         */
         GSNodePtrArray _nodes;
 
+        /**
+         *
+         */
         GSScopePtr _globalScope;
     };
 

@@ -1,74 +1,112 @@
 #include <GS_Lexer.h>
 
-#include <utility>
-
 namespace GSLanguageCompiler::Lexer {
 
-    Map<Reader::SymbolT, TokenType> ReservedSymbols = {
-            {EOF,   TokenType::EndOfFile},
-            {'\n', TokenType::NewLine},
-            {' ',  TokenType::SymbolSpace},
-
-            {'(',  TokenType::SymbolLeftParen},
-            {')',  TokenType::SymbolRightParen},
-            {'{',  TokenType::SymbolLeftBrace},
-            {'}',  TokenType::SymbolRightBrace},
-
-            {'\"', TokenType::SymbolDoubleQuotes},
-            {':',  TokenType::SymbolColon},
-            {',',  TokenType::SymbolComma},
-
-            {'+',  TokenType::SymbolPlus},
-            {'-',  TokenType::SymbolMinus},
-            {'*',  TokenType::SymbolStar},
-            {'/',  TokenType::SymbolSlash},
-            {'=' , TokenType::SymbolEq}
+    Vector<std::pair<UString, TokenType>> ReservedWords = {
+            {U"var", TokenType::KeywordVar},
+            {U"func", TokenType::KeywordFunc}
     };
 
-    Map<String, TokenType> ReservedLetters = {
-            {"var",  TokenType::KeywordVar},
-            {"func", TokenType::KeywordFunc},
+    Vector<std::pair<USymbol, TokenType>> ReservedSymbols = {
+            {U'(', TokenType::SymbolLeftParen},
+            {U')', TokenType::SymbolRightParen},
+            {U'{', TokenType::SymbolLeftBrace},
+            {U'}', TokenType::SymbolRightBrace},
+
+            {U':', TokenType::SymbolColon},
+            {U',', TokenType::SymbolComma},
+
+            {U'+', TokenType::SymbolPlus},
+            {U'-', TokenType::SymbolMinus},
+            {U'*', TokenType::SymbolStar},
+            {U'/', TokenType::SymbolSlash},
+
+            {U'=', TokenType::SymbolEq}
     };
 
-    GS_Lexer::GS_Lexer(Reader::GS_TextStream textStream)
-            : _textStream(textStream) {}
-
-    GS_Token GS_Lexer::getToken() {
-        auto symbol = _textStream.getSymbol();
-
-        if (ReservedSymbols.find(symbol) != ReservedSymbols.end()) {
-            return GS_Token(ReservedSymbols[symbol]);
-        } else if (std::isalpha(symbol)) {
-            String value;
-
-            while (std::isalpha(symbol) && symbol != EOF && symbol != ' ' && symbol != '\n') {
-                value += symbol;
-
-                symbol = _textStream.getSymbol();
+    inline TokenType ReservedWordsType(ConstLRef<UString> string) {
+        for (auto &pair : ReservedWords) {
+            if (pair.first == string) {
+                return pair.second;
             }
-
-            _textStream.prevSymbol();
-
-            if (ReservedLetters.find(value) != ReservedLetters.end()) {
-                return GS_Token(ReservedLetters[value]);
-            }
-
-            return GS_Token(TokenType::Identifier,  value);
-        } else if (std::isdigit(symbol)) {
-            String value;
-
-            while (std::isdigit(symbol) && symbol != EOF && symbol != ' ' && symbol != '\n') {
-                value += symbol;
-
-                symbol = _textStream.getSymbol();
-            }
-
-            _textStream.prevSymbol();
-
-            return GS_Token(TokenType::LiteralNumber,  value);
         }
 
-        return {};
+        return TokenType::Unknown;
+    }
+
+    inline TokenType ReservedSymbolsType(ConstLRef<USymbol> symbol) {
+        for (auto &pair : ReservedSymbols) {
+            if (pair.first == symbol) {
+                return pair.second;
+            }
+        }
+
+        return TokenType::Unknown;
+    }
+
+    GS_Lexer::GS_Lexer(Ptr<Reader::GS_TextStream> stream)
+            : _stream(stream), _symbol(_stream->getSymbol()) {}
+
+    GSTokenPtr GS_Lexer::getToken() {
+        if (_symbol.isWhitespace()) {
+            _symbol = _stream->getSymbol();
+
+            return std::make_shared<GS_Token>(TokenType::SymbolSpace);
+        }
+
+        if (ReservedSymbolsType(_symbol) != TokenType::Unknown) {
+            auto type = ReservedSymbolsType(_symbol);
+
+            _symbol = _stream->getSymbol();
+
+            return std::make_shared<GS_Token>(type);
+        }
+
+        if (_symbol.isIDStart()) {
+            return _tokenizeWord();
+        }
+
+        if (_symbol.isDigit()) {
+            return _tokenizeNumber();
+        }
+
+        return nullptr;
+    }
+
+    GSTokenPtr GS_Lexer::_tokenizeWord() {
+        UString string;
+
+        string += _symbol;
+
+        _symbol = _stream->getSymbol();
+
+        while (_symbol.isIDContinue()) {
+            string += _symbol;
+
+            _symbol = _stream->getSymbol();
+        }
+
+        if (ReservedWordsType(string) != TokenType::Unknown) {
+            return std::make_shared<GS_Token>(ReservedWordsType(string));
+        }
+
+        return std::make_shared<GS_ValueToken>(TokenType::Identifier, string);
+    }
+
+    GSTokenPtr GS_Lexer::_tokenizeNumber() {
+        UString string;
+
+        string += _symbol;
+
+        _symbol = _stream->getSymbol();
+
+        while (_symbol.isDigit()) {
+            string += _symbol;
+
+            _symbol = _stream->getSymbol();
+        }
+
+        return std::make_shared<GS_ValueToken>(TokenType::LiteralNumber, string);
     }
 
 }

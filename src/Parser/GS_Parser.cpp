@@ -2,13 +2,15 @@
 
 namespace GSLanguageCompiler::Parser {
 
-    GS_Parser::GS_Parser(Lexer::GS_TokenStream stream)
-            : _tokenStream(stream) {
-        _operatorsPrecedence[Lexer::TokenType::SymbolStar]  = 2;
-        _operatorsPrecedence[Lexer::TokenType::SymbolSlash] = 2;
-        _operatorsPrecedence[Lexer::TokenType::SymbolPlus]  = 1;
-        _operatorsPrecedence[Lexer::TokenType::SymbolMinus] = 1;
-    }
+    Map<Lexer::TokenType, I32> OperatorsPrecedence = {
+            {Lexer::TokenType::SymbolStar,  2},
+            {Lexer::TokenType::SymbolSlash, 2},
+            {Lexer::TokenType::SymbolPlus,  1},
+            {Lexer::TokenType::SymbolMinus, 1}
+    };
+
+    GS_Parser::GS_Parser(Ptr<Lexer::GS_TokenStream> stream)
+            : _tokenStream(stream) {}
 
     AST::GSDeclarationPtrArray GS_Parser::parse() {
         return _parseProgram();
@@ -17,7 +19,7 @@ namespace GSLanguageCompiler::Parser {
     AST::GSDeclarationPtrArray GS_Parser::_parseProgram() {
         AST::GSDeclarationPtrArray declarations;
 
-        while (!_tokenStream.isEqualTypes(Lexer::TokenType::EndOfFile)) {
+        while (!_isEqualTokenTypes(Lexer::TokenType::EndOfFile)) {
             declarations.emplace_back(_parseDeclaration());
         }
 
@@ -25,9 +27,9 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSDeclarationPtr GS_Parser::_parseDeclaration() {
-        if (_tokenStream.isEqualTypes(Lexer::TokenType::KeywordFunc)) {
+        if (_isEqualTokenTypes(Lexer::TokenType::KeywordFunc)) {
             return _parseFunctionDeclaration();
-        } else if (_tokenStream.isEqualTypes(Lexer::TokenType::KeywordVar)) {
+        } else if (_isEqualTokenTypes(Lexer::TokenType::KeywordVar)) {
             return _parseVariableDeclaration();
         } else {
             throw std::runtime_error("Unknown declaration!");
@@ -35,43 +37,47 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSDeclarationPtr GS_Parser::_parseFunctionDeclaration() {
-        _tokenStream.next(); // skip 'func'
+        if (!_isEqualTokenTypes(Lexer::TokenType::KeywordFunc)) {
+            throw std::runtime_error("Invalid function declaration! Missing 'func' keyword!");
+        }
 
-        if (!_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
+        _nextToken(); // skip 'func'
+
+        if (!_isEqualTokenTypes(Lexer::TokenType::Identifier)) {
             throw std::runtime_error("Invalid function name!");
         }
 
-        auto functionName = _tokenStream.tokenValue();
+        auto functionName = ReinterpretCast<Ptr<Lexer::GS_ValueToken>>(_token.get())->getValue();
 
-        _tokenStream.next(); // skip function name
+        _nextToken(); // skip function name
 
-        if (!_tokenStream.isEqualTypes(Lexer::TokenType::SymbolLeftParen)) {
+        if (!_isEqualTokenTypes(Lexer::TokenType::SymbolLeftParen)) {
             throw std::runtime_error("Missing \'(\'!");
         }
 
-        _tokenStream.next(); // skip '('
+        _nextToken(); // skip '('
 
-        if (!_tokenStream.isEqualTypes(Lexer::TokenType::SymbolRightParen)) {
+        if (!_isEqualTokenTypes(Lexer::TokenType::SymbolRightParen)) {
             throw std::runtime_error("Missing \')\'!");
         }
 
-        _tokenStream.next(); // skip ')'
+        _nextToken(); // skip ')'
 
-        if (!_tokenStream.isEqualTypes(Lexer::TokenType::SymbolLeftBrace)) {
+        if (!_isEqualTokenTypes(Lexer::TokenType::SymbolLeftBrace)) {
             throw std::runtime_error("Missing \'{\'!");
         }
 
-        _tokenStream.next(); // skip '{'
+        _nextToken(); // skip '{'
 
         AST::GSStatementPtrArray functionBody;
 
-        while (!_tokenStream.isEqualTypes(Lexer::TokenType::SymbolRightBrace)) {
+        while (!_isEqualTokenTypes(Lexer::TokenType::SymbolRightBrace)) {
             auto statement = _parseStatement();
 
             functionBody.emplace_back(statement);
         }
 
-        _tokenStream.next(); // skip '}'
+        _nextToken(); // skip '}'
 
         return std::make_shared<AST::GS_FunctionDeclaration>(functionName, functionBody);
     }
@@ -234,14 +240,22 @@ namespace GSLanguageCompiler::Parser {
         }
     }
 
+    Void GS_Parser::_nextToken() {
+        _token = _tokenStream->getToken();
+    }
+
     I32 GS_Parser::_currentTokenPrecedence() {
-        auto precedence = _operatorsPrecedence[_tokenStream.tokenType()];
+        auto precedence = OperatorsPrecedence[_token->getTokenType()];
 
         if (!precedence) {
             return -1;
         }
 
         return precedence;
+    }
+
+    Bool GS_Parser::_isEqualTokenTypes(Lexer::TokenType type) {
+        return _token->getTokenType() == type;
     }
 
 }

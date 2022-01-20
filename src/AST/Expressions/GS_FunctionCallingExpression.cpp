@@ -2,22 +2,22 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_FunctionCallingExpression::GS_FunctionCallingExpression(String name, GSExpressionPtrArray params, GSScopePtr scope)
+    GS_FunctionCallingExpression::GS_FunctionCallingExpression(UString name, GSExpressionPtrArray params, GSScopePtr scope)
             : _name(std::move(name)), _params(std::move(params)), GS_Expression(std::move(scope)) {}
 
-    String GS_FunctionCallingExpression::getName() {
+    UString GS_FunctionCallingExpression::getName() const {
         return _name;
     }
 
-    GSExpressionPtrArray GS_FunctionCallingExpression::getParams() {
+    GSExpressionPtrArray GS_FunctionCallingExpression::getParams() const {
         return _params;
     }
 
-    Void GS_FunctionCallingExpression::accept(GS_Visitor *visitor) {
+    Void GS_FunctionCallingExpression::accept(Ptr<GS_Visitor> visitor) {
         visitor->visit(this);
     }
 
-    ExpressionType GS_FunctionCallingExpression::getExpressionType() {
+    ExpressionType GS_FunctionCallingExpression::getExpressionType() const {
         return ExpressionType::FunctionCallingExpression;
     }
 

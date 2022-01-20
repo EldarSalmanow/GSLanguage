@@ -7,19 +7,19 @@ namespace GSLanguageCompiler::AST {
 
     GS_Node::~GS_Node() = default;
 
-    GSScopePtr GS_Node::getScope() {
+    GSScopePtr GS_Node::getScope() const {
         return _scope;
     }
 
-    Bool GS_Node::isDeclaration() {
+    Bool GS_Node::isDeclaration() const {
         return false;
     }
 
-    Bool GS_Node::isStatement() {
+    Bool GS_Node::isStatement() const {
         return false;
     }
 
-    Bool GS_Node::isExpression() {
+    Bool GS_Node::isExpression() const {
         return false;
     }
 

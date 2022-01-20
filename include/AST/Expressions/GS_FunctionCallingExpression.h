@@ -17,7 +17,7 @@ namespace GSLanguageCompiler::AST {
          * @param params Function params
          * @param scope Scope
          */
-        GS_FunctionCallingExpression(String name, GSExpressionPtrArray params, GSScopePtr scope);
+        GS_FunctionCallingExpression(UString name, GSExpressionPtrArray params, GSScopePtr scope);
 
     public:
 
@@ -25,13 +25,13 @@ namespace GSLanguageCompiler::AST {
          * Getter for function name
          * @return Function name
          */
-        String getName();
+        UString getName() const;
 
         /**
          * Getter for params
          * @return Params
          */
-        GSExpressionPtrArray getParams();
+        GSExpressionPtrArray getParams() const;
 
     public:
 
@@ -40,7 +40,7 @@ namespace GSLanguageCompiler::AST {
          * @param visitor
          * @return
          */
-        Void accept(GS_Visitor *visitor) override;
+        Void accept(Ptr<GS_Visitor> visitor) override;
 
     public:
 
@@ -48,14 +48,14 @@ namespace GSLanguageCompiler::AST {
          * Getter for expression type
          * @return Expression type
          */
-        ExpressionType getExpressionType() override;
+        ExpressionType getExpressionType() const override;
 
     private:
 
         /**
          * Function name
          */
-        String _name;
+        UString _name;
 
         /**
          * Params for calling function

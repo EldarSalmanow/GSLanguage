@@ -6,7 +6,7 @@ namespace GSLanguageCompiler::AST {
 
     GS_Visitor::~GS_Visitor() = default;
 
-    Void GS_Visitor::visit(GS_FunctionDeclaration *functionDeclaration) {
+    Void GS_Visitor::visit(Ptr<GS_FunctionDeclaration> functionDeclaration) {
         auto body = functionDeclaration->getBody();
 
         for (auto &statement : body) {
@@ -14,9 +14,9 @@ namespace GSLanguageCompiler::AST {
         }
     }
 
-    Void GS_Visitor::visit(GS_VariableDeclarationStatement *variableDeclarationStatement) {}
+    Void GS_Visitor::visit(Ptr<GS_VariableDeclarationStatement> variableDeclarationStatement) {}
 
-    Void GS_Visitor::visit(GS_AssignmentStatement *assignmentStatement) {
+    Void GS_Visitor::visit(Ptr<GS_AssignmentStatement> assignmentStatement) {
         auto lvalueExpression = assignmentStatement->getLValueExpression();
         auto rvalueExpression = assignmentStatement->getRValueExpression();
 
@@ -24,21 +24,21 @@ namespace GSLanguageCompiler::AST {
         rvalueExpression->accept(this);
     }
 
-    Void GS_Visitor::visit(GS_ExpressionStatement *expressionStatement) {
+    Void GS_Visitor::visit(Ptr<GS_ExpressionStatement> expressionStatement) {
         auto expression = expressionStatement->getExpression();
 
         expression->accept(this);
     }
 
-    Void GS_Visitor::visit(GS_ConstantExpression *constantExpression) {}
+    Void GS_Visitor::visit(Ptr<GS_ConstantExpression> constantExpression) {}
 
-    Void GS_Visitor::visit(GS_UnaryExpression *unaryExpression) {
+    Void GS_Visitor::visit(Ptr<GS_UnaryExpression> unaryExpression) {
         auto expression = unaryExpression->getExpression();
 
         expression->accept(this);
     }
 
-    Void GS_Visitor::visit(GS_BinaryExpression *binaryExpression) {
+    Void GS_Visitor::visit(Ptr<GS_BinaryExpression> binaryExpression) {
         auto firstExpression = binaryExpression->getFirstExpression();
         auto secondExpression = binaryExpression->getSecondExpression();
 
@@ -46,9 +46,9 @@ namespace GSLanguageCompiler::AST {
         secondExpression->accept(this);
     }
 
-    Void GS_Visitor::visit(GS_VariableUsingExpression *variableUsingExpression) {}
+    Void GS_Visitor::visit(Ptr<GS_VariableUsingExpression> variableUsingExpression) {}
 
-    Void GS_Visitor::visit(GS_FunctionCallingExpression *functionCallingExpression) {
+    Void GS_Visitor::visit(Ptr<GS_FunctionCallingExpression> functionCallingExpression) {
         auto params = functionCallingExpression->getParams();
 
         for (auto &param : params) {

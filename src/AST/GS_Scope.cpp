@@ -13,19 +13,19 @@ namespace GSLanguageCompiler::AST {
         _nodes.emplace_back(std::move(node));
     }
 
-    GSScopePtr GS_Scope::getParent() {
+    GSScopePtr GS_Scope::getParent() const {
         return _parent;
     }
 
-    GSScopePtrArray GS_Scope::getScopes() {
+    GSScopePtrArray GS_Scope::getScopes() const {
         return _scopes;
     }
 
-    GSNodePtrArray GS_Scope::getNodes() {
+    GSNodePtrArray GS_Scope::getNodes() const {
         return _nodes;
     }
 
-    Semantic::GSTableOfSymbolsPtr GS_Scope::getTableOfSymbols() {
+    Semantic::GSTableOfSymbolsPtr GS_Scope::getTableOfSymbols() const {
         return _tableOfSymbols;
     }
 

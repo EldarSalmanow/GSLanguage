@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_VISITOR_H
 #define GSLANGUAGE_GS_VISITOR_H
 
-#include <GSCrossPlatform/GS_CrossPlatformTypes.h>
+#include <GSCrossPlatform/GS_CrossPlatform.h>
 
 namespace GSLanguageCompiler::AST {
 
@@ -27,23 +27,23 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
-        virtual Void visit(GS_FunctionDeclaration *functionDeclaration);
+        virtual Void visit(Ptr<GS_FunctionDeclaration> functionDeclaration);
 
-        virtual Void visit(GS_VariableDeclarationStatement *variableDeclarationStatement);
+        virtual Void visit(Ptr<GS_VariableDeclarationStatement> variableDeclarationStatement);
 
-        virtual Void visit(GS_AssignmentStatement *assignmentStatement);
+        virtual Void visit(Ptr<GS_AssignmentStatement> assignmentStatement);
 
-        virtual Void visit(GS_ExpressionStatement *expressionStatement);
+        virtual Void visit(Ptr<GS_ExpressionStatement> expressionStatement);
 
-        virtual Void visit(GS_ConstantExpression *constantExpression);
+        virtual Void visit(Ptr<GS_ConstantExpression> constantExpression);
 
-        virtual Void visit(GS_UnaryExpression *unaryExpression);
+        virtual Void visit(Ptr<GS_UnaryExpression> unaryExpression);
 
-        virtual Void visit(GS_BinaryExpression *binaryExpression);
+        virtual Void visit(Ptr<GS_BinaryExpression> binaryExpression);
 
-        virtual Void visit(GS_VariableUsingExpression *variableUsingExpression);
+        virtual Void visit(Ptr<GS_VariableUsingExpression> variableUsingExpression);
 
-        virtual Void visit(GS_FunctionCallingExpression *functionCallingExpression);
+        virtual Void visit(Ptr<GS_FunctionCallingExpression> functionCallingExpression);
     };
 
     /**

@@ -9,8 +9,7 @@ namespace GSLanguageCompiler::AST {
      * Declaration type
      */
     enum class DeclarationType {
-        FunctionDeclaration,
-        VariableDeclaration
+        FunctionDeclaration
     };
 
     /**
@@ -31,7 +30,7 @@ namespace GSLanguageCompiler::AST {
          * Is declaration
          * @return Is declaration
          */
-        Bool isDeclaration() override;
+        Bool isDeclaration() const override;
 
     public:
 
@@ -39,7 +38,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for declaration type
          * @return Declaration type
          */
-        virtual DeclarationType getDeclarationType() = 0;
+        virtual DeclarationType getDeclarationType() const = 0;
     };
 
     /**

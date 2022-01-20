@@ -2,14 +2,14 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    GS_TokenStream::GS_TokenStream(GS_Lexer lexer)
+    GS_TokenStream::GS_TokenStream(Ptr<GS_Lexer> lexer)
             : _lexer(lexer) {}
 
-    GS_Token GS_TokenStream::getToken() {
-        return _lexer.getToken();
+    GSTokenPtr GS_TokenStream::getToken() {
+        return _lexer->getToken();
     }
 
-    GS_TokenStream &GS_TokenStream::operator>>(GS_Token &token) {
+    GS_TokenStream &GS_TokenStream::operator>>(GSTokenPtr &token) {
         token = getToken();
 
         return *this;

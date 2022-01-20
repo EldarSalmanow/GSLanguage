@@ -19,19 +19,23 @@ message(STATUS "    IncludeDir:  ${INCLUDE_DIR}")
 message(STATUS "    SourceDir:   ${SOURCE_DIR}")
 message(STATUS "    BinaryDir:   ${BINARY_DIR}")
 
+if (${MSVC})
+    add_compile_options(/utf-8)
+endif()
+
+include(${EXTERNAL_DIR}/conanbuildinfo.cmake)
+
 find_package(LLVM REQUIRED)
 
 separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
 
 add_definitions(${LLVM_DEFINITIONS_LIST})
 
-include(${EXTERNAL_DIR}/conanbuildinfo.cmake)
-
 set(PROJECT_LIBRARIES
         GSReaderLibrary
         GSLexerLibrary
         GSDriverLibrary
-#        GSASTLibrary
+        GSASTLibrary
 #        GSCodeGeneratorLibrary
 #        GSSemanticLibrary
 #        GSParserLibrary
@@ -49,7 +53,7 @@ include_directories(${INCLUDE_DIR})
 add_subdirectory(${INCLUDE_DIR}/Reader)
 add_subdirectory(${INCLUDE_DIR}/Lexer)
 add_subdirectory(${INCLUDE_DIR}/Driver)
-#add_subdirectory(${INCLUDE_DIR}/AST)
+add_subdirectory(${INCLUDE_DIR}/AST)
 #add_subdirectory(${INCLUDE_DIR}/Parser)
 #add_subdirectory(${INCLUDE_DIR}/Semantic)
 #add_subdirectory(${INCLUDE_DIR}/CodeGenerator)

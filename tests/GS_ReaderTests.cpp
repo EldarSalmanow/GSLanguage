@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <Reader/GS_Reader.h>
+#include <Reader/GS_TextStream.h>
 
 using namespace GSLanguageCompiler;
 
@@ -8,51 +8,43 @@ class ReaderTest : public ::testing::Test {
 public:
 
     ReaderTest()
-            : _code(nullptr) {}
+            : _inputStream(nullptr), _reader(nullptr),  _textStream(nullptr) {}
 
 protected:
 
     Void SetUp() override {
-        std::stringstream stream(_inputString);
+        _inputStream = new UFileStream();
 
-        auto reader = new Reader::GS_Reader(&stream);
+        _reader = new Reader::GS_Reader(_inputStream);
 
-        _code = new Reader::GS_Code(reader->read());
+        _textStream = new Reader::GS_TextStream(*_reader);
     }
 
     Void TearDown() override {
-        delete _code;
+        delete _inputStream;
+
+        delete _reader;
+
+        delete _textStream;
     }
 
 protected:
 
     String _inputString = "func main() {\nprint(\"Hello, World!\")\n}";
 
-    Reader::GS_Code *_code;
+    Reader::StreamT *_inputStream;
+
+    Reader::GS_Reader *_reader;
+
+    Reader::GS_TextStream *_textStream;
 };
 
-TEST_F(ReaderTest, Size) {
-    I32 codeSize = 0;
-
-    for (auto &line : *_code) {
-        for (auto &symbol : line) {
-            ++codeSize;
-        }
-    }
-
-    ASSERT_EQ(_inputString.size(), codeSize);
-}
-
 TEST_F(ReaderTest, Symbols) {
-    String codeAsString;
+    auto symbol = _textStream->getSymbol();
 
-    for (auto &line : *_code) {
-        for (auto &symbol : line) {
-            codeAsString += symbol.getSymbol();
-        }
+    for (I32 index = 0; symbol != EOF; ++index, symbol = _textStream->getSymbol()) {
+        ASSERT_EQ(_inputString[index], symbol);
     }
-
-    ASSERT_EQ(_inputString, codeAsString);
 }
 
 I32 main() {

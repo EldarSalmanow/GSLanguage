@@ -5,6 +5,9 @@
 
 namespace GSLanguageCompiler::Lexer {
 
+    /**
+     *
+     */
     class GS_TokenStream {
     public:
 
@@ -12,22 +15,31 @@ namespace GSLanguageCompiler::Lexer {
          *
          * @param lexer
          */
-        explicit GS_TokenStream(GS_Lexer lexer);
+        explicit GS_TokenStream(Ptr<GS_Lexer> lexer);
 
     public:
 
-        GS_Token getToken();
+        /**
+         *
+         * @return
+         */
+        GSTokenPtr getToken();
 
     public:
 
-        GS_TokenStream &operator>>(GS_Token &token);
+        /**
+         *
+         * @param token
+         * @return
+         */
+        GS_TokenStream &operator>>(GSTokenPtr &token);
 
     private:
 
         /**
          *
          */
-        GS_Lexer _lexer;
+        Ptr<GS_Lexer> _lexer;
     };
 
 }

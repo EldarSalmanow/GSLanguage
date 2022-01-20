@@ -34,7 +34,7 @@ namespace GSLanguageCompiler::AST {
          * Is expression
          * @return Is expression
          */
-        Bool isExpression() override;
+        Bool isExpression() const override;
 
     public:
 
@@ -42,7 +42,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for expression type
          * @return Expression type
          */
-        virtual ExpressionType getExpressionType() = 0;
+        virtual ExpressionType getExpressionType() const = 0;
     };
 
     /**

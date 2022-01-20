@@ -32,13 +32,13 @@ namespace GSLanguageCompiler::AST {
          * Getter for unary operation
          * @return Unary operation
          */
-        UnaryOperation getUnaryOperation();
+        UnaryOperation getUnaryOperation() const;
 
         /**
          * Getter for expression ptr
          * @return Expression ptr
          */
-        GSExpressionPtr getExpression();
+        GSExpressionPtr getExpression() const;
 
     public:
 
@@ -47,7 +47,7 @@ namespace GSLanguageCompiler::AST {
          * @param visitor
          * @return
          */
-        Void accept(GS_Visitor *visitor) override;
+        Void accept(Ptr<GS_Visitor> visitor) override;
 
     public:
 
@@ -55,7 +55,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for expression type
          * @return Expression type
          */
-        ExpressionType getExpressionType() override;
+        ExpressionType getExpressionType() const override;
 
     private:
 

@@ -36,19 +36,19 @@ namespace GSLanguageCompiler::AST {
          * Getter for binary operation
          * @return Binary operation
          */
-        BinaryOperation getBinaryOperation();
+        BinaryOperation getBinaryOperation() const;
 
         /**
          * Getter for first expression ptr
          * @return First expression ptr
          */
-        GSExpressionPtr getFirstExpression();
+        GSExpressionPtr getFirstExpression() const;
 
         /**
          * Getter for second expression ptr
          * @return Second expression ptr
          */
-        GSExpressionPtr getSecondExpression();
+        GSExpressionPtr getSecondExpression() const;
 
     public:
 
@@ -57,7 +57,7 @@ namespace GSLanguageCompiler::AST {
          * @param visitor
          * @return
          */
-        Void accept(GS_Visitor *visitor) override;
+        Void accept(Ptr<GS_Visitor> visitor) override;
 
     public:
 
@@ -65,7 +65,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for expression type
          * @return Expression type
          */
-        ExpressionType getExpressionType() override;
+        ExpressionType getExpressionType() const override;
 
     private:
 

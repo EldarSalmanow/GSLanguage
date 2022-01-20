@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_TYPE_H
 #define GSLANGUAGE_GS_TYPE_H
 
-#include <GSCrossPlatform/GS_CrossPlatformTypes.h>
+#include <GSCrossPlatform/GS_CrossPlatform.h>
 
 namespace GSLanguageCompiler::AST {
 
@@ -15,7 +15,7 @@ namespace GSLanguageCompiler::AST {
          * Constructor for GS_Type
          * @param name Type name
          */
-        explicit GS_Type(String name);
+        explicit GS_Type(UString name);
 
     public:
 
@@ -23,25 +23,49 @@ namespace GSLanguageCompiler::AST {
          * Getter for type name
          * @return Type name
          */
-        String getName();
+        UString getName() const;
 
     private:
 
         /**
          * Type name
          */
-        String _name;
+        UString _name;
     };
 
+    /**
+     *
+     */
+    class GS_VoidType : public GS_Type {
+    public:
+
+        /**
+         *
+         */
+        GS_VoidType();
+    };
+
+    /**
+     *
+     */
     class GS_I32Type : public GS_Type {
     public:
 
+        /**
+         *
+         */
         GS_I32Type();
     };
 
+    /**
+     *
+     */
     class GS_StringType : public GS_Type {
     public:
 
+        /**
+         *
+         */
         GS_StringType();
     };
 
@@ -55,7 +79,7 @@ namespace GSLanguageCompiler::AST {
      * @param type Type ptr
      * @return Is base input type
      */
-    Bool isBaseType(GSTypePtr type);
+    Bool IsBaseType(GSTypePtr type);
 
 }
 

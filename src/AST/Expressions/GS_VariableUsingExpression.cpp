@@ -2,18 +2,18 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_VariableUsingExpression::GS_VariableUsingExpression(String name, GSScopePtr scope)
+    GS_VariableUsingExpression::GS_VariableUsingExpression(UString name, GSScopePtr scope)
             : _name(std::move(name)), GS_Expression(std::move(scope)) {}
 
-    String GS_VariableUsingExpression::getName() {
+    UString GS_VariableUsingExpression::getName() const {
         return _name;
     }
 
-    Void GS_VariableUsingExpression::accept(GS_Visitor *visitor) {
+    Void GS_VariableUsingExpression::accept(Ptr<GS_Visitor> visitor) {
         visitor->visit(this);
     }
 
-    ExpressionType GS_VariableUsingExpression::getExpressionType() {
+    ExpressionType GS_VariableUsingExpression::getExpressionType() const {
         return ExpressionType::VariableUsingExpression;
     }
 

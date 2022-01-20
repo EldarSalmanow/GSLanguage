@@ -1,8 +1,6 @@
 #ifndef GSLANGUAGE_GS_KEYWORDS_H
 #define GSLANGUAGE_GS_KEYWORDS_H
 
-#include <GSCrossPlatform/GS_CrossPlatformTypes.h>
-
 namespace GSLanguageCompiler::Lexer {
 
     /**

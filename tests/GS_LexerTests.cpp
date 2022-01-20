@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include <Reader/GS_Reader.h>
-#include <Lexer/GS_Lexer.h>
+#include <Reader/GS_TextStream.h>
+#include <Lexer/GS_TokenStream.h>
 
 using namespace GSLanguageCompiler;
 
@@ -9,51 +9,65 @@ class LexerTest : public ::testing::Test {
 public:
 
     LexerTest()
-            : _code(nullptr) {}
+            : _inputStream(nullptr), _reader(nullptr), _textStream(nullptr), _lexer(nullptr), _tokenStream(nullptr) {}
 
 protected:
 
     Void SetUp() override {
-        _code = new Reader::GS_Code(_makeCodeFromString(_inputString));
+        _inputStream = new std::stringstream("var a = 10");
 
-        Lexer::GS_Lexer lexer(*_code);
+        _reader = new Reader::GS_Reader(_inputStream);
 
-        _tokens = lexer.tokenize();
+        _textStream = new Reader::GS_TextStream(*_reader);
+
+        _lexer = new Lexer::GS_Lexer(*_textStream);
+
+        _tokenStream = new Lexer::GS_TokenStream(*_lexer);
     }
 
     Void TearDown() override {
-        delete _code;
-    }
+        delete _inputStream;
 
-private:
+        delete _reader;
 
-    Reader::GS_Code _makeCodeFromString(String input) {
-        std::stringstream stream(std::move(input));
+        delete _textStream;
 
-        Reader::GS_Reader reader(&stream);
+        delete _lexer;
 
-        return reader.read();
+        delete _tokenStream;
     }
 
 protected:
 
-    String _inputString = "var a = 10";
+    Reader::StreamT _inputStream;
 
-    Reader::GS_Code *_code;
+    Reader::GS_Reader *_reader;
 
-    Lexer::GSTokenArray _tokens;
+    Reader::GS_TextStream *_textStream;
+
+    Lexer::GS_Lexer *_lexer;
+
+    Lexer::GS_TokenStream *_tokenStream;
 
     Lexer::GSTokenArray _validTokens = {
-            Lexer::GS_Token(Lexer::TokenType::KeywordVar, Lexer::GS_Position("var a = 10", 1, 1)),
-            Lexer::GS_Token(Lexer::TokenType::Identifier, "a", Lexer::GS_Position("var a = 10", 1, 5)),
-            Lexer::GS_Token(Lexer::TokenType::SymbolEq, Lexer::GS_Position("var a = 10", 1, 7)),
-            Lexer::GS_Token(Lexer::TokenType::LiteralNumber, "10", Lexer::GS_Position("var a = 10", 1, 9)),
-            Lexer::GS_Token(Lexer::TokenType::EndOfFile, Lexer::GS_Position())
+            Lexer::GS_Token(Lexer::TokenType::KeywordVar),
+            Lexer::GS_Token(Lexer::TokenType::SymbolSpace),
+            Lexer::GS_Token(Lexer::TokenType::Identifier, "a"),
+            Lexer::GS_Token(Lexer::TokenType::SymbolSpace),
+            Lexer::GS_Token(Lexer::TokenType::SymbolEq),
+            Lexer::GS_Token(Lexer::TokenType::SymbolSpace),
+            Lexer::GS_Token(Lexer::TokenType::LiteralNumber, "10"),
+            Lexer::GS_Token(Lexer::TokenType::EndOfFile)
     };
 };
 
-TEST_F(LexerTest, Size) {
-    ASSERT_EQ(_validTokens.size(), _tokens.size());
+TEST_F(LexerTest, Valid) {
+    Lexer::GS_Token token = _tokenStream->getToken();
+
+    for (I32 index = 0; token.getType() != Lexer::TokenType::EndOfFile ; ++index, token = _tokenStream->getToken()) {
+        ASSERT_EQ(token.getType(), _validTokens[index].getType());
+        ASSERT_EQ(token.getValue(), _validTokens[index].getValue());
+    }
 }
 
 I32 main() {

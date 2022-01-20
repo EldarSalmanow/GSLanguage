@@ -11,8 +11,7 @@ namespace GSLanguageCompiler::AST {
     enum class StatementType {
         VariableDeclarationStatement,
         AssignmentStatement,
-        ExpressionStatement,
-        DeclarationStatement
+        ExpressionStatement
     };
 
     /**
@@ -33,7 +32,7 @@ namespace GSLanguageCompiler::AST {
          * Is statement
          * @return Is statement
          */
-        Bool isStatement() override;
+        Bool isStatement() const override;
 
     public:
 
@@ -41,7 +40,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for statement type
          * @return Statement type
          */
-        virtual StatementType getStatementType() = 0;
+        virtual StatementType getStatementType() const = 0;
     };
 
     /**

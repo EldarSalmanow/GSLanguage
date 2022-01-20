@@ -15,9 +15,9 @@ namespace GSLanguageCompiler::Lexer {
 
         /**
          *
-         * @param textStream
+         * @param cursor
          */
-        explicit GS_Lexer(Reader::GS_TextStream textStream);
+        explicit GS_Lexer(Ptr<Reader::GS_TextStream> stream);
 
     public:
 
@@ -25,14 +25,33 @@ namespace GSLanguageCompiler::Lexer {
          *
          * @return
          */
-        GS_Token getToken();
+        GSTokenPtr getToken();
+
+    private:
+
+        /**
+         *
+         * @return
+         */
+        GSTokenPtr _tokenizeWord();
+
+        /**
+         *
+         * @return
+         */
+        GSTokenPtr _tokenizeNumber();
 
     private:
 
         /**
          *
          */
-        Reader::GS_TextStream _textStream;
+        Ptr<Reader::GS_TextStream> _stream;
+
+        /**
+         *
+         */
+        Reader::SymbolT _symbol;
     };
 
 }

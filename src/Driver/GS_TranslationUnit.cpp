@@ -1,47 +1,44 @@
 #include <Reader/GS_Reader.h>
 #include <Lexer/GS_Lexer.h>
+//#include <Parser/GS_Parser.h>
 
 #include <GS_TranslationUnit.h>
 
 namespace GSLanguageCompiler::Driver {
 
-    String tokenTypeToString(Lexer::TokenType type) {
-        String tokenTypesAsString[] = {
-#define GS_TOKENTYPE(name) #name
+    UString tokenTypeToString(Lexer::TokenType type) {
+        UString tokenTypesAsString[] = {
+#define GS_TOKENTYPE(name) U#name
 #include <Lexer/GS_Keywords.def>
         };
 
-        return tokenTypesAsString[static_cast<I32>(type)];
+        return tokenTypesAsString[StaticCast<I32>(type)];
     }
 
-    GS_TranslationUnit::GS_TranslationUnit(String name)
+    GS_TranslationUnit::GS_TranslationUnit(UString name)
             : _name(std::move(name)) {}
 
     I32 GS_TranslationUnit::compile() {
-        IFStream fileStream(_name);
+        UFileStream fileStream;
+
+        fileStream.Open(_name, in_mode);
 
         Reader::GS_Reader reader(&fileStream);
 
-        Reader::GS_TextStream textStream(reader);
+        Reader::GS_TextStream textStream(&reader);
 
-        Lexer::GS_Lexer lexer(textStream);
+        Lexer::GS_Lexer lexer(&textStream);
 
-        Lexer::GSTokenArray tokens;
-
-        auto token = lexer.getToken();
-
-        while (token.getType() != Lexer::TokenType::EndOfFile) {
-            std::cout << tokenTypeToString(token.getType()) << std::endl;
-
-            tokens.emplace_back(token);
-
-            token = lexer.getToken();
-        }
+//        Lexer::GS_TokenStream tokenStream(&lexer);
+//
+//        Parser::GS_Parser parser(&tokenStream);
+//
+//        auto declarations = parser.parse();
 
         return 0;
     }
 
-    String GS_TranslationUnit::getName() {
+    UString GS_TranslationUnit::getName() const {
         return _name;
     }
 
