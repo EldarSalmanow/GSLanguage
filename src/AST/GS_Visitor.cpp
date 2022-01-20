@@ -1,6 +1,4 @@
-#include <GS_Visitor.h>
-
-#include <GS_IncludeAll.h>
+#include <AST.h>
 
 namespace GSLanguageCompiler::AST {
 

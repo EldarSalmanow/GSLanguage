@@ -13,6 +13,12 @@ namespace GSLanguageCompiler::Lexer {
 
         /**
          *
+         * @param tokens
+         */
+        explicit GS_TokenStream(GSTokenPtrArray tokens);
+
+        /**
+         *
          * @param lexer
          */
         explicit GS_TokenStream(Ptr<GS_Lexer> lexer);
@@ -40,6 +46,16 @@ namespace GSLanguageCompiler::Lexer {
          *
          */
         Ptr<GS_Lexer> _lexer;
+
+        /**
+         *
+         */
+        GSTokenPtrArray _tokens;
+
+        /**
+         *
+         */
+        GSTokenPtrArrayIterator _tokenIterator;
     };
 
 }
