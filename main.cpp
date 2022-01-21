@@ -108,14 +108,34 @@ namespace New {
                 return ParseVariableDeclarationStatement(scope);
             }
 
-            // TODO add supporting assignment statement
+            auto expression = ParseExpression(scope);
 
-            return nullptr;
+            if (IsTokenType(Lexer::TokenType::SymbolEq)) {
+                return ParseAssignmentStatement(expression, scope);
+            }
+
+            return ParseExpressionStatement(scope);
         }
 
         SharedPtr<AST::GS_AssignmentStatement> ParseAssignmentStatement(ConstLRef<AST::GSScopePtr> scope) {
             auto lvalueExpression = ParseLValueExpression(scope);
 
+            if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
+                return nullptr;
+            }
+
+            NextToken(); // skip '='
+
+            auto rvalueExpression = ParseRValueExpression(scope);
+
+            auto assignmentStatement = std::make_shared<AST::GS_AssignmentStatement>(lvalueExpression, rvalueExpression, scope);
+
+            scope->addNode(assignmentStatement);
+
+            return assignmentStatement;
+        }
+
+        SharedPtr<AST::GS_AssignmentStatement> ParseAssignmentStatement(ConstLRef<AST::GSExpressionPtr> lvalueExpression, ConstLRef<AST::GSScopePtr> scope) {
             if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
                 return nullptr;
             }
@@ -190,9 +210,19 @@ namespace New {
         SharedPtr<AST::GS_ExpressionStatement> ParseExpressionStatement(ConstLRef<AST::GSScopePtr> scope) {
             auto expression = ParseExpression(scope);
 
-            scope->addNode(expression);
+            auto expressionStatement = std::make_shared<AST::GS_ExpressionStatement>(expression, scope);
 
-            return std::make_shared<AST::GS_ExpressionStatement>(expression, scope);
+            scope->addNode(expressionStatement);
+
+            return expressionStatement;
+        }
+
+        SharedPtr<AST::GS_ExpressionStatement> ParseExpressionStatement(ConstLRef<AST::GSExpressionPtr> expression, ConstLRef<AST::GSScopePtr> scope) {
+            auto expressionStatement = std::make_shared<AST::GS_ExpressionStatement>(expression, scope);
+
+            scope->addNode(expressionStatement);
+
+            return expressionStatement;
         }
 
         AST::GSExpressionPtr ParseExpression(ConstLRef<AST::GSScopePtr> scope) {
