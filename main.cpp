@@ -407,6 +407,38 @@ namespace New {
 
 }
 
+class CFVisitor : public AST::GS_BaseTransformer {
+public:
+
+    Bool isConstantExpression(AST::GSNodePtr node) {
+        if (node->isExpression()) {
+            auto expression = std::reinterpret_pointer_cast<AST::GS_Expression>(node);
+
+            if (expression->getExpressionType() == AST::ExpressionType::ConstantExpression) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
+public:
+
+    AST::GSNodePtr transform(Ptr<AST::GS_UnaryExpression> unaryExpression) override {
+        auto expression = unaryExpression->getExpression();
+
+        if (isConstantExpression(expression)) {
+            auto constantExpression = std::reinterpret_pointer_cast<AST::GS_ConstantExpression>(expression);
+        }
+    }
+
+    AST::GSNodePtr transform(Ptr<AST::GS_BinaryExpression> binaryExpression) override {
+
+    }
+};
+
 I32 main() {
     /**
      * func main() {

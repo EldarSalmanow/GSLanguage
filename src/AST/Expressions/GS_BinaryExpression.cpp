@@ -17,8 +17,8 @@ namespace GSLanguageCompiler::AST {
         return _secondExpression;
     }
 
-    Void GS_BinaryExpression::accept(Ptr<GS_Visitor> visitor) {
-        visitor->visit(this);
+    Any GS_BinaryExpression::accept(Ptr<GS_Visitor> visitor) {
+        return visitor->visit(this);
     }
 
     ExpressionType GS_BinaryExpression::getExpressionType() const {

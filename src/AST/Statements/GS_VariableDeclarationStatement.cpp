@@ -23,8 +23,8 @@ namespace GSLanguageCompiler::AST {
         return _expression;
     }
 
-    Void GS_VariableDeclarationStatement::accept(Ptr<GS_Visitor> visitor) {
-        visitor->visit(this);
+    Any GS_VariableDeclarationStatement::accept(Ptr<GS_Visitor> visitor) {
+        return visitor->visit(this);
     }
 
     StatementType GS_VariableDeclarationStatement::getStatementType() const {

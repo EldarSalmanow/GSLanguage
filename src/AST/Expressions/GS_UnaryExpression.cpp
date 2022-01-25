@@ -13,8 +13,8 @@ namespace GSLanguageCompiler::AST {
         return _expression;
     }
 
-    Void GS_UnaryExpression::accept(Ptr<GS_Visitor> visitor) {
-        visitor->visit(this);
+    Any GS_UnaryExpression::accept(Ptr<GS_Visitor> visitor) {
+        return visitor->visit(this);
     }
 
     ExpressionType GS_UnaryExpression::getExpressionType() const {

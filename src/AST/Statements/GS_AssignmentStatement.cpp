@@ -13,8 +13,8 @@ namespace GSLanguageCompiler::AST {
         return _rvalueExpression;
     }
 
-    Void GS_AssignmentStatement::accept(Ptr<GS_Visitor> visitor) {
-        visitor->visit(this);
+    Any GS_AssignmentStatement::accept(Ptr<GS_Visitor> visitor) {
+        return visitor->visit(this);
     }
 
     StatementType GS_AssignmentStatement::getStatementType() const {

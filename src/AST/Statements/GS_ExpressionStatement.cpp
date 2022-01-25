@@ -9,8 +9,8 @@ namespace GSLanguageCompiler::AST {
         return _expression;
     }
 
-    Void GS_ExpressionStatement::accept(Ptr<GS_Visitor> visitor) {
-        visitor->visit(this);
+    Any GS_ExpressionStatement::accept(Ptr<GS_Visitor> visitor) {
+        return visitor->visit(this);
     }
 
     StatementType GS_ExpressionStatement::getStatementType() const {

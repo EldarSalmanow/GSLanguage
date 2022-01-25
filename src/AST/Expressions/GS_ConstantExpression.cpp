@@ -25,8 +25,8 @@ namespace GSLanguageCompiler::AST {
         return _value;
     }
 
-    Void GS_ConstantExpression::accept(Ptr<GS_Visitor> visitor) {
-        visitor->visit(this);
+    Any GS_ConstantExpression::accept(Ptr<GS_Visitor> visitor) {
+        return visitor->visit(this);
     }
 
     ExpressionType GS_ConstantExpression::getExpressionType() const {

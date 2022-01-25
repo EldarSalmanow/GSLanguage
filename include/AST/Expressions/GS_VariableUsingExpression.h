@@ -33,7 +33,7 @@ namespace GSLanguageCompiler::AST {
          * @param visitor
          * @return
          */
-        Void accept(Ptr<GS_Visitor> visitor) override;
+        Any accept(Ptr<GS_Visitor> visitor) override;
 
     public:
 

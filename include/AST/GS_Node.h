@@ -57,7 +57,7 @@ namespace GSLanguageCompiler::AST {
          * @param visitor
          * @return
          */
-        virtual Void accept(Ptr<GS_Visitor> visitor) = 0;
+        virtual Any accept(Ptr<GS_Visitor> visitor) = 0;
 
     private:
 

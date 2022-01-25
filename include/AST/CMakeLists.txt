@@ -25,6 +25,7 @@ set(GS_AST_SOURCE
         ${AST_DIR}/GS_Scope.cpp
 
         ${AST_DIR}/GS_Visitor.cpp
+        ${AST_DIR}/GS_Transformer.cpp
         ${AST_DIR}/GS_Pass.cpp
 
         ${AST_DIR}/GS_TranslationUnit.cpp)

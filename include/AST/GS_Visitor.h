@@ -18,7 +18,7 @@ namespace GSLanguageCompiler::AST {
     class GS_FunctionCallingExpression;
 
     /**
-     * Base class for all AST visitors
+     * Interface class for all AST visitors
      */
     class GS_Visitor {
     public:
@@ -27,29 +27,61 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
-        virtual Void visit(Ptr<GS_FunctionDeclaration> functionDeclaration);
+        virtual Any visit(Ptr<GS_FunctionDeclaration> functionDeclaration) = 0;
 
-        virtual Void visit(Ptr<GS_VariableDeclarationStatement> variableDeclarationStatement);
+        virtual Any visit(Ptr<GS_VariableDeclarationStatement> variableDeclarationStatement) = 0;
 
-        virtual Void visit(Ptr<GS_AssignmentStatement> assignmentStatement);
+        virtual Any visit(Ptr<GS_AssignmentStatement> assignmentStatement) = 0;
 
-        virtual Void visit(Ptr<GS_ExpressionStatement> expressionStatement);
+        virtual Any visit(Ptr<GS_ExpressionStatement> expressionStatement) = 0;
 
-        virtual Void visit(Ptr<GS_ConstantExpression> constantExpression);
+        virtual Any visit(Ptr<GS_ConstantExpression> constantExpression) = 0;
 
-        virtual Void visit(Ptr<GS_UnaryExpression> unaryExpression);
+        virtual Any visit(Ptr<GS_UnaryExpression> unaryExpression) = 0;
 
-        virtual Void visit(Ptr<GS_BinaryExpression> binaryExpression);
+        virtual Any visit(Ptr<GS_BinaryExpression> binaryExpression) = 0;
 
-        virtual Void visit(Ptr<GS_VariableUsingExpression> variableUsingExpression);
+        virtual Any visit(Ptr<GS_VariableUsingExpression> variableUsingExpression) = 0;
 
-        virtual Void visit(Ptr<GS_FunctionCallingExpression> functionCallingExpression);
+        virtual Any visit(Ptr<GS_FunctionCallingExpression> functionCallingExpression) = 0;
     };
 
     /**
      * Visitor ptr type
      */
     using GSVisitorPtr = SharedPtr<GS_Visitor>;
+
+    /**
+     * Base class for all AST visitors
+     */
+    class GS_BaseVisitor : public GS_Visitor {
+    public:
+
+        /**
+         *
+         */
+        ~GS_BaseVisitor() override;
+
+    public:
+
+        Any visit(Ptr<GS_FunctionDeclaration> functionDeclaration) override;
+
+        Any visit(Ptr<GS_VariableDeclarationStatement> variableDeclarationStatement) override;
+
+        Any visit(Ptr<GS_AssignmentStatement> assignmentStatement) override;
+
+        Any visit(Ptr<GS_ExpressionStatement> expressionStatement) override;
+
+        Any visit(Ptr<GS_ConstantExpression> constantExpression) override;
+
+        Any visit(Ptr<GS_UnaryExpression> unaryExpression) override;
+
+        Any visit(Ptr<GS_BinaryExpression> binaryExpression) override;
+
+        Any visit(Ptr<GS_VariableUsingExpression> variableUsingExpression) override;
+
+        Any visit(Ptr<GS_FunctionCallingExpression> functionCallingExpression) override;
+    };
 
 }
 

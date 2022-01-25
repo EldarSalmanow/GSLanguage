@@ -13,8 +13,8 @@ namespace GSLanguageCompiler::AST {
         return _params;
     }
 
-    Void GS_FunctionCallingExpression::accept(Ptr<GS_Visitor> visitor) {
-        visitor->visit(this);
+    Any GS_FunctionCallingExpression::accept(Ptr<GS_Visitor> visitor) {
+        return visitor->visit(this);
     }
 
     ExpressionType GS_FunctionCallingExpression::getExpressionType() const {

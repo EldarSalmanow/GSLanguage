@@ -34,8 +34,8 @@ namespace GSLanguageCompiler::AST {
         return _functionScope;
     }
 
-    Void GS_FunctionDeclaration::accept(Ptr<GS_Visitor> visitor) {
-        visitor->visit(this);
+    Any GS_FunctionDeclaration::accept(Ptr<GS_Visitor> visitor) {
+        return visitor->visit(this);
     }
 
     DeclarationType GS_FunctionDeclaration::getDeclarationType() const {

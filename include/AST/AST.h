@@ -23,6 +23,7 @@
 #include <AST/GS_Scope.h>
 
 #include <AST/GS_Visitor.h>
+#include <AST/GS_Transformer.h>
 #include <AST/GS_Pass.h>
 
 #include <AST/GS_TranslationUnit.h>
