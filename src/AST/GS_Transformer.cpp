@@ -2,62 +2,92 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_Transformer::~GS_Transformer() = default;
+    GSNodePtr GS_Transformer::visit(SharedPtr<GS_FunctionDeclaration> functionDeclaration) {
+        auto &body = functionDeclaration->getBody();
 
-    GS_BaseTransformer::~GS_BaseTransformer() = default;
+        for (auto &statement : body) {
+            auto transformedStatement = std::reinterpret_pointer_cast<GS_Statement>(Accept(this, statement));
 
-    GSNodePtr GS_BaseTransformer::transform(Ptr<GS_FunctionDeclaration> functionDeclaration) {
-        auto transformedFunctionDeclaration = GS_BaseVisitor::visit(functionDeclaration);
+            statement.swap(transformedStatement);
+        }
 
-        return std::any_cast<GSNodePtr>(transformedFunctionDeclaration);
+        return functionDeclaration;
     }
 
-    GSNodePtr GS_BaseTransformer::transform(Ptr<GS_VariableDeclarationStatement> variableDeclarationStatement) {
-        auto transformedVariableDeclarationStatement = GS_BaseVisitor::visit(variableDeclarationStatement);
+    GSNodePtr GS_Transformer::visit(SharedPtr<GS_VariableDeclarationStatement> variableDeclarationStatement) {
+        auto &expression = variableDeclarationStatement->getExpression();
 
-        return std::any_cast<GSNodePtr>(transformedVariableDeclarationStatement);
+        auto transformedExpression = std::reinterpret_pointer_cast<GS_Expression>(Accept(this, expression));
+
+        expression.swap(transformedExpression);
+
+        return variableDeclarationStatement;
     }
 
-    GSNodePtr GS_BaseTransformer::transform(Ptr<GS_AssignmentStatement> assignmentStatement) {
-        auto transformedAssignmentStatement = GS_BaseVisitor::visit(assignmentStatement);
+    GSNodePtr GS_Transformer::visit(SharedPtr<GS_AssignmentStatement> assignmentStatement) {
+        auto &lvalueExpression = assignmentStatement->getLValueExpression();
+        auto &rvalueExpression = assignmentStatement->getRValueExpression();
 
-        return std::any_cast<GSNodePtr>(transformedAssignmentStatement);
+        auto lvalueTransformedExpression = std::reinterpret_pointer_cast<GS_Expression>(Accept(this, lvalueExpression));
+        auto rvalueTransformedExpression = std::reinterpret_pointer_cast<GS_Expression>(Accept(this, rvalueExpression));
+
+        lvalueExpression.swap(lvalueTransformedExpression);
+        rvalueExpression.swap(rvalueTransformedExpression);
+
+        return assignmentStatement;
     }
 
-    GSNodePtr GS_BaseTransformer::transform(Ptr<GS_ExpressionStatement> expressionStatement) {
-        auto transformedExpressionStatement = GS_BaseVisitor::visit(expressionStatement);
+    GSNodePtr GS_Transformer::visit(SharedPtr<GS_ExpressionStatement> expressionStatement) {
+        auto &expression = expressionStatement->getExpression();
 
-        return std::any_cast<GSNodePtr>(transformedExpressionStatement);
+        auto transformedExpression = std::reinterpret_pointer_cast<GS_Expression>(Accept(this, expression));
+
+        expression.swap(transformedExpression);
+
+        return expressionStatement;
     }
 
-    GSNodePtr GS_BaseTransformer::transform(Ptr<GS_ConstantExpression> constantExpression) {
-        auto transformedConstantExpression = GS_BaseVisitor::visit(constantExpression);
-
-        return std::any_cast<GSNodePtr>(transformedConstantExpression);
+    GSNodePtr GS_Transformer::visit(SharedPtr<GS_ConstantExpression> constantExpression) {
+        return constantExpression;
     }
 
-    GSNodePtr GS_BaseTransformer::transform(Ptr<GS_UnaryExpression> unaryExpression) {
-        auto transformedUnaryExpression = GS_BaseVisitor::visit(unaryExpression);
+    GSNodePtr GS_Transformer::visit(SharedPtr<GS_UnaryExpression> unaryExpression) {
+        auto &expression = unaryExpression->getExpression();
 
-        return std::any_cast<GSNodePtr>(transformedUnaryExpression);
+        auto transformedExpression = std::reinterpret_pointer_cast<GS_Expression>(Accept(this, expression));
+
+        expression.swap(transformedExpression);
+
+        return unaryExpression;
     }
 
-    GSNodePtr GS_BaseTransformer::transform(Ptr<GS_BinaryExpression> binaryExpression) {
-        auto transformedBinaryExpression = GS_BaseVisitor::visit(binaryExpression);
+    GSNodePtr GS_Transformer::visit(SharedPtr<GS_BinaryExpression> binaryExpression) {
+        auto &firstExpression = binaryExpression->getFirstExpression();
+        auto &secondExpression = binaryExpression->getSecondExpression();
 
-        return std::any_cast<GSNodePtr>(transformedBinaryExpression);
+        auto firstTransformedExpression = std::reinterpret_pointer_cast<GS_Expression>(Accept(this, firstExpression));
+        auto secondTransformedExpression = std::reinterpret_pointer_cast<GS_Expression>(Accept(this, secondExpression));
+
+        firstExpression.swap(firstTransformedExpression);
+        secondExpression.swap(secondTransformedExpression);
+
+        return binaryExpression;
     }
 
-    GSNodePtr GS_BaseTransformer::transform(Ptr<GS_VariableUsingExpression> variableUsingExpression) {
-        auto transformedVariableUsingExpression = GS_BaseVisitor::visit(variableUsingExpression);
-
-        return std::any_cast<GSNodePtr>(transformedVariableUsingExpression);
+    GSNodePtr GS_Transformer::visit(SharedPtr<GS_VariableUsingExpression> variableUsingExpression) {
+        return variableUsingExpression;
     }
 
-    GSNodePtr GS_BaseTransformer::transform(Ptr<GS_FunctionCallingExpression> functionCallingExpression) {
-        auto transformedFunctionCallingExpression = GS_BaseVisitor::visit(functionCallingExpression);
+    GSNodePtr GS_Transformer::visit(SharedPtr<GS_FunctionCallingExpression> functionCallingExpression) {
+        auto &params = functionCallingExpression->getParams();
 
-        return std::any_cast<GSNodePtr>(transformedFunctionCallingExpression);
+        for (auto &expression : params) {
+            auto transformedExpression = std::reinterpret_pointer_cast<GS_Expression>(Accept(this, expression));
+
+            expression.swap(transformedExpression);
+        }
+
+        return functionCallingExpression;
     }
 
 }

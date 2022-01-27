@@ -13,6 +13,10 @@ namespace GSLanguageCompiler::AST {
         _nodes.emplace_back(std::move(node));
     }
 
+    Void GS_Scope::removeNode(GSNodePtr node) {
+        _nodes.erase(std::find(_nodes.begin(), _nodes.end(), node));
+    }
+
     GSScopePtr GS_Scope::getParent() const {
         return _parent;
     }

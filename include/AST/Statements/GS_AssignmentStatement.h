@@ -26,22 +26,13 @@ namespace GSLanguageCompiler::AST {
          * Getter for left value expression ptr
          * @return Left value expression ptr
          */
-        GSExpressionPtr getLValueExpression() const;
+        LRef<GSExpressionPtr> getLValueExpression();
 
         /**
          * Getter for right value expression ptr
          * @return Right value expression ptr
          */
-        GSExpressionPtr getRValueExpression() const;
-
-    public:
-
-        /**
-         *
-         * @param visitor
-         * @return
-         */
-        Any accept(Ptr<GS_Visitor> visitor) override;
+        LRef<GSExpressionPtr> getRValueExpression();
 
     public:
 

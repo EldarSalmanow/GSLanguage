@@ -9,16 +9,12 @@ namespace GSLanguageCompiler::AST {
         return _operation;
     }
 
-    GSExpressionPtr GS_BinaryExpression::getFirstExpression() const {
+    LRef<GSExpressionPtr> GS_BinaryExpression::getFirstExpression() {
         return _firstExpression;
     }
 
-    GSExpressionPtr GS_BinaryExpression::getSecondExpression() const {
+    LRef<GSExpressionPtr> GS_BinaryExpression::getSecondExpression() {
         return _secondExpression;
-    }
-
-    Any GS_BinaryExpression::accept(Ptr<GS_Visitor> visitor) {
-        return visitor->visit(this);
     }
 
     ExpressionType GS_BinaryExpression::getExpressionType() const {

@@ -29,15 +29,6 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         *
-         * @param visitor
-         * @return
-         */
-        Any accept(Ptr<GS_Visitor> visitor) override;
-
-    public:
-
-        /**
          * Getter for expression type
          * @return Expression type
          */

@@ -48,21 +48,13 @@ namespace GSLanguageCompiler::AST {
          * Getter for function code
          * @return Function code
          */
-        GSStatementPtrArray getBody() const;
+        LRef<GSStatementPtrArray> getBody();
 
         /**
          * Getter for function scope
          * @return Function scope
          */
         GSScopePtr getFunctionScope() const;
-
-    public:
-
-        /**
-         *
-         * @param visitor
-         */
-        Any accept(Ptr<GS_Visitor> visitor) override;
 
     public:
 

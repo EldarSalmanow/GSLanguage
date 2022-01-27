@@ -31,16 +31,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for params
          * @return Params
          */
-        GSExpressionPtrArray getParams() const;
-
-    public:
-
-        /**
-         *
-         * @param visitor
-         * @return
-         */
-        Any accept(Ptr<GS_Visitor> visitor) override;
+        LRef<GSExpressionPtrArray> getParams();
 
     public:
 

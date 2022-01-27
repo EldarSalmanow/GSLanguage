@@ -19,12 +19,8 @@ namespace GSLanguageCompiler::AST {
         return _type;
     }
 
-    GSExpressionPtr GS_VariableDeclarationStatement::getExpression() const {
+    LRef<GSExpressionPtr> GS_VariableDeclarationStatement::getExpression() {
         return _expression;
-    }
-
-    Any GS_VariableDeclarationStatement::accept(Ptr<GS_Visitor> visitor) {
-        return visitor->visit(this);
     }
 
     StatementType GS_VariableDeclarationStatement::getStatementType() const {

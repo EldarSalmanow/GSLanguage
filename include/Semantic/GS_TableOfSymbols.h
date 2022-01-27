@@ -90,13 +90,6 @@ namespace GSLanguageCompiler::Semantic {
         AST::GSExpressionPtr _expression;
     };
 
-    class GS_TableOfSymbols;
-
-    /**
-     * Table of symbols ptr
-     */
-    using GSTableOfSymbolsPtr = SharedPtr<GS_TableOfSymbols>;
-
     /**
      *
      */
@@ -133,6 +126,11 @@ namespace GSLanguageCompiler::Semantic {
          */
         GSSymbolPtrArray _symbols;
     };
+
+    /**
+     * Table of symbols ptr
+     */
+    using GSTableOfSymbolsPtr = SharedPtr<GS_TableOfSymbols>;
 
 }
 

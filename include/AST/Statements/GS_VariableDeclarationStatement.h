@@ -57,16 +57,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for expression for variable
          * @return Expression for variable
          */
-        GSExpressionPtr getExpression() const;
-
-    public:
-
-        /**
-         *
-         * @param visitor
-         * @return
-         */
-        Any accept(Ptr<GS_Visitor> visitor) override;
+        LRef<GSExpressionPtr> getExpression();
 
     public:
 

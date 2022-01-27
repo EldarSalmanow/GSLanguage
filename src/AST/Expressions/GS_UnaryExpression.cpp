@@ -9,12 +9,8 @@ namespace GSLanguageCompiler::AST {
         return _operation;
     }
 
-    GSExpressionPtr GS_UnaryExpression::getExpression() const {
+    LRef<GSExpressionPtr> GS_UnaryExpression::getExpression() {
         return _expression;
-    }
-
-    Any GS_UnaryExpression::accept(Ptr<GS_Visitor> visitor) {
-        return visitor->visit(this);
     }
 
     ExpressionType GS_UnaryExpression::getExpressionType() const {

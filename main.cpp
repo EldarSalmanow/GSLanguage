@@ -407,10 +407,130 @@ namespace New {
 
 }
 
-class CFVisitor : public AST::GS_BaseTransformer {
+/**
+ * Constant Folding Visitor
+ */
+
+class CFTransformer : public AST::GS_Transformer {
 public:
 
-    Bool isConstantExpression(AST::GSNodePtr node) {
+    AST::GSNodePtr visit(SharedPtr<AST::GS_UnaryExpression> unaryExpression) override {
+        Transform(unaryExpression);
+
+        auto expression = unaryExpression->getExpression();
+        auto operation = unaryExpression->getUnaryOperation();
+        auto scope = unaryExpression->getScope();
+
+        if (IsConstantExpression(expression)) {
+            auto value = std::reinterpret_pointer_cast<AST::GS_ConstantExpression>(expression)->getValue();
+
+            auto result = Fold(value, operation);
+
+            if (result != nullptr) {
+                scope->removeNode(unaryExpression);
+
+                auto newExpression = std::make_shared<AST::GS_ConstantExpression>(result, scope);
+
+                scope->addNode(newExpression);
+
+                return newExpression;
+            }
+        }
+
+        return unaryExpression;
+    }
+
+    AST::GSNodePtr visit(SharedPtr<AST::GS_BinaryExpression> binaryExpression) override {
+        Transform(binaryExpression);
+
+        auto firstExpression = binaryExpression->getFirstExpression();
+        auto secondExpression = binaryExpression->getSecondExpression();
+        auto operation = binaryExpression->getBinaryOperation();
+        auto scope = binaryExpression->getScope();
+
+        if (IsConstantExpression(firstExpression) && IsConstantExpression(secondExpression)) {
+            auto firstValue = std::reinterpret_pointer_cast<AST::GS_ConstantExpression>(firstExpression)->getValue();
+            auto secondValue = std::reinterpret_pointer_cast<AST::GS_ConstantExpression>(secondExpression)->getValue();
+
+            auto result = Fold(firstValue, secondValue, operation);
+
+            if (result != nullptr) {
+                scope->removeNode(binaryExpression);
+
+                auto newExpression = std::make_shared<AST::GS_ConstantExpression>(result, scope);
+
+                scope->addNode(newExpression);
+
+                return newExpression;
+            }
+        }
+
+        return binaryExpression;
+    }
+
+private:
+
+    template<typename T>
+    Void Transform(LRef<SharedPtr<T>> node) {
+        auto transformedNode = std::reinterpret_pointer_cast<T>(AST::GS_Transformer::visit(node));
+
+        node.swap(transformedNode);
+    }
+
+    AST::GSValuePtr Fold(ConstLRef<AST::GSValuePtr> value, AST::UnaryOperation operation) {
+        if (value->getType()->getName() == U"I32") {
+            auto number = value->getValueWithCast<I32>();
+
+            switch (operation) {
+                case AST::UnaryOperation::Minus:
+                    number = -number;
+
+                    break;
+                default:
+                    return nullptr;
+            }
+
+            return std::make_shared<AST::GS_I32Value>(number);
+        }
+
+        return nullptr;
+    }
+
+    AST::GSValuePtr Fold(ConstLRef<AST::GSValuePtr> firstValue, ConstLRef<AST::GSValuePtr> secondValue, AST::BinaryOperation operation) {
+        if (firstValue->getType()->getName() == U"I32" && secondValue->getType()->getName() == U"I32") {
+            auto firstNumber = firstValue->getValueWithCast<I32>();
+            auto secondNumber = secondValue->getValueWithCast<I32>();
+
+            I32 result = 0;
+
+            switch (operation) {
+                case AST::BinaryOperation::Plus:
+                    result = firstNumber + secondNumber;
+
+                    break;
+                case AST::BinaryOperation::Minus:
+                    result = firstNumber - secondNumber;
+
+                    break;
+                case AST::BinaryOperation::Star:
+                    result = firstNumber * secondNumber;
+
+                    break;
+                case AST::BinaryOperation::Slash:
+                    result = firstNumber / secondNumber;
+
+                    break;
+                default:
+                    return nullptr;
+            }
+
+            return std::make_shared<AST::GS_I32Value>(result);
+        }
+
+        return nullptr;
+    }
+
+    Bool IsConstantExpression(ConstLRef<AST::GSNodePtr> node) {
         if (node->isExpression()) {
             auto expression = std::reinterpret_pointer_cast<AST::GS_Expression>(node);
 
@@ -423,21 +543,309 @@ public:
 
         return false;
     }
+};
 
+class PrintVisitor : public AST::GS_BaseVisitor {
 public:
 
-    AST::GSNodePtr transform(Ptr<AST::GS_UnaryExpression> unaryExpression) override {
-        auto expression = unaryExpression->getExpression();
+    Void visit(SharedPtr<AST::GS_FunctionDeclaration> functionDeclaration) override {
+        Print("FunctionDeclaration: {");
 
-        if (isConstantExpression(expression)) {
-            auto constantExpression = std::reinterpret_pointer_cast<AST::GS_ConstantExpression>(expression);
+        AddTab();
+
+        Print("Name: " + functionDeclaration->getName().asString());
+
+        Print("Body: {");
+
+        AddTab();
+
+        for (auto &statement : functionDeclaration->getBody()) {
+            AST::Accept(this, statement);
+        }
+
+        SubTab();
+
+        Print("}");
+
+        SubTab();
+
+        Print("}");
+    }
+
+    Void visit(SharedPtr<AST::GS_VariableDeclarationStatement> variableDeclarationStatement) override {
+        Print("VariableDeclarationStatement: {");
+
+        AddTab();
+
+        Print("Name: " + variableDeclarationStatement->getName().asString());
+
+        Print("Type: " + variableDeclarationStatement->getType()->getName().asString());
+
+        Print("Expression: {");
+
+        AddTab();
+
+        AST::Accept(this, variableDeclarationStatement->getExpression());
+
+        SubTab();
+
+        Print("}");
+
+        SubTab();
+
+        Print("}");
+    }
+
+    Void visit(SharedPtr<AST::GS_AssignmentStatement> assignmentStatement) override {
+        Print("AssignmentStatement: {");
+
+        AddTab();
+
+        Print("LValueExpression: {");
+
+        AddTab();
+
+        AST::Accept(this, assignmentStatement->getLValueExpression());
+
+        SubTab();
+
+        Print("}");
+
+        Print("RValueExpression: {");
+
+        AddTab();
+
+        AST::Accept(this, assignmentStatement->getRValueExpression());
+
+        SubTab();
+
+        Print("}");
+
+        SubTab();
+
+        Print("}");
+    }
+
+    Void visit(SharedPtr<AST::GS_ExpressionStatement> expressionStatement) override {
+        Print("ExpressionStatement: {");
+
+        AddTab();
+
+        AST::Accept(this, expressionStatement->getExpression());
+
+        SubTab();
+
+        Print("}");
+    }
+
+    Void visit(SharedPtr<AST::GS_ConstantExpression> constantExpression) override {
+        Print("ConstantExpression: {");
+
+        AddTab();
+
+        Print("Value: {");
+
+        AddTab();
+
+        auto value = constantExpression->getValue();
+        auto typeName = value->getType()->getName();
+
+        Print("Type: " + typeName.asString());
+
+        if (typeName == U"I32") {
+            Print("Value: " + std::to_string(value->getValueWithCast<I32>()));
+        } else if (typeName == U"String") {
+            Print("Value: " + value->getValueWithCast<UString>().asString());
+        }
+
+        SubTab();
+
+        Print("}");
+
+        SubTab();
+
+        Print("}");
+    }
+
+    Void visit(SharedPtr<AST::GS_UnaryExpression> unaryExpression) override {
+        Print("UnaryExpression: {");
+
+        AddTab();
+
+        Print("Expression: {");
+
+        AddTab();
+
+        AST::Accept(this, unaryExpression->getExpression());
+
+        SubTab();
+
+        Print("}");
+
+        auto operation = unaryExpression->getUnaryOperation();
+
+        String stringOperation;
+
+        switch (operation) {
+            case AST::UnaryOperation::Minus:
+                stringOperation = "Minus (-)";
+
+                break;
+        }
+
+        Print("Operation: " + stringOperation);
+
+        SubTab();
+
+        Print("}");
+    }
+
+    Void visit(SharedPtr<AST::GS_BinaryExpression> binaryExpression) override {
+        Print("BinaryExpression: {");
+
+        AddTab();
+
+        Print("FirstExpression: {");
+
+        AddTab();
+
+        AST::Accept(this, binaryExpression->getFirstExpression());
+
+        SubTab();
+
+        Print("}");
+
+        Print("SecondExpression: {");
+
+        AddTab();
+
+        AST::Accept(this, binaryExpression->getSecondExpression());
+
+        SubTab();
+
+        Print("}");
+
+        auto operation = binaryExpression->getBinaryOperation();
+
+        String stringOperation;
+
+        switch (operation) {
+            case AST::BinaryOperation::Plus:
+                stringOperation = "Plus (+)";
+
+                break;
+            case AST::BinaryOperation::Minus:
+                stringOperation = "Minus (-)";
+
+                break;
+            case AST::BinaryOperation::Star:
+                stringOperation = "Star (*)";
+
+                break;
+            case AST::BinaryOperation::Slash:
+                stringOperation = "Slash (/)";
+
+                break;
+        }
+
+        Print("Operation: " + stringOperation);
+
+        SubTab();
+
+        Print("}");
+    }
+
+    Void visit(SharedPtr<AST::GS_VariableUsingExpression> variableUsingExpression) override {
+        Print("VariableUsingExpression: {");
+
+        AddTab();
+
+        Print("Name: " + variableUsingExpression->getName().asString());
+
+        SubTab();
+
+        Print("}");
+    }
+
+    Void visit(SharedPtr<AST::GS_FunctionCallingExpression> functionCallingExpression) override {
+        Print("FunctionCallingExpression: {");
+
+        AddTab();
+
+        Print("Name: " + functionCallingExpression->getName().asString());
+
+        Print("Params: {");
+
+        AddTab();
+
+        for (auto &param : functionCallingExpression->getParams()) {
+            AST::Accept(this, param);
+        }
+
+        SubTab();
+
+        Print("}");
+
+        SubTab();
+
+        Print("}");
+    }
+
+private:
+
+    Void Print(String message) {
+        PrintTabs();
+
+        std::cout << message << std::endl;
+    }
+
+    Void PrintTabs() {
+        for (auto i = 0; i < tabsNumber; ++i) {
+            std::cout << "  ";
         }
     }
 
-    AST::GSNodePtr transform(Ptr<AST::GS_BinaryExpression> binaryExpression) override {
-
+    Void AddTab() {
+        ++tabsNumber;
     }
+
+    Void SubTab() {
+        --tabsNumber;
+    }
+
+private:
+
+    I32 tabsNumber = 0;
 };
+
+Void Dump(ConstLRef<AST::GSScopePtr> scope) {
+    static I32 scopeNumber = 0;
+    static I32 tabsNumber = 0;
+
+    ++scopeNumber;
+
+    auto printTabs = [] (I32 tabsNumber) -> Void {
+        for (auto i = 0; i < tabsNumber; ++i) {
+            std::cout << "  ";
+        }
+    };
+
+    printTabs(tabsNumber);
+
+    std::cout << "Scope " << scopeNumber << " : {" << std::endl;
+
+    ++tabsNumber;
+
+    for (auto &scope_ : scope->getScopes()) {
+        Dump(scope_);
+    }
+
+    --tabsNumber;
+
+    printTabs(tabsNumber);
+
+    std::cout << "}" << std::endl;
+}
 
 I32 main() {
     /**
@@ -445,23 +853,62 @@ I32 main() {
      *     var a = 10
      * }
      */
-    Lexer::GS_TokenStream stream({
-        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::KeywordFunc),
-        std::make_shared<Lexer::GS_ValueToken>(Lexer::TokenType::Identifier, U"main"),
-        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::SymbolLeftParen),
-        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::SymbolRightParen),
-        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::SymbolLeftBrace),
-        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::KeywordVar),
-        std::make_shared<Lexer::GS_ValueToken>(Lexer::TokenType::Identifier, U"a"),
-        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::SymbolEq),
-        std::make_shared<Lexer::GS_ValueToken>(Lexer::TokenType::LiteralNumber, U"10"),
-        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::SymbolRightBrace),
-        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::EndOfFile),
-    });
+//    Lexer::GS_TokenStream stream({
+//        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::KeywordFunc),
+//        std::make_shared<Lexer::GS_ValueToken>(Lexer::TokenType::Identifier, U"main"),
+//        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::SymbolLeftParen),
+//        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::SymbolRightParen),
+//        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::SymbolLeftBrace),
+//        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::KeywordVar),
+//        std::make_shared<Lexer::GS_ValueToken>(Lexer::TokenType::Identifier, U"a"),
+//        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::SymbolEq),
+//        std::make_shared<Lexer::GS_ValueToken>(Lexer::TokenType::LiteralNumber, U"10"),
+//        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::SymbolRightBrace),
+//        std::make_shared<Lexer::GS_Token>(Lexer::TokenType::EndOfFile),
+//    });
+//
+//    New::GS_Parser parser(&stream);
+//
+//    auto unit = parser.Parse();
 
-    New::GS_Parser parser(&stream);
+    auto scope = std::make_shared<AST::GS_Scope>(nullptr);
 
-    auto unit = parser.Parse();
+//    auto scope2 = std::make_shared<AST::GS_Scope>(scope);
+//
+//    scope->addScope(scope2);
+//
+//    auto scope3 = std::make_shared<AST::GS_Scope>(scope2);
+//
+//    scope2->addScope(scope3);
+//
+//    auto scope4 = std::make_shared<AST::GS_Scope>(scope3);
+//
+//    scope3->addScope(scope4);
+//
+//    Dump(scope);
+
+    auto expression = std::make_shared<AST::GS_ConstantExpression>(std::make_shared<AST::GS_I32Value>(12), scope);
+    auto expression2 = std::make_shared<AST::GS_ConstantExpression>(std::make_shared<AST::GS_I32Value>(94), scope);
+
+    auto unaryExpression = std::make_shared<AST::GS_UnaryExpression>(AST::UnaryOperation::Minus, expression, scope);
+
+    scope->addNode(unaryExpression);
+
+    auto binaryExpression = std::make_shared<AST::GS_BinaryExpression>(AST::BinaryOperation::Plus, unaryExpression, expression2, scope);
+
+    scope->addNode(binaryExpression);
+
+    auto visitor = std::make_shared<PrintVisitor>();
+
+    visitor->visit(binaryExpression);
+
+    using GSTransformerPtr = SharedPtr<AST::GS_Transformer>;
+
+    GSTransformerPtr transformer = std::make_shared<CFTransformer>();
+
+    auto transformed = transformer->visit(binaryExpression);
+
+    AST::Accept(visitor.get(), transformed);
 
     return 0;
 }

@@ -1,80 +1,65 @@
-#include <AST.h>
+#include <GS_Visitor.h>
 
 namespace GSLanguageCompiler::AST {
 
-    GS_Visitor::~GS_Visitor() = default;
-
     GS_BaseVisitor::~GS_BaseVisitor() = default;
 
-    Any GS_BaseVisitor::visit(Ptr<GS_FunctionDeclaration> functionDeclaration) {
+    Void GS_BaseVisitor::visit(SharedPtr<GS_FunctionDeclaration> functionDeclaration) {
         auto body = functionDeclaration->getBody();
 
         for (auto &statement : body) {
-            statement->accept(this);
+            Accept(this, statement);
         }
-
-        return nullptr;
     }
 
-    Any GS_BaseVisitor::visit(Ptr<GS_VariableDeclarationStatement> variableDeclarationStatement) {
+    Void GS_BaseVisitor::visit(SharedPtr<GS_VariableDeclarationStatement> variableDeclarationStatement) {
         auto expression = variableDeclarationStatement->getExpression();
 
-        expression->accept(this);
-
-        return nullptr;
+        Accept(this, expression);
     }
 
-    Any GS_BaseVisitor::visit(Ptr<GS_AssignmentStatement> assignmentStatement) {
+    Void GS_BaseVisitor::visit(SharedPtr<GS_AssignmentStatement> assignmentStatement) {
         auto lvalueExpression = assignmentStatement->getLValueExpression();
         auto rvalueExpression = assignmentStatement->getRValueExpression();
 
-        lvalueExpression->accept(this);
-        rvalueExpression->accept(this);
-
-        return nullptr;
+        Accept(this, lvalueExpression);
+        Accept(this, rvalueExpression);
     }
 
-    Any GS_BaseVisitor::visit(Ptr<GS_ExpressionStatement> expressionStatement) {
+    Void GS_BaseVisitor::visit(SharedPtr<GS_ExpressionStatement> expressionStatement) {
         auto expression = expressionStatement->getExpression();
 
-        expression->accept(this);
-
-        return nullptr;
+        Accept(this, expression);
     }
 
-    Any GS_BaseVisitor::visit(Ptr<GS_ConstantExpression> constantExpression) {
-        return nullptr;
+    Void GS_BaseVisitor::visit(SharedPtr<GS_ConstantExpression> constantExpression) {
+
     }
 
-    Any GS_BaseVisitor::visit(Ptr<GS_UnaryExpression> unaryExpression) {
+    Void GS_BaseVisitor::visit(SharedPtr<GS_UnaryExpression> unaryExpression) {
         auto expression = unaryExpression->getExpression();
 
-        expression->accept(this);
-
-        return nullptr;
+        Accept(this, expression);
     }
 
-    Any GS_BaseVisitor::visit(Ptr<GS_BinaryExpression> binaryExpression) {
+    Void GS_BaseVisitor::visit(SharedPtr<GS_BinaryExpression> binaryExpression) {
         auto firstExpression = binaryExpression->getFirstExpression();
         auto secondExpression = binaryExpression->getSecondExpression();
 
-        firstExpression->accept(this);
-        secondExpression->accept(this);
-
-        return nullptr;
+        Accept(this, firstExpression);
+        Accept(this, secondExpression);
     }
 
-    Any GS_BaseVisitor::visit(Ptr<GS_VariableUsingExpression> variableUsingExpression) {
-        return nullptr;
+    Void GS_BaseVisitor::visit(SharedPtr<GS_VariableUsingExpression> variableUsingExpression) {
+
     }
 
-    Any GS_BaseVisitor::visit(Ptr<GS_FunctionCallingExpression> functionCallingExpression) {
+    Void GS_BaseVisitor::visit(SharedPtr<GS_FunctionCallingExpression> functionCallingExpression) {
         auto params = functionCallingExpression->getParams();
 
-        for (auto &param : params) {
-            param->accept(this);
+        for (auto &expression : params) {
+            Accept(this, expression);
         }
-
-        return nullptr;
     }
+
 }

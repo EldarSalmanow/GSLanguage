@@ -9,12 +9,8 @@ namespace GSLanguageCompiler::AST {
         return _name;
     }
 
-    GSExpressionPtrArray GS_FunctionCallingExpression::getParams() const {
+    LRef<GSExpressionPtrArray> GS_FunctionCallingExpression::getParams() {
         return _params;
-    }
-
-    Any GS_FunctionCallingExpression::accept(Ptr<GS_Visitor> visitor) {
-        return visitor->visit(this);
     }
 
     ExpressionType GS_FunctionCallingExpression::getExpressionType() const {

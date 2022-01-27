@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_SCOPE_H
 #define GSLANGUAGE_GS_SCOPE_H
 
-#include <GSCrossPlatform/GS_CrossPlatformTypes.h>
+#include <GSCrossPlatform/GS_CrossPlatform.h>
 
 namespace GSLanguageCompiler {
 
@@ -51,6 +51,13 @@ namespace GSLanguageCompiler {
              * @return
              */
             Void addNode(GSNodePtr node);
+
+            /**
+             *
+             * @param node
+             * @return
+             */
+            Void removeNode(GSNodePtr node);
 
         public:
 

@@ -9,10 +9,6 @@ namespace GSLanguageCompiler::AST {
         return _name;
     }
 
-    Any GS_VariableUsingExpression::accept(Ptr<GS_Visitor> visitor) {
-        return visitor->visit(this);
-    }
-
     ExpressionType GS_VariableUsingExpression::getExpressionType() const {
         return ExpressionType::VariableUsingExpression;
     }

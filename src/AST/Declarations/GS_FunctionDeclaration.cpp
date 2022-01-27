@@ -18,24 +18,18 @@ namespace GSLanguageCompiler::AST {
 
     Void GS_FunctionDeclaration::addStatement(GSStatementPtr statement) {
         _body.emplace_back(std::move(statement));
-
-//        _functionScope->addNode(std::move(statement));
     }
 
     UString GS_FunctionDeclaration::getName() const {
         return _name;
     }
 
-    GSStatementPtrArray GS_FunctionDeclaration::getBody() const {
+    LRef<GSStatementPtrArray> GS_FunctionDeclaration::getBody() {
         return _body;
     }
 
     GSScopePtr GS_FunctionDeclaration::getFunctionScope() const {
         return _functionScope;
-    }
-
-    Any GS_FunctionDeclaration::accept(Ptr<GS_Visitor> visitor) {
-        return visitor->visit(this);
     }
 
     DeclarationType GS_FunctionDeclaration::getDeclarationType() const {

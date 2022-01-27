@@ -42,22 +42,13 @@ namespace GSLanguageCompiler::AST {
          * Getter for first expression ptr
          * @return First expression ptr
          */
-        GSExpressionPtr getFirstExpression() const;
+        LRef<GSExpressionPtr> getFirstExpression();
 
         /**
          * Getter for second expression ptr
          * @return Second expression ptr
          */
-        GSExpressionPtr getSecondExpression() const;
-
-    public:
-
-        /**
-         *
-         * @param visitor
-         * @return
-         */
-        Any accept(Ptr<GS_Visitor> visitor) override;
+        LRef<GSExpressionPtr> getSecondExpression();
 
     public:
 

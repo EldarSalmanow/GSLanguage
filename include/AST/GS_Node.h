@@ -3,8 +3,6 @@
 
 #include <AST/GS_Scope.h>
 
-#include <AST/GS_Visitor.h>
-
 namespace GSLanguageCompiler::AST {
 
     /**
@@ -49,15 +47,6 @@ namespace GSLanguageCompiler::AST {
          * @return
          */
         virtual Bool isExpression() const;
-
-    public:
-
-        /**
-         *
-         * @param visitor
-         * @return
-         */
-        virtual Any accept(Ptr<GS_Visitor> visitor) = 0;
 
     private:
 
