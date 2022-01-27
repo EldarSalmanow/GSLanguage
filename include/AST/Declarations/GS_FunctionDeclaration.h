@@ -13,9 +13,9 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         *
-         * @param name
-         * @param scope
+         * Constructor for function declaration
+         * @param name Function name
+         * @param scope Function scope
          */
         GS_FunctionDeclaration(UString name, GSScopePtr scope);
 
@@ -54,7 +54,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for function scope
          * @return Function scope
          */
-        GSScopePtr getFunctionScope() const;
+        LRef<GSScopePtr> getFunctionScope();
 
     public:
 

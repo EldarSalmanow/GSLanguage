@@ -12,7 +12,7 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Constructor for GS_Type
+         * Constructor for type
          * @param name Type name
          */
         explicit GS_Type(UString name);
@@ -34,37 +34,37 @@ namespace GSLanguageCompiler::AST {
     };
 
     /**
-     *
+     * Builtin void type
      */
     class GS_VoidType : public GS_Type {
     public:
 
         /**
-         *
+         * Constructor for void type
          */
         GS_VoidType();
     };
 
     /**
-     *
+     * Builtin I32 type
      */
     class GS_I32Type : public GS_Type {
     public:
 
         /**
-         *
+         * Constructor for I32 type
          */
         GS_I32Type();
     };
 
     /**
-     *
+     * Builtin String type
      */
     class GS_StringType : public GS_Type {
     public:
 
         /**
-         *
+         * Constructor for String type
          */
         GS_StringType();
     };

@@ -12,7 +12,7 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Constructor for GS_VariableUsingExpression
+         * Constructor for variable using expression
          * @param name Variable name
          * @param scope Scope
          */

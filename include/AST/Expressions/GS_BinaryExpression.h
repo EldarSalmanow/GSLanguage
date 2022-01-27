@@ -22,7 +22,7 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Constructor for GS_BinaryExpression
+         * Constructor for binary expression
          * @param operation Binary operation
          * @param firstNode First expression ptr
          * @param secondNode Second expression ptr

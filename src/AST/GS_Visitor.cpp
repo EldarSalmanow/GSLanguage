@@ -62,4 +62,45 @@ namespace GSLanguageCompiler::AST {
         }
     }
 
+    Void GS_BaseVisitor::visit(ConstLRef<GSNodePtr> node) {
+        if (node->isDeclaration()) {
+            auto declaration = std::reinterpret_pointer_cast<GS_Declaration>(node);
+
+            switch (declaration->getDeclarationType()) {
+                case DeclarationType::FunctionDeclaration:
+                    return this->visit(std::reinterpret_pointer_cast<GS_FunctionDeclaration>(declaration));
+            }
+        }
+
+        if (node->isStatement()) {
+            auto statement = std::reinterpret_pointer_cast<GS_Statement>(node);
+
+            switch (statement->getStatementType()) {
+                case StatementType::VariableDeclarationStatement:
+                    return this->visit(std::reinterpret_pointer_cast<GS_VariableDeclarationStatement>(statement));
+                case StatementType::AssignmentStatement:
+                    return this->visit(std::reinterpret_pointer_cast<GS_AssignmentStatement>(statement));
+                case StatementType::ExpressionStatement:
+                    return this->visit(std::reinterpret_pointer_cast<GS_ExpressionStatement>(statement));
+            }
+        }
+
+        if (node->isExpression()) {
+            auto expression = std::reinterpret_pointer_cast<GS_Expression>(node);
+
+            switch (expression->getExpressionType()) {
+                case ExpressionType::ConstantExpression:
+                    return this->visit(std::reinterpret_pointer_cast<GS_ConstantExpression>(expression));
+                case ExpressionType::UnaryExpression:
+                    return this->visit(std::reinterpret_pointer_cast<GS_UnaryExpression>(expression));
+                case ExpressionType::BinaryExpression:
+                    return this->visit(std::reinterpret_pointer_cast<GS_BinaryExpression>(expression));
+                case ExpressionType::VariableUsingExpression:
+                    return this->visit(std::reinterpret_pointer_cast<GS_VariableUsingExpression>(expression));
+                case ExpressionType::FunctionCallingExpression:
+                    return this->visit(std::reinterpret_pointer_cast<GS_FunctionCallingExpression>(expression));
+            }
+        }
+    }
+
 }

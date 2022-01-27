@@ -7,7 +7,7 @@ namespace GSLanguageCompiler::AST {
 
     GS_Node::~GS_Node() = default;
 
-    GSScopePtr GS_Node::getScope() const {
+    LRef<GSScopePtr> GS_Node::getScope() {
         return _scope;
     }
 

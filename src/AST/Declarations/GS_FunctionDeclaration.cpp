@@ -28,7 +28,7 @@ namespace GSLanguageCompiler::AST {
         return _body;
     }
 
-    GSScopePtr GS_FunctionDeclaration::getFunctionScope() const {
+    LRef<GSScopePtr> GS_FunctionDeclaration::getFunctionScope() {
         return _functionScope;
     }
 

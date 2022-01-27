@@ -548,6 +548,10 @@ private:
 class PrintVisitor : public AST::GS_BaseVisitor {
 public:
 
+    Void visit(ConstLRef<AST::GSNodePtr> node) override {
+        AST::GS_BaseVisitor::visit(node);
+    }
+
     Void visit(SharedPtr<AST::GS_FunctionDeclaration> functionDeclaration) override {
         Print("FunctionDeclaration: {");
 
@@ -818,35 +822,6 @@ private:
     I32 tabsNumber = 0;
 };
 
-Void Dump(ConstLRef<AST::GSScopePtr> scope) {
-    static I32 scopeNumber = 0;
-    static I32 tabsNumber = 0;
-
-    ++scopeNumber;
-
-    auto printTabs = [] (I32 tabsNumber) -> Void {
-        for (auto i = 0; i < tabsNumber; ++i) {
-            std::cout << "  ";
-        }
-    };
-
-    printTabs(tabsNumber);
-
-    std::cout << "Scope " << scopeNumber << " : {" << std::endl;
-
-    ++tabsNumber;
-
-    for (auto &scope_ : scope->getScopes()) {
-        Dump(scope_);
-    }
-
-    --tabsNumber;
-
-    printTabs(tabsNumber);
-
-    std::cout << "}" << std::endl;
-}
-
 I32 main() {
     /**
      * func main() {
@@ -873,20 +848,6 @@ I32 main() {
 
     auto scope = std::make_shared<AST::GS_Scope>(nullptr);
 
-//    auto scope2 = std::make_shared<AST::GS_Scope>(scope);
-//
-//    scope->addScope(scope2);
-//
-//    auto scope3 = std::make_shared<AST::GS_Scope>(scope2);
-//
-//    scope2->addScope(scope3);
-//
-//    auto scope4 = std::make_shared<AST::GS_Scope>(scope3);
-//
-//    scope3->addScope(scope4);
-//
-//    Dump(scope);
-
     auto expression = std::make_shared<AST::GS_ConstantExpression>(std::make_shared<AST::GS_I32Value>(12), scope);
     auto expression2 = std::make_shared<AST::GS_ConstantExpression>(std::make_shared<AST::GS_I32Value>(94), scope);
 
@@ -908,7 +869,9 @@ I32 main() {
 
     auto transformed = transformer->visit(binaryExpression);
 
-    AST::Accept(visitor.get(), transformed);
+    visitor->visit(transformed);
+
+//    AST::Accept(visitor.get(), transformed);
 
     return 0;
 }

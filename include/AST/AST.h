@@ -1,6 +1,10 @@
 #ifndef GSLANGUAGE_AST_H
 #define GSLANGUAGE_AST_H
 
+/**
+ * This file includes all files from GSLanguageCompiler AST Module
+ */
+
 #include <AST/GS_Node.h>
 
 #include <AST/GS_Declaration.h>
@@ -19,13 +23,12 @@
 #include <AST/Expressions/GS_VariableUsingExpression.h>
 #include <AST/Expressions/GS_FunctionCallingExpression.h>
 
+#include <AST/GS_TranslationUnit.h>
+
 #include <AST/GS_Type.h>
 #include <AST/GS_Scope.h>
 
 #include <AST/GS_Visitor.h>
 #include <AST/GS_Transformer.h>
-//#include <AST/GS_Pass.h>
-
-#include <AST/GS_TranslationUnit.h>
 
 #endif //GSLANGUAGE_AST_H

@@ -13,7 +13,7 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Constructor for GS_AssignmentStatement
+         * Constructor for assignment statement
          * @param lvalueExpression Left value expression ptr
          * @param rvalueExpression Right value expression ptr
          * @param scope Assignment scope

@@ -14,7 +14,7 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Constructor for all values
+         * Constructor for value
          * @tparam T Type of value
          * @param type Type ptr
          * @param data Value
@@ -107,7 +107,7 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Constructor for GS_ConstantExpression
+         * Constructor for constant expression
          * @param value Value ptr
          * @param scope Scope
          */
@@ -119,7 +119,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for value ptr
          * @return Value ptr
          */
-        GSValuePtr getValue() const;
+        LRef<GSValuePtr> getValue();
 
     public:
 

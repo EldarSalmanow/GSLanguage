@@ -19,7 +19,7 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Constructor for GS_UnaryExpression
+         * Constructor for unary expression
          * @param operation Unary operation
          * @param node Expression ptr
          * @param scope Scope

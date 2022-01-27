@@ -13,7 +13,7 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Constructor for GS_ExpressionStatement
+         * Constructor for expression statement
          * @param expression Expression ptr
          * @param scope Scope
          */

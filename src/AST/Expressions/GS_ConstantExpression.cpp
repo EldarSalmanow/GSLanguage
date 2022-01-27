@@ -21,7 +21,7 @@ namespace GSLanguageCompiler::AST {
     GS_ConstantExpression::GS_ConstantExpression(GSValuePtr value, GSScopePtr scope)
             : _value(std::move(value)), GS_Expression(std::move(scope)) {}
 
-    GSValuePtr GS_ConstantExpression::getValue() const {
+    LRef<GSValuePtr> GS_ConstantExpression::getValue() {
         return _value;
     }
 

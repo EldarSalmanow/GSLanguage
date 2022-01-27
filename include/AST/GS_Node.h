@@ -23,35 +23,35 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         *
-         * @return
+         * Getter for scope
+         * @return Scope
          */
-        GSScopePtr getScope() const;
+        LRef<GSScopePtr> getScope();
 
     public:
 
         /**
-         *
-         * @return
+         * Is declaration node
+         * @return Is declaration
          */
         virtual Bool isDeclaration() const;
 
         /**
-         *
-         * @return
+         * Is statement node
+         * @return Is statement
          */
         virtual Bool isStatement() const;
 
         /**
-         *
-         * @return
+         * Is expression node
+         * @return Is expression
          */
         virtual Bool isExpression() const;
 
     private:
 
         /**
-         *
+         * Scope
          */
         GSScopePtr _scope;
     };

@@ -23,38 +23,44 @@ namespace GSLanguageCompiler {
 
         class GS_Scope;
 
+        /**
+         * Scope ptr type
+         */
         using GSScopePtr = SharedPtr<GS_Scope>;
 
+        /**
+         * Scope ptr array type
+         */
         using GSScopePtrArray = Vector<GSScopePtr>;
 
         class GS_Scope {
         public:
 
             /**
-             *
-             * @param parent
+             * Constructor for scope
+             * @param parent Parent scope
              */
             explicit GS_Scope(GSScopePtr parent);
 
         public:
 
             /**
-             *
-             * @param scope
+             * Add child scope
+             * @param scope Child scope
              * @return
              */
             Void addScope(GSScopePtr scope);
 
             /**
-             *
-             * @param node
+             * Add node to scope
+             * @param node Node
              * @return
              */
             Void addNode(GSNodePtr node);
 
             /**
-             *
-             * @param node
+             * Remove node from scope
+             * @param node Node
              * @return
              */
             Void removeNode(GSNodePtr node);
@@ -62,48 +68,48 @@ namespace GSLanguageCompiler {
         public:
 
             /**
-             *
-             * @return
+             * Getter for parent scope
+             * @return Parent scope
              */
             GSScopePtr getParent() const;
 
             /**
-             *
-             * @return
+             * Getter for child scopes
+             * @return Child scopes
              */
             GSScopePtrArray getScopes() const;
 
             /**
-             *
-             * @return
+             * Getter for nodes
+             * @return Nodes
              */
             GSNodePtrArray getNodes() const;
 
             /**
-             *
-             * @return
+             * Getter for table of symbols
+             * @return Table of symbols
              */
             Semantic::GSTableOfSymbolsPtr getTableOfSymbols() const;
 
         private:
 
             /**
-             *
+             * Parent scope
              */
             GSScopePtr _parent;
 
             /**
-             *
+             * Child scopes
              */
             GSScopePtrArray _scopes;
 
             /**
-             *
+             * Nodes in scope
              */
             GSNodePtrArray _nodes;
 
             /**
-             *
+             * Scope table of symbols
              */
             Semantic::GSTableOfSymbolsPtr _tableOfSymbols;
         };

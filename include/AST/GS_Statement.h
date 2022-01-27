@@ -21,8 +21,8 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         *
-         * @param scope
+         * Constructor for statement
+         * @param scope Statement scope
          */
         explicit GS_Statement(GSScopePtr scope);
 

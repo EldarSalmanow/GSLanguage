@@ -12,7 +12,7 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Constructor for GS_FunctionCallingExpression
+         * Constructor for function calling expression
          * @param name Function name
          * @param params Function params
          * @param scope Scope
