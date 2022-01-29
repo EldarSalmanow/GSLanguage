@@ -9,6 +9,7 @@ namespace GSLanguageCompiler::AST {
      * Declaration type
      */
     enum class DeclarationType {
+        TranslationUnitDeclaration,
         FunctionDeclaration
     };
 

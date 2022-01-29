@@ -9,6 +9,7 @@ set(GS_AST_SOURCE
         ${AST_DIR}/GS_Statement.cpp
         ${AST_DIR}/GS_Expression.cpp
 
+        ${AST_DIR}/Declarations/GS_TranslationUnitDeclaration.cpp
         ${AST_DIR}/Declarations/GS_FunctionDeclaration.cpp
 
         ${AST_DIR}/Statements/GS_VariableDeclarationStatement.cpp
@@ -20,8 +21,6 @@ set(GS_AST_SOURCE
         ${AST_DIR}/Expressions/GS_BinaryExpression.cpp
         ${AST_DIR}/Expressions/GS_VariableUsingExpression.cpp
         ${AST_DIR}/Expressions/GS_FunctionCallingExpression.cpp
-
-        ${AST_DIR}/GS_TranslationUnit.cpp
 
         ${AST_DIR}/GS_Type.cpp
         ${AST_DIR}/GS_Scope.cpp

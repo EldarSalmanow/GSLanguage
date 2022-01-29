@@ -38,8 +38,8 @@ namespace GSLanguageCompiler::AST {
          * @return Value
          */
         template<typename T>
-        T getValueWithCast() {
-            return std::any_cast<T>(_value);
+        T getValueWithCast() const {
+            return std::any_cast<T>(getValue());
         }
 
     public:
@@ -48,13 +48,13 @@ namespace GSLanguageCompiler::AST {
          * Getter for value
          * @return Value
          */
-        Any getValue();
+        Any getValue() const;
 
         /**
          * Getter for type ptr
          * @return Type ptr
          */
-        GSTypePtr getType();
+        GSTypePtr getType() const;
 
     private:
 

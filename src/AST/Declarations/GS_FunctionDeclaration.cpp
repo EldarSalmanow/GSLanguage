@@ -17,7 +17,11 @@ namespace GSLanguageCompiler::AST {
     }
 
     Void GS_FunctionDeclaration::addStatement(GSStatementPtr statement) {
-        _body.emplace_back(std::move(statement));
+        auto bodyStatement = std::move(statement);
+
+        _body.emplace_back(bodyStatement);
+
+        _functionScope->addNode(bodyStatement);
     }
 
     UString GS_FunctionDeclaration::getName() const {

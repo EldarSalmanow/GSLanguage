@@ -4,11 +4,11 @@ namespace GSLanguageCompiler::AST {
 
     GS_Value::~GS_Value() = default;
 
-    Any GS_Value::getValue() {
+    Any GS_Value::getValue() const {
         return _value;
     }
 
-    GSTypePtr GS_Value::getType() {
+    GSTypePtr GS_Value::getType() const {
         return _type;
     }
 

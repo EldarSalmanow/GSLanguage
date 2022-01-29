@@ -15,10 +15,10 @@ namespace GSLanguageCompiler::Driver {
         return tokenTypesAsString[StaticCast<I32>(type)];
     }
 
-    GS_TranslationUnit::GS_TranslationUnit(UString name)
+    GS_TranslationUnitDeclaration::GS_TranslationUnitDeclaration(UString name)
             : _name(std::move(name)) {}
 
-    I32 GS_TranslationUnit::compile() {
+    I32 GS_TranslationUnitDeclaration::compile() {
         UFileStream fileStream;
 
         fileStream.Open(_name, in_mode);
@@ -38,7 +38,7 @@ namespace GSLanguageCompiler::Driver {
         return 0;
     }
 
-    UString GS_TranslationUnit::getName() const {
+    UString GS_TranslationUnitDeclaration::getName() const {
         return _name;
     }
 

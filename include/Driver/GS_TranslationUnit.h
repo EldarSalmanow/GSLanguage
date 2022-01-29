@@ -1,14 +1,14 @@
-#ifndef GSLANGUAGE_GS_TRANSLATIONUNIT_H
+#ifndef GSLANGUAGE_GS_TRANSLATIONUNITDECLARATION_H
 #define GSLANGUAGE_GS_TRANSLATIONUNIT_H
 
 #include <GSCrossPlatform/GS_CrossPlatform.h>
 
 namespace GSLanguageCompiler::Driver {
 
-    class GS_TranslationUnit {
+    class GS_TranslationUnitDeclaration {
     public:
 
-        explicit GS_TranslationUnit(UString name);
+        explicit GS_TranslationUnitDeclaration(UString name);
 
     public:
 
@@ -25,4 +25,4 @@ namespace GSLanguageCompiler::Driver {
 
 }
 
-#endif //GSLANGUAGE_GS_TRANSLATIONUNIT_H
+#endif //GSLANGUAGE_GS_TRANSLATIONUNITDECLARATION_H

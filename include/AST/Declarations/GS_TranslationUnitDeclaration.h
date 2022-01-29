@@ -1,5 +1,7 @@
-#ifndef GSLANGUAGE_GS_TRANSLATIONUNIT_H
-#define GSLANGUAGE_GS_TRANSLATIONUNIT_H
+#ifndef GSLANGUAGE_GS_TRANSLATIONUNITDECLARATION_H
+#define GSLANGUAGE_GS_TRANSLATIONUNITDECLARATION_H
+
+#include <AST/GS_Declaration.h>
 
 #include <AST/GS_Scope.h>
 
@@ -8,7 +10,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * Class for translation units
      */
-    class GS_TranslationUnit {
+    class GS_TranslationUnitDeclaration : public GS_Declaration {
     public:
 
         /**
@@ -16,7 +18,7 @@ namespace GSLanguageCompiler::AST {
          * @param nodes Nodes
          * @param scope Global scope
          */
-        GS_TranslationUnit(GSNodePtrArray nodes, GSScopePtr scope);
+        GS_TranslationUnitDeclaration(GSNodePtrArray nodes, GSScopePtr scope);
 
     public:
 
@@ -24,13 +26,21 @@ namespace GSLanguageCompiler::AST {
          * Getter for nodes
          * @return Nodes
          */
-        GSNodePtrArray getNodes() const;
+        LRef<GSNodePtrArray> getNodes();
 
         /**
          * Getter for global scope
          * @return Global scope
          */
-        GSScopePtr getScope() const;
+        LRef<GSScopePtr> getGlobalScope();
+
+    public:
+
+        /**
+         * Getter for declaration type
+         * @return Declaration type
+         */
+        DeclarationType getDeclarationType() const override;
 
     private:
 
@@ -48,7 +58,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * Translation unit ptr type
      */
-    using GSTranslationUnitPtr = SharedPtr<GS_TranslationUnit>;
+    using GSTranslationUnitPtr = SharedPtr<GS_TranslationUnitDeclaration>;
 
     /**
      * Translation unit ptr array type
@@ -57,4 +67,4 @@ namespace GSLanguageCompiler::AST {
 
 }
 
-#endif //GSLANGUAGE_GS_TRANSLATIONUNIT_H
+#endif //GSLANGUAGE_GS_TRANSLATIONUNITDECLARATION_H

@@ -27,6 +27,13 @@ namespace GSLanguageCompiler::AST {
         GSNodePtr visit(ConstLRef<GSNodePtr> node) override;
 
         /**
+         * Visit translation unit declaration
+         * @param translationUnitDeclaration Translation unit declaration
+         * @return Transformed node
+         */
+        GSNodePtr visit(SharedPtr<GS_TranslationUnitDeclaration> translationUnitDeclaration) override;
+
+        /**
          * Visit function declaration
          * @param functionDeclaration Function declaration
          * @return Transformed node

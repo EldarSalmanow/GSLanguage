@@ -15,7 +15,7 @@ namespace GSLanguageCompiler::AST {
         return _name;
     }
 
-    GSTypePtr GS_VariableDeclarationStatement::getType() const {
+    LRef<GSTypePtr> GS_VariableDeclarationStatement::getType() {
         return _type;
     }
 

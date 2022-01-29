@@ -1,6 +1,7 @@
 #ifndef GSLANGUAGE_GS_VISITOR_H
 #define GSLANGUAGE_GS_VISITOR_H
 
+#include <AST/Declarations/GS_TranslationUnitDeclaration.h>
 #include <AST/Declarations/GS_FunctionDeclaration.h>
 
 #include <AST/Statements/GS_VariableDeclarationStatement.h>
@@ -35,6 +36,13 @@ namespace GSLanguageCompiler::AST {
          * @return Data
          */
         virtual T visit(ConstLRef<GSNodePtr> node) = 0;
+
+        /**
+         * Visit translation unit declaration
+         * @param translationUnitDeclaration Translation unit declaration
+         * @return Data
+         */
+        virtual T visit(SharedPtr<GS_TranslationUnitDeclaration> translationUnitDeclaration) = 0;
 
         /**
          * Visit function declaration
@@ -127,6 +135,13 @@ namespace GSLanguageCompiler::AST {
         Void visit(ConstLRef<GSNodePtr> node) override;
 
         /**
+         * Visit translation unit declaration
+         * @param translationUnitDeclaration Translation unit declaration
+         * @return
+         */
+        Void visit(SharedPtr<GS_TranslationUnitDeclaration> translationUnitDeclaration) override;
+
+        /**
          * Visit function declaration
          * @param functionDeclaration Function declaration
          * @return
@@ -189,55 +204,6 @@ namespace GSLanguageCompiler::AST {
          */
         Void visit(SharedPtr<GS_FunctionCallingExpression> functionCallingExpression) override;
     };
-
-    /**
-     * Acceptor for template AST visitor and AST nodes
-     * @tparam T Return type of visitor functions
-     * @param visitor Template AST visitor
-     * @param node AST node
-     * @return Return type of visitor functions
-     */
-    template<typename T>
-    T Accept(Ptr<GS_Visitor<T>> visitor, ConstLRef<GSNodePtr> node) {
-        if (node->isDeclaration()) {
-            auto declaration = std::reinterpret_pointer_cast<GS_Declaration>(node);
-
-            switch (declaration->getDeclarationType()) {
-                case DeclarationType::FunctionDeclaration:
-                    return visitor->visit(std::reinterpret_pointer_cast<GS_FunctionDeclaration>(declaration));
-            }
-        }
-
-        if (node->isStatement()) {
-            auto statement = std::reinterpret_pointer_cast<GS_Statement>(node);
-
-            switch (statement->getStatementType()) {
-                case StatementType::VariableDeclarationStatement:
-                    return visitor->visit(std::reinterpret_pointer_cast<GS_VariableDeclarationStatement>(statement));
-                case StatementType::AssignmentStatement:
-                    return visitor->visit(std::reinterpret_pointer_cast<GS_AssignmentStatement>(statement));
-                case StatementType::ExpressionStatement:
-                    return visitor->visit(std::reinterpret_pointer_cast<GS_ExpressionStatement>(statement));
-            }
-        }
-
-        if (node->isExpression()) {
-            auto expression = std::reinterpret_pointer_cast<GS_Expression>(node);
-
-            switch (expression->getExpressionType()) {
-                case ExpressionType::ConstantExpression:
-                    return visitor->visit(std::reinterpret_pointer_cast<GS_ConstantExpression>(expression));
-                case ExpressionType::UnaryExpression:
-                    return visitor->visit(std::reinterpret_pointer_cast<GS_UnaryExpression>(expression));
-                case ExpressionType::BinaryExpression:
-                    return visitor->visit(std::reinterpret_pointer_cast<GS_BinaryExpression>(expression));
-                case ExpressionType::VariableUsingExpression:
-                    return visitor->visit(std::reinterpret_pointer_cast<GS_VariableUsingExpression>(expression));
-                case ExpressionType::FunctionCallingExpression:
-                    return visitor->visit(std::reinterpret_pointer_cast<GS_FunctionCallingExpression>(expression));
-            }
-        }
-    }
 
 }
 

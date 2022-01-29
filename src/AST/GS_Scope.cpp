@@ -1,9 +1,11 @@
+#include <Semantic/GS_TableOfSymbols.h>
+
 #include <GS_Scope.h>
 
 namespace GSLanguageCompiler::AST {
 
     GS_Scope::GS_Scope(GSScopePtr parent)
-            : _parent(std::move(parent)) {}
+            : _parent(std::move(parent)), _tableOfSymbols(std::make_shared<Semantic::GS_TableOfSymbols>()) {}
 
     Void GS_Scope::addScope(GSScopePtr scope) {
         _scopes.emplace_back(std::move(scope));

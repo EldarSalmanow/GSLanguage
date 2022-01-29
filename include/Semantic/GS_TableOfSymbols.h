@@ -17,7 +17,7 @@ namespace GSLanguageCompiler::Semantic {
          *
          * @return
          */
-        virtual Bool isVariable();
+        virtual Bool isVariable() const;
     };
 
     /**
@@ -42,7 +42,7 @@ namespace GSLanguageCompiler::Semantic {
          * @param type
          * @param expression
          */
-        GS_VariableSymbol(String name, AST::GSTypePtr type, AST::GSExpressionPtr expression);
+        GS_VariableSymbol(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression);
 
     public:
 
@@ -50,19 +50,19 @@ namespace GSLanguageCompiler::Semantic {
          *
          * @return
          */
-        String getName();
+        UString getName() const;
 
         /**
          *
          * @return
          */
-        AST::GSTypePtr getType();
+        AST::GSTypePtr getType() const;
 
         /**
          *
          * @return
          */
-        AST::GSExpressionPtr getExpression();
+        LRef<AST::GSExpressionPtr> getExpression();
 
     public:
 
@@ -70,14 +70,14 @@ namespace GSLanguageCompiler::Semantic {
          *
          * @return
          */
-        Bool isVariable() override;
+        Bool isVariable() const override;
 
     private:
 
         /**
          *
          */
-        String _name;
+        UString _name;
 
         /**
          *
@@ -117,7 +117,14 @@ namespace GSLanguageCompiler::Semantic {
          * @param expression
          * @return
          */
-        Void addVariable(String name, AST::GSTypePtr type, AST::GSExpressionPtr expression);
+        Void addVariable(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression);
+
+        /**
+         *
+         * @param name
+         * @return
+         */
+        SharedPtr<GS_VariableSymbol> getVariable(UString name);
 
     private:
 

@@ -51,7 +51,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for variable type
          * @return Variable type
          */
-        GSTypePtr getType() const;
+        LRef<GSTypePtr> getType();
 
         /**
          * Getter for expression for variable
