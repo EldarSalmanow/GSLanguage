@@ -4,7 +4,7 @@
 
 namespace GSLanguageCompiler::Driver {
 
-    GS_TranslationUnitsManager::GS_TranslationUnitsManager(Vector<GS_TranslationUnitDeclaration> translationUnits)
+    GS_TranslationUnitsManager::GS_TranslationUnitsManager(Vector<GS_TranslationUnit> translationUnits)
             : _translationUnits(std::move(translationUnits)) {}
 
     I32 GS_TranslationUnitsManager::compileUnits() {
@@ -19,7 +19,7 @@ namespace GSLanguageCompiler::Driver {
         return returnCode;
     }
 
-    Vector<GS_TranslationUnitDeclaration> GS_TranslationUnitsManager::getTranslationUnits() {
+    Vector<GS_TranslationUnit> GS_TranslationUnitsManager::getTranslationUnits() {
         return _translationUnits;
     }
 

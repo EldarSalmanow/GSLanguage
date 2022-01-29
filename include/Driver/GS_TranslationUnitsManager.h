@@ -8,7 +8,7 @@ namespace GSLanguageCompiler::Driver {
     class GS_TranslationUnitsManager {
     public:
 
-        explicit GS_TranslationUnitsManager(Vector<GS_TranslationUnitDeclaration> files);
+        explicit GS_TranslationUnitsManager(Vector<GS_TranslationUnit> files);
 
     public:
 
@@ -16,11 +16,11 @@ namespace GSLanguageCompiler::Driver {
 
     public:
 
-        Vector<GS_TranslationUnitDeclaration> getTranslationUnits();
+        Vector<GS_TranslationUnit> getTranslationUnits();
 
     private:
 
-        Vector<GS_TranslationUnitDeclaration> _translationUnits;
+        Vector<GS_TranslationUnit> _translationUnits;
     };
 
 }

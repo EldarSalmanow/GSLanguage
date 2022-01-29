@@ -5,10 +5,10 @@
 
 namespace GSLanguageCompiler::Driver {
 
-    class GS_TranslationUnitDeclaration {
+    class GS_TranslationUnit {
     public:
 
-        explicit GS_TranslationUnitDeclaration(UString name);
+        explicit GS_TranslationUnit(UString name);
 
     public:
 
