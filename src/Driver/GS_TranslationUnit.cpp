@@ -15,7 +15,7 @@ namespace GSLanguageCompiler::Driver {
         return tokenTypesAsString[StaticCast<I32>(type)];
     }
 
-    GS_TranslationUnit::GS_TranslationUnitDeclaration(UString name)
+    GS_TranslationUnit::GS_TranslationUnit(UString name)
             : _name(std::move(name)) {}
 
     I32 GS_TranslationUnit::compile() {

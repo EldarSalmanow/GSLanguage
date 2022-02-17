@@ -1,3 +1,3 @@
 func main() {
-    var a: I32 = 10
+    var a: I32 = 1 - 2 * 3
 }

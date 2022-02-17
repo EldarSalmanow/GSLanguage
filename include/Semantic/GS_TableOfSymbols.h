@@ -1,6 +1,7 @@
 #ifndef GSLANGUAGE_GS_TABLEOFSYMBOLS_H
 #define GSLANGUAGE_GS_TABLEOFSYMBOLS_H
 
+#include <AST/GS_Statement.h>
 #include <AST/GS_Expression.h>
 
 #include <AST/GS_Type.h>
@@ -18,6 +19,11 @@ namespace GSLanguageCompiler::Semantic {
          * @return
          */
         virtual Bool isVariable() const;
+
+        /**
+         *
+         */
+        virtual Bool isFunction() const;
     };
 
     /**
@@ -56,7 +62,7 @@ namespace GSLanguageCompiler::Semantic {
          *
          * @return
          */
-        AST::GSTypePtr getType() const;
+        LRef<AST::GSTypePtr> getType();
 
         /**
          *
@@ -93,6 +99,54 @@ namespace GSLanguageCompiler::Semantic {
     /**
      *
      */
+    class GS_FunctionSymbol : public GS_Symbol {
+    public:
+
+        /**
+         *
+         * @param name
+         * @param body
+         */
+        GS_FunctionSymbol(UString name, AST::GSStatementPtrArray body);
+
+    public:
+
+        /**
+         *
+         * @return
+         */
+        UString getName() const;
+
+        /**
+         *
+         * @return
+         */
+        LRef<AST::GSStatementPtrArray> getBody();
+
+    public:
+
+        /**
+         *
+         * @return
+         */
+        Bool isFunction() const override;
+
+    private:
+
+        /**
+         *
+         */
+        UString _name;
+
+        /**
+         *
+         */
+        AST::GSStatementPtrArray _body;
+    };
+
+    /**
+     *
+     */
     class GS_TableOfSymbols {
     public:
 
@@ -118,6 +172,14 @@ namespace GSLanguageCompiler::Semantic {
          * @return
          */
         Void addVariable(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression);
+
+        /**
+         *
+         * @param name
+         * @param body
+         * @return
+         */
+        Void addFunction(UString name, AST::GSStatementPtrArray body);
 
         /**
          *

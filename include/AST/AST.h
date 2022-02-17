@@ -28,6 +28,5 @@
 #include <AST/GS_Scope.h>
 
 #include <AST/GS_Visitor.h>
-#include <AST/GS_Transformer.h>
 
 #endif //GSLANGUAGE_AST_H

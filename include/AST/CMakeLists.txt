@@ -23,10 +23,7 @@ set(GS_AST_SOURCE
         ${AST_DIR}/Expressions/GS_FunctionCallingExpression.cpp
 
         ${AST_DIR}/GS_Type.cpp
-        ${AST_DIR}/GS_Scope.cpp
-
-        ${AST_DIR}/GS_Visitor.cpp
-        ${AST_DIR}/GS_Transformer.cpp)
+        ${AST_DIR}/GS_Scope.cpp)
 
 add_library(
 #       Library name
