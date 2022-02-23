@@ -8,7 +8,7 @@ namespace GSLanguageCompiler::Reader {
     SymbolT GS_Reader::getSymbol() {
         auto symbol = _stream->Get();
 
-        return ;
+        return symbol;
     }
 
 }

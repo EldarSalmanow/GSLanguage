@@ -36,7 +36,7 @@ set(PROJECT_LIBRARIES
         GSLexerLibrary
         GSDriverLibrary
         GSASTLibrary
-#        GSCodeGeneratorLibrary
+        GSCodeGeneratorLibrary
         GSSemanticLibrary
 #        GSParserLibrary
         )
@@ -56,7 +56,7 @@ add_subdirectory(${INCLUDE_DIR}/Driver)
 add_subdirectory(${INCLUDE_DIR}/AST)
 #add_subdirectory(${INCLUDE_DIR}/Parser)
 add_subdirectory(${INCLUDE_DIR}/Semantic)
-#add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
+add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
 
 #add_subdirectory(tests)
 
@@ -67,3 +67,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_LIBRARIES})
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${BINARY_DIR})
+
+# TODO reorganise build script

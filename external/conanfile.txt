@@ -1,6 +1,7 @@
 [requires]
-gtest/cci.20210126
 GSCrossPlatform/1.0
+rapidjson/cci.20211112
+gtest/cci.20210126
 
 [generators]
 cmake

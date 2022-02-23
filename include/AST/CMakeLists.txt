@@ -5,6 +5,10 @@ set(AST_DIR ${SOURCE_DIR}/AST)
 set(GS_AST_SOURCE
         ${AST_DIR}/GS_Node.cpp
 
+        ${AST_DIR}/GS_Scope.cpp
+
+        ${AST_DIR}/GS_Type.cpp
+
         ${AST_DIR}/GS_Declaration.cpp
         ${AST_DIR}/GS_Statement.cpp
         ${AST_DIR}/GS_Expression.cpp
@@ -22,8 +26,7 @@ set(GS_AST_SOURCE
         ${AST_DIR}/Expressions/GS_VariableUsingExpression.cpp
         ${AST_DIR}/Expressions/GS_FunctionCallingExpression.cpp
 
-        ${AST_DIR}/GS_Type.cpp
-        ${AST_DIR}/GS_Scope.cpp)
+        ${AST_DIR}/GS_Pass.cpp)
 
 add_library(
 #       Library name

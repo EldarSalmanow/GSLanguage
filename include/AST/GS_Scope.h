@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_SCOPE_H
 #define GSLANGUAGE_GS_SCOPE_H
 
+#include <algorithm>
+
 #include <GSCrossPlatform/GS_CrossPlatform.h>
 
 namespace GSLanguageCompiler {
@@ -59,11 +61,12 @@ namespace GSLanguageCompiler {
             Void addNode(GSNodePtr node);
 
             /**
-             * Remove node from scope
-             * @param node Node
+             * Replace node in scope
+             * @param oldNode Old node
+             * @param newNode New node
              * @return
              */
-            Void removeNode(GSNodePtr node);
+            Void replaceNode(GSNodePtr oldNode, GSNodePtr newNode);
 
         public:
 

@@ -3,7 +3,7 @@ project(GSCodeGeneratorLibrary)
 set(CODEGENERATOR_DIR ${SOURCE_DIR}/CodeGenerator)
 
 set(GS_CODEGENERATOR_SOURCE
-        ${CODEGENERATOR_DIR}/GS_CodeGenerationPass.cpp ../../src/CodeGenerator/GS_TranslationUnit.cpp ../../src/CodeGenerator/GS_CodeGenerationVisitor.cpp)
+        ${CODEGENERATOR_DIR}/GS_CodeGenerationPass.cpp)
 
 add_library(
 #       Library name
@@ -18,4 +18,4 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR}/CodeGenerator)
 
 llvm_map_components_to_libnames(LLVM_LIBS core native)
 
-target_link_libraries(${PROJECT_NAME} ${LLVM_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${LLVM_LIBS})

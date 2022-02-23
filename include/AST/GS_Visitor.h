@@ -38,6 +38,27 @@ namespace GSLanguageCompiler::AST {
         virtual T visitNode(ConstLRef<GSNodePtr> node) = 0;
 
         /**
+         * Visit declaration
+         * @param declaration Declaration
+         * @return Data
+         */
+        virtual T visitDeclaration(ConstLRef<GSDeclarationPtr> declaration) = 0;
+
+        /**
+         * Visit statement
+         * @param statement Statement
+         * @return Data
+         */
+        virtual T visitStatement(ConstLRef<GSStatementPtr> statement) = 0;
+
+        /**
+         * Visit expression
+         * @param expression Expression
+         * @return Data
+         */
+        virtual T visitExpression(ConstLRef<GSExpressionPtr> expression) = 0;
+
+        /**
          * Visit translation unit declaration
          * @param translationUnitDeclaration Translation unit declaration
          * @return Data
@@ -109,7 +130,7 @@ namespace GSLanguageCompiler::AST {
     };
 
     /**
-     * Base class for all AST visitors
+     * Template specialisation for all AST visitors
      */
     template<>
     class GS_BaseVisitor<Void> {
@@ -131,49 +152,69 @@ namespace GSLanguageCompiler::AST {
             if (node->isDeclaration()) {
                 auto declaration = std::reinterpret_pointer_cast<GS_Declaration>(node);
 
-                switch (declaration->getDeclarationType()) {
-                    case DeclarationType::TranslationUnitDeclaration:
-                        return visitTranslationUnitDeclaration(
-                                std::reinterpret_pointer_cast<GS_TranslationUnitDeclaration>(declaration));
-                    case DeclarationType::FunctionDeclaration:
-                        return visitFunctionDeclaration(
-                                std::reinterpret_pointer_cast<GS_FunctionDeclaration>(declaration));
-                }
+                return visitDeclaration(declaration);
             }
 
             if (node->isStatement()) {
                 auto statement = std::reinterpret_pointer_cast<GS_Statement>(node);
 
-                switch (statement->getStatementType()) {
-                    case StatementType::VariableDeclarationStatement:
-                        return visitVariableDeclarationStatement(
-                                std::reinterpret_pointer_cast<GS_VariableDeclarationStatement>(statement));
-                    case StatementType::AssignmentStatement:
-                        return visitAssignmentStatement(
-                                std::reinterpret_pointer_cast<GS_AssignmentStatement>(statement));
-                    case StatementType::ExpressionStatement:
-                        return visitExpressionStatement(
-                                std::reinterpret_pointer_cast<GS_ExpressionStatement>(statement));
-                }
+                return visitStatement(statement);
             }
 
             if (node->isExpression()) {
                 auto expression = std::reinterpret_pointer_cast<GS_Expression>(node);
 
-                switch (expression->getExpressionType()) {
-                    case ExpressionType::ConstantExpression:
-                        return visitConstantExpression(std::reinterpret_pointer_cast<GS_ConstantExpression>(expression));
-                    case ExpressionType::UnaryExpression:
-                        return visitUnaryExpression(std::reinterpret_pointer_cast<GS_UnaryExpression>(expression));
-                    case ExpressionType::BinaryExpression:
-                        return visitBinaryExpression(std::reinterpret_pointer_cast<GS_BinaryExpression>(expression));
-                    case ExpressionType::VariableUsingExpression:
-                        return visitVariableUsingExpression(
-                                std::reinterpret_pointer_cast<GS_VariableUsingExpression>(expression));
-                    case ExpressionType::FunctionCallingExpression:
-                        return visitFunctionCallingExpression(
-                                std::reinterpret_pointer_cast<GS_FunctionCallingExpression>(expression));
-                }
+                return visitExpression(expression);
+            }
+        }
+
+        /**
+         * Visit declaration
+         * @param declaration Declaration
+         * @return
+         */
+        virtual Void visitDeclaration(ConstLRef<GSDeclarationPtr> declaration) {
+            switch (declaration->getDeclarationType()) {
+                case DeclarationType::TranslationUnitDeclaration:
+                    return visitTranslationUnitDeclaration(std::reinterpret_pointer_cast<GS_TranslationUnitDeclaration>(declaration));
+                case DeclarationType::FunctionDeclaration:
+                    return visitFunctionDeclaration(std::reinterpret_pointer_cast<GS_FunctionDeclaration>(declaration));
+            }
+        }
+
+        /**
+         * Visit statement
+         * @param statement Statement
+         * @return
+         */
+        virtual Void visitStatement(ConstLRef<GSStatementPtr> statement) {
+            switch (statement->getStatementType()) {
+                case StatementType::VariableDeclarationStatement:
+                    return visitVariableDeclarationStatement(std::reinterpret_pointer_cast<GS_VariableDeclarationStatement>(statement));
+                case StatementType::AssignmentStatement:
+                    return visitAssignmentStatement(std::reinterpret_pointer_cast<GS_AssignmentStatement>(statement));
+                case StatementType::ExpressionStatement:
+                    return visitExpressionStatement(std::reinterpret_pointer_cast<GS_ExpressionStatement>(statement));
+            }
+        }
+
+        /**
+         * Visit expression
+         * @param expression Expression
+         * @return
+         */
+        virtual Void visitExpression(ConstLRef<GSExpressionPtr> expression) {
+            switch (expression->getExpressionType()) {
+                case ExpressionType::ConstantExpression:
+                    return visitConstantExpression(std::reinterpret_pointer_cast<GS_ConstantExpression>(expression));
+                case ExpressionType::UnaryExpression:
+                    return visitUnaryExpression(std::reinterpret_pointer_cast<GS_UnaryExpression>(expression));
+                case ExpressionType::BinaryExpression:
+                    return visitBinaryExpression(std::reinterpret_pointer_cast<GS_BinaryExpression>(expression));
+                case ExpressionType::VariableUsingExpression:
+                    return visitVariableUsingExpression(std::reinterpret_pointer_cast<GS_VariableUsingExpression>(expression));
+                case ExpressionType::FunctionCallingExpression:
+                    return visitFunctionCallingExpression(std::reinterpret_pointer_cast<GS_FunctionCallingExpression>(expression));
             }
         }
 
@@ -295,7 +336,7 @@ namespace GSLanguageCompiler::AST {
     };
 
     /**
-     * Base class for all AST transformers
+     * Template specialisation for all AST visitors
      */
     template<>
     class GS_BaseVisitor<GSNodePtr> {
@@ -314,49 +355,69 @@ namespace GSLanguageCompiler::AST {
             if (node->isDeclaration()) {
                 auto declaration = std::reinterpret_pointer_cast<GS_Declaration>(node);
 
-                switch (declaration->getDeclarationType()) {
-                    case DeclarationType::TranslationUnitDeclaration:
-                        return visitTranslationUnitDeclaration(
-                                std::reinterpret_pointer_cast<GS_TranslationUnitDeclaration>(declaration));
-                    case DeclarationType::FunctionDeclaration:
-                        return visitFunctionDeclaration(
-                                std::reinterpret_pointer_cast<GS_FunctionDeclaration>(declaration));
-                }
+                return visitDeclaration(declaration);
             }
 
             if (node->isStatement()) {
                 auto statement = std::reinterpret_pointer_cast<GS_Statement>(node);
 
-                switch (statement->getStatementType()) {
-                    case StatementType::VariableDeclarationStatement:
-                        return visitVariableDeclarationStatement(
-                                std::reinterpret_pointer_cast<GS_VariableDeclarationStatement>(statement));
-                    case StatementType::AssignmentStatement:
-                        return visitAssignmentStatement(
-                                std::reinterpret_pointer_cast<GS_AssignmentStatement>(statement));
-                    case StatementType::ExpressionStatement:
-                        return visitExpressionStatement(
-                                std::reinterpret_pointer_cast<GS_ExpressionStatement>(statement));
-                }
+                return visitStatement(statement);
             }
 
             if (node->isExpression()) {
                 auto expression = std::reinterpret_pointer_cast<GS_Expression>(node);
 
-                switch (expression->getExpressionType()) {
-                    case ExpressionType::ConstantExpression:
-                        return visitConstantExpression(std::reinterpret_pointer_cast<GS_ConstantExpression>(expression));
-                    case ExpressionType::UnaryExpression:
-                        return visitUnaryExpression(std::reinterpret_pointer_cast<GS_UnaryExpression>(expression));
-                    case ExpressionType::BinaryExpression:
-                        return visitBinaryExpression(std::reinterpret_pointer_cast<GS_BinaryExpression>(expression));
-                    case ExpressionType::VariableUsingExpression:
-                        return visitVariableUsingExpression(
-                                std::reinterpret_pointer_cast<GS_VariableUsingExpression>(expression));
-                    case ExpressionType::FunctionCallingExpression:
-                        return visitFunctionCallingExpression(
-                                std::reinterpret_pointer_cast<GS_FunctionCallingExpression>(expression));
-                }
+                return visitExpression(expression);
+            }
+        }
+
+        /**
+         * Visit declaration
+         * @param declaration Declaration
+         * @return Transformed node
+         */
+        virtual GSNodePtr visitDeclaration(ConstLRef<GSDeclarationPtr> declaration) {
+            switch (declaration->getDeclarationType()) {
+                case DeclarationType::TranslationUnitDeclaration:
+                    return visitTranslationUnitDeclaration(std::reinterpret_pointer_cast<GS_TranslationUnitDeclaration>(declaration));
+                case DeclarationType::FunctionDeclaration:
+                    return visitFunctionDeclaration(std::reinterpret_pointer_cast<GS_FunctionDeclaration>(declaration));
+            }
+        }
+
+        /**
+         * Visit statement
+         * @param statement Statement
+         * @return Transformed node
+         */
+        virtual GSNodePtr visitStatement(ConstLRef<GSStatementPtr> statement) {
+            switch (statement->getStatementType()) {
+                case StatementType::VariableDeclarationStatement:
+                    return visitVariableDeclarationStatement(std::reinterpret_pointer_cast<GS_VariableDeclarationStatement>(statement));
+                case StatementType::AssignmentStatement:
+                    return visitAssignmentStatement(std::reinterpret_pointer_cast<GS_AssignmentStatement>(statement));
+                case StatementType::ExpressionStatement:
+                    return visitExpressionStatement(std::reinterpret_pointer_cast<GS_ExpressionStatement>(statement));
+            }
+        }
+
+        /**
+         * Visit expression
+         * @param expression Expression
+         * @return Transformed node
+         */
+        virtual GSNodePtr visitExpression(ConstLRef<GSExpressionPtr> expression) {
+            switch (expression->getExpressionType()) {
+                case ExpressionType::ConstantExpression:
+                    return visitConstantExpression(std::reinterpret_pointer_cast<GS_ConstantExpression>(expression));
+                case ExpressionType::UnaryExpression:
+                    return visitUnaryExpression(std::reinterpret_pointer_cast<GS_UnaryExpression>(expression));
+                case ExpressionType::BinaryExpression:
+                    return visitBinaryExpression(std::reinterpret_pointer_cast<GS_BinaryExpression>(expression));
+                case ExpressionType::VariableUsingExpression:
+                    return visitVariableUsingExpression(std::reinterpret_pointer_cast<GS_VariableUsingExpression>(expression));
+                case ExpressionType::FunctionCallingExpression:
+                    return visitFunctionCallingExpression(std::reinterpret_pointer_cast<GS_FunctionCallingExpression>(expression));
             }
         }
 
@@ -511,9 +572,25 @@ namespace GSLanguageCompiler::AST {
         }
     };
 
+    /**
+     * Visitor type
+     */
     using GS_Visitor = GS_BaseVisitor<Void>;
 
+    /**
+     * Visitor ptr type
+     */
+    using GSVisitorPtr = SharedPtr<GS_Visitor>;
+
+    /**
+     * Transformer type
+     */
     using GS_Transformer = GS_BaseVisitor<GSNodePtr>;
+
+    /**
+     * Transformer ptr type
+     */
+    using GSTransformerPtr = SharedPtr<GS_Transformer>;
 
 }
 

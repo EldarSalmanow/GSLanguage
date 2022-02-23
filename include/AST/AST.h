@@ -7,6 +7,10 @@
 
 #include <AST/GS_Node.h>
 
+#include <AST/GS_Scope.h>
+
+#include <AST/GS_Type.h>
+
 #include <AST/GS_Declaration.h>
 #include <AST/GS_Statement.h>
 #include <AST/GS_Expression.h>
@@ -24,9 +28,7 @@
 #include <AST/Expressions/GS_VariableUsingExpression.h>
 #include <AST/Expressions/GS_FunctionCallingExpression.h>
 
-#include <AST/GS_Type.h>
-#include <AST/GS_Scope.h>
-
 #include <AST/GS_Visitor.h>
+#include <AST/GS_Pass.h>
 
 #endif //GSLANGUAGE_AST_H
