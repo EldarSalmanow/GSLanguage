@@ -3,26 +3,16 @@
 
 #include <AST/GS_Pass.h>
 
+#include <CodeGenerator/GS_CodeGenerationVisitor.h>
+
 namespace GSLanguageCompiler::CodeGenerator {
 
-    class GS_CompilerUnit;
+    class GS_CodeGenerationVisitor;
 
     class GS_CodeGenerationPass : public AST::GS_Pass {
     public:
 
-        explicit GS_CodeGenerationPass(GS_CompilerUnit *compilerUnit);
-
-    public:
-
-        GS_CompilerUnit *getCompilerUnit();
-
-    public:
-
-        Void runForDeclarations(AST::GSDeclarationPtrArray &declarations) override;
-
-    private:
-
-        GS_CompilerUnit *_compilerUnit;
+        explicit GS_CodeGenerationPass(SharedPtr<GS_CodeGenerationVisitor> visitor);
     };
 
 }
