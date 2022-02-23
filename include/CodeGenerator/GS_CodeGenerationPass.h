@@ -7,11 +7,16 @@
 
 namespace GSLanguageCompiler::CodeGenerator {
 
-    class GS_CodeGenerationVisitor;
-
+    /**
+     *
+     */
     class GS_CodeGenerationPass : public AST::GS_Pass {
     public:
 
+        /**
+         *
+         * @param visitor
+         */
         explicit GS_CodeGenerationPass(SharedPtr<GS_CodeGenerationVisitor> visitor);
     };
 

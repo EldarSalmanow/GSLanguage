@@ -369,6 +369,8 @@ namespace GSLanguageCompiler::AST {
 
                 return visitExpression(expression);
             }
+
+            return nullptr;
         }
 
         /**

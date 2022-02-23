@@ -14,16 +14,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         /**
          *
          */
-        virtual ~GS_CompilerUnit() = default;
-
-    public:
-
-        /**
-         *
-         * @param name
-         * @return
-         */
-        virtual Bool write(UString name) = 0;
+        virtual ~GS_CompilerUnit();
     };
 
     /**
