@@ -24,11 +24,11 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         Ptr<llvm::Value> visitNode(ConstLRef<AST::GSNodePtr> node) override;
 
-        Ptr<llvm::Value> visitDeclaration(const AST::GSDeclarationPtr &declaration) override;
+        Ptr<llvm::Value> visitDeclaration(ConstLRef<AST::GSDeclarationPtr> declaration) override;
 
-        Ptr<llvm::Value> visitStatement(const AST::GSStatementPtr &statement) override;
+        Ptr<llvm::Value> visitStatement(ConstLRef<AST::GSStatementPtr> statement) override;
 
-        Ptr<llvm::Value> visitExpression(const AST::GSExpressionPtr &expression) override;
+        Ptr<llvm::Value> visitExpression(ConstLRef<AST::GSExpressionPtr> expression) override;
 
         Ptr<llvm::Value> visitTranslationUnitDeclaration(SharedPtr<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration) override;
 
@@ -60,20 +60,15 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     private:
 
-        llvm::Type *getType(AST::GSTypePtr type);
-
-        llvm::Type *getI32Type();
-
-        llvm::Type *getStringType();
-
-        llvm::Type *getVoidType();
-
-    private:
-
         /**
          *
          */
         SharedPtr<GS_LLVMCompilerUnit> _unit;
+
+        /**
+         *
+         */
+        llvm::IRBuilder<> _builder;
     };
 
 }

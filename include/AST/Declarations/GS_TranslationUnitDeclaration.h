@@ -15,12 +15,19 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Constructor for translation unit
+         * @param name Name
          * @param nodes Nodes
          * @param scope Global scope
          */
-        GS_TranslationUnitDeclaration(GSNodePtrArray nodes, GSScopePtr scope);
+        GS_TranslationUnitDeclaration(UString name, GSNodePtrArray nodes, GSScopePtr scope);
 
     public:
+
+        /**
+         * Getter for name
+         * @return Name
+         */
+        UString getName() const;
 
         /**
          * Getter for nodes
@@ -43,6 +50,11 @@ namespace GSLanguageCompiler::AST {
         DeclarationType getDeclarationType() const override;
 
     private:
+
+        /**
+         * Name
+         */
+        UString _name;
 
         /**
          * Nodes

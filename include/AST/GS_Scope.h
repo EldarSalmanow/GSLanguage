@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-#include <GSCrossPlatform/GS_CrossPlatform.h>
+#include <GSCrossPlatform/CrossPlatform.h>
 
 namespace GSLanguageCompiler {
 

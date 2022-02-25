@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_TOKEN_H
 #define GSLANGUAGE_GS_TOKEN_H
 
-#include <GSCrossPlatform/GS_CrossPlatform.h>
+#include <GSCrossPlatform/CrossPlatform.h>
 
 #include <Lexer/GS_Keywords.h>
 

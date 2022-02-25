@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_COMPILERUNIT_H
 #define GSLANGUAGE_GS_COMPILERUNIT_H
 
-#include <GSCrossPlatform/GS_CrossPlatform.h>
+#include <GSCrossPlatform/CrossPlatform.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 

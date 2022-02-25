@@ -9,7 +9,9 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     /**
      *
+     * @tparam T
      */
+    template<typename T>
     class GS_CodeGenerationPass : public AST::GS_Pass {
     public:
 
@@ -17,7 +19,7 @@ namespace GSLanguageCompiler::CodeGenerator {
          *
          * @param visitor
          */
-        explicit GS_CodeGenerationPass(SharedPtr<GS_CodeGenerationVisitor> visitor);
+        explicit GS_CodeGenerationPass(SharedPtr<GS_CodeGenerationVisitor<T>> visitor);
     };
 
 }

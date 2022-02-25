@@ -1,7 +1,7 @@
 //#include <rapidjson/document.h>
 
 //#include <Reader/Reader.h>
-#include <Lexer/Lexer.h>
+//#include <Lexer/Lexer.h>
 //#include <Parser/Parser.h>
 #include <AST/AST.h>
 #include <CodeGenerator/CodeGenerator.h>
@@ -442,15 +442,15 @@ namespace GSLanguageCompiler::Driver {
                 : AST::GS_Pass(std::make_shared<CFVisitor>()) {}
     };
 
-    UString tokenTypeToString(Lexer::TokenType type) {
-        UString tokenTypesAsString[] = {
-            #define GS_TOKENTYPE(name) U#name
-
-            #include <Lexer/GS_Keywords.def>
-        };
-
-        return tokenTypesAsString[StaticCast<I32>(type)];
-    }
+//    UString tokenTypeToString(Lexer::TokenType type) {
+//        UString tokenTypesAsString[] = {
+//            #define GS_TOKENTYPE(name) U#name
+//
+//            #include <Lexer/GS_Keywords.def>
+//        };
+//
+//        return tokenTypesAsString[StaticCast<I32>(type)];
+//    }
 
     GS_TranslationUnit::GS_TranslationUnit(UString name)
             : _name(std::move(name)) {}
@@ -508,16 +508,23 @@ namespace GSLanguageCompiler::Driver {
                 function
         };
 
-        auto unit = std::make_shared<AST::GS_TranslationUnitDeclaration>(nodes, globalScope);
+        auto unit = std::make_shared<AST::GS_TranslationUnitDeclaration>(U"test", nodes, globalScope);
 
-        PrintASTPass printer;
-        ConstantFoldingASTPass folder;
+//        PrintASTPass printer;
+//        ConstantFoldingASTPass folder;
+//
+//        printer.run({unit});
+//
+//        folder.run({unit});
+//
+//        printer.run({unit});
 
-        printer.run({unit});
+        CodeGenerator::GS_LLVMCodeGenerationVisitor visitor;
+        visitor.visitNode(unit);
 
-        folder.run({unit});
+        auto compilerUnit = visitor.getCompilerUnit();
 
-        printer.run({unit});
+        std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCompilerUnit>(compilerUnit)->getModule().print(llvm::errs(), nullptr);
 
         return 0;
     }

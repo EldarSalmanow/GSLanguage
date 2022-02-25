@@ -4,7 +4,38 @@
 
 namespace GSLanguageCompiler::CodeGenerator {
 
-    GS_LLVMCodeGenerationVisitor::GS_LLVMCodeGenerationVisitor() = default;
+    Ptr<llvm::Type> GenerateType(AST::GSTypePtr type, LRef<llvm::LLVMContext> context) {
+        auto typeName = type->getName();
+
+        if (typeName == U"Void") {
+            return llvm::Type::getVoidTy(context);
+        } else if (typeName == U"I32") {
+            return llvm::Type::getInt32Ty(context);
+        } else if (typeName == U"String") {
+            return llvm::Type::getInt8PtrTy(context);
+        }
+
+        return nullptr;
+    }
+    
+    Ptr<llvm::Constant> GenerateValue(AST::GSValuePtr value, LRef<llvm::IRBuilder<>> builder) {
+        auto type = value->getType();
+        
+        auto typeName = type->getName();
+
+        auto &context = builder.getContext();
+
+        if (typeName == U"I32") {
+            return llvm::ConstantInt::get(GenerateType(type, context), value->getValueWithCast<I32>());
+        } else if (typeName == U"String") {
+            return builder.CreateGlobalStringPtr(value->getValueWithCast<UString>().asString());
+        }
+
+        return nullptr;
+    }
+    
+    GS_LLVMCodeGenerationVisitor::GS_LLVMCodeGenerationVisitor()
+            : _unit(std::make_shared<GS_LLVMCompilerUnit>()), _builder(_unit->getContext()) {}
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitNode(ConstLRef<AST::GSNodePtr> node) {
         if (node->isDeclaration()) {
@@ -62,11 +93,40 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitTranslationUnitDeclaration(SharedPtr<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration) {
+        auto nodes = translationUnitDeclaration->getNodes();
 
+        _unit->createModule(translationUnitDeclaration->getName());
+
+        for (auto &node : nodes) {
+            this->visitNode(node);
+        }
+
+        return nullptr;
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitFunctionDeclaration(SharedPtr<AST::GS_FunctionDeclaration> functionDeclaration) {
-        return nullptr;
+        auto name = functionDeclaration->getName();
+        auto body = functionDeclaration->getBody();
+
+        if (!_unit->hasModule()) {
+            return nullptr;
+        }
+
+        auto functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(_builder.getContext()), false);
+
+        auto function = llvm::Function::Create(functionType, llvm::Function::LinkageTypes::ExternalLinkage, name.asString(), _unit->getModule());
+
+        auto block = llvm::BasicBlock::Create(_unit->getContext(), "entry", function);
+
+        _builder.SetInsertPoint(block);
+
+        for (auto &statement : body) {
+            this->visitStatement(statement);
+        }
+
+        _builder.CreateRetVoid();
+
+        return function;
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitVariableDeclarationStatement(SharedPtr<AST::GS_VariableDeclarationStatement> variableDeclarationStatement) {
@@ -82,14 +142,39 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitConstantExpression(SharedPtr<AST::GS_ConstantExpression> constantExpression) {
+        auto value = constantExpression->getValue();
 
+        return GenerateValue(value, _builder);
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitUnaryExpression(SharedPtr<AST::GS_UnaryExpression> unaryExpression) {
+        auto expression = unaryExpression->getExpression();
+        auto operation = unaryExpression->getUnaryOperation();
+
+        switch (operation) {
+            case AST::UnaryOperation::Minus:
+                return _builder.CreateUnOp(llvm::Instruction::UnaryOps::FNeg, this->visitExpression(expression));
+        }
+
         return nullptr;
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitBinaryExpression(SharedPtr<AST::GS_BinaryExpression> binaryExpression) {
+        auto firstExpression = binaryExpression->getFirstExpression();
+        auto secondExpression = binaryExpression->getSecondExpression();
+        auto operation = binaryExpression->getBinaryOperation();
+
+        switch (operation) {
+            case AST::BinaryOperation::Plus:
+                return _builder.CreateAdd(this->visitExpression(firstExpression), this->visitExpression(secondExpression));
+            case AST::BinaryOperation::Minus:
+                return _builder.CreateSub(this->visitExpression(firstExpression), this->visitExpression(secondExpression));
+            case AST::BinaryOperation::Star:
+                return _builder.CreateMul(this->visitExpression(firstExpression), this->visitExpression(secondExpression));
+            case AST::BinaryOperation::Slash:
+                return _builder.CreateSDiv(this->visitExpression(firstExpression), this->visitExpression(secondExpression));
+        }
+
         return nullptr;
     }
 
@@ -103,34 +188,6 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     GSCompilerUnitPtr GS_LLVMCodeGenerationVisitor::getCompilerUnit() {
         return _unit;
-    }
-
-    llvm::Type *GS_LLVMCodeGenerationVisitor::getType(AST::GSTypePtr type) {
-        auto name = type->getName();
-
-        if (name == U"I32") {
-            return getI32Type();
-        } else if (name == U"String") {
-            return getStringType();
-        } else if (name == U"Void") {
-            return getVoidType();
-        }
-
-        return nullptr;
-    }
-
-    static llvm::LLVMContext context;
-
-    llvm::Type *GS_LLVMCodeGenerationVisitor::getI32Type() {
-        return llvm::Type::getInt32Ty(context);
-    }
-
-    llvm::Type *GS_LLVMCodeGenerationVisitor::getStringType() {
-        return nullptr;
-    }
-
-    llvm::Type *GS_LLVMCodeGenerationVisitor::getVoidType() {
-        return nullptr;
     }
 
 }

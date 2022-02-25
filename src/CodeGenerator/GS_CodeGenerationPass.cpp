@@ -2,7 +2,8 @@
 
 namespace GSLanguageCompiler::CodeGenerator {
 
-    GS_CodeGenerationPass::GS_CodeGenerationPass(SharedPtr<GS_CodeGenerationVisitor> visitor)
+    template<typename T>
+    GS_CodeGenerationPass<T>::GS_CodeGenerationPass(SharedPtr<GS_CodeGenerationVisitor<T>> visitor)
             : AST::GS_Pass(visitor) {}
 
 }

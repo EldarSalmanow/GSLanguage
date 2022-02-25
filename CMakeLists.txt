@@ -32,8 +32,8 @@ separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
 add_definitions(${LLVM_DEFINITIONS_LIST})
 
 set(PROJECT_LIBRARIES
-        GSReaderLibrary
-        GSLexerLibrary
+#        GSReaderLibrary
+#        GSLexerLibrary
         GSDriverLibrary
         GSASTLibrary
         GSCodeGeneratorLibrary
@@ -50,8 +50,8 @@ include_directories(${CONAN_INCLUDE_DIRS})
 
 include_directories(${INCLUDE_DIR})
 
-add_subdirectory(${INCLUDE_DIR}/Reader)
-add_subdirectory(${INCLUDE_DIR}/Lexer)
+#add_subdirectory(${INCLUDE_DIR}/Reader)
+#add_subdirectory(${INCLUDE_DIR}/Lexer)
 add_subdirectory(${INCLUDE_DIR}/Driver)
 add_subdirectory(${INCLUDE_DIR}/AST)
 #add_subdirectory(${INCLUDE_DIR}/Parser)
