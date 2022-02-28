@@ -24,6 +24,17 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
+         * Creating translation unit ptr
+         * @param name Name
+         * @param nodes Nodes
+         * @param scope Global scope
+         * @return Translation unit ptr
+         */
+        static SharedPtr<GS_TranslationUnitDeclaration> Create(UString name, GSNodePtrArray nodes, GSScopePtr scope);
+
+    public:
+
+        /**
          * Getter for name
          * @return Name
          */

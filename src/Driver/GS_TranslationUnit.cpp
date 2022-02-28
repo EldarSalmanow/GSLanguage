@@ -518,7 +518,7 @@ namespace GSLanguageCompiler::Driver {
                 function
         };
 
-        auto unit = std::make_shared<AST::GS_TranslationUnitDeclaration>(U"test", nodes, globalScope);
+        auto unit = AST::GS_TranslationUnitDeclaration::Create(U"test", nodes, globalScope);
 
         PrintVisitor printer;
         CFVisitor folder;
