@@ -4,17 +4,18 @@
 //#include <Lexer/Lexer.h>
 //#include <Parser/Parser.h>
 #include <AST/AST.h>
-#include <CodeGenerator/CodeGenerator.h>
+//#include <CodeGenerator/CodeGenerator.h>
 
 #include <GS_TranslationUnit.h>
+#include "AST/GS_Visitor.h"
 
 namespace GSLanguageCompiler::Driver {
 
-    class CFVisitor : public AST::GS_Transformer {
+    class CFVisitor : public AST::GS_Visitor<AST::GSNodePtr> {
     public:
 
         AST::GSNodePtr visitUnaryExpression(SharedPtr<AST::GS_UnaryExpression> unaryExpression) override {
-            unaryExpression = std::reinterpret_pointer_cast<AST::GS_UnaryExpression>(AST::GS_Transformer::visitUnaryExpression(unaryExpression));
+            unaryExpression = std::reinterpret_pointer_cast<AST::GS_UnaryExpression>(AST::GS_Visitor<AST::GSNodePtr>::visitUnaryExpression(unaryExpression));
 
             auto expression = unaryExpression->getExpression();
             auto operation = unaryExpression->getUnaryOperation();
@@ -38,7 +39,7 @@ namespace GSLanguageCompiler::Driver {
         }
 
         AST::GSNodePtr visitBinaryExpression(SharedPtr<AST::GS_BinaryExpression> binaryExpression) override {
-            binaryExpression = std::reinterpret_pointer_cast<AST::GS_BinaryExpression>(AST::GS_Transformer::visitBinaryExpression(binaryExpression));
+            binaryExpression = std::reinterpret_pointer_cast<AST::GS_BinaryExpression>(AST::GS_Visitor<AST::GSNodePtr>::visitBinaryExpression(binaryExpression));
 
             auto firstExpression = binaryExpression->getFirstExpression();
             auto secondExpression = binaryExpression->getSecondExpression();
@@ -133,7 +134,7 @@ namespace GSLanguageCompiler::Driver {
         }
     };
 
-    class PrintVisitor : public AST::GS_Visitor {
+    class PrintVisitor : public AST::GS_Visitor<Void> {
     public:
 
         Void visitTranslationUnitDeclaration(SharedPtr<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration) override {
@@ -428,18 +429,27 @@ namespace GSLanguageCompiler::Driver {
         I32 tabsNumber = 0;
     };
 
-    class PrintASTPass : public AST::GS_Pass {
+    class RenamerVisitor : public AST::GS_Visitor<AST::GSNodePtr> {
     public:
 
-        PrintASTPass()
-                : AST::GS_Pass(std::make_shared<PrintVisitor>()) {}
-    };
+        RenamerVisitor(ConstLRef<UString> firstName, ConstLRef<UString> secondName)
+                : _firstName(firstName), _secondName(secondName) {}
 
-    class ConstantFoldingASTPass : public AST::GS_Pass {
     public:
 
-        ConstantFoldingASTPass()
-                : AST::GS_Pass(std::make_shared<CFVisitor>()) {}
+        Result visitVariableDeclarationStatement(SharedPtr<AST::GS_VariableDeclarationStatement> variableDeclarationStatement) override {
+            auto &name = variableDeclarationStatement->getName();
+
+            if (name == _firstName) {
+                name = _secondName;
+            }
+
+            return variableDeclarationStatement;
+        }
+
+    private:
+
+        UString _firstName, _secondName;
     };
 
 //    UString tokenTypeToString(Lexer::TokenType type) {
@@ -510,21 +520,26 @@ namespace GSLanguageCompiler::Driver {
 
         auto unit = std::make_shared<AST::GS_TranslationUnitDeclaration>(U"test", nodes, globalScope);
 
-//        PrintASTPass printer;
-//        ConstantFoldingASTPass folder;
-//
-//        printer.run({unit});
-//
-//        folder.run({unit});
-//
-//        printer.run({unit});
+        PrintVisitor printer;
+        CFVisitor folder;
+        RenamerVisitor renamer(U"a"_us, U"b"_us);
 
-        CodeGenerator::GS_LLVMCodeGenerationVisitor visitor;
-        visitor.visitNode(unit);
+        printer.visitNode(unit);
 
-        auto compilerUnit = visitor.getCompilerUnit();
+        folder.visitNode(unit);
 
-        std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCompilerUnit>(compilerUnit)->getModule().print(llvm::errs(), nullptr);
+        printer.visitNode(unit);
+
+        renamer.visitNode(unit);
+
+        printer.visitNode(unit);
+
+//        CodeGenerator::GS_LLVMCodeGenerationVisitor visitor;
+//        visitor.visitNode(unit);
+//
+//        auto compilerUnit = visitor.getCompilerUnit();
+//
+//        std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCompilerUnit>(compilerUnit)->getModule().print(llvm::errs(), nullptr);
 
         return 0;
     }

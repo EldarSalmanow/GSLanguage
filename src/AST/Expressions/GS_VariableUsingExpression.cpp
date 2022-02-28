@@ -5,7 +5,7 @@ namespace GSLanguageCompiler::AST {
     GS_VariableUsingExpression::GS_VariableUsingExpression(UString name, GSScopePtr scope)
             : _name(std::move(name)), GS_Expression(std::move(scope)) {}
 
-    UString GS_VariableUsingExpression::getName() const {
+    LRef<UString> GS_VariableUsingExpression::getName() {
         return _name;
     }
 

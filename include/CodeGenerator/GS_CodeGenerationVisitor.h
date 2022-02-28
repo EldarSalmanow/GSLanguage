@@ -3,19 +3,19 @@
 
 #include <AST/GS_Visitor.h>
 
-#include <CodeGenerator/GS_CompilerUnit.h>
+#include <CodeGenerator/GS_TranslationModule.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
     template<typename T>
-    class GS_CodeGenerationVisitor : public AST::GS_BaseVisitor<T> {
+    class GS_CodeGenerationVisitor : public AST::GS_Visitor<T> {
     public:
 
         /**
          *
          * @return
          */
-        virtual GSCompilerUnitPtr getCompilerUnit() = 0;
+        virtual GSTranlsationModulePtr getTranslationModule() = 0;
     };
 
 }

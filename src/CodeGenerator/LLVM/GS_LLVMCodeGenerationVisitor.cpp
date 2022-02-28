@@ -35,7 +35,7 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
     
     GS_LLVMCodeGenerationVisitor::GS_LLVMCodeGenerationVisitor()
-            : _unit(std::make_shared<GS_LLVMCompilerUnit>()), _builder(_unit->getContext()) {}
+            : _unit(std::make_shared<GS_LLVMTranslationModule>()), _builder(_unit->getContext()) {}
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitNode(ConstLRef<AST::GSNodePtr> node) {
         if (node->isDeclaration()) {
@@ -186,8 +186,8 @@ namespace GSLanguageCompiler::CodeGenerator {
         return nullptr;
     }
 
-    GSCompilerUnitPtr GS_LLVMCodeGenerationVisitor::getCompilerUnit() {
-        return _unit;
+    GSTranlationModulePtr getTranslationModule() {
+        return _module;
     }
 
 }

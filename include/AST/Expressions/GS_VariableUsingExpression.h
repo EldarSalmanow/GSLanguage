@@ -24,7 +24,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for variable name
          * @return Variable name
          */
-        UString getName() const;
+        LRef<UString> getName();
 
     public:
 

@@ -32,7 +32,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for unary operation
          * @return Unary operation
          */
-        UnaryOperation getUnaryOperation() const;
+        LRef<UnaryOperation> getUnaryOperation();
 
         /**
          * Getter for expression ptr

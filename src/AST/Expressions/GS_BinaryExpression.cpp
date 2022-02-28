@@ -5,7 +5,7 @@ namespace GSLanguageCompiler::AST {
     GS_BinaryExpression::GS_BinaryExpression(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression, GSScopePtr scope)
             : _operation(operation), _firstExpression(std::move(firstExpression)), _secondExpression(std::move(secondExpression)), GS_Expression(std::move(scope)) {}
 
-    BinaryOperation GS_BinaryExpression::getBinaryOperation() const {
+    LRef<BinaryOperation> GS_BinaryExpression::getBinaryOperation() {
         return _operation;
     }
 

@@ -27,7 +27,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for name
          * @return Name
          */
-        UString getName() const;
+        LRef<UString> getName();
 
         /**
          * Getter for nodes

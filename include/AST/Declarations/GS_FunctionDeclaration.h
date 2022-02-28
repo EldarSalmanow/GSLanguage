@@ -42,7 +42,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for function name
          * @return Function name
          */
-        UString getName() const;
+        LRef<UString> getName();
 
         /**
          * Getter for function code

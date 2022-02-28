@@ -5,7 +5,7 @@
 
 #include <CodeGenerator/GS_CodeGenerationVisitor.h>
 
-#include <CodeGenerator/LLVM/GS_LLVMCompilerUnit.h>
+#include <CodeGenerator/LLVM/GS_LLVMTranslationModule.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
@@ -56,14 +56,14 @@ namespace GSLanguageCompiler::CodeGenerator {
          *
          * @return
          */
-        GSCompilerUnitPtr getCompilerUnit() override;
+        GSTranlationModulePtr getTranslationModule() override;
 
     private:
 
         /**
          *
          */
-        SharedPtr<GS_LLVMCompilerUnit> _unit;
+        SharedPtr<GS_LLVMTranslationModule> _module;
 
         /**
          *

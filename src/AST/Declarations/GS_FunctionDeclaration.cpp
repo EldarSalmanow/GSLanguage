@@ -24,7 +24,7 @@ namespace GSLanguageCompiler::AST {
         _functionScope->addNode(bodyStatement);
     }
 
-    UString GS_FunctionDeclaration::getName() const {
+    LRef<UString> GS_FunctionDeclaration::getName() {
         return _name;
     }
 

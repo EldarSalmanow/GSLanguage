@@ -1,23 +1,23 @@
-#ifndef GSLANGUAGE_GS_LLVMCOMPILERUNIT_H
-#define GSLANGUAGE_GS_LLVMCOMPILERUNIT_H
+#ifndef GSLANGUAGE_GS_LLVMTRANSLATIONMODULE_H
+#define GSLANGUAGE_GS_LLVMTRANSLATIONMODULE_H
 
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
 
-#include <CodeGenerator/GS_CompilerUnit.h>
+#include <CodeGenerator/GS_TranslationModule.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
     /**
      *
      */
-    class GS_LLVMCompilerUnit : public GS_CompilerUnit {
+    class GS_LLVMTranslationModule : public GS_TranslationModule {
     public:
 
         /**
          *
          */
-        GS_LLVMCompilerUnit();
+        GS_LLVMTranslationModule();
 
     public:
 
@@ -62,4 +62,4 @@ namespace GSLanguageCompiler::CodeGenerator {
 
 }
 
-#endif //GSLANGUAGE_GS_LLVMCOMPILERUNIT_H
+#endif //GSLANGUAGE_GS_LLVMTRANSLATIONMODULE_H

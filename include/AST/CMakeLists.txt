@@ -24,9 +24,7 @@ set(GS_AST_SOURCE
         ${AST_DIR}/Expressions/GS_UnaryExpression.cpp
         ${AST_DIR}/Expressions/GS_BinaryExpression.cpp
         ${AST_DIR}/Expressions/GS_VariableUsingExpression.cpp
-        ${AST_DIR}/Expressions/GS_FunctionCallingExpression.cpp
-
-        ${AST_DIR}/GS_Pass.cpp)
+        ${AST_DIR}/Expressions/GS_FunctionCallingExpression.cpp)
 
 add_library(
 #       Library name

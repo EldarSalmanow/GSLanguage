@@ -5,7 +5,7 @@ namespace GSLanguageCompiler::AST {
     GS_UnaryExpression::GS_UnaryExpression(UnaryOperation operation, GSExpressionPtr expression, GSScopePtr scope)
             : _operation(operation), _expression(std::move(expression)), GS_Expression(std::move(scope)) {}
 
-    UnaryOperation GS_UnaryExpression::getUnaryOperation() const {
+    LRef<UnaryOperation> GS_UnaryExpression::getUnaryOperation() {
         return _operation;
     }
 

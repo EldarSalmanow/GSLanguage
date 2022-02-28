@@ -36,7 +36,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for binary operation
          * @return Binary operation
          */
-        BinaryOperation getBinaryOperation() const;
+        LRef<BinaryOperation> getBinaryOperation();
 
         /**
          * Getter for first expression ptr
