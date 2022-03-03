@@ -20,6 +20,15 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
+         * Creating type ptr
+         * @param name Name
+         * @return Type ptr
+         */
+        static SharedPtr<GS_Type> Create(UString name);
+
+    public:
+
+        /**
          * Getter for type name
          * @return Type name
          */
@@ -34,6 +43,11 @@ namespace GSLanguageCompiler::AST {
     };
 
     /**
+     * Type ptr type
+     */
+    using GSTypePtr = SharedPtr<GS_Type>;
+
+    /**
      * Builtin void type
      */
     class GS_VoidType : public GS_Type {
@@ -43,6 +57,14 @@ namespace GSLanguageCompiler::AST {
          * Constructor for void type
          */
         GS_VoidType();
+
+    public:
+
+        /**
+         * Creating Void type ptr
+         * @return Void type ptr
+         */
+        static SharedPtr<GS_VoidType> Create();
     };
 
     /**
@@ -55,6 +77,14 @@ namespace GSLanguageCompiler::AST {
          * Constructor for I32 type
          */
         GS_I32Type();
+
+    public:
+
+        /**
+         * Creating I32 type ptr
+         * @return I32 type ptr
+         */
+        static SharedPtr<GS_I32Type> Create();
     };
 
     /**
@@ -67,12 +97,15 @@ namespace GSLanguageCompiler::AST {
          * Constructor for String type
          */
         GS_StringType();
-    };
 
-    /**
-     * Type ptr type
-     */
-    using GSTypePtr = SharedPtr<GS_Type>;
+    public:
+
+        /**
+         * Creating String type ptr
+         * @return String type ptr
+         */
+        static SharedPtr<GS_StringType> Create();
+    };
 
     /**
      * Function for check is base type

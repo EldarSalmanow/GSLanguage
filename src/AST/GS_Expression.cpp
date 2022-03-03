@@ -9,4 +9,12 @@ namespace GSLanguageCompiler::AST {
         return true;
     }
 
+    GSExpressionPtr ToExpression(GSNodePtr node) {
+        if (node->isExpression()) {
+            return std::reinterpret_pointer_cast<GS_Expression>(node);
+        }
+
+        return nullptr;
+    }
+
 }

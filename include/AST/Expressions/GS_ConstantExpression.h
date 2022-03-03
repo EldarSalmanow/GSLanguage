@@ -33,6 +33,20 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
+         * Creating value ptr
+         * @tparam T Type of value
+         * @param type Type ptr
+         * @param value Value
+         * @return Value ptr
+         */
+        template<typename T>
+        static SharedPtr<GS_Value> Create(GSTypePtr type, T value) {
+            return std::make_shared<GS_Value>(std::move(type), std::move(value));
+        }
+
+    public:
+
+        /**
          * Getter for data value
          * @tparam T Type for getting
          * @return Value
@@ -85,6 +99,15 @@ namespace GSLanguageCompiler::AST {
          * @param value I32 value
          */
         explicit GS_I32Value(I32 value);
+
+    public:
+
+        /**
+         * Creating I32 value ptr
+         * @param value Value
+         * @return I32 value ptr
+         */
+        static SharedPtr<GS_I32Value> Create(I32 value);
     };
 
     /**
@@ -98,6 +121,15 @@ namespace GSLanguageCompiler::AST {
          * @param value String value
          */
         explicit GS_StringValue(UString value);
+
+    public:
+
+        /**
+         * Creating String value ptr
+         * @param value Value
+         * @return String value ptr
+         */
+        static SharedPtr<GS_StringValue> Create(UString value);
     };
 
     /**
@@ -112,6 +144,16 @@ namespace GSLanguageCompiler::AST {
          * @param scope Scope
          */
         GS_ConstantExpression(GSValuePtr value, GSScopePtr scope);
+
+    public:
+
+        /**
+         * Creating constant expression ptr
+         * @param value Value ptr
+         * @param scope Scope ptr
+         * @return Constant expression ptr
+         */
+        static SharedPtr<GS_ConstantExpression> Create(GSValuePtr value, GSScopePtr scope);
 
     public:
 

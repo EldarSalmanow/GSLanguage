@@ -7,7 +7,6 @@
 //#include <CodeGenerator/CodeGenerator.h>
 
 #include <GS_TranslationUnit.h>
-#include "AST/GS_Visitor.h"
 
 namespace GSLanguageCompiler::Driver {
 
@@ -27,7 +26,7 @@ namespace GSLanguageCompiler::Driver {
                 auto result = Fold(value, operation);
 
                 if (result != nullptr) {
-                    auto newExpression = std::make_shared<AST::GS_ConstantExpression>(result, scope);
+                    auto newExpression = AST::GS_ConstantExpression::Create(result, scope);
 
                     scope->replaceNode(unaryExpression, newExpression);
 
@@ -53,7 +52,7 @@ namespace GSLanguageCompiler::Driver {
                 auto result = Fold(firstValue, secondValue, operation);
 
                 if (result != nullptr) {
-                    auto newExpression = std::make_shared<AST::GS_ConstantExpression>(result, scope);
+                    auto newExpression = AST::GS_ConstantExpression::Create(result, scope);
 
                     scope->replaceNode(binaryExpression, newExpression);
 
@@ -79,7 +78,7 @@ namespace GSLanguageCompiler::Driver {
                         return nullptr;
                 }
 
-                return std::make_shared<AST::GS_I32Value>(number);
+                return AST::GS_I32Value::Create(number);
             }
 
             return nullptr;
@@ -113,16 +112,14 @@ namespace GSLanguageCompiler::Driver {
                         return nullptr;
                 }
 
-                return std::make_shared<AST::GS_I32Value>(result);
+                return AST::GS_I32Value::Create(result);
             }
 
             return nullptr;
         }
 
         Bool IsConstantExpression(ConstLRef<AST::GSNodePtr> node) {
-            if (node->isExpression()) {
-                auto expression = std::reinterpret_pointer_cast<AST::GS_Expression>(node);
-
+            if (auto expression = AST::ToExpression(node)) {
                 if (expression->getExpressionType() == AST::ExpressionType::ConstantExpression) {
                     return true;
                 }
@@ -497,22 +494,18 @@ namespace GSLanguageCompiler::Driver {
 //
 //        New::GS_Parser parser(&tokenStream);
 
-        auto globalScope = std::make_shared<AST::GS_Scope>(nullptr);
+        auto globalScope = AST::GS_Scope::CreateGlobalScope();
 
-        auto function = std::make_shared<AST::GS_FunctionDeclaration>(U"main", globalScope);
+        auto function = AST::GS_FunctionDeclaration::Create(U"main"_us, globalScope);
 
-        auto number_1 = std::make_shared<AST::GS_ConstantExpression>(std::make_shared<AST::GS_I32Value>(1),
-                                                                     function->getFunctionScope());
-        auto number_2 = std::make_shared<AST::GS_ConstantExpression>(std::make_shared<AST::GS_I32Value>(5),
-                                                                     function->getFunctionScope());
+        auto number_1 = AST::GS_ConstantExpression::Create(AST::GS_I32Value::Create(1), function->getFunctionScope());
+        auto number_2 = AST::GS_ConstantExpression::Create(AST::GS_I32Value::Create(5), function->getFunctionScope());
 
-        function->addStatement(std::make_shared<AST::GS_VariableDeclarationStatement>(U"a",
-                                                                                      std::make_shared<AST::GS_I32Type>(),
-                                                                                      std::make_shared<AST::GS_BinaryExpression>(
-                                                                                              AST::BinaryOperation::Plus,
-                                                                                              number_1, number_2,
-                                                                                              function->getFunctionScope()),
-                                                                                      function->getFunctionScope()));
+        auto expression = AST::GS_BinaryExpression::Create(AST::BinaryOperation::Plus, number_1, number_2, function->getFunctionScope());
+
+        auto variable = AST::GS_VariableDeclarationStatement::Create(U"a", AST::GS_I32Type::Create(), expression, function->getFunctionScope());
+
+        function->addStatement(variable);
 
         AST::GSNodePtrArray nodes = {
                 function

@@ -72,4 +72,18 @@ namespace GSLanguageCompiler::Semantic {
         return nullptr;
     }
 
+    SharedPtr<GS_FunctionSymbol> GS_TableOfSymbols::getFunction(UString name) {
+        for (auto &symbol : _symbols) {
+            if (symbol->isFunction()) {
+                auto function = std::reinterpret_pointer_cast<GS_FunctionSymbol>(symbol);
+
+                if (function->getName() == name) {
+                    return function;
+                }
+            }
+        }
+
+        return nullptr;
+    }
+
 }

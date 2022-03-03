@@ -21,6 +21,16 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
+         * Creating variable using expression ptr
+         * @param name Variable name
+         * @param scope Scope
+         * @return Variable using expression ptr
+         */
+        static SharedPtr<GS_VariableUsingExpression> Create(UString name, GSScopePtr scope);
+
+    public:
+
+        /**
          * Getter for variable name
          * @return Variable name
          */

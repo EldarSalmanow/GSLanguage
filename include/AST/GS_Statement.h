@@ -53,6 +53,13 @@ namespace GSLanguageCompiler::AST {
      */
     using GSStatementPtrArray = Vector<GSStatementPtr>;
 
+    /**
+     * Casting to statement if node is statement
+     * @param node Node
+     * @return Statement or nullptr
+     */
+    GSStatementPtr ToStatement(GSNodePtr node);
+
 }
 
 #endif //GSLANGUAGE_GS_STATEMENT_H

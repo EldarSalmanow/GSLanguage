@@ -42,6 +42,36 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
+         * Creating variable declaration statement ptr
+         * @param name Variable name
+         * @param type Variable type
+         * @param scope Variable scope
+         * @return Variable declaration statement ptr
+         */
+        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSTypePtr type, GSScopePtr scope);
+
+        /**
+         * Creating variable declaration statement ptr
+         * @param name Variable name
+         * @param expression Expression for variable
+         * @param scope Variable scope
+         * @return Variable declaration statement ptr
+         */
+        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSExpressionPtr expression, GSScopePtr scope);
+
+        /**
+         * Creating variable declaration statement ptr
+         * @param name Variable name
+         * @param type Variable type
+         * @param expression Expression for variable
+         * @param scope Variable scope
+         * @return Variable declaration statement ptr
+         */
+        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSTypePtr type, GSExpressionPtr expression, GSScopePtr scope);
+
+    public:
+
+        /**
          * Getter for variable name
          * @return Variable name
          */

@@ -7,6 +7,14 @@ namespace GSLanguageCompiler::AST {
     GS_Scope::GS_Scope(GSScopePtr parent)
             : _parent(std::move(parent)), _tableOfSymbols(std::make_shared<Semantic::GS_TableOfSymbols>()) {}
 
+    SharedPtr<GS_Scope> GS_Scope::Create(GSScopePtr scope) {
+        return std::make_shared<GS_Scope>(std::move(scope));
+    }
+
+    SharedPtr<GS_Scope> GS_Scope::CreateGlobalScope() {
+        return Create(nullptr);
+    }
+
     Void GS_Scope::addScope(GSScopePtr scope) {
         _scopes.emplace_back(std::move(scope));
     }

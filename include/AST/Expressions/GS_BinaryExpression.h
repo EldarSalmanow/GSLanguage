@@ -33,6 +33,18 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
+         * Creating binary expression ptr
+         * @param operation Binary operation
+         * @param firstExpression First expression ptr
+         * @param secondExpression Second expression ptr
+         * @param scope Scope
+         * @return Binary expression ptr
+         */
+        static SharedPtr<GS_BinaryExpression> Create(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression, GSScopePtr scope);
+
+    public:
+
+        /**
          * Getter for binary operation
          * @return Binary operation
          */

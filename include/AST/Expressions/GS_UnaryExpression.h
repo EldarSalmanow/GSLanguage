@@ -21,10 +21,21 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for unary expression
          * @param operation Unary operation
-         * @param node Expression ptr
+         * @param expression Expression ptr
          * @param scope Scope
          */
         GS_UnaryExpression(UnaryOperation operation, GSExpressionPtr expression, GSScopePtr scope);
+
+    public:
+
+        /**
+         * Creating unary expression ptr
+         * @param operation Unary operation
+         * @param expression Expression ptr
+         * @param scope Scope
+         * @return Unary expression ptr
+         */
+        static SharedPtr<GS_UnaryExpression> Create(UnaryOperation operation, GSExpressionPtr expression, GSScopePtr scope);
 
     public:
 

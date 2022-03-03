@@ -22,6 +22,16 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
+         * Creating expression statement ptr
+         * @param expression Expression ptr
+         * @param scope Scope ptr
+         * @return Expression statement ptr
+         */
+        static SharedPtr<GS_ExpressionStatement> Create(GSExpressionPtr expression, GSScopePtr scope);
+
+    public:
+
+        /**
          * Getter for expression ptr
          * @return Expression ptr
          */

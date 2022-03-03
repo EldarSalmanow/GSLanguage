@@ -9,4 +9,12 @@ namespace GSLanguageCompiler::AST {
         return true;
     }
 
+    GSDeclarationPtr ToDeclaration(GSNodePtr node) {
+        if (node->isDeclaration()) {
+            return std::reinterpret_pointer_cast<GS_Declaration>(node);
+        }
+
+        return nullptr;
+    }
+
 }

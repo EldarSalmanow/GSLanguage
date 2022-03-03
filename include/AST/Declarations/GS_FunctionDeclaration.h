@@ -30,6 +30,25 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
+         * Creating function declaration ptr
+         * @param name Function name
+         * @param scope Function scope
+         * @return Function declaration ptr
+         */
+        static SharedPtr<GS_FunctionDeclaration> Create(UString name, GSScopePtr scope);
+
+        /**
+         * Creating function declaration ptr
+         * @param name Function name
+         * @param body Function body
+         * @param scope Function scope
+         * @return Function declaration ptr
+         */
+        static SharedPtr<GS_FunctionDeclaration> Create(UString name, GSStatementPtrArray body, GSScopePtr scope);
+
+    public:
+
+        /**
          * Adding statement to function body
          * @param statement Statement
          * @return

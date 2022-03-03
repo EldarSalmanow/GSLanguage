@@ -16,6 +16,14 @@ namespace GSLanguageCompiler::AST {
         getScope()->addScope(_functionScope);
     }
 
+    SharedPtr<GS_FunctionDeclaration> GS_FunctionDeclaration::Create(UString name, GSScopePtr scope) {
+        return std::make_shared<GS_FunctionDeclaration>(std::move(name), std::move(scope));
+    }
+
+    SharedPtr<GS_FunctionDeclaration> GS_FunctionDeclaration::Create(UString name, GSStatementPtrArray body, GSScopePtr scope) {
+        return std::make_shared<GS_FunctionDeclaration>(std::move(name), std::move(body), std::move(scope));
+    }
+
     Void GS_FunctionDeclaration::addStatement(GSStatementPtr statement) {
         auto bodyStatement = std::move(statement);
 

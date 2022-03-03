@@ -52,6 +52,13 @@ namespace GSLanguageCompiler::AST {
      */
     using GSDeclarationPtrArray = Vector<GSDeclarationPtr>;
 
+    /**
+     * Casting node to declaration if node is declaration
+     * @param node Node
+     * @return Declaration or nullptr
+     */
+    GSDeclarationPtr ToDeclaration(GSNodePtr node);
+
 }
 
 #endif //GSLANGUAGE_GS_DECLARATION_H

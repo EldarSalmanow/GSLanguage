@@ -47,6 +47,21 @@ namespace GSLanguageCompiler {
         public:
 
             /**
+             * Creating scope
+             * @param scope Parent scope
+             * @return Scope
+             */
+            static SharedPtr<GS_Scope> Create(GSScopePtr scope);
+
+            /**
+             * Creating global scope
+             * @return Global scope
+             */
+            static SharedPtr<GS_Scope> CreateGlobalScope();
+
+        public:
+
+            /**
              * Add child scope
              * @param scope Child scope
              * @return

@@ -55,6 +55,13 @@ namespace GSLanguageCompiler::AST {
      */
     using GSExpressionPtrArray = Vector<GSExpressionPtr>;
 
+    /**
+     * Casting to expression if node is expression
+     * @param node Node
+     * @return Expression or nullptr
+     */
+    GSExpressionPtr ToExpression(GSNodePtr node);
+
 }
 
 #endif //GSLANGUAGE_GS_EXPRESSION_H

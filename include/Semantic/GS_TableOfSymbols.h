@@ -188,6 +188,13 @@ namespace GSLanguageCompiler::Semantic {
          */
         SharedPtr<GS_VariableSymbol> getVariable(UString name);
 
+        /**
+         *
+         * @param name
+         * @return
+         */
+        SharedPtr<GS_FunctionSymbol> getFunction(UString name);
+
     private:
 
         /**
