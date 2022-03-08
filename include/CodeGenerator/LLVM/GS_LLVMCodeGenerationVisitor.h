@@ -1,11 +1,11 @@
 #ifndef GSLANGUAGE_GS_LLVMCODEGENERATIONVISITOR_H
 #define GSLANGUAGE_GS_LLVMCODEGENERATIONVISITOR_H
 
-#include <llvm/IR/Value.h>
+#include <llvm/IR/IRBuilder.h>
 
 #include <CodeGenerator/GS_CodeGenerationVisitor.h>
 
-#include <CodeGenerator/LLVM/GS_LLVMTranslationModule.h>
+#include <CodeGenerator/LLVM/GS_LLVMCodeGenerationVisitorContext.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
@@ -21,14 +21,6 @@ namespace GSLanguageCompiler::CodeGenerator {
         GS_LLVMCodeGenerationVisitor();
 
     public:
-
-        Ptr<llvm::Value> visitNode(ConstLRef<AST::GSNodePtr> node) override;
-
-        Ptr<llvm::Value> visitDeclaration(ConstLRef<AST::GSDeclarationPtr> declaration) override;
-
-        Ptr<llvm::Value> visitStatement(ConstLRef<AST::GSStatementPtr> statement) override;
-
-        Ptr<llvm::Value> visitExpression(ConstLRef<AST::GSExpressionPtr> expression) override;
 
         Ptr<llvm::Value> visitTranslationUnitDeclaration(SharedPtr<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration) override;
 
@@ -50,25 +42,25 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         Ptr<llvm::Value> visitFunctionCallingExpression(SharedPtr<AST::GS_FunctionCallingExpression> functionCallingExpression) override;
 
-    public:
+    private:
 
-        /**
-         *
-         * @return
-         */
-        GSTranlationModulePtr getTranslationModule() override;
+        Ptr<llvm::AllocaInst> _findVariableByName(ConstLRef<UString> name);
+
+    private:
+
+        SharedPtr<GS_LLVMCodeGenerationVisitorContext> _getLLVMVisitorContext();
 
     private:
 
         /**
          *
          */
-        SharedPtr<GS_LLVMTranslationModule> _module;
+        SharedPtr<llvm::IRBuilder<>> _builder;
 
         /**
          *
          */
-        llvm::IRBuilder<> _builder;
+        Vector<std::pair<UString, Ptr<llvm::AllocaInst>>> _variables;
     };
 
 }

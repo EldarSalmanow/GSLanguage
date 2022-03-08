@@ -17,6 +17,23 @@
 namespace GSLanguageCompiler::AST {
 
     /**
+     * Base class for AST visitor contexts
+     */
+    class GS_VisitorContext {
+    public:
+
+        /**
+         * Virtual destructor for supporting inheritance
+         */
+        virtual ~GS_VisitorContext() = default;
+    };
+
+    /**
+     * Visitor context ptr type
+     */
+    using GSVisitorContextPtr = SharedPtr<GS_VisitorContext>;
+
+    /**
      * Interface class for all AST visitors
      * @tparam ResultT
      */
@@ -31,10 +48,32 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        GS_BaseVisitor()
+                : _context(nullptr) {}
+
+        /**
+         * Constructor for base visitor
+         * @param context Visitor context
+         */
+        explicit GS_BaseVisitor(GSVisitorContextPtr context)
+                : _context(std::move(context)) {}
+
+    public:
+
         /**
          * Virtual destructor for supporting inheritance
          */
         virtual ~GS_BaseVisitor() = default;
+
+    public:
+
+        /**
+         * Getter for visitor context
+         * @return Visitor context
+         */
+        LRef<GSVisitorContextPtr> getContext() {
+            return _context;
+        }
 
     public:
 
@@ -182,11 +221,18 @@ namespace GSLanguageCompiler::AST {
          * @return Data
          */
         virtual Result visitFunctionCallingExpression(SharedPtr<GS_FunctionCallingExpression> functionCallingExpression) = 0;
+
+    private:
+
+        /**
+         * Visitor context
+         */
+        GSVisitorContextPtr _context;
     };
 
     /**
-     *
-     * @tparam ResultT
+     * Base class for AST visitors
+     * @tparam ResultT Result type of visiting AST
      */
     template<typename ResultT>
     class GS_Visitor : public GS_BaseVisitor<ResultT> {
@@ -196,6 +242,15 @@ namespace GSLanguageCompiler::AST {
          * Result type
          */
         using Result = typename GS_BaseVisitor<ResultT>::Result;
+
+    public:
+
+        /**
+         * Constructor for visitor
+         * @param context Visitor context
+         */
+        explicit GS_Visitor(GSVisitorContextPtr context)
+                : GS_BaseVisitor<ResultT>(std::move(context)) {}
     };
 
     /**

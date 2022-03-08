@@ -3,9 +3,7 @@ project(GSCodeGeneratorLibrary)
 set(CODEGENERATOR_DIR ${SOURCE_DIR}/CodeGenerator)
 
 set(GS_CODEGENERATOR_SOURCE
-        ${CODEGENERATOR_DIR}/GS_TranslationModule.cpp
-
-        ${CODEGENERATOR_DIR}/LLVM/GS_LLVMTranslationModule.cpp
+        ${CODEGENERATOR_DIR}/LLVM/GS_LLVMCodeGenerationVisitorContext.cpp
         ${CODEGENERATOR_DIR}/LLVM/GS_LLVMCodeGenerationVisitor.cpp)
 
 add_library(

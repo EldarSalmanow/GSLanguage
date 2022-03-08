@@ -4,9 +4,7 @@
 //#include <Lexer/Lexer.h>
 //#include <Parser/Parser.h>
 #include <AST/AST.h>
-//#include <CodeGenerator/CodeGenerator.h>
-
-#include <llvm/IR/IRBuilder.h>
+#include <CodeGenerator/CodeGenerator.h>
 
 #include <GS_TranslationUnit.h>
 
@@ -428,179 +426,177 @@ namespace GSLanguageCompiler::Driver {
         I32 tabsNumber = 0;
     };
 
-    class RenamerVisitor : public AST::GS_Visitor<AST::GSNodePtr> {
-    public:
-
-        RenamerVisitor(ConstLRef<UString> firstName, ConstLRef<UString> secondName)
-                : _firstName(firstName), _secondName(secondName) {}
-
-    public:
-
-        Result visitVariableDeclarationStatement(SharedPtr<AST::GS_VariableDeclarationStatement> variableDeclarationStatement) override {
-            auto &name = variableDeclarationStatement->getName();
-
-            if (name == _firstName) {
-                name = _secondName;
-            }
-
-            return variableDeclarationStatement;
-        }
-
-    private:
-
-        UString _firstName, _secondName;
-    };
-
-    class CodeGenerationVisitor : public AST::GS_Visitor<Ptr<llvm::Value>> {
-    public:
-
-        CodeGenerationVisitor(UString moduleName)
-                : _context(), _module(moduleName.asString(), _context), _builder(_context) {}
-
-    public:
-
-        Result visitTranslationUnitDeclaration(SharedPtr<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration) override {
-            return nullptr;
-        }
-
-        Result visitFunctionDeclaration(SharedPtr<AST::GS_FunctionDeclaration> functionDeclaration) override {
-            auto name = functionDeclaration->getName();
-            auto body = functionDeclaration->getBody();
-
-            auto llvmFunctionType = llvm::FunctionType::get(llvm::Type::getVoidTy(_context), false);
-
-            auto llvmFunction = llvm::Function::Create(llvmFunctionType, llvm::Function::LinkageTypes::ExternalLinkage, name.asString(), _module);
-
-            auto block = llvm::BasicBlock::Create(_context, "entry", llvmFunction);
-
-            _builder.SetInsertPoint(block);
-
-            for (auto &statement : body) {
-                visitStatement(statement);
-            }
-
-            _builder.CreateRetVoid();
-
-            return llvmFunction;
-        }
-
-        Result visitVariableDeclarationStatement(SharedPtr<AST::GS_VariableDeclarationStatement> variableDeclarationStatement) override {
-            auto name = variableDeclarationStatement->getName();
-            auto type = variableDeclarationStatement->getType();
-            auto expression = variableDeclarationStatement->getExpression();
-
-            auto llvmFunction = _builder.GetInsertBlock()->getParent();
-
-            auto typeName = type->getName();
-
-            Ptr<llvm::Type> llvmType;
-
-            if (typeName == U"I32"_us) {
-                llvmType = llvm::Type::getInt32Ty(_context);
-            } else {
-                return nullptr;
-            }
-
-            auto llvmAllocaInstruction = _builder.CreateAlloca(llvmType);
-
-            _variables[llvmFunction][name] = llvmAllocaInstruction;
-
-            return _builder.CreateStore(visitExpression(expression), llvmAllocaInstruction);
-        }
-
-        Result visitAssignmentStatement(SharedPtr<AST::GS_AssignmentStatement> assignmentStatement) override {
-            return nullptr;
-        }
-
-        Result visitExpressionStatement(SharedPtr<AST::GS_ExpressionStatement> expressionStatement) override {
-            return nullptr;
-        }
-
-        Result visitConstantExpression(SharedPtr<AST::GS_ConstantExpression> constantExpression) override {
-            auto value = constantExpression->getValue();
-
-            auto type = value->getType();
-
-            auto typeName = type->getName();
-
-            Ptr<llvm::Type> llvmType;
-
-            if (typeName == U"I32"_us) {
-                auto number = value->getValueWithCast<I32>();
-
-                return llvm::ConstantInt::get(llvm::Type::getInt32Ty(_context), number);
-            } else if (typeName == U"String"_us) {
-                auto string = value->getValueWithCast<UString>();
-
-                return _builder.CreateGlobalStringPtr(string.asString());
-            } else {
-                return nullptr;
-            }
-        }
-
-        Result visitUnaryExpression(SharedPtr<AST::GS_UnaryExpression> unaryExpression) override {
-            auto operation = unaryExpression->getUnaryOperation();
-            auto expression = unaryExpression->getExpression();
-
-            switch (operation) {
-                case AST::UnaryOperation::Minus:
-                    return _builder.CreateUnOp(llvm::Instruction::UnaryOps::FNeg, visitExpression(expression));
-                default:
-                    return nullptr;
-            }
-        }
-
-        Result visitBinaryExpression(SharedPtr<AST::GS_BinaryExpression> binaryExpression) override {
-            auto operation = binaryExpression->getBinaryOperation();
-            auto firstExpression = binaryExpression->getFirstExpression();
-            auto secondExpression = binaryExpression->getSecondExpression();
-
-            switch (operation) {
-                case AST::BinaryOperation::Plus:
-                    return _builder.CreateAdd(visitExpression(firstExpression), visitExpression(secondExpression));
-                case AST::BinaryOperation::Minus:
-                    return _builder.CreateSub(visitExpression(firstExpression), visitExpression(secondExpression));
-                case AST::BinaryOperation::Star:
-                    return _builder.CreateMul(visitExpression(firstExpression), visitExpression(secondExpression));
-                case AST::BinaryOperation::Slash:
-                    return _builder.CreateSDiv(visitExpression(firstExpression), visitExpression(secondExpression));
-                default:
-                    return nullptr;
-            }
-        }
-
-        Result visitVariableUsingExpression(SharedPtr<AST::GS_VariableUsingExpression> variableUsingExpression) override {
-            auto name = variableUsingExpression->getName();
-
-            auto llvmFunction = _builder.GetInsertBlock()->getParent();
-
-            auto llvmAllocaInstruction = _variables[llvmFunction][name];
-
-            return _builder.CreateLoad(llvmAllocaInstruction->getAllocatedType(), llvmAllocaInstruction, name.asString());
-        }
-
-        Result visitFunctionCallingExpression(SharedPtr<AST::GS_FunctionCallingExpression> functionCallingExpression) override {
-            auto name = functionCallingExpression->getName();
-
-            auto llvmFunction = _module.getFunction(name.asString());
-
-            if (llvmFunction != nullptr) {
-                return _builder.CreateCall(llvmFunction);
-            }
-
-            return nullptr;
-        }
-
-    public:
-
-        llvm::LLVMContext _context;
-
-        llvm::Module _module;
-
-        llvm::IRBuilder<> _builder;
-
-        Map<Ptr<llvm::Function>, Map<UString, Ptr<llvm::AllocaInst>>> _variables;
-    };
+//    class CodeGenerationVisitor : public AST::GS_Visitor<Ptr<llvm::Value>> {
+//    public:
+//
+//        explicit CodeGenerationVisitor(ConstLRef<UString> moduleName)
+//                : _context(), _module(moduleName.asString(), _context), _builder(_context) {}
+//
+//    public:
+//
+//        Result visitTranslationUnitDeclaration(SharedPtr<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration) override {
+//            auto nodes = translationUnitDeclaration->getNodes();
+//
+//            for (auto &node : nodes) {
+//                visitNode(node);
+//            }
+//
+//            return nullptr;
+//        }
+//
+//        Result visitFunctionDeclaration(SharedPtr<AST::GS_FunctionDeclaration> functionDeclaration) override {
+//            auto name = functionDeclaration->getName();
+//            auto body = functionDeclaration->getBody();
+//
+//            auto llvmFunctionType = llvm::FunctionType::get(llvm::Type::getVoidTy(_context), false);
+//
+//            auto llvmFunction = llvm::Function::Create(llvmFunctionType, llvm::Function::LinkageTypes::ExternalLinkage, name.asString(), _module);
+//
+//            auto block = llvm::BasicBlock::Create(_context, "entry", llvmFunction);
+//
+//            _builder.SetInsertPoint(block);
+//
+//            for (auto &statement : body) {
+//                visitStatement(statement);
+//            }
+//
+//            _builder.CreateRetVoid();
+//
+//            return llvmFunction;
+//        }
+//
+//        Result visitVariableDeclarationStatement(SharedPtr<AST::GS_VariableDeclarationStatement> variableDeclarationStatement) override {
+//            auto name = variableDeclarationStatement->getName();
+//            auto type = variableDeclarationStatement->getType();
+//            auto expression = variableDeclarationStatement->getExpression();
+//
+//            auto llvmFunction = _builder.GetInsertBlock()->getParent();
+//
+//            auto typeName = type->getName();
+//
+//            Ptr<llvm::Type> llvmType;
+//
+//            if (typeName == U"I32"_us) {
+//                llvmType = llvm::Type::getInt32Ty(_context);
+//            } else {
+//                return nullptr;
+//            }
+//
+//            auto llvmAllocaInstruction = _builder.CreateAlloca(llvmType);
+//
+//            _variables.emplace_back(std::make_pair(name, llvmAllocaInstruction));
+//
+//            return _builder.CreateStore(visitExpression(expression), llvmAllocaInstruction);
+//        }
+//
+//        Result visitAssignmentStatement(SharedPtr<AST::GS_AssignmentStatement> assignmentStatement) override {
+//            auto lvalueExpression = assignmentStatement->getLValueExpression();
+//            auto rvalueExpression = assignmentStatement->getRValueExpression();
+//
+//            return _builder.CreateStore(visitExpression(lvalueExpression), visitExpression(rvalueExpression));
+//        }
+//
+//        Result visitExpressionStatement(SharedPtr<AST::GS_ExpressionStatement> expressionStatement) override {
+//            auto expression = expressionStatement->getExpression();
+//
+//            return visitExpression(expression);
+//        }
+//
+//        Result visitConstantExpression(SharedPtr<AST::GS_ConstantExpression> constantExpression) override {
+//            auto value = constantExpression->getValue();
+//
+//            auto type = value->getType();
+//
+//            auto typeName = type->getName();
+//
+//            Ptr<llvm::Type> llvmType;
+//
+//            if (typeName == U"I32"_us) {
+//                auto number = value->getValueWithCast<I32>();
+//
+//                return llvm::ConstantInt::get(llvm::Type::getInt32Ty(_context), number);
+//            } else if (typeName == U"String"_us) {
+//                auto string = value->getValueWithCast<UString>();
+//
+//                return _builder.CreateGlobalStringPtr(string.asString());
+//            } else {
+//                return nullptr;
+//            }
+//        }
+//
+//        Result visitUnaryExpression(SharedPtr<AST::GS_UnaryExpression> unaryExpression) override {
+//            auto operation = unaryExpression->getUnaryOperation();
+//            auto expression = unaryExpression->getExpression();
+//
+//            switch (operation) {
+//                case AST::UnaryOperation::Minus:
+//                    return _builder.CreateUnOp(llvm::Instruction::UnaryOps::FNeg, visitExpression(expression));
+//                default:
+//                    return nullptr;
+//            }
+//        }
+//
+//        Result visitBinaryExpression(SharedPtr<AST::GS_BinaryExpression> binaryExpression) override {
+//            auto operation = binaryExpression->getBinaryOperation();
+//            auto firstExpression = binaryExpression->getFirstExpression();
+//            auto secondExpression = binaryExpression->getSecondExpression();
+//
+//            switch (operation) {
+//                case AST::BinaryOperation::Plus:
+//                    return _builder.CreateAdd(visitExpression(firstExpression), visitExpression(secondExpression));
+//                case AST::BinaryOperation::Minus:
+//                    return _builder.CreateSub(visitExpression(firstExpression), visitExpression(secondExpression));
+//                case AST::BinaryOperation::Star:
+//                    return _builder.CreateMul(visitExpression(firstExpression), visitExpression(secondExpression));
+//                case AST::BinaryOperation::Slash:
+//                    return _builder.CreateSDiv(visitExpression(firstExpression), visitExpression(secondExpression));
+//                default:
+//                    return nullptr;
+//            }
+//        }
+//
+//        Result visitVariableUsingExpression(SharedPtr<AST::GS_VariableUsingExpression> variableUsingExpression) override {
+//            auto name = variableUsingExpression->getName();
+//
+//            auto llvmAllocaInstruction = findVariableByName(name);
+//
+//            return _builder.CreateLoad(llvmAllocaInstruction->getAllocatedType(), llvmAllocaInstruction, name.asString());
+//        }
+//
+//        Result visitFunctionCallingExpression(SharedPtr<AST::GS_FunctionCallingExpression> functionCallingExpression) override {
+//            auto name = functionCallingExpression->getName();
+//
+//            auto llvmFunction = _module.getFunction(name.asString());
+//
+//            if (llvmFunction != nullptr) {
+//                return _builder.CreateCall(llvmFunction);
+//            }
+//
+//            return nullptr;
+//        }
+//
+//    public:
+//
+//        Ptr<llvm::AllocaInst> findVariableByName(ConstLRef<UString> name) {
+//            for (auto &pair : _variables) {
+//                if (pair.first == name) {
+//                    return pair.second;
+//                }
+//            }
+//
+//            return nullptr;
+//        }
+//
+//    public:
+//
+//        llvm::LLVMContext _context;
+//
+//        llvm::Module _module;
+//
+//        llvm::IRBuilder<> _builder;
+//
+//        Vector<std::pair<UString, Ptr<llvm::AllocaInst>>> _variables;
+//    };
 
 //    UString tokenTypeToString(Lexer::TokenType type) {
 //        UString tokenTypesAsString[] = {
@@ -656,9 +652,25 @@ namespace GSLanguageCompiler::Driver {
 
         auto expression = AST::GS_BinaryExpression::Create(AST::BinaryOperation::Plus, number_1, number_2, function->getFunctionScope());
 
-        auto variable = AST::GS_VariableDeclarationStatement::Create(U"a", AST::GS_I32Type::Create(), expression, function->getFunctionScope());
+        auto variable = AST::GS_VariableDeclarationStatement::Create(U"a"_us, AST::GS_I32Type::Create(), expression, function->getFunctionScope());
+
+        auto number_3 = AST::GS_ConstantExpression::Create(AST::GS_I32Value::Create(10), function->getFunctionScope());
+        auto number_4 = AST::GS_ConstantExpression::Create(AST::GS_I32Value::Create(23), function->getFunctionScope());
+
+        auto expression_2 = AST::GS_BinaryExpression::Create(AST::BinaryOperation::Plus, number_3, number_4, function->getFunctionScope());
+
+        auto variable_2 = AST::GS_VariableDeclarationStatement::Create(U"b"_us, AST::GS_I32Type::Create(), expression_2, function->getFunctionScope());
+
+        auto expression_3 = AST::GS_BinaryExpression::Create(AST::BinaryOperation::Plus,
+                                                             AST::GS_VariableUsingExpression::Create(U"a"_us, function->getFunctionScope()),
+                                                             AST::GS_VariableUsingExpression::Create(U"b"_us, function->getFunctionScope()),
+                                                             function->getFunctionScope());
+
+        auto variable_3 = AST::GS_VariableDeclarationStatement::Create(U"c"_us, AST::GS_I32Type::Create(), expression_3, function->getFunctionScope());
 
         function->addStatement(variable);
+        function->addStatement(variable_2);
+        function->addStatement(variable_3);
 
         AST::GSNodePtrArray nodes = {
                 function
@@ -666,22 +678,15 @@ namespace GSLanguageCompiler::Driver {
 
         auto unit = AST::GS_TranslationUnitDeclaration::Create(U"test", nodes, globalScope);
 
-//        PrintVisitor printer;
-//        CFVisitor folder;
-//        RenamerVisitor renamer(U"a"_us, U"b"_us);
-//        printer.visitNode(unit);
-//
-//        folder.visitNode(unit);
-//
-//        printer.visitNode(unit);
-//
-//        renamer.visitNode(unit);
-//
-//        printer.visitNode(unit);
+        PrintVisitor printer;
 
-        CodeGenerationVisitor codeGen(unit->getName());
-        codeGen.visitFunctionDeclaration(function);
-        codeGen._module.print(llvm::errs(), nullptr);
+        auto codeGen = std::make_shared<CodeGenerator::GS_LLVMCodeGenerationVisitor>();
+
+        printer.visitNode(unit);
+
+        codeGen->visitTranslationUnitDeclaration(unit);
+
+        std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCodeGenerationVisitorContext>(codeGen->getContext())->getModule().print(llvm::errs(), nullptr);
 
         return 0;
     }

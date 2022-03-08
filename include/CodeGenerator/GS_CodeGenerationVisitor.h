@@ -3,7 +3,7 @@
 
 #include <AST/GS_Visitor.h>
 
-#include <CodeGenerator/GS_TranslationModule.h>
+#include <CodeGenerator/GS_CodeGenerationVisitorContext.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
@@ -11,11 +11,8 @@ namespace GSLanguageCompiler::CodeGenerator {
     class GS_CodeGenerationVisitor : public AST::GS_Visitor<T> {
     public:
 
-        /**
-         *
-         * @return
-         */
-        virtual GSTranlsationModulePtr getTranslationModule() = 0;
+        explicit GS_CodeGenerationVisitor(GSCodeGenerationVisitorContextPtr context)
+                : AST::GS_Visitor<T>(context) {}
     };
 
 }

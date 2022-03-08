@@ -1,23 +1,23 @@
-#ifndef GSLANGUAGE_GS_LLVMTRANSLATIONMODULE_H
-#define GSLANGUAGE_GS_LLVMTRANSLATIONMODULE_H
+#ifndef GSLANGUAGE_GS_LLVMCODEGENERATIONVISITORCONTEXT_H
+#define GSLANGUAGE_GS_LLVMCODEGENERATIONVISITORCONTEXT_H
 
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
 
-#include <CodeGenerator/GS_TranslationModule.h>
+#include <CodeGenerator/GS_CodeGenerationVisitorContext.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
     /**
      *
      */
-    class GS_LLVMTranslationModule : public GS_TranslationModule {
+    class GS_LLVMCodeGenerationVisitorContext : public GS_CodeGenerationVisitorContext {
     public:
 
         /**
          *
          */
-        GS_LLVMTranslationModule();
+        GS_LLVMCodeGenerationVisitorContext();
 
     public:
 
@@ -27,12 +27,6 @@ namespace GSLanguageCompiler::CodeGenerator {
          * @return
          */
         Void createModule(UString name);
-
-        /**
-         *
-         * @return
-         */
-        Bool hasModule();
 
     public:
 
@@ -62,4 +56,4 @@ namespace GSLanguageCompiler::CodeGenerator {
 
 }
 
-#endif //GSLANGUAGE_GS_LLVMTRANSLATIONMODULE_H
+#endif //GSLANGUAGE_GS_LLVMCODEGENERATIONVISITORCONTEXT_H
