@@ -7,6 +7,11 @@
 namespace GSLanguageCompiler::AST {
 
     /**
+     * Declaring expression
+     */
+    class GS_Expression;
+
+    /**
      * Class for function declarations in language
      */
     class GS_FunctionDeclaration : public GS_Declaration {
@@ -14,16 +19,9 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Constructor for function declaration
-         * @param name Function name
-         * @param scope Function scope
-         */
-        GS_FunctionDeclaration(UString name, GSScopePtr scope);
-
-        /**
-         * Constructor for function declaration
-         * @param name Function name
-         * @param body Function code
-         * @param scope Function scope
+         * @param name Name
+         * @param body Body
+         * @param scope Scope
          */
         GS_FunctionDeclaration(UString name, GSStatementPtrArray body, GSScopePtr scope);
 
@@ -31,22 +29,36 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Creating function declaration ptr
-         * @param name Function name
-         * @param scope Function scope
-         * @return Function declaration ptr
-         */
-        static SharedPtr<GS_FunctionDeclaration> Create(UString name, GSScopePtr scope);
-
-        /**
-         * Creating function declaration ptr
-         * @param name Function name
-         * @param body Function body
-         * @param scope Function scope
+         * @param name Name
+         * @param body Body
+         * @param scope Scope
          * @return Function declaration ptr
          */
         static SharedPtr<GS_FunctionDeclaration> Create(UString name, GSStatementPtrArray body, GSScopePtr scope);
 
+        /**
+         * Creating function declaration ptr
+         * @param name Name
+         * @param scope Scope
+         * @return Function declaration ptr
+         */
+        static SharedPtr<GS_FunctionDeclaration> Create(UString name, GSScopePtr scope);
+
     public:
+
+        /**
+         * Creating new statement or expression in function scope and return it
+         * @tparam T Type of statement or expression for creating
+         * @tparam Args Argument types for creating statement or expression
+         * @param args Arguments for creating statement or expression
+         * @return Created statement or expression
+         */
+        template<typename T, typename... Args>
+        inline auto createStatement(Args... args) {
+            static_assert(std::is_base_of_v<GS_Statement, T> || std::is_base_of_v<GS_Expression, T>, "Element for creating must be a statement or expression!");
+
+            return T::Create(args..., _functionScope);
+        }
 
         /**
          * Adding statement to function body
@@ -54,6 +66,24 @@ namespace GSLanguageCompiler::AST {
          * @return
          */
         Void addStatement(GSStatementPtr statement);
+
+        /**
+         * Creating and adding new statement to body and scope and return it
+         * @tparam T Type of statement for creating
+         * @tparam Args Argument types for creating statement
+         * @param args Arguments for creating statement
+         * @return Created statement
+         */
+        template<typename T, typename... Args>
+        inline auto addStatement(Args... args) {
+            static_assert(std::is_base_of_v<GS_Statement, T>, "Element for creating must be a statement!");
+
+            auto node = createStatement<T>(args...);
+
+            addStatement(node);
+
+            return node;
+        }
 
     public:
 

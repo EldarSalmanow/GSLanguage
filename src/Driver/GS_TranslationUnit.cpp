@@ -3,6 +3,15 @@
 //#include <Reader/Reader.h>
 //#include <Lexer/Lexer.h>
 //#include <Parser/Parser.h>
+
+#include <llvm/IR/LegacyPassManager.h>
+#include <llvm/Target/TargetOptions.h>
+#include <llvm/Target/TargetMachine.h>
+#include <llvm/Support/Host.h>
+#include <llvm/Support/TargetSelect.h>
+#include <llvm/Support/TargetRegistry.h>
+#include <llvm/Support/raw_ostream.h>
+
 #include <AST/AST.h>
 #include <CodeGenerator/CodeGenerator.h>
 
@@ -611,6 +620,69 @@ namespace GSLanguageCompiler::Driver {
     GS_TranslationUnit::GS_TranslationUnit(UString name)
             : _name(std::move(name)) {}
 
+    I32 compileModule(llvm::Module &module) {
+        auto targetTriple = llvm::sys::getDefaultTargetTriple();
+
+        llvm::InitializeNativeTarget();
+        llvm::InitializeNativeTargetAsmParser();
+        llvm::InitializeNativeTargetAsmPrinter();
+
+        String error;
+
+        auto target = llvm::TargetRegistry::lookupTarget(targetTriple, error);
+
+        if (!target) {
+            llvm::errs() << error;
+
+            return 1;
+        }
+
+        auto cpu = "generic";
+        auto features = "";
+
+        llvm::TargetOptions options;
+
+        auto model = llvm::Optional<llvm::Reloc::Model>();
+
+        auto machine = target->createTargetMachine(targetTriple, cpu, features, options, model);
+
+        module.setDataLayout(machine->createDataLayout());
+        module.setTargetTriple(targetTriple);
+
+        auto fileName = "output.o";
+
+        std::error_code errorCode;
+
+        llvm::raw_fd_ostream stream(fileName, errorCode);
+
+        if (errorCode) {
+            llvm::errs() << errorCode.message();
+
+            return 1;
+        }
+
+        llvm::legacy::PassManager manager;
+
+        if (machine->addPassesToEmitFile(manager, stream, nullptr, llvm::CodeGenFileType::CGFT_ObjectFile)) {
+            return 1;
+        }
+
+        manager.run(module);
+
+        stream.flush();
+
+        return 0;
+    }
+
+    template<typename T, typename... Args>
+    inline auto CreateNode(SharedPtr<AST::GS_FunctionDeclaration> functionDeclaration, Args... args) {
+        auto node = T::Create(args..., functionDeclaration->getFunctionScope());
+
+        functionDeclaration->addStatement(node);
+
+        return node;
+    }
+
     I32 GS_TranslationUnit::compile() {
 //        UFileStream file;
 //        file.Open(U"../../test.gs", in_mode);
@@ -643,52 +715,33 @@ namespace GSLanguageCompiler::Driver {
 //
 //        New::GS_Parser parser(&tokenStream);
 
-        auto globalScope = AST::GS_Scope::CreateGlobalScope();
+        auto unit = AST::GS_TranslationUnitDeclaration::Create(U"test"_us);
 
-        auto function = AST::GS_FunctionDeclaration::Create(U"main"_us, globalScope);
+        auto function = unit->addNode<AST::GS_FunctionDeclaration>(U"main"_us);
 
-        auto number_1 = AST::GS_ConstantExpression::Create(AST::GS_I32Value::Create(1), function->getFunctionScope());
-        auto number_2 = AST::GS_ConstantExpression::Create(AST::GS_I32Value::Create(5), function->getFunctionScope());
+        auto expression_1 = function->createStatement<AST::GS_ConstantExpression>(AST::GS_I32Value::Create(2));
 
-        auto expression = AST::GS_BinaryExpression::Create(AST::BinaryOperation::Plus, number_1, number_2, function->getFunctionScope());
+        auto expression_2 = function->createStatement<AST::GS_ConstantExpression>(AST::GS_I32Value::Create(4));
 
-        auto variable = AST::GS_VariableDeclarationStatement::Create(U"a"_us, AST::GS_I32Type::Create(), expression, function->getFunctionScope());
+        auto expression = function->createStatement<AST::GS_BinaryExpression>(AST::BinaryOperation::Plus, expression_1, expression_2);
 
-        auto number_3 = AST::GS_ConstantExpression::Create(AST::GS_I32Value::Create(10), function->getFunctionScope());
-        auto number_4 = AST::GS_ConstantExpression::Create(AST::GS_I32Value::Create(23), function->getFunctionScope());
+        auto variable = function->addStatement<AST::GS_VariableDeclarationStatement>(U"a"_us, AST::GS_I32Type::Create(), expression);
 
-        auto expression_2 = AST::GS_BinaryExpression::Create(AST::BinaryOperation::Plus, number_3, number_4, function->getFunctionScope());
+        auto printer = std::make_shared<PrintVisitor>();
 
-        auto variable_2 = AST::GS_VariableDeclarationStatement::Create(U"b"_us, AST::GS_I32Type::Create(), expression_2, function->getFunctionScope());
-
-        auto expression_3 = AST::GS_BinaryExpression::Create(AST::BinaryOperation::Plus,
-                                                             AST::GS_VariableUsingExpression::Create(U"a"_us, function->getFunctionScope()),
-                                                             AST::GS_VariableUsingExpression::Create(U"b"_us, function->getFunctionScope()),
-                                                             function->getFunctionScope());
-
-        auto variable_3 = AST::GS_VariableDeclarationStatement::Create(U"c"_us, AST::GS_I32Type::Create(), expression_3, function->getFunctionScope());
-
-        function->addStatement(variable);
-        function->addStatement(variable_2);
-        function->addStatement(variable_3);
-
-        AST::GSNodePtrArray nodes = {
-                function
-        };
-
-        auto unit = AST::GS_TranslationUnitDeclaration::Create(U"test", nodes, globalScope);
-
-        PrintVisitor printer;
+        printer->visitNode(unit);
 
         auto codeGen = std::make_shared<CodeGenerator::GS_LLVMCodeGenerationVisitor>();
 
-        printer.visitNode(unit);
-
         codeGen->visitTranslationUnitDeclaration(unit);
 
-        std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCodeGenerationVisitorContext>(codeGen->getContext())->getModule().print(llvm::errs(), nullptr);
+        auto &module = std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCodeGenerationVisitorContext>(codeGen->getContext())->getModule();
 
-        return 0;
+        module.print(llvm::errs(), nullptr);
+
+        auto result = compileModule(module);
+
+        return result;
     }
 
     UString GS_TranslationUnit::getName() const {

@@ -9,6 +9,18 @@ namespace GSLanguageCompiler::AST {
         return std::make_shared<GS_TranslationUnitDeclaration>(std::move(name), std::move(nodes), std::move(scope));
     }
 
+    SharedPtr<GS_TranslationUnitDeclaration> GS_TranslationUnitDeclaration::Create(UString name, GSScopePtr scope) {
+        return GS_TranslationUnitDeclaration::Create(std::move(name), GSNodePtrArray(), std::move(scope));
+    }
+
+    SharedPtr<GS_TranslationUnitDeclaration> GS_TranslationUnitDeclaration::Create(UString name) {
+        return GS_TranslationUnitDeclaration::Create(std::move(name), GS_Scope::CreateGlobalScope());
+    }
+
+    Void GS_TranslationUnitDeclaration::addNode(GSNodePtr node) {
+        _nodes.emplace_back(std::move(node));
+    }
+
     LRef<UString> GS_TranslationUnitDeclaration::getName() {
         return _name;
     }

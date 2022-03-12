@@ -64,7 +64,7 @@ target_link_directories(${PROJECT_NAME} PRIVATE ${CONAN_LIB_DIRS})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS})
 
-llvm_map_components_to_libnames(LLVM_LIBS core native)
+llvm_map_components_to_libnames(LLVM_LIBS all)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LLVM_LIBS})
 

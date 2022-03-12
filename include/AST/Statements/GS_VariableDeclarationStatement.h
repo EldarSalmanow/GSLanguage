@@ -9,6 +9,11 @@
 namespace GSLanguageCompiler::AST {
 
     /**
+     * Declaring function declaration
+     */
+    class GS_FunctionDeclaration;
+
+    /**
      * Class for variable declarations in language
      */
     class GS_VariableDeclarationStatement : public GS_Statement {
@@ -16,26 +21,10 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Constructor for variable declaration statement
-         * @param name Variable name
-         * @param type Variable type
-         * @param scope Variable scope
-         */
-        GS_VariableDeclarationStatement(UString name, GSTypePtr type, GSScopePtr scope);
-
-        /**
-         * Constructor for variable declaration statement
-         * @param name Variable name
-         * @param expression Expression for variable
-         * @param scope Variable scope
-         */
-        GS_VariableDeclarationStatement(UString name, GSExpressionPtr expression, GSScopePtr scope);
-
-        /**
-         * Constructor for variable declaration statement
-         * @param name Variable name
-         * @param type Variable type
-         * @param expression Expression for variable
-         * @param scope Variable scope
+         * @param name Name
+         * @param type Type
+         * @param expression Expression
+         * @param scope Scope
          */
         GS_VariableDeclarationStatement(UString name, GSTypePtr type, GSExpressionPtr expression, GSScopePtr scope);
 
@@ -43,31 +32,31 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Creating variable declaration statement ptr
-         * @param name Variable name
-         * @param type Variable type
-         * @param scope Variable scope
+         * @param name Name
+         * @param type Type
+         * @param expression Expression
+         * @param scope Scope
+         * @return Variable declaration statement ptr
+         */
+        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSTypePtr type, GSExpressionPtr expression, GSScopePtr scope);
+
+        /**
+         * Creating variable declaration statement ptr
+         * @param name Name
+         * @param type Type
+         * @param scope Scope
          * @return Variable declaration statement ptr
          */
         static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSTypePtr type, GSScopePtr scope);
 
         /**
          * Creating variable declaration statement ptr
-         * @param name Variable name
-         * @param expression Expression for variable
-         * @param scope Variable scope
+         * @param name Name
+         * @param expression Expression
+         * @param scope Scope
          * @return Variable declaration statement ptr
          */
         static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSExpressionPtr expression, GSScopePtr scope);
-
-        /**
-         * Creating variable declaration statement ptr
-         * @param name Variable name
-         * @param type Variable type
-         * @param expression Expression for variable
-         * @param scope Variable scope
-         * @return Variable declaration statement ptr
-         */
-        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSTypePtr type, GSExpressionPtr expression, GSScopePtr scope);
 
     public:
 

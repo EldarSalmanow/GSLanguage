@@ -14,7 +14,7 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Constructor for translation unit
+         * Constructor for translation unit declaration
          * @param name Name
          * @param nodes Nodes
          * @param scope Global scope
@@ -24,13 +24,69 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Creating translation unit ptr
+         * Creating translation unit declaration ptr
          * @param name Name
          * @param nodes Nodes
          * @param scope Global scope
-         * @return Translation unit ptr
+         * @return Translation unit declaration ptr
          */
         static SharedPtr<GS_TranslationUnitDeclaration> Create(UString name, GSNodePtrArray nodes, GSScopePtr scope);
+
+        /**
+         * Creating translation unit declaration ptr
+         * @param name Name
+         * @param scope Global scope
+         * @return Translation unit declaration ptr
+         */
+        static SharedPtr<GS_TranslationUnitDeclaration> Create(UString name, GSScopePtr scope);
+
+        /**
+         * Creating translation unit ptr
+         * @param name Name
+         * @return Translation unit declaration ptr
+         */
+        static SharedPtr<GS_TranslationUnitDeclaration> Create(UString name);
+
+    public:
+
+        /**
+         * Creating new node in scope and return it
+         * @tparam T Type of node for creating
+         * @tparam Args Argument types for creating node
+         * @param args Arguments for creating node
+         * @return Created node
+         */
+        template<typename T, typename... Args>
+        inline auto createNode(Args... args) {
+            static_assert(std::is_base_of_v<GS_Node, T>, "Element for creating must be a node!");
+
+            return T::Create(args..., _globalScope);
+        }
+
+        /**
+         * Adding node to translation unit
+         * @param node Node
+         * @return
+         */
+        Void addNode(GSNodePtr node);
+
+        /**
+         * Creating and adding new node to scope and return it
+         * @tparam T Type of node for creating
+         * @tparam Args Argument types for creating node
+         * @param args Arguments for creating node
+         * @return Created node
+         */
+        template<typename T, typename... Args>
+        inline auto addNode(Args... args) {
+            static_assert(std::is_base_of_v<GS_Node, T>, "Element for creating must be node!");
+
+            auto node = createNode<T>(args...);
+
+            addNode(node);
+
+            return node;
+        }
 
     public:
 
