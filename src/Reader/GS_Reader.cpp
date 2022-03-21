@@ -2,13 +2,11 @@
 
 namespace GSLanguageCompiler::Reader {
 
-    GS_Reader::GS_Reader(StreamT stream)
-            : _stream(stream) {}
+    GS_Reader::GS_Reader(LRef<UniquePtr<File>> file)
+            : _file(std::move(file)) {}
 
-    SymbolT GS_Reader::getSymbol() {
-        auto symbol = _stream->Get();
-
-        return symbol;
+    UString GS_Reader::ReadText() {
+        return _file->ReadInput();
     }
 
 }

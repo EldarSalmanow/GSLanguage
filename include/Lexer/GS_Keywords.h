@@ -7,7 +7,7 @@ namespace GSLanguageCompiler::Lexer {
      * Type of token
      */
     enum class TokenType {
-#include <Lexer/GS_Keywords.def>
+        #include <Lexer/GS_Keywords.def>
     };
 
 }

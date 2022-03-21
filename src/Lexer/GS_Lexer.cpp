@@ -3,8 +3,8 @@
 namespace GSLanguageCompiler::Lexer {
 
     Vector<std::pair<UString, TokenType>> ReservedWords = {
-            {U"var", TokenType::KeywordVar},
-            {U"func", TokenType::KeywordFunc}
+            {U"var"_us, TokenType::KeywordVar},
+            {U"func"_us, TokenType::KeywordFunc}
     };
 
     Vector<std::pair<USymbol, TokenType>> ReservedSymbols = {
@@ -44,69 +44,86 @@ namespace GSLanguageCompiler::Lexer {
         return TokenType::Unknown;
     }
 
-    GS_Lexer::GS_Lexer(Ptr<Reader::GS_TextStream> stream)
-            : _stream(stream), _symbol(_stream->getSymbol()) {}
+    GS_Lexer::GS_Lexer(LRef<Reader::GS_TextStream> textStream)
+            : _stream(textStream) {}
 
-    GSTokenPtr GS_Lexer::getToken() {
-        if (_symbol.isWhitespace()) {
-            _symbol = _stream->getSymbol();
+    GSTokenArray GS_Lexer::Tokenize() {
+        GSTokenArray tokens;
 
-            return std::make_shared<GS_Token>(TokenType::SymbolSpace);
+        auto token = GetToken();
+
+        while (token.GetType() != TokenType::EndOfFile) {
+            tokens.emplace_back(token);
+
+            token = GetToken();
         }
 
-        if (ReservedSymbolsType(_symbol) != TokenType::Unknown) {
-            auto type = ReservedSymbolsType(_symbol);
+        tokens.emplace_back(GS_Token::Create(TokenType::EndOfFile));
 
-            _symbol = _stream->getSymbol();
-
-            return std::make_shared<GS_Token>(type);
-        }
-
-        if (_symbol.isIDStart()) {
-            return _tokenizeWord();
-        }
-
-        if (_symbol.isDigit()) {
-            return _tokenizeNumber();
-        }
-
-        return nullptr;
+        return tokens;
     }
 
-    GSTokenPtr GS_Lexer::_tokenizeWord() {
-        UString string;
+    GS_Token GS_Lexer::GetToken() {
+        if (CurrentSymbol().IsWhitespace()) {
+            NextSymbol();
 
-        string += _symbol;
-
-        _symbol = _stream->getSymbol();
-
-        while (_symbol.isIDContinue()) {
-            string += _symbol;
-
-            _symbol = _stream->getSymbol();
+            return GetToken();
+//            return GS_Token::Create(TokenType::SymbolSpace); // TODO delete or modify
         }
 
-        if (ReservedWordsType(string) != TokenType::Unknown) {
-            return std::make_shared<GS_Token>(ReservedWordsType(string));
+        auto type = ReservedSymbolsType(CurrentSymbol());
+
+        if (type != TokenType::Unknown) {
+            NextSymbol();
+
+            return GS_Token::Create(type);
         }
 
-        return std::make_shared<GS_ValueToken>(TokenType::Identifier, string);
+        if (CurrentSymbol().IsIDStart()) {
+            UString string;
+
+            string += CurrentSymbol();
+
+            NextSymbol();
+
+            while (CurrentSymbol().IsIDContinue()) {
+                string += CurrentSymbol();
+
+                NextSymbol();
+            }
+
+            if (ReservedWordsType(string) != TokenType::Unknown) {
+                return GS_Token::Create(ReservedWordsType(string));
+            }
+
+            return GS_Token::Create(TokenType::Identifier, string);
+        }
+
+        if (CurrentSymbol().IsDigit()) {
+            UString string;
+
+            string += CurrentSymbol();
+
+            NextSymbol();
+
+            while (CurrentSymbol().IsDigit()) {
+                string += CurrentSymbol();
+
+                NextSymbol();
+            }
+
+            return GS_Token::Create(TokenType::LiteralNumber, string);
+        }
+
+        return GS_Token::Create(TokenType::EndOfFile);
     }
 
-    GSTokenPtr GS_Lexer::_tokenizeNumber() {
-        UString string;
+    USymbol GS_Lexer::CurrentSymbol() {
+        return _stream.CurrentSymbol();
+    }
 
-        string += _symbol;
-
-        _symbol = _stream->getSymbol();
-
-        while (_symbol.isDigit()) {
-            string += _symbol;
-
-            _symbol = _stream->getSymbol();
-        }
-
-        return std::make_shared<GS_ValueToken>(TokenType::LiteralNumber, string);
+    Void GS_Lexer::NextSymbol() {
+        _stream.NextSymbol();
     }
 
 }

@@ -6,56 +6,48 @@
 namespace GSLanguageCompiler::Lexer {
 
     /**
-     *
+     * Stream class for tokens
      */
     class GS_TokenStream {
     public:
 
         /**
-         *
-         * @param tokens
+         * Constructor for token stream
+         * @param lexer Lexer
          */
-        explicit GS_TokenStream(GSTokenPtrArray tokens);
-
-        /**
-         *
-         * @param lexer
-         */
-        explicit GS_TokenStream(Ptr<GS_Lexer> lexer);
+        explicit GS_TokenStream(LRef<GS_Lexer> lexer);
 
     public:
 
         /**
-         *
-         * @return
+         * Getting current token
+         * @return Current token
          */
-        GSTokenPtr getToken();
-
-    public:
+        GS_Token CurrentToken();
 
         /**
-         *
-         * @param token
+         * Setting cursor to next token in stream
          * @return
          */
-        GS_TokenStream &operator>>(GSTokenPtr &token);
+        Void NextToken();
+
+        /**
+         * Setting cursor to prev token in stream
+         * @return
+         */
+        Void PrevToken();
 
     private:
 
         /**
-         *
+         * Token array
          */
-        Ptr<GS_Lexer> _lexer;
+        GSTokenArray _tokens;
 
         /**
-         *
+         * Token array iterator
          */
-        GSTokenPtrArray _tokens;
-
-        /**
-         *
-         */
-        GSTokenPtrArrayIterator _tokenIterator;
+        GSTokenArrayIterator _tokenIterator;
     };
 
 }

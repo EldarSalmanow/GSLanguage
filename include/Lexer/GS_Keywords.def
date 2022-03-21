@@ -1,5 +1,5 @@
 #ifndef GS_TOKENTYPE
-#define GS_TOKENTYPE(name) name
+    #define GS_TOKENTYPE(name) name
 #endif
 
 GS_TOKENTYPE(Unknown),

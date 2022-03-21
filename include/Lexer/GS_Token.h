@@ -7,48 +7,72 @@
 
 namespace GSLanguageCompiler::Lexer {
 
+    /**
+     * Class for representation token in lexer
+     */
     class GS_Token {
     public:
 
-        explicit GS_Token(TokenType type);
+        /**
+         * Constructor for token
+         * @param type Type
+         * @param value Value
+         */
+        GS_Token(TokenType type, UString value);
 
     public:
 
-        TokenType getTokenType() const;
+        /**
+         * Creating token
+         * @param type Type
+         * @param value Value
+         * @return Token
+         */
+        static GS_Token Create(TokenType type, UString value);
+
+        /**
+         * Creating token
+         * @param type Type
+         * @return Token
+         */
+        static GS_Token Create(TokenType type);
+
+    public:
+
+        /**
+         * Getter for type
+         * @return Type
+         */
+        TokenType GetType() const;
+
+        /**
+         * Getter for value
+         * @return Value
+         */
+        UString GetValue() const;
 
     private:
 
+        /**
+         * Token type
+         */
         TokenType _type;
-    };
 
-    class GS_ValueToken : public GS_Token {
-    public:
-
-        GS_ValueToken(TokenType type, UString value);
-
-    public:
-
-        UString getValue() const;
-
-    private:
-
+        /**
+         * Token value
+         */
         UString _value;
     };
 
     /**
-     * Token ptr type
-     */
-    using GSTokenPtr = SharedPtr<GS_Token>;
-
-    /**
      * Token ptr array type
      */
-    using GSTokenPtrArray = Vector<GSTokenPtr>;
+    using GSTokenArray = Vector<GS_Token>;
 
     /**
      * Token ptr array iterator type
      */
-    using GSTokenPtrArrayIterator = GSTokenPtrArray::iterator;
+    using GSTokenArrayIterator = GSTokenArray::iterator;
 
 }
 

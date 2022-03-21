@@ -9,155 +9,240 @@ namespace GSLanguageCompiler::Parser {
             {Lexer::TokenType::SymbolMinus, 1}
     };
 
-    GS_Parser::GS_Parser(Ptr<Lexer::GS_TokenStream> stream)
-            : _tokenStream(stream) {}
+    GS_Parser::GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream)
+            : _stream(tokenStream) {}
 
-    AST::GSDeclarationPtrArray GS_Parser::parse() {
-        return _parseProgram();
+    AST::GSTranslationUnitPtr GS_Parser::Parse() {
+        AST::GSNodePtrArray nodes;
+
+        auto globalScope = AST::GS_Scope::CreateGlobalScope();
+
+        while (!IsTokenType(Lexer::TokenType::EndOfFile)) {
+            auto node = ParseDeclaration(globalScope);
+
+            nodes.emplace_back(node);
+        }
+
+        return AST::GS_TranslationUnitDeclaration::Create(U"test"_us, nodes, globalScope); // TODO add getting file name for TU
     }
 
-    AST::GSDeclarationPtrArray GS_Parser::_parseProgram() {
-        AST::GSDeclarationPtrArray declarations;
-
-        while (!_isEqualTokenTypes(Lexer::TokenType::EndOfFile)) {
-            declarations.emplace_back(_parseDeclaration());
+    AST::GSDeclarationPtr GS_Parser::ParseDeclaration(ConstLRef<AST::GSScopePtr> scope) {
+        if (IsTokenType(Lexer::TokenType::KeywordFunc)) {
+            return ParseFunctionDeclaration(scope);
         }
 
-        return declarations;
+        return nullptr;
     }
 
-    AST::GSDeclarationPtr GS_Parser::_parseDeclaration() {
-        if (_isEqualTokenTypes(Lexer::TokenType::KeywordFunc)) {
-            return _parseFunctionDeclaration();
-        } else if (_isEqualTokenTypes(Lexer::TokenType::KeywordVar)) {
-            return _parseVariableDeclaration();
-        } else {
-            throw std::runtime_error("Unknown declaration!");
+    SharedPtr<AST::GS_FunctionDeclaration> GS_Parser::ParseFunctionDeclaration(ConstLRef<AST::GSScopePtr> scope) {
+        if (!IsTokenType(Lexer::TokenType::KeywordFunc)) {
+            return nullptr;
         }
+
+        NextToken(); // skip 'func'
+
+        if (!IsTokenType(Lexer::TokenType::Identifier)) {
+            return nullptr;
+        }
+
+        auto functionName = TokenValue();
+
+        NextToken(); // skip function name
+
+        if (!IsTokenType(Lexer::TokenType::SymbolLeftParen)) {
+            return nullptr;
+        }
+
+        NextToken(); // skip '('
+
+        if (!IsTokenType(Lexer::TokenType::SymbolRightParen)) {
+            return nullptr;
+        }
+
+        NextToken(); // skip ')'
+
+        if (!IsTokenType(Lexer::TokenType::SymbolLeftBrace)) {
+            return nullptr;
+        }
+
+        NextToken(); // skip '{'
+
+        auto function = AST::GS_FunctionDeclaration::Create(functionName, scope);
+
+        while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
+            auto statement = ParseStatement(function->getFunctionScope());
+
+            function->addStatement(statement);
+        }
+
+        NextToken(); // skip '}'
+
+        scope->addNode(function);
+
+        return function;
     }
 
-    AST::GSDeclarationPtr GS_Parser::_parseFunctionDeclaration() {
-        if (!_isEqualTokenTypes(Lexer::TokenType::KeywordFunc)) {
-            throw std::runtime_error("Invalid function declaration! Missing 'func' keyword!");
+    AST::GSStatementPtr GS_Parser::ParseStatement(ConstLRef<AST::GSScopePtr> scope) {
+        if (IsTokenType(Lexer::TokenType::KeywordVar)) {
+            return ParseVariableDeclarationStatement(scope);
         }
 
-        _nextToken(); // skip 'func'
+        auto expression = ParseExpression(scope);
 
-        if (!_isEqualTokenTypes(Lexer::TokenType::Identifier)) {
-            throw std::runtime_error("Invalid function name!");
+        if (IsTokenType(Lexer::TokenType::SymbolEq)) {
+            return ParseAssignmentStatement(expression, scope);
         }
 
-        auto functionName = ReinterpretCast<Ptr<Lexer::GS_ValueToken>>(_token.get())->getValue();
-
-        _nextToken(); // skip function name
-
-        if (!_isEqualTokenTypes(Lexer::TokenType::SymbolLeftParen)) {
-            throw std::runtime_error("Missing \'(\'!");
-        }
-
-        _nextToken(); // skip '('
-
-        if (!_isEqualTokenTypes(Lexer::TokenType::SymbolRightParen)) {
-            throw std::runtime_error("Missing \')\'!");
-        }
-
-        _nextToken(); // skip ')'
-
-        if (!_isEqualTokenTypes(Lexer::TokenType::SymbolLeftBrace)) {
-            throw std::runtime_error("Missing \'{\'!");
-        }
-
-        _nextToken(); // skip '{'
-
-        AST::GSStatementPtrArray functionBody;
-
-        while (!_isEqualTokenTypes(Lexer::TokenType::SymbolRightBrace)) {
-            auto statement = _parseStatement();
-
-            functionBody.emplace_back(statement);
-        }
-
-        _nextToken(); // skip '}'
-
-        return std::make_shared<AST::GS_FunctionDeclaration>(functionName, functionBody);
+        return ParseExpressionStatement(expression, scope);
     }
 
-    AST::GSStatementPtr GS_Parser::_parseVariableDeclaration() {
-        _tokenStream.next(); // skip 'var'
+    SharedPtr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement(ConstLRef<AST::GSScopePtr> scope) {
+        auto lvalueExpression = ParseLValueExpression(scope);
 
-        if (!_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
-            throw std::runtime_error("Invalid variable name!");
+        if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
+            return nullptr;
         }
 
-        auto variableName = _tokenStream.tokenValue();
+        NextToken(); // skip '='
 
-        _tokenStream.next(); // skip variable name
+        auto rvalueExpression = ParseRValueExpression(scope);
 
-        if (!_tokenStream.isEqualTypes(Lexer::TokenType::SymbolColon)) {
-            throw std::runtime_error("Can`t declare variable without type!");
-        }
+        auto assignmentStatement = AST::GS_AssignmentStatement::Create(lvalueExpression, rvalueExpression, scope);
 
-        _tokenStream.next(); // skip ':'
+        scope->addNode(assignmentStatement);
 
-        if (!_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
-            throw std::runtime_error("Invalid type name!");
-        }
-
-        auto typeName = _tokenStream.tokenValue();
-
-        AST::GSTypePtr variableType;
-
-        if (typeName == "I32") {
-            variableType = std::make_shared<AST::GS_I32Type>();
-        } else if (typeName == "String") {
-            variableType = std::make_shared<AST::GS_StringType>();
-        } else {
-            throw std::runtime_error("Unknown type name!");
-        }
-
-        _tokenStream.next(); // skip variable type
-
-        return std::make_shared<AST::GS_VariableDeclaration>(variableName, variableType);
+        return assignmentStatement;
     }
 
-    AST::GSStatementPtr GS_Parser::_parseStatement() {
-        if (_tokenStream.isEqualTypes(Lexer::TokenType::KeywordVar)
-         || _tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
-            return _parseAssignmentStatement();
-        } else {
-            return std::make_shared<AST::GS_ExpressionStatement>(_parseExpression());
-        }
-    }
-
-    AST::GSStatementPtr GS_Parser::_parseAssignmentStatement() {
-        AST::GSStatementPtr statement;
-
-        if (_tokenStream.isEqualTypes(Lexer::TokenType::KeywordVar)) {
-            statement = _parseVariableDeclarationStatement();
-        } else if (_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
-            statement = std::make_shared<AST::GS_ExpressionStatement>(_parsePrimaryExpression());
+    SharedPtr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement(ConstLRef<AST::GSExpressionPtr> lvalueExpression, ConstLRef<AST::GSScopePtr> scope) {
+        if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
+            return nullptr;
         }
 
-        if (_tokenStream.isEqualTypes(Lexer::TokenType::SymbolEq)) {
-            _tokenStream.next(); // skip '='
+        NextToken(); // skip '='
 
-            auto expression = _parseExpression();
+        auto rvalueExpression = ParseRValueExpression(scope);
 
-            return std::make_shared<AST::GS_AssignmentStatement>(statement, expression);
+        auto assignmentStatement = AST::GS_AssignmentStatement::Create(lvalueExpression, rvalueExpression, scope);
+
+        scope->addNode(assignmentStatement);
+
+        return assignmentStatement;
+    }
+
+    SharedPtr<AST::GS_VariableDeclarationStatement> GS_Parser::ParseVariableDeclarationStatement(ConstLRef<AST::GSScopePtr> scope) {
+        if (!IsTokenType(Lexer::TokenType::KeywordVar)) {
+            return nullptr;
         }
 
-        return statement;
+        NextToken(); // skip 'var'
+
+        if (!IsTokenType(Lexer::TokenType::Identifier)) {
+            return nullptr;
+        }
+
+        auto variableName = TokenValue();
+
+        NextToken(); // skip variable name
+
+        if (IsTokenType(Lexer::TokenType::SymbolColon)) {
+            NextToken(); // skip ':'
+
+            auto variableType = ParseType();
+
+            if (variableType->getName() == U"Void") {
+                return nullptr;
+            }
+
+            if (IsTokenType(Lexer::TokenType::SymbolEq)) {
+                NextToken(); // skip '='
+
+                auto variableExpression = ParseRValueExpression(scope);
+
+                auto variable = AST::GS_VariableDeclarationStatement::Create(variableName, variableType, variableExpression, scope);
+
+                scope->addNode(variable);
+
+                return variable;
+            }
+
+            auto variable = AST::GS_VariableDeclarationStatement::Create(variableName, variableType, scope);
+
+            scope->addNode(variable);
+
+            return variable;
+        } else if (IsTokenType(Lexer::TokenType::SymbolEq)) {
+            NextToken(); // skip '='
+
+            auto variableExpression = ParseRValueExpression(scope);
+
+            auto variable = AST::GS_VariableDeclarationStatement::Create(variableName, variableExpression, scope);
+
+            scope->addNode(variable);
+
+            return variable;
+        }
+
+        return nullptr;
     }
 
-    AST::GSExpressionPtr GS_Parser::_parseExpression() {
-        auto expression = _parseUnaryExpression();
+    SharedPtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement(ConstLRef<AST::GSScopePtr> scope) {
+        auto expression = ParseExpression(scope);
 
-        return _parseBinaryExpression(0, expression);
+        auto expressionStatement = AST::GS_ExpressionStatement::Create(expression, scope);
+
+        scope->addNode(expressionStatement);
+
+        return expressionStatement;
     }
 
-    AST::GSExpressionPtr GS_Parser::_parseBinaryExpression(I32 expressionPrecedence, AST::GSExpressionPtr expression) {
+    SharedPtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement(ConstLRef<AST::GSExpressionPtr> expression, ConstLRef<AST::GSScopePtr> scope) {
+        auto expressionStatement = AST::GS_ExpressionStatement::Create(expression, scope);
+
+        scope->addNode(expressionStatement);
+
+        return expressionStatement;
+    }
+
+    AST::GSExpressionPtr GS_Parser::ParseExpression(ConstLRef<AST::GSScopePtr> scope) {
+        auto expression = ParseLValueExpression(scope);
+
+        if (!expression) {
+            expression = ParseRValueExpression(scope);
+        }
+
+        return expression;
+    }
+
+    AST::GSExpressionPtr GS_Parser::ParseLValueExpression(ConstLRef<AST::GSScopePtr> scope) {
+        if (IsTokenType(Lexer::TokenType::Identifier)) {
+            return ParseVariableUsingExpression(scope);
+        }
+
+        return nullptr;
+    }
+
+    AST::GSExpressionPtr GS_Parser::ParseRValueExpression(ConstLRef<AST::GSScopePtr> scope) {
+        auto expression = ParseUnaryExpression(scope);
+
+        return ParseBinaryExpression(0, expression, scope);
+    }
+
+    AST::GSExpressionPtr GS_Parser::ParseVariableUsingExpression(ConstLRef<AST::GSScopePtr> scope) {
+        if (!IsTokenType(Lexer::TokenType::Identifier)) {
+            return nullptr;
+        }
+
+        auto variableName = TokenValue();
+
+        NextToken();
+
+        return AST::GS_VariableUsingExpression::Create(variableName, scope);
+    }
+
+    AST::GSExpressionPtr GS_Parser::ParseBinaryExpression(I32 expressionPrecedence, LRef<AST::GSExpressionPtr> expression, ConstLRef<AST::GSScopePtr> scope) {
         while (true) {
-            auto currentTokenPrecedence = _currentTokenPrecedence();
+            auto currentTokenPrecedence = TokenPrecedence();
 
             if (currentTokenPrecedence < expressionPrecedence) {
                 return expression;
@@ -165,7 +250,7 @@ namespace GSLanguageCompiler::Parser {
 
             AST::BinaryOperation binaryOperator;
 
-            switch (_tokenStream.tokenType()) {
+            switch (TokenType()) {
                 case Lexer::TokenType::SymbolPlus:
                     binaryOperator = AST::BinaryOperation::Plus;
 
@@ -183,69 +268,79 @@ namespace GSLanguageCompiler::Parser {
 
                     break;
                 default:
-                    throw std::runtime_error("Unknown binary operator!");
+                    throw UException(U"Unknown binary operator!"_us);
             }
 
-            _tokenStream.next(); // skip binary operator
+            NextToken(); // skip binary operator
 
-            auto secondExpression = _parseUnaryExpression();
+            auto secondExpression = ParseUnaryExpression(scope);
 
-            auto nextTokenPrecedence = _currentTokenPrecedence();
+            auto nextTokenPrecedence = TokenPrecedence();
 
             if (currentTokenPrecedence < nextTokenPrecedence) {
-                secondExpression = _parseBinaryExpression(currentTokenPrecedence + 1, secondExpression);
+                secondExpression = ParseBinaryExpression(currentTokenPrecedence + 1, secondExpression, scope);
             }
 
-            expression = std::make_shared<AST::GS_BinaryExpression>(binaryOperator, expression, secondExpression);
+            expression = AST::GS_BinaryExpression::Create(binaryOperator, expression, secondExpression, scope);
         }
     }
 
-    AST::GSExpressionPtr GS_Parser::_parseUnaryExpression() {
-        if (_tokenStream.isEqualTypes(Lexer::TokenType::SymbolMinus)) {
-            _tokenStream.next();
+    AST::GSExpressionPtr GS_Parser::ParseUnaryExpression(ConstLRef<AST::GSScopePtr> scope) {
+        if (IsTokenType(Lexer::TokenType::SymbolMinus)) {
+            NextToken(); // skip '-'
 
-            return std::make_shared<AST::GS_UnaryExpression>(AST::UnaryOperation::Minus, _parsePrimaryExpression());
+            auto constantExpression = ParseConstantExpression(scope);
+
+            return AST::GS_UnaryExpression::Create(AST::UnaryOperation::Minus, constantExpression, scope);
         }
 
-        return _parsePrimaryExpression();
+        return ParseConstantExpression(scope);
     }
 
-    AST::GSExpressionPtr GS_Parser::_parsePrimaryExpression() {
-        if (_tokenStream.isEqualTypes(Lexer::TokenType::LiteralNumber)) {
-            auto value = _tokenStream.tokenValue();
+    AST::GSExpressionPtr GS_Parser::ParseConstantExpression(ConstLRef<AST::GSScopePtr> scope) {
+        if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
+            auto tokenValue = AST::GS_I32Value::Create(std::stoi(TokenValue().AsString())); // TODO create converting from string to number
 
-            _tokenStream.next();
+            NextToken();
 
-            return std::make_shared<AST::GS_ConstantExpression>(std::make_shared<AST::GS_I32Value>(std::stoi(value)));
-        } else if (_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
-            auto value = _tokenStream.tokenValue();
+            return AST::GS_ConstantExpression::Create(tokenValue, scope);
+        } else if (IsTokenType(Lexer::TokenType::LiteralString)) {
+            auto tokenValue = AST::GS_StringValue::Create(TokenValue());
 
-            _tokenStream.next();
+            NextToken();
 
-            return std::make_shared<AST::GS_VariableUsingExpression>(value);
-        } else if (_tokenStream.isEqualTypes(Lexer::TokenType::SymbolLeftParen)) {
-            _tokenStream.next();
-
-            auto expression = _parseExpression();
-
-            if (!_tokenStream.isEqualTypes(Lexer::TokenType::SymbolRightParen)) {
-                throw std::runtime_error("Missed \')\'!");
-            }
-
-            _tokenStream.next();
-
-            return expression;
-        } else {
-            throw std::runtime_error("Unknown expression!");
+            return AST::GS_ConstantExpression::Create(tokenValue, scope);
+        } else if (IsTokenType(Lexer::TokenType::Identifier)) {
+            return ParseVariableUsingExpression(scope);
         }
+
+        return nullptr;
     }
 
-    Void GS_Parser::_nextToken() {
-        _token = _tokenStream->getToken();
+    AST::GSTypePtr GS_Parser::ParseType() {
+        if (!IsTokenType(Lexer::TokenType::Identifier)) {
+            return nullptr;
+        }
+
+        auto stringVariableType = TokenValue();
+
+        NextToken(); // skip variable type
+
+        AST::GSTypePtr variableType = nullptr;
+
+        if (stringVariableType == U"Void") {
+            variableType = AST::GS_VoidType::Create();
+        } else if (stringVariableType == U"I32") {
+            variableType = AST::GS_I32Type::Create();
+        } else if (stringVariableType == U"String") {
+            variableType = AST::GS_StringType::Create();
+        }
+
+        return variableType;
     }
 
-    I32 GS_Parser::_currentTokenPrecedence() {
-        auto precedence = OperatorsPrecedence[_token->getTokenType()];
+    I32 GS_Parser::TokenPrecedence() {
+        auto precedence = OperatorsPrecedence[TokenType()];
 
         if (!precedence) {
             return -1;
@@ -254,8 +349,280 @@ namespace GSLanguageCompiler::Parser {
         return precedence;
     }
 
-    Bool GS_Parser::_isEqualTokenTypes(Lexer::TokenType type) {
-        return _token->getTokenType() == type;
+    Bool GS_Parser::IsTokenType(Lexer::TokenType type) {
+        return TokenType() == type;
     }
+
+    UString GS_Parser::TokenValue() {
+        return CurrentToken().GetValue();
+    }
+
+    Lexer::TokenType GS_Parser::TokenType() {
+        return CurrentToken().GetType();
+    }
+
+    Lexer::GS_Token GS_Parser::CurrentToken() {
+        return _stream.CurrentToken();
+    }
+
+    Void GS_Parser::NextToken() {
+        _stream.NextToken();
+    }
+
+//    Map<Lexer::TokenType, I32> OperatorsPrecedence = {
+//            {Lexer::TokenType::SymbolStar,  2},
+//            {Lexer::TokenType::SymbolSlash, 2},
+//            {Lexer::TokenType::SymbolPlus,  1},
+//            {Lexer::TokenType::SymbolMinus, 1}
+//    };
+//
+//    GS_Parser::GS_Parser(Ptr<Lexer::GS_TokenStream> stream)
+//            : _tokenStream(stream) {}
+//
+//    AST::GSDeclarationPtrArray GS_Parser::parse() {
+//        return _parseProgram();
+//    }
+//
+//    AST::GSDeclarationPtrArray GS_Parser::_parseProgram() {
+//        AST::GSDeclarationPtrArray declarations;
+//
+//        while (!_isEqualTokenTypes(Lexer::TokenType::EndOfFile)) {
+//            declarations.emplace_back(_parseDeclaration());
+//        }
+//
+//        return declarations;
+//    }
+//
+//    AST::GSDeclarationPtr GS_Parser::_parseDeclaration() {
+//        if (_isEqualTokenTypes(Lexer::TokenType::KeywordFunc)) {
+//            return _parseFunctionDeclaration();
+//        } else if (_isEqualTokenTypes(Lexer::TokenType::KeywordVar)) {
+//            return _parseVariableDeclaration();
+//        } else {
+//            throw std::runtime_error("Unknown declaration!");
+//        }
+//    }
+//
+//    AST::GSDeclarationPtr GS_Parser::_parseFunctionDeclaration() {
+//        if (!_isEqualTokenTypes(Lexer::TokenType::KeywordFunc)) {
+//            throw std::runtime_error("Invalid function declaration! Missing 'func' keyword!");
+//        }
+//
+//        _nextToken(); // skip 'func'
+//
+//        if (!_isEqualTokenTypes(Lexer::TokenType::Identifier)) {
+//            throw std::runtime_error("Invalid function name!");
+//        }
+//
+//        auto functionName = ReinterpretCast<Ptr<Lexer::GS_ValueToken>>(_token.get())->getValue();
+//
+//        _nextToken(); // skip function name
+//
+//        if (!_isEqualTokenTypes(Lexer::TokenType::SymbolLeftParen)) {
+//            throw std::runtime_error("Missing \'(\'!");
+//        }
+//
+//        _nextToken(); // skip '('
+//
+//        if (!_isEqualTokenTypes(Lexer::TokenType::SymbolRightParen)) {
+//            throw std::runtime_error("Missing \')\'!");
+//        }
+//
+//        _nextToken(); // skip ')'
+//
+//        if (!_isEqualTokenTypes(Lexer::TokenType::SymbolLeftBrace)) {
+//            throw std::runtime_error("Missing \'{\'!");
+//        }
+//
+//        _nextToken(); // skip '{'
+//
+//        AST::GSStatementPtrArray functionBody;
+//
+//        while (!_isEqualTokenTypes(Lexer::TokenType::SymbolRightBrace)) {
+//            auto statement = _parseStatement();
+//
+//            functionBody.emplace_back(statement);
+//        }
+//
+//        _nextToken(); // skip '}'
+//
+//        return std::make_shared<AST::GS_FunctionDeclaration>(functionName, functionBody);
+//    }
+//
+//    AST::GSStatementPtr GS_Parser::_parseVariableDeclaration() {
+//        _tokenStream.next(); // skip 'var'
+//
+//        if (!_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
+//            throw std::runtime_error("Invalid variable name!");
+//        }
+//
+//        auto variableName = _tokenStream.tokenValue();
+//
+//        _tokenStream.next(); // skip variable name
+//
+//        if (!_tokenStream.isEqualTypes(Lexer::TokenType::SymbolColon)) {
+//            throw std::runtime_error("Can`t declare variable without type!");
+//        }
+//
+//        _tokenStream.next(); // skip ':'
+//
+//        if (!_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
+//            throw std::runtime_error("Invalid type name!");
+//        }
+//
+//        auto typeName = _tokenStream.tokenValue();
+//
+//        AST::GSTypePtr variableType;
+//
+//        if (typeName == "I32") {
+//            variableType = std::make_shared<AST::GS_I32Type>();
+//        } else if (typeName == "String") {
+//            variableType = std::make_shared<AST::GS_StringType>();
+//        } else {
+//            throw std::runtime_error("Unknown type name!");
+//        }
+//
+//        _tokenStream.next(); // skip variable type
+//
+//        return std::make_shared<AST::GS_VariableDeclaration>(variableName, variableType);
+//    }
+//
+//    AST::GSStatementPtr GS_Parser::_parseStatement() {
+//        if (_tokenStream.isEqualTypes(Lexer::TokenType::KeywordVar)
+//         || _tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
+//            return _parseAssignmentStatement();
+//        } else {
+//            return std::make_shared<AST::GS_ExpressionStatement>(_parseExpression());
+//        }
+//    }
+//
+//    AST::GSStatementPtr GS_Parser::_parseAssignmentStatement() {
+//        AST::GSStatementPtr statement;
+//
+//        if (_tokenStream.isEqualTypes(Lexer::TokenType::KeywordVar)) {
+//            statement = _parseVariableDeclarationStatement();
+//        } else if (_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
+//            statement = std::make_shared<AST::GS_ExpressionStatement>(_parsePrimaryExpression());
+//        }
+//
+//        if (_tokenStream.isEqualTypes(Lexer::TokenType::SymbolEq)) {
+//            _tokenStream.next(); // skip '='
+//
+//            auto expression = _parseExpression();
+//
+//            return std::make_shared<AST::GS_AssignmentStatement>(statement, expression);
+//        }
+//
+//        return statement;
+//    }
+//
+//    AST::GSExpressionPtr GS_Parser::_parseExpression() {
+//        auto expression = _parseUnaryExpression();
+//
+//        return _parseBinaryExpression(0, expression);
+//    }
+//
+//    AST::GSExpressionPtr GS_Parser::_parseBinaryExpression(I32 expressionPrecedence, AST::GSExpressionPtr expression) {
+//        while (true) {
+//            auto currentTokenPrecedence = _currentTokenPrecedence();
+//
+//            if (currentTokenPrecedence < expressionPrecedence) {
+//                return expression;
+//            }
+//
+//            AST::BinaryOperation binaryOperator;
+//
+//            switch (_tokenStream.tokenType()) {
+//                case Lexer::TokenType::SymbolPlus:
+//                    binaryOperator = AST::BinaryOperation::Plus;
+//
+//                    break;
+//                case Lexer::TokenType::SymbolMinus:
+//                    binaryOperator = AST::BinaryOperation::Minus;
+//
+//                    break;
+//                case Lexer::TokenType::SymbolStar:
+//                    binaryOperator = AST::BinaryOperation::Star;
+//
+//                    break;
+//                case Lexer::TokenType::SymbolSlash:
+//                    binaryOperator = AST::BinaryOperation::Slash;
+//
+//                    break;
+//                default:
+//                    throw std::runtime_error("Unknown binary operator!");
+//            }
+//
+//            _tokenStream.next(); // skip binary operator
+//
+//            auto secondExpression = _parseUnaryExpression();
+//
+//            auto nextTokenPrecedence = _currentTokenPrecedence();
+//
+//            if (currentTokenPrecedence < nextTokenPrecedence) {
+//                secondExpression = _parseBinaryExpression(currentTokenPrecedence + 1, secondExpression);
+//            }
+//
+//            expression = std::make_shared<AST::GS_BinaryExpression>(binaryOperator, expression, secondExpression);
+//        }
+//    }
+//
+//    AST::GSExpressionPtr GS_Parser::_parseUnaryExpression() {
+//        if (_tokenStream.isEqualTypes(Lexer::TokenType::SymbolMinus)) {
+//            _tokenStream.next();
+//
+//            return std::make_shared<AST::GS_UnaryExpression>(AST::UnaryOperation::Minus, _parsePrimaryExpression());
+//        }
+//
+//        return _parsePrimaryExpression();
+//    }
+//
+//    AST::GSExpressionPtr GS_Parser::_parsePrimaryExpression() {
+//        if (_tokenStream.isEqualTypes(Lexer::TokenType::LiteralNumber)) {
+//            auto value = _tokenStream.tokenValue();
+//
+//            _tokenStream.next();
+//
+//            return std::make_shared<AST::GS_ConstantExpression>(std::make_shared<AST::GS_I32Value>(std::stoi(value)));
+//        } else if (_tokenStream.isEqualTypes(Lexer::TokenType::Identifier)) {
+//            auto value = _tokenStream.tokenValue();
+//
+//            _tokenStream.next();
+//
+//            return std::make_shared<AST::GS_VariableUsingExpression>(value);
+//        } else if (_tokenStream.isEqualTypes(Lexer::TokenType::SymbolLeftParen)) {
+//            _tokenStream.next();
+//
+//            auto expression = _parseExpression();
+//
+//            if (!_tokenStream.isEqualTypes(Lexer::TokenType::SymbolRightParen)) {
+//                throw std::runtime_error("Missed \')\'!");
+//            }
+//
+//            _tokenStream.next();
+//
+//            return expression;
+//        } else {
+//            throw std::runtime_error("Unknown expression!");
+//        }
+//    }
+//
+//    Void GS_Parser::_nextToken() {
+//        _token = _tokenStream->getToken();
+//    }
+//
+//    I32 GS_Parser::_currentTokenPrecedence() {
+//        auto precedence = OperatorsPrecedence[_token->getTokenType()];
+//
+//        if (!precedence) {
+//            return -1;
+//        }
+//
+//        return precedence;
+//    }
+//
+//    Bool GS_Parser::_isEqualTokenTypes(Lexer::TokenType type) {
+//        return _token->getTokenType() == type;
+//    }
 
 }

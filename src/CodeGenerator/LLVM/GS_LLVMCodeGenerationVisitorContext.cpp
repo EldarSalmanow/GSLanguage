@@ -6,7 +6,7 @@ namespace GSLanguageCompiler::CodeGenerator {
             : _context(std::make_shared<llvm::LLVMContext>()), _module(nullptr) {};
 
     Void GS_LLVMCodeGenerationVisitorContext::createModule(UString name) {
-        _module = std::make_shared<llvm::Module>(name.asString(), getContext());
+        _module = std::make_shared<llvm::Module>(name.AsString(), getContext());
     }
 
     LRef<llvm::LLVMContext> GS_LLVMCodeGenerationVisitorContext::getContext() {

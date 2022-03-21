@@ -1,9 +1,9 @@
 #ifndef GSLANGUAGE_GS_NEWPARSER_H
 #define GSLANGUAGE_GS_NEWPARSER_H
 
-#include <Lexer/GS_TokenStream.h>
+//#include <Lexer/GS_TokenStream.h>
 
-#include <AST/GS_IncludeAll.h>
+#include <AST/AST.h>
 
 namespace GSLanguageCompiler::Parser::New {
 

@@ -6,41 +6,31 @@
 namespace GSLanguageCompiler::Reader {
 
     /**
-     * Symbol type
-     */
-    using SymbolT = USymbol;
-
-    /**
-     * Stream type
-     */
-    using StreamT = UnicodeStream*;
-
-    /**
      * Reader for read files
      */
     class GS_Reader {
     public:
 
         /**
-         * Constructor for GS_Reader
-         * @param stream Input stream
+         * Constructor for reader
+         * @param file Input file
          */
-        explicit GS_Reader(StreamT stream);
+        explicit GS_Reader(LRef<UniquePtr<File>> file);
 
     public:
 
         /**
-         * Reading symbol from input stream
-         * @return Symbol
+         * Reading text from source
+         * @return Text
          */
-        SymbolT getSymbol();
+        UString ReadText();
 
     private:
 
         /**
-         * Stream for reading code
+         * file for reading code
          */
-        StreamT _stream;
+        UniquePtr<File> _file;
     };
 
 }

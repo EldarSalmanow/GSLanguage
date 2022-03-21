@@ -28,7 +28,7 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         auto llvmFunctionType = llvm::FunctionType::get(llvm::Type::getVoidTy(_getLLVMVisitorContext()->getContext()), false);
 
-        auto llvmFunction = llvm::Function::Create(llvmFunctionType, llvm::Function::LinkageTypes::ExternalLinkage, name.asString(), _getLLVMVisitorContext()->getModule());
+        auto llvmFunction = llvm::Function::Create(llvmFunctionType, llvm::Function::LinkageTypes::ExternalLinkage, name.AsString(), _getLLVMVisitorContext()->getModule());
 
         auto block = llvm::BasicBlock::Create(_getLLVMVisitorContext()->getContext(), "entry", llvmFunction);
 
@@ -96,7 +96,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         } else if (typeName == U"String"_us) {
             auto string = value->getValueWithCast<UString>();
 
-            return _builder->CreateGlobalStringPtr(string.asString());
+            return _builder->CreateGlobalStringPtr(string.AsString());
         } else {
             return nullptr;
         }
@@ -138,13 +138,13 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         auto llvmAllocaInstruction = _findVariableByName(name);
 
-        return _builder->CreateLoad(llvmAllocaInstruction->getAllocatedType(), llvmAllocaInstruction, name.asString());
+        return _builder->CreateLoad(llvmAllocaInstruction->getAllocatedType(), llvmAllocaInstruction, name.AsString());
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitFunctionCallingExpression(SharedPtr<AST::GS_FunctionCallingExpression> functionCallingExpression) {
         auto name = functionCallingExpression->getName();
 
-        auto llvmFunction = _getLLVMVisitorContext()->getModule().getFunction(name.asString());
+        auto llvmFunction = _getLLVMVisitorContext()->getModule().getFunction(name.AsString());
 
         if (llvmFunction != nullptr) {
             return _builder->CreateCall(llvmFunction);

@@ -6,101 +6,48 @@
 namespace GSLanguageCompiler::Reader {
 
     /**
-     *
-     */
-    class TextStream : public BufferedDataStream<SymbolT> {
-    public:
-
-        /**
-         *
-         * @param reader
-         */
-        explicit TextStream(Ptr<GS_Reader> reader);
-
-        /**
-         *
-         * @param symbols
-         */
-        explicit TextStream(Vector<SymbolT> symbols);
-
-    public:
-
-        /**
-         *
-         * @return
-         */
-        DataT Get() override;
-
-        /**
-         *
-         * @param data
-         * @return
-         */
-        Void Put(DataT data) override;
-
-    public:
-
-        /**
-         *
-         * @return
-         */
-        StreamPosition GetPosition() override;
-
-        /**
-         *
-         * @param position
-         * @return
-         */
-        Bool SetPosition(StreamPosition position) override;
-
-    private:
-
-        /**
-         *
-         */
-        Vector<SymbolT> _symbols;
-
-        /**
-         *
-         */
-        U64 _index;
-    };
-
-    /**
-     *
+     * Stream class for source code
      */
     class GS_TextStream {
     public:
 
         /**
-         *
-         * @param reader
+         * Constructor for text stream
+         * @param reader Reader
          */
-        explicit GS_TextStream(Ptr<GS_Reader> reader);
+        explicit GS_TextStream(LRef<GS_Reader> reader);
 
     public:
 
         /**
-         *
-         * @return
+         * Getting symbol from stream
+         * @return Current symbol
          */
-        SymbolT getSymbol();
-
-    public:
+        USymbol CurrentSymbol();
 
         /**
-         *
-         * @param symbol
+         * Setting cursor to next symbol in stream
          * @return
          */
-        LRef<GS_TextStream> operator>>(LRef<SymbolT> symbol);
+        Void NextSymbol();
+
+        /**
+         * Setting cursor to prev symbol in stream
+         * @return
+         */
+        Void PrevSymbol();
 
     private:
 
         /**
-         *
+         * Source code string
          */
-        Ptr<GS_Reader> _reader;
+        UString _string;
+
+        /**
+         * Source code string iterator
+         */
+        UString::Iterator _stringIterator;
     };
 
 }

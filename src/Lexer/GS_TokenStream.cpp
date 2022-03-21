@@ -2,28 +2,19 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    GS_TokenStream::GS_TokenStream(GSTokenPtrArray tokens)
-            : _lexer(nullptr), _tokens(std::move(tokens)), _tokenIterator(_tokens.begin()) {}
+    GS_TokenStream::GS_TokenStream(LRef<GS_Lexer> lexer)
+            : _tokens(lexer.Tokenize()), _tokenIterator(_tokens.begin()) {}
 
-    GS_TokenStream::GS_TokenStream(Ptr<GS_Lexer> lexer)
-            : _lexer(lexer) {}
-
-    GSTokenPtr GS_TokenStream::getToken() {
-        if (!_lexer) {
-            auto token = _tokenIterator[0];
-
-            ++_tokenIterator;
-
-            return token;
-        }
-
-        return _lexer->getToken();
+    GS_Token GS_TokenStream::CurrentToken() {
+        return *_tokenIterator;
     }
 
-    GS_TokenStream &GS_TokenStream::operator>>(GSTokenPtr &token) {
-        token = getToken();
+    Void GS_TokenStream::NextToken() {
+        ++_tokenIterator;
+    }
 
-        return *this;
+    Void GS_TokenStream::PrevToken() {
+        --_tokenIterator;
     }
 
 }
