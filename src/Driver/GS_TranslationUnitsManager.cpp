@@ -4,14 +4,22 @@
 
 namespace GSLanguageCompiler::Driver {
 
-    GS_TranslationUnitsManager::GS_TranslationUnitsManager(Vector<GS_TranslationUnit> translationUnits)
-            : _translationUnits(std::move(translationUnits)) {}
+    GS_TranslationUnitsManager::GS_TranslationUnitsManager(GSTranslationUnitPtrArray units)
+            : _units(std::move(units)) {}
 
-    I32 GS_TranslationUnitsManager::compileUnits() {
+    SharedPtr<GS_TranslationUnitsManager> GS_TranslationUnitsManager::Create(GSTranslationUnitPtrArray units) {
+        return std::make_shared<GS_TranslationUnitsManager>(std::move(units));
+    }
+
+    SharedPtr<GS_TranslationUnitsManager> GS_TranslationUnitsManager::Create() {
+        return GS_TranslationUnitsManager::Create(GSTranslationUnitPtrArray());
+    }
+
+    I32 GS_TranslationUnitsManager::CompileUnits() {
         I32 returnCode = 0;
 
-        for (auto &unit : _translationUnits) {
-            if (unit.compile()) {
+        for (auto &unit : _units) {
+            if (unit->Compile()) {
                 returnCode = 1;
             }
         }
@@ -19,8 +27,12 @@ namespace GSLanguageCompiler::Driver {
         return returnCode;
     }
 
-    Vector<GS_TranslationUnit> GS_TranslationUnitsManager::getTranslationUnits() {
-        return _translationUnits;
+    Void GS_TranslationUnitsManager::AddUnit(GSTranslationUnitPtr unit) {
+        _units.emplace_back(std::move(unit));
+    }
+
+    GSTranslationUnitPtrArray GS_TranslationUnitsManager::GetUnits() {
+        return _units;
     }
 
 }

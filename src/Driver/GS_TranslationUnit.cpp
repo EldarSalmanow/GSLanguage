@@ -437,10 +437,41 @@ namespace GSLanguageCompiler::Driver {
         I32 tabsNumber = 0;
     };
 
-    GS_TranslationUnit::GS_TranslationUnit(UString name)
-            : _name(std::move(name)) {}
+    GS_TranslationUnit::GS_TranslationUnit(UString inputName, UString outputName)
+            : _inputName(std::move(inputName)), _outputName(std::move(outputName)) {}
 
-    I32 compileModule(llvm::Module &module) {
+    SharedPtr<GS_TranslationUnit> GS_TranslationUnit::Create(UString inputName, UString outputName) {
+        return std::make_shared<GS_TranslationUnit>(std::move(inputName), std::move(outputName));
+    }
+
+    I32 GS_TranslationUnit::Compile() {
+        auto file = File::Create(_inputName, InMode);
+
+        Reader::GS_Reader reader(file);
+
+        Reader::GS_TextStream textStream(reader);
+
+        Lexer::GS_Lexer lexer(textStream);
+
+        Lexer::GS_TokenStream tokenStream(lexer);
+
+        Parser::GS_Parser parser(tokenStream);
+
+        auto unit = parser.Parse();
+
+        auto printer = std::make_shared<PrintVisitor>();
+
+        printer->visitNode(unit);
+
+        auto codeGen = std::make_shared<CodeGenerator::GS_LLVMCodeGenerationVisitor>();
+
+        codeGen->visitTranslationUnitDeclaration(unit);
+
+        auto &module = std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCodeGenerationVisitorContext>(
+                codeGen->getContext())->getModule();
+
+        module.print(llvm::errs(), nullptr);
+
         auto targetTriple = llvm::sys::getDefaultTargetTriple();
 
         llvm::InitializeNativeTarget();
@@ -469,11 +500,9 @@ namespace GSLanguageCompiler::Driver {
         module.setDataLayout(machine->createDataLayout());
         module.setTargetTriple(targetTriple);
 
-        auto fileName = "output.o";
-
         std::error_code errorCode;
 
-        llvm::raw_fd_ostream stream(fileName, errorCode);
+        llvm::raw_fd_ostream stream(_outputName.AsString(), errorCode);
 
         if (errorCode) {
             llvm::errs() << errorCode.message();
@@ -494,86 +523,12 @@ namespace GSLanguageCompiler::Driver {
         return 0;
     }
 
-    I32 GS_TranslationUnit::compile() {
-//        UFileStream file;
-//        file.Open(U"../../test.gs", in_mode);
-//
-//        Reader::GS_Reader reader(&file);
-//
-//        Reader::GS_TextStream textStream(&reader);
-//
-//        Lexer::GS_Lexer lexer(&textStream);
-//
-//        Lexer::GSTokenPtrArray tokens;
-//
-//        Lexer::GSTokenPtr token = lexer.getToken();
-//
-//        while (token != nullptr) {
-//            if (token->getTokenType() == Lexer::TokenType::SymbolSpace) {
-//                token = lexer.getToken();
-//
-//                continue;
-//            }
-//
-//            tokens.emplace_back(token);
-//
-//            token = lexer.getToken();
-//        }
-//
-//        tokens.emplace_back(std::make_shared<Lexer::GS_Token>(Lexer::TokenType::EndOfFile));
-//
-//        Lexer::GS_TokenStream tokenStream(tokens);
-//
-//        New::GS_Parser parser(&tokenStream);
-
-        auto file = File::Create(U"../test.gs"_us, InMode);
-
-        Reader::GS_Reader reader(file);
-
-        Reader::GS_TextStream textStream(reader);
-
-        Lexer::GS_Lexer lexer(textStream);
-
-        Lexer::GS_TokenStream tokenStream(lexer);
-
-        Parser::GS_Parser parser(tokenStream);
-
-        auto unit = parser.Parse();
-
-//        auto unit = AST::GS_TranslationUnitDeclaration::Create(U"test"_us);
-//
-//        auto function = unit->addNode<AST::GS_FunctionDeclaration>(U"main"_us);
-//
-//        auto expression_1 = function->createStatement<AST::GS_ConstantExpression>(AST::GS_I32Value::Create(2));
-//
-//        auto expression_2 = function->createStatement<AST::GS_ConstantExpression>(AST::GS_I32Value::Create(4));
-//
-//        auto expression = function->createStatement<AST::GS_BinaryExpression>(AST::BinaryOperation::Plus, expression_1,
-//                                                                              expression_2);
-//
-//        auto variable = function->addStatement<AST::GS_VariableDeclarationStatement>(U"a"_us, AST::GS_I32Type::Create(),
-//                                                                                     expression);
-
-        auto printer = std::make_shared<PrintVisitor>();
-
-        printer->visitNode(unit);
-
-        auto codeGen = std::make_shared<CodeGenerator::GS_LLVMCodeGenerationVisitor>();
-
-        codeGen->visitTranslationUnitDeclaration(unit);
-
-        auto &module = std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCodeGenerationVisitorContext>(
-                codeGen->getContext())->getModule();
-
-        module.print(llvm::errs(), nullptr);
-
-        auto result = compileModule(module);
-
-        return result;
+    UString GS_TranslationUnit::GetInputName() const {
+        return _inputName;
     }
 
-    UString GS_TranslationUnit::getName() const {
-        return _name;
+    UString GS_TranslationUnit::GetOutputName() const {
+        return _outputName;
     }
 
 }

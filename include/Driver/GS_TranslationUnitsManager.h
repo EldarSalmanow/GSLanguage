@@ -5,22 +5,62 @@
 
 namespace GSLanguageCompiler::Driver {
 
+    /**
+     * Class for managing translation units
+     */
     class GS_TranslationUnitsManager {
     public:
 
-        explicit GS_TranslationUnitsManager(Vector<GS_TranslationUnit> files);
+        /**
+         * Constructor for translation units manager
+         * @param units Translation unit ptrs
+         */
+        explicit GS_TranslationUnitsManager(GSTranslationUnitPtrArray units);
 
     public:
 
-        I32 compileUnits();
+        /**
+         * Creating translation units manager
+         * @param units Translation unit ptrs
+         * @return Translation unit ptrs
+         */
+        static SharedPtr<GS_TranslationUnitsManager> Create(GSTranslationUnitPtrArray units);
+
+        /**
+         * Creating translation units manager
+         * @return Translation unit ptrs
+         */
+        static SharedPtr<GS_TranslationUnitsManager> Create();
 
     public:
 
-        Vector<GS_TranslationUnit> getTranslationUnits();
+        /**
+         * Compile all units
+         * @return Compiling result
+         */
+        I32 CompileUnits();
+
+        /**
+         * Adding translation unit
+         * @param unit Translation unit ptr
+         * @return
+         */
+        Void AddUnit(GSTranslationUnitPtr unit);
+
+    public:
+
+        /**
+         * Getter for translation unit ptrs
+         * @return Translation unit ptrs
+         */
+        GSTranslationUnitPtrArray GetUnits();
 
     private:
 
-        Vector<GS_TranslationUnit> _translationUnits;
+        /**
+         * Translation unit ptrs
+         */
+        GSTranslationUnitPtrArray _units;
     };
 
 }
