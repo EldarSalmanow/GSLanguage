@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_TRANSLATIONUNIT_H
 #define GSLANGUAGE_GS_TRANSLATIONUNIT_H
 
-#include <GSCrossPlatform/CrossPlatform.h>
+#include <Driver/GS_TranslationUnitConfig.h>
 
 namespace GSLanguageCompiler::Driver {
 
@@ -13,20 +13,18 @@ namespace GSLanguageCompiler::Driver {
 
         /**
          * Constructor for translation unit
-         * @param inputName Input name
-         * @param outputName Output name
+         * @param config Unit config
          */
-        GS_TranslationUnit(UString inputName, UString outputName);
+        explicit GS_TranslationUnit(GSTranslationUnitConfigPtr config);
 
     public:
 
         /**
          * Creating translation unit
-         * @param inputName Input name
-         * @param outputName Output name
+         * @param config Unit config
          * @return Translation unit ptr
          */
-        static SharedPtr<GS_TranslationUnit> Create(UString inputName, UString outputName);
+        static SharedPtr<GS_TranslationUnit> Create(GSTranslationUnitConfigPtr config);
 
     public:
 
@@ -39,28 +37,17 @@ namespace GSLanguageCompiler::Driver {
     public:
 
         /**
-         * Getter for input file name
-         * @return Input file name
+         * Getter for config
+         * @return Config
          */
-        UString GetInputName() const;
-
-        /**
-         * Getter for output file name
-         * @return Output file name
-         */
-        UString GetOutputName() const;
+        GSTranslationUnitConfigPtr GetConfig() const;
 
     private:
 
         /**
-         * Input file name
+         * Unit config
          */
-        UString _inputName;
-
-        /**
-         * Output file name
-         */
-        UString _outputName;
+        GSTranslationUnitConfigPtr _config;
     };
 
     /**

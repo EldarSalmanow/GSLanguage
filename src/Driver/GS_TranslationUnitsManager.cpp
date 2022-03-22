@@ -31,7 +31,7 @@ namespace GSLanguageCompiler::Driver {
         _units.emplace_back(std::move(unit));
     }
 
-    GSTranslationUnitPtrArray GS_TranslationUnitsManager::GetUnits() {
+    GSTranslationUnitPtrArray GS_TranslationUnitsManager::GetUnits() const {
         return _units;
     }
 

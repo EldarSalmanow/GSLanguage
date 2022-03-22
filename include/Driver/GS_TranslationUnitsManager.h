@@ -53,7 +53,7 @@ namespace GSLanguageCompiler::Driver {
          * Getter for translation unit ptrs
          * @return Translation unit ptrs
          */
-        GSTranslationUnitPtrArray GetUnits();
+        GSTranslationUnitPtrArray GetUnits() const;
 
     private:
 

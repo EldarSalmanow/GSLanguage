@@ -437,15 +437,15 @@ namespace GSLanguageCompiler::Driver {
         I32 tabsNumber = 0;
     };
 
-    GS_TranslationUnit::GS_TranslationUnit(UString inputName, UString outputName)
-            : _inputName(std::move(inputName)), _outputName(std::move(outputName)) {}
+    GS_TranslationUnit::GS_TranslationUnit(GSTranslationUnitConfigPtr config)
+            : _config(std::move(config)) {}
 
-    SharedPtr<GS_TranslationUnit> GS_TranslationUnit::Create(UString inputName, UString outputName) {
-        return std::make_shared<GS_TranslationUnit>(std::move(inputName), std::move(outputName));
+    SharedPtr<GS_TranslationUnit> GS_TranslationUnit::Create(GSTranslationUnitConfigPtr config) {
+        return std::make_shared<GS_TranslationUnit>(std::move(config));
     }
 
     I32 GS_TranslationUnit::Compile() {
-        auto file = File::Create(_inputName, InMode);
+        auto file = File::Create(_config->GetInputName(), InMode);
 
         Reader::GS_Reader reader(file);
 
@@ -502,7 +502,7 @@ namespace GSLanguageCompiler::Driver {
 
         std::error_code errorCode;
 
-        llvm::raw_fd_ostream stream(_outputName.AsString(), errorCode);
+        llvm::raw_fd_ostream stream(_config->GetOutputName().AsString(), errorCode);
 
         if (errorCode) {
             llvm::errs() << errorCode.message();
@@ -523,12 +523,8 @@ namespace GSLanguageCompiler::Driver {
         return 0;
     }
 
-    UString GS_TranslationUnit::GetInputName() const {
-        return _inputName;
-    }
-
-    UString GS_TranslationUnit::GetOutputName() const {
-        return _outputName;
+    GSTranslationUnitConfigPtr GS_TranslationUnit::GetConfig() const {
+        return _config;
     }
 
 }

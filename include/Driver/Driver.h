@@ -5,8 +5,14 @@
  * This file includes all files from GSLanguageCompiler Driver Module
  */
 
+#include <Driver/GS_TranslationUnitConfig.h>
+
 #include <Driver/GS_TranslationUnit.h>
 
+#include <Driver/GS_CompilerConfig.h>
+
 #include <Driver/GS_TranslationUnitsManager.h>
+
+#include <Driver/GS_Compiler.h>
 
 #endif //GSLANGUAGE_DRIVER_H
