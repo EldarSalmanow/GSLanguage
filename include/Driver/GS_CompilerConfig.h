@@ -22,9 +22,17 @@ namespace GSLanguageCompiler::Driver {
         /**
          * Creating compiler config
          * @param unitConfigs Unit configs
-         * @return Compiler configs
+         * @return Compiler config ptr
          */
         static SharedPtr<GS_CompilerConfig> Create(GSTranslationUnitConfigPtrArray unitConfigs);
+
+        /**
+         * Creating compiler config with parsing command line arguments
+         * @param argc Arguments counter
+         * @param argv Arguments value
+         * @return Compiler config ptr
+         */
+        static SharedPtr<GS_CompilerConfig> Create(I32 argc, Ptr<Ptr<C8>> argv);
 
     public:
 

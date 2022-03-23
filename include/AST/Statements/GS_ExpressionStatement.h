@@ -35,7 +35,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for expression ptr
          * @return Expression ptr
          */
-        LRef<GSExpressionPtr> getExpression();
+        LRef<GSExpressionPtr> GetExpression();
 
     public:
 
@@ -43,7 +43,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for statement type
          * @return Statement type
          */
-        StatementType getStatementType() const override;
+        StatementType GetStatementType() const override;
 
     private:
 

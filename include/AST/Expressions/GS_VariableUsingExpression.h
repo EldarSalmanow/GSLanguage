@@ -34,7 +34,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for variable name
          * @return Variable name
          */
-        LRef<UString> getName();
+        LRef<UString> GetName();
 
     public:
 
@@ -42,7 +42,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for expression type
          * @return Expression type
          */
-        ExpressionType getExpressionType() const override;
+        ExpressionType GetExpressionType() const override;
 
     private:
 

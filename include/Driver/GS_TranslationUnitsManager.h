@@ -22,13 +22,13 @@ namespace GSLanguageCompiler::Driver {
         /**
          * Creating translation units manager
          * @param units Translation unit ptrs
-         * @return Translation unit ptrs
+         * @return Translation units manager ptr
          */
         static SharedPtr<GS_TranslationUnitsManager> Create(GSTranslationUnitPtrArray units);
 
         /**
          * Creating translation units manager
-         * @return Translation unit ptrs
+         * @return Translation units manager ptr
          */
         static SharedPtr<GS_TranslationUnitsManager> Create();
 

@@ -9,11 +9,11 @@ namespace GSLanguageCompiler::AST {
         return std::make_shared<GS_VariableUsingExpression>(std::move(name), std::move(scope));
     }
 
-    LRef<UString> GS_VariableUsingExpression::getName() {
+    LRef<UString> GS_VariableUsingExpression::GetName() {
         return _name;
     }
 
-    ExpressionType GS_VariableUsingExpression::getExpressionType() const {
+    ExpressionType GS_VariableUsingExpression::GetExpressionType() const {
         return ExpressionType::VariableUsingExpression;
     }
 

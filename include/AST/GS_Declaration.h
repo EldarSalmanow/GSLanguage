@@ -31,7 +31,7 @@ namespace GSLanguageCompiler::AST {
          * Is declaration
          * @return Is declaration
          */
-        Bool isDeclaration() const override;
+        Bool IsDeclaration() const override;
 
     public:
 
@@ -39,7 +39,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for declaration type
          * @return Declaration type
          */
-        virtual DeclarationType getDeclarationType() const = 0;
+        virtual DeclarationType GetDeclarationType() const = 0;
     };
 
     /**

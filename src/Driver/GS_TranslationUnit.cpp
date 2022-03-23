@@ -152,7 +152,7 @@ namespace GSLanguageCompiler::Driver {
 
             AddTab();
 
-            for (auto &node: translationUnitDeclaration->getNodes()) {
+            for (auto &node: translationUnitDeclaration->GetNodes()) {
                 visitNode(node);
             }
 
@@ -170,13 +170,13 @@ namespace GSLanguageCompiler::Driver {
 
             AddTab();
 
-            Print("Name: " + functionDeclaration->getName().AsString());
+            Print("Name: " + functionDeclaration->GetName().AsString());
 
             Print("Body: {");
 
             AddTab();
 
-            for (auto &statement: functionDeclaration->getBody()) {
+            for (auto &statement: functionDeclaration->GetBody()) {
                 visitStatement(statement);
             }
 
@@ -195,15 +195,15 @@ namespace GSLanguageCompiler::Driver {
 
             AddTab();
 
-            Print("Name: " + variableDeclarationStatement->getName().AsString());
+            Print("Name: " + variableDeclarationStatement->GetName().AsString());
 
-            Print("Type: " + variableDeclarationStatement->getType()->getName().AsString());
+            Print("Type: " + variableDeclarationStatement->GetType()->GetName().AsString());
 
             Print("Expression: {");
 
             AddTab();
 
-            visitExpression(variableDeclarationStatement->getExpression());
+            visitExpression(variableDeclarationStatement->GetExpression());
 
             SubTab();
 
@@ -223,7 +223,7 @@ namespace GSLanguageCompiler::Driver {
 
             AddTab();
 
-            visitExpression(assignmentStatement->getLValueExpression());
+            visitExpression(assignmentStatement->GetLValueExpression());
 
             SubTab();
 
@@ -233,7 +233,7 @@ namespace GSLanguageCompiler::Driver {
 
             AddTab();
 
-            visitExpression(assignmentStatement->getRValueExpression());
+            visitExpression(assignmentStatement->GetRValueExpression());
 
             SubTab();
 
@@ -249,7 +249,7 @@ namespace GSLanguageCompiler::Driver {
 
             AddTab();
 
-            visitExpression(expressionStatement->getExpression());
+            visitExpression(expressionStatement->GetExpression());
 
             SubTab();
 
@@ -265,15 +265,15 @@ namespace GSLanguageCompiler::Driver {
 
             AddTab();
 
-            auto value = constantExpression->getValue();
-            auto typeName = value->getType()->getName();
+            auto value = constantExpression->GetValue();
+            auto typeName = value->GetType()->GetName();
 
             Print("Type: " + typeName.AsString());
 
             if (typeName == U"I32") {
-                Print("Value: " + std::to_string(value->getValueWithCast<I32>()));
+                Print("Value: " + std::to_string(value->GetValueWithCast<I32>()));
             } else if (typeName == U"String") {
-                Print("Value: " + value->getValueWithCast<UString>().AsString());
+                Print("Value: " + value->GetValueWithCast<UString>().AsString());
             }
 
             SubTab();
@@ -294,13 +294,13 @@ namespace GSLanguageCompiler::Driver {
 
             AddTab();
 
-            visitExpression(unaryExpression->getExpression());
+            visitExpression(unaryExpression->GetExpression());
 
             SubTab();
 
             Print("}");
 
-            auto operation = unaryExpression->getUnaryOperation();
+            auto operation = unaryExpression->GetUnaryOperation();
 
             String stringOperation;
 
@@ -327,7 +327,7 @@ namespace GSLanguageCompiler::Driver {
 
             AddTab();
 
-            visitExpression(binaryExpression->getFirstExpression());
+            visitExpression(binaryExpression->GetFirstExpression());
 
             SubTab();
 
@@ -337,13 +337,13 @@ namespace GSLanguageCompiler::Driver {
 
             AddTab();
 
-            visitExpression(binaryExpression->getSecondExpression());
+            visitExpression(binaryExpression->GetSecondExpression());
 
             SubTab();
 
             Print("}");
 
-            auto operation = binaryExpression->getBinaryOperation();
+            auto operation = binaryExpression->GetBinaryOperation();
 
             String stringOperation;
 
@@ -378,7 +378,7 @@ namespace GSLanguageCompiler::Driver {
 
             AddTab();
 
-            Print("Name: " + variableUsingExpression->getName().AsString());
+            Print("Name: " + variableUsingExpression->GetName().AsString());
 
             SubTab();
 
@@ -391,13 +391,13 @@ namespace GSLanguageCompiler::Driver {
 
             AddTab();
 
-            Print("Name: " + functionCallingExpression->getName().AsString());
+            Print("Name: " + functionCallingExpression->GetName().AsString());
 
             Print("Params: {");
 
             AddTab();
 
-            for (auto &param: functionCallingExpression->getParams()) {
+            for (auto &param: functionCallingExpression->GetParams()) {
                 visitExpression(param);
             }
 
@@ -445,19 +445,7 @@ namespace GSLanguageCompiler::Driver {
     }
 
     I32 GS_TranslationUnit::Compile() {
-        auto file = File::Create(_config->GetInputName(), InMode);
-
-        Reader::GS_Reader reader(file);
-
-        Reader::GS_TextStream textStream(reader);
-
-        Lexer::GS_Lexer lexer(textStream);
-
-        Lexer::GS_TokenStream tokenStream(lexer);
-
-        Parser::GS_Parser parser(tokenStream);
-
-        auto unit = parser.Parse();
+        auto unit = RunFrontend(_config->GetInputName());
 
         auto printer = std::make_shared<PrintVisitor>();
 
@@ -521,6 +509,24 @@ namespace GSLanguageCompiler::Driver {
         stream.flush();
 
         return 0;
+    }
+
+    SharedPtr<AST::GS_TranslationUnitDeclaration> GS_TranslationUnit::RunFrontend(UString inputFile) {
+        auto file = File::Create(inputFile, InMode);
+
+        Reader::GS_Reader reader(file);
+
+        Reader::GS_TextStream textStream(reader);
+
+        Lexer::GS_Lexer lexer(textStream);
+
+        Lexer::GS_TokenStream tokenStream(lexer);
+
+        Parser::GS_Parser parser(tokenStream);
+
+        auto unit = parser.Parse();
+
+        return unit;
     }
 
     GSTranslationUnitConfigPtr GS_TranslationUnit::GetConfig() const {

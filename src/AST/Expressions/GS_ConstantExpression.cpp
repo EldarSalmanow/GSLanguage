@@ -4,11 +4,11 @@ namespace GSLanguageCompiler::AST {
 
     GS_Value::~GS_Value() = default;
 
-    Any GS_Value::getValue() const {
+    Any GS_Value::GetValue() const {
         return _value;
     }
 
-    GSTypePtr GS_Value::getType() const {
+    GSTypePtr GS_Value::GetType() const {
         return _type;
     }
 
@@ -33,11 +33,11 @@ namespace GSLanguageCompiler::AST {
         return std::make_shared<GS_ConstantExpression>(std::move(value), std::move(scope));
     }
 
-    LRef<GSValuePtr> GS_ConstantExpression::getValue() {
+    LRef<GSValuePtr> GS_ConstantExpression::GetValue() {
         return _value;
     }
 
-    ExpressionType GS_ConstantExpression::getExpressionType() const {
+    ExpressionType GS_ConstantExpression::GetExpressionType() const {
         return ExpressionType::ConstantExpression;
     }
 

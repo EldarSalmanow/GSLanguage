@@ -9,19 +9,19 @@ namespace GSLanguageCompiler::AST {
         return std::make_shared<GS_BinaryExpression>(operation, std::move(firstExpression), std::move(secondExpression), std::move(scope));
     }
 
-    LRef<BinaryOperation> GS_BinaryExpression::getBinaryOperation() {
+    LRef<BinaryOperation> GS_BinaryExpression::GetBinaryOperation() {
         return _operation;
     }
 
-    LRef<GSExpressionPtr> GS_BinaryExpression::getFirstExpression() {
+    LRef<GSExpressionPtr> GS_BinaryExpression::GetFirstExpression() {
         return _firstExpression;
     }
 
-    LRef<GSExpressionPtr> GS_BinaryExpression::getSecondExpression() {
+    LRef<GSExpressionPtr> GS_BinaryExpression::GetSecondExpression() {
         return _secondExpression;
     }
 
-    ExpressionType GS_BinaryExpression::getExpressionType() const {
+    ExpressionType GS_BinaryExpression::GetExpressionType() const {
         return ExpressionType::BinaryExpression;
     }
 

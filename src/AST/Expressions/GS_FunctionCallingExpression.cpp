@@ -9,15 +9,15 @@ namespace GSLanguageCompiler::AST {
         return std::make_shared<GS_FunctionCallingExpression>(std::move(name), std::move(params), std::move(scope));
     }
 
-    LRef<UString> GS_FunctionCallingExpression::getName() {
+    LRef<UString> GS_FunctionCallingExpression::GetName() {
         return _name;
     }
 
-    LRef<GSExpressionPtrArray> GS_FunctionCallingExpression::getParams() {
+    LRef<GSExpressionPtrArray> GS_FunctionCallingExpression::GetParams() {
         return _params;
     }
 
-    ExpressionType GS_FunctionCallingExpression::getExpressionType() const {
+    ExpressionType GS_FunctionCallingExpression::GetExpressionType() const {
         return ExpressionType::FunctionCallingExpression;
     }
 

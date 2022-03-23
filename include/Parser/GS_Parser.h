@@ -14,11 +14,13 @@ namespace GSLanguageCompiler::Parser {
 
     public:
 
-        AST::GSTranslationUnitPtr Parse();
+        AST::GSTranslationUnitDeclarationPtr Parse();
 
     private:
 
         AST::GSDeclarationPtr ParseDeclaration(ConstLRef<AST::GSScopePtr> scope);
+
+        AST::GSDeclarationPtr ParseDeclaration(ConstLRef<AST::GSTranslationUnitDeclarationPtr> );
 
         SharedPtr<AST::GS_FunctionDeclaration> ParseFunctionDeclaration(ConstLRef<AST::GSScopePtr> scope);
 

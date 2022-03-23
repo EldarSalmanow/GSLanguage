@@ -9,11 +9,6 @@
 namespace GSLanguageCompiler::AST {
 
     /**
-     * Declaring function declaration
-     */
-    class GS_FunctionDeclaration;
-
-    /**
      * Class for variable declarations in language
      */
     class GS_VariableDeclarationStatement : public GS_Statement {
@@ -64,19 +59,19 @@ namespace GSLanguageCompiler::AST {
          * Getter for variable name
          * @return Variable name
          */
-        LRef<UString> getName();
+        LRef<UString> GetName();
 
         /**
          * Getter for variable type
          * @return Variable type
          */
-        LRef<GSTypePtr> getType();
+        LRef<GSTypePtr> GetType();
 
         /**
          * Getter for expression for variable
          * @return Expression for variable
          */
-        LRef<GSExpressionPtr> getExpression();
+        LRef<GSExpressionPtr> GetExpression();
 
     public:
 
@@ -84,7 +79,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for statement type
          * @return Statement type
          */
-        StatementType getStatementType() const override;
+        StatementType GetStatementType() const override;
 
     private:
 

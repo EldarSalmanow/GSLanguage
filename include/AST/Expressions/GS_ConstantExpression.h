@@ -52,8 +52,8 @@ namespace GSLanguageCompiler::AST {
          * @return Value
          */
         template<typename T>
-        T getValueWithCast() const {
-            return std::any_cast<T>(getValue());
+        T GetValueWithCast() const {
+            return std::any_cast<T>(GetValue());
         }
 
     public:
@@ -62,13 +62,13 @@ namespace GSLanguageCompiler::AST {
          * Getter for value
          * @return Value
          */
-        Any getValue() const;
+        Any GetValue() const;
 
         /**
          * Getter for type ptr
          * @return Type ptr
          */
-        GSTypePtr getType() const;
+        GSTypePtr GetType() const;
 
     private:
 
@@ -161,7 +161,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for value ptr
          * @return Value ptr
          */
-        LRef<GSValuePtr> getValue();
+        LRef<GSValuePtr> GetValue();
 
     public:
 
@@ -169,7 +169,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for expression type
          * @return Expression type
          */
-        ExpressionType getExpressionType() const override;
+        ExpressionType GetExpressionType() const override;
 
     private:
 

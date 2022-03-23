@@ -7,39 +7,39 @@ namespace GSLanguageCompiler::AST {
     GS_Scope::GS_Scope(GSScopePtr parent)
             : _parent(std::move(parent)), _tableOfSymbols(std::make_shared<Semantic::GS_TableOfSymbols>()) {}
 
-    SharedPtr<GS_Scope> GS_Scope::Create(GSScopePtr scope) {
+    GSScopePtr GS_Scope::Create(GSScopePtr scope) {
         return std::make_shared<GS_Scope>(std::move(scope));
     }
 
-    SharedPtr<GS_Scope> GS_Scope::CreateGlobalScope() {
-        return Create(nullptr);
+    GSScopePtr GS_Scope::CreateGlobalScope() {
+        return GS_Scope::Create(nullptr);
     }
 
-    Void GS_Scope::addScope(GSScopePtr scope) {
+    Void GS_Scope::AddScope(GSScopePtr scope) {
         _scopes.emplace_back(std::move(scope));
     }
 
-    Void GS_Scope::addNode(GSNodePtr node) {
+    Void GS_Scope::AddNode(GSNodePtr node) {
         _nodes.emplace_back(std::move(node));
     }
 
-    Void GS_Scope::replaceNode(GSNodePtr oldNode, GSNodePtr newNode) {
+    Void GS_Scope::ReplaceNode(GSNodePtr oldNode, GSNodePtr newNode) {
         std::replace(_nodes.begin(), _nodes.end(), oldNode, newNode);
     }
 
-    GSScopePtr GS_Scope::getParent() const {
+    GSScopePtr GS_Scope::GetParent() const {
         return _parent;
     }
 
-    GSScopePtrArray GS_Scope::getScopes() const {
+    GSScopePtrArray GS_Scope::GetScopes() const {
         return _scopes;
     }
 
-    GSNodePtrArray GS_Scope::getNodes() const {
+    GSNodePtrArray GS_Scope::GetNodes() const {
         return _nodes;
     }
 
-    Semantic::GSTableOfSymbolsPtr GS_Scope::getTableOfSymbols() const {
+    Semantic::GSTableOfSymbolsPtr GS_Scope::GetTableOfSymbols() const {
         return _tableOfSymbols;
     }
 

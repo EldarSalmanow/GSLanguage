@@ -48,19 +48,19 @@ namespace GSLanguageCompiler::AST {
          * Getter for binary operation
          * @return Binary operation
          */
-        LRef<BinaryOperation> getBinaryOperation();
+        LRef<BinaryOperation> GetBinaryOperation();
 
         /**
          * Getter for first expression ptr
          * @return First expression ptr
          */
-        LRef<GSExpressionPtr> getFirstExpression();
+        LRef<GSExpressionPtr> GetFirstExpression();
 
         /**
          * Getter for second expression ptr
          * @return Second expression ptr
          */
-        LRef<GSExpressionPtr> getSecondExpression();
+        LRef<GSExpressionPtr> GetSecondExpression();
 
     public:
 
@@ -68,7 +68,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for expression type
          * @return Expression type
          */
-        ExpressionType getExpressionType() const override;
+        ExpressionType GetExpressionType() const override;
 
     private:
 

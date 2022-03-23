@@ -9,11 +9,11 @@ namespace GSLanguageCompiler::AST {
         return std::make_shared<GS_ExpressionStatement>(std::move(expression), std::move(scope));
     }
 
-    LRef<GSExpressionPtr> GS_ExpressionStatement::getExpression() {
+    LRef<GSExpressionPtr> GS_ExpressionStatement::GetExpression() {
         return _expression;
     }
 
-    StatementType GS_ExpressionStatement::getStatementType() const {
+    StatementType GS_ExpressionStatement::GetStatementType() const {
         return StatementType::ExpressionStatement;
     }
 

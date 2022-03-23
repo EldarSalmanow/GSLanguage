@@ -9,7 +9,7 @@ namespace GSLanguageCompiler::AST {
         return std::make_shared<GS_Type>(std::move(name));
     }
 
-    UString GS_Type::getName() const {
+    UString GS_Type::GetName() const {
         return _name;
     }
 
@@ -35,9 +35,9 @@ namespace GSLanguageCompiler::AST {
     }
 
     Bool isBaseType(GSTypePtr type) {
-        auto typeName = type->getName();
+        auto typeName = type->GetName();
 
-        if (typeName == U"Void" || typeName == U"I32" || typeName == U"String") {
+        if (typeName == U"Void"_us || typeName == U"I32"_us || typeName == U"String"_us) {
             return true;
         } else {
             return false;

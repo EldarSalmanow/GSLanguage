@@ -9,15 +9,15 @@ namespace GSLanguageCompiler::AST {
         return std::make_shared<GS_AssignmentStatement>(std::move(lvalueExpression), std::move(rvalueExpression), std::move(scope));
     }
 
-    LRef<GSExpressionPtr> GS_AssignmentStatement::getLValueExpression() {
+    LRef<GSExpressionPtr> GS_AssignmentStatement::GetLValueExpression() {
         return _lvalueExpression;
     }
 
-    LRef<GSExpressionPtr> GS_AssignmentStatement::getRValueExpression() {
+    LRef<GSExpressionPtr> GS_AssignmentStatement::GetRValueExpression() {
         return _rvalueExpression;
     }
 
-    StatementType GS_AssignmentStatement::getStatementType() const {
+    StatementType GS_AssignmentStatement::GetStatementType() const {
         return StatementType::AssignmentStatement;
     }
 

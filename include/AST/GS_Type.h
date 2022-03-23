@@ -32,7 +32,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for type name
          * @return Type name
          */
-        UString getName() const;
+        UString GetName() const;
 
     private:
 

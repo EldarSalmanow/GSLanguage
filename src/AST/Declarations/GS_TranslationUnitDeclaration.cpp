@@ -17,23 +17,23 @@ namespace GSLanguageCompiler::AST {
         return GS_TranslationUnitDeclaration::Create(std::move(name), GS_Scope::CreateGlobalScope());
     }
 
-    Void GS_TranslationUnitDeclaration::addNode(GSNodePtr node) {
+    Void GS_TranslationUnitDeclaration::AddNode(GSNodePtr node) {
         _nodes.emplace_back(std::move(node));
     }
 
-    LRef<UString> GS_TranslationUnitDeclaration::getName() {
+    LRef<UString> GS_TranslationUnitDeclaration::GetName() {
         return _name;
     }
 
-    LRef<GSNodePtrArray> GS_TranslationUnitDeclaration::getNodes() {
+    LRef<GSNodePtrArray> GS_TranslationUnitDeclaration::GetNodes() {
         return _nodes;
     }
 
-    LRef<GSScopePtr> GS_TranslationUnitDeclaration::getGlobalScope() {
+    LRef<GSScopePtr> GS_TranslationUnitDeclaration::GetGlobalScope() {
         return _globalScope;
     }
 
-    DeclarationType GS_TranslationUnitDeclaration::getDeclarationType() const {
+    DeclarationType GS_TranslationUnitDeclaration::GetDeclarationType() const {
         return DeclarationType::TranslationUnitDeclaration;
     }
 

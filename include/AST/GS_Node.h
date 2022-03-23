@@ -26,7 +26,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for scope
          * @return Scope
          */
-        LRef<GSScopePtr> getScope();
+        LRef<GSScopePtr> GetScope();
 
     public:
 
@@ -34,19 +34,19 @@ namespace GSLanguageCompiler::AST {
          * Is declaration node
          * @return Is declaration
          */
-        virtual Bool isDeclaration() const;
+        virtual Bool IsDeclaration() const;
 
         /**
          * Is statement node
          * @return Is statement
          */
-        virtual Bool isStatement() const;
+        virtual Bool IsStatement() const;
 
         /**
          * Is expression node
          * @return Is expression
          */
-        virtual Bool isExpression() const;
+        virtual Bool IsExpression() const;
 
     private:
 

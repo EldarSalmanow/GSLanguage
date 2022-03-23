@@ -19,19 +19,19 @@ namespace GSLanguageCompiler::AST {
         return GS_VariableDeclarationStatement::Create(std::move(name), GSTypePtr(), std::move(expression), std::move(scope));
     }
 
-    LRef<UString> GS_VariableDeclarationStatement::getName() {
+    LRef<UString> GS_VariableDeclarationStatement::GetName() {
         return _name;
     }
 
-    LRef<GSTypePtr> GS_VariableDeclarationStatement::getType() {
+    LRef<GSTypePtr> GS_VariableDeclarationStatement::GetType() {
         return _type;
     }
 
-    LRef<GSExpressionPtr> GS_VariableDeclarationStatement::getExpression() {
+    LRef<GSExpressionPtr> GS_VariableDeclarationStatement::GetExpression() {
         return _expression;
     }
 
-    StatementType GS_VariableDeclarationStatement::getStatementType() const {
+    StatementType GS_VariableDeclarationStatement::GetStatementType() const {
         return StatementType::VariableDeclarationStatement;
     }
 

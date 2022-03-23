@@ -36,13 +36,13 @@ namespace GSLanguageCompiler::AST {
          * Getter for function name
          * @return Function name
          */
-        LRef<UString> getName();
+        LRef<UString> GetName();
 
         /**
          * Getter for params
          * @return Params
          */
-        LRef<GSExpressionPtrArray> getParams();
+        LRef<GSExpressionPtrArray> GetParams();
 
     public:
 
@@ -50,7 +50,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for expression type
          * @return Expression type
          */
-        ExpressionType getExpressionType() const override;
+        ExpressionType GetExpressionType() const override;
 
     private:
 

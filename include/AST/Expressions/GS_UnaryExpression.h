@@ -43,13 +43,13 @@ namespace GSLanguageCompiler::AST {
          * Getter for unary operation
          * @return Unary operation
          */
-        LRef<UnaryOperation> getUnaryOperation();
+        LRef<UnaryOperation> GetUnaryOperation();
 
         /**
          * Getter for expression ptr
          * @return Expression ptr
          */
-        LRef<GSExpressionPtr> getExpression();
+        LRef<GSExpressionPtr> GetExpression();
 
     public:
 
@@ -57,7 +57,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for expression type
          * @return Expression type
          */
-        ExpressionType getExpressionType() const override;
+        ExpressionType GetExpressionType() const override;
 
     private:
 

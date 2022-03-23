@@ -32,7 +32,7 @@ namespace GSLanguageCompiler::AST {
          * Is statement
          * @return Is statement
          */
-        Bool isStatement() const override;
+        Bool IsStatement() const override;
 
     public:
 
@@ -40,7 +40,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for statement type
          * @return Statement type
          */
-        virtual StatementType getStatementType() const = 0;
+        virtual StatementType GetStatementType() const = 0;
     };
 
     /**

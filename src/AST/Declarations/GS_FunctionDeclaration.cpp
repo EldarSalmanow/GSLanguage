@@ -4,12 +4,12 @@ namespace GSLanguageCompiler::AST {
 
     GS_FunctionDeclaration::GS_FunctionDeclaration(UString name, GSStatementPtrArray body, GSScopePtr scope)
             : _name(std::move(name)), _body(std::move(body)), GS_Declaration(std::move(scope)) {
-        _functionScope = GS_Scope::Create(getScope());
+        _functionScope = GS_Scope::Create(GetScope());
 
-        getScope()->addScope(_functionScope);
+        GetScope()->AddScope(_functionScope);
 
-        for (auto &statement : getBody()) {
-            _functionScope->addNode(statement);
+        for (auto &statement : GetBody()) {
+            _functionScope->AddNode(statement);
         }
     }
 
@@ -21,25 +21,25 @@ namespace GSLanguageCompiler::AST {
         return GS_FunctionDeclaration::Create(std::move(name), GSStatementPtrArray(), std::move(scope));
     }
 
-    Void GS_FunctionDeclaration::addStatement(GSStatementPtr statement) {
+    Void GS_FunctionDeclaration::AddStatement(GSStatementPtr statement) {
         _body.emplace_back(statement);
 
-        _functionScope->addNode(statement);
+        _functionScope->AddNode(statement);
     }
 
-    LRef<UString> GS_FunctionDeclaration::getName() {
+    LRef<UString> GS_FunctionDeclaration::GetName() {
         return _name;
     }
 
-    LRef<GSStatementPtrArray> GS_FunctionDeclaration::getBody() {
+    LRef<GSStatementPtrArray> GS_FunctionDeclaration::GetBody() {
         return _body;
     }
 
-    LRef<GSScopePtr> GS_FunctionDeclaration::getFunctionScope() {
+    LRef<GSScopePtr> GS_FunctionDeclaration::GetFunctionScope() {
         return _functionScope;
     }
 
-    DeclarationType GS_FunctionDeclaration::getDeclarationType() const {
+    DeclarationType GS_FunctionDeclaration::GetDeclarationType() const {
         return DeclarationType::FunctionDeclaration;
     }
 

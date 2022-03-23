@@ -9,32 +9,23 @@ namespace GSLanguageCompiler {
 
     namespace Semantic {
 
+        /**
+         * Declaring table of symbols
+         */
         class GS_TableOfSymbols;
-
-        using GSTableOfSymbolsPtr = SharedPtr<GS_TableOfSymbols>;
 
     }
 
     namespace AST {
 
+        /**
+         * Declaring AST node
+         */
         class GS_Node;
 
-        using GSNodePtr = SharedPtr<GS_Node>;
-
-        using GSNodePtrArray = Vector<GSNodePtr>;
-
-        class GS_Scope;
-
         /**
-         * Scope ptr type
+         * Class for representation scope in AST
          */
-        using GSScopePtr = SharedPtr<GS_Scope>;
-
-        /**
-         * Scope ptr array type
-         */
-        using GSScopePtrArray = Vector<GSScopePtr>;
-
         class GS_Scope {
         public:
 
@@ -42,7 +33,7 @@ namespace GSLanguageCompiler {
              * Constructor for scope
              * @param parent Parent scope
              */
-            explicit GS_Scope(GSScopePtr parent);
+            explicit GS_Scope(SharedPtr<GS_Scope> parent);
 
         public:
 
@@ -51,7 +42,7 @@ namespace GSLanguageCompiler {
              * @param scope Parent scope
              * @return Scope
              */
-            static SharedPtr<GS_Scope> Create(GSScopePtr scope);
+            static SharedPtr<GS_Scope> Create(SharedPtr<GS_Scope> scope);
 
             /**
              * Creating global scope
@@ -66,14 +57,14 @@ namespace GSLanguageCompiler {
              * @param scope Child scope
              * @return
              */
-            Void addScope(GSScopePtr scope);
+            Void AddScope(SharedPtr<GS_Scope> scope);
 
             /**
              * Add node to scope
              * @param node Node
              * @return
              */
-            Void addNode(GSNodePtr node);
+            Void AddNode(SharedPtr<GS_Node> node);
 
             /**
              * Replace node in scope
@@ -81,7 +72,7 @@ namespace GSLanguageCompiler {
              * @param newNode New node
              * @return
              */
-            Void replaceNode(GSNodePtr oldNode, GSNodePtr newNode);
+            Void ReplaceNode(SharedPtr<GS_Node> oldNode, SharedPtr<GS_Node> newNode);
 
         public:
 
@@ -89,48 +80,58 @@ namespace GSLanguageCompiler {
              * Getter for parent scope
              * @return Parent scope
              */
-            GSScopePtr getParent() const;
+            SharedPtr<GS_Scope> GetParent() const;
 
             /**
              * Getter for child scopes
              * @return Child scopes
              */
-            GSScopePtrArray getScopes() const;
+            Vector<SharedPtr<GS_Scope>> GetScopes() const;
 
             /**
              * Getter for nodes
              * @return Nodes
              */
-            GSNodePtrArray getNodes() const;
+            Vector<SharedPtr<GS_Node>> GetNodes() const;
 
             /**
              * Getter for table of symbols
              * @return Table of symbols
              */
-            Semantic::GSTableOfSymbolsPtr getTableOfSymbols() const;
+            SharedPtr<Semantic::GS_TableOfSymbols> GetTableOfSymbols() const;
 
         private:
 
             /**
              * Parent scope
              */
-            GSScopePtr _parent;
+            SharedPtr<GS_Scope> _parent;
 
             /**
              * Child scopes
              */
-            GSScopePtrArray _scopes;
+            Vector<SharedPtr<GS_Scope>> _scopes;
 
             /**
              * Nodes in scope
              */
-            GSNodePtrArray _nodes;
+            Vector<SharedPtr<GS_Node>> _nodes;
 
             /**
              * Scope table of symbols
              */
-            Semantic::GSTableOfSymbolsPtr _tableOfSymbols;
+            SharedPtr<Semantic::GS_TableOfSymbols> _tableOfSymbols;
         };
+
+        /**
+         * Scope ptr type
+         */
+        using GSScopePtr = SharedPtr<GS_Scope>;
+
+        /**
+         * Scope ptr array type
+         */
+        using GSScopePtrArray = Vector<GSScopePtr>;
 
     }
 

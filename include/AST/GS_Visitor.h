@@ -83,19 +83,19 @@ namespace GSLanguageCompiler::AST {
          * @return Data
          */
         virtual Result visitNode(ConstLRef<GSNodePtr> node) {
-            if (node->isDeclaration()) {
+            if (node->IsDeclaration()) {
                 auto declaration = std::reinterpret_pointer_cast<GS_Declaration>(node);
 
                 return visitDeclaration(declaration);
             }
 
-            if (node->isStatement()) {
+            if (node->IsStatement()) {
                 auto statement = std::reinterpret_pointer_cast<GS_Statement>(node);
 
                 return visitStatement(statement);
             }
 
-            if (node->isExpression()) {
+            if (node->IsExpression()) {
                 auto expression = std::reinterpret_pointer_cast<GS_Expression>(node);
 
                 return visitExpression(expression);
@@ -108,7 +108,7 @@ namespace GSLanguageCompiler::AST {
          * @return Data
          */
         virtual Result visitDeclaration(ConstLRef<GSDeclarationPtr> declaration) {
-            switch (declaration->getDeclarationType()) {
+            switch (declaration->GetDeclarationType()) {
                 case DeclarationType::TranslationUnitDeclaration:
                     return visitTranslationUnitDeclaration(std::reinterpret_pointer_cast<GS_TranslationUnitDeclaration>(declaration));
                 case DeclarationType::FunctionDeclaration:
@@ -122,7 +122,7 @@ namespace GSLanguageCompiler::AST {
          * @return Data
          */
         virtual Result visitStatement(ConstLRef<GSStatementPtr> statement) {
-            switch (statement->getStatementType()) {
+            switch (statement->GetStatementType()) {
                 case StatementType::VariableDeclarationStatement:
                     return visitVariableDeclarationStatement(std::reinterpret_pointer_cast<GS_VariableDeclarationStatement>(statement));
                 case StatementType::AssignmentStatement:
@@ -138,7 +138,7 @@ namespace GSLanguageCompiler::AST {
          * @return Data
          */
         virtual Result visitExpression(ConstLRef<GSExpressionPtr> expression) {
-            switch (expression->getExpressionType()) {
+            switch (expression->GetExpressionType()) {
                 case ExpressionType::ConstantExpression:
                     return visitConstantExpression(std::reinterpret_pointer_cast<GS_ConstantExpression>(expression));
                 case ExpressionType::UnaryExpression:
@@ -273,7 +273,7 @@ namespace GSLanguageCompiler::AST {
          * @return
          */
         Result visitTranslationUnitDeclaration(SharedPtr<GS_TranslationUnitDeclaration> translationUnitDeclaration) override {
-            auto nodes = translationUnitDeclaration->getNodes();
+            auto nodes = translationUnitDeclaration->GetNodes();
 
             for (auto &node : nodes) {
                 visitNode(node);
@@ -286,7 +286,7 @@ namespace GSLanguageCompiler::AST {
          * @return
          */
         Result visitFunctionDeclaration(SharedPtr<GS_FunctionDeclaration> functionDeclaration) override {
-            auto body = functionDeclaration->getBody();
+            auto body = functionDeclaration->GetBody();
 
             for (auto &statement : body) {
                 visitNode(statement);
@@ -299,7 +299,7 @@ namespace GSLanguageCompiler::AST {
          * @return
          */
         Result visitVariableDeclarationStatement(SharedPtr<GS_VariableDeclarationStatement> variableDeclarationStatement) override {
-            auto expression = variableDeclarationStatement->getExpression();
+            auto expression = variableDeclarationStatement->GetExpression();
 
             visitNode(expression);
         }
@@ -310,8 +310,8 @@ namespace GSLanguageCompiler::AST {
          * @return
          */
         Result visitAssignmentStatement(SharedPtr<GS_AssignmentStatement> assignmentStatement) override {
-            auto lvalueExpression = assignmentStatement->getLValueExpression();
-            auto rvalueExpression = assignmentStatement->getRValueExpression();
+            auto lvalueExpression = assignmentStatement->GetLValueExpression();
+            auto rvalueExpression = assignmentStatement->GetRValueExpression();
 
             visitNode(lvalueExpression);
             visitNode(rvalueExpression);
@@ -323,7 +323,7 @@ namespace GSLanguageCompiler::AST {
          * @return
          */
         Result visitExpressionStatement(SharedPtr<GS_ExpressionStatement> expressionStatement) override {
-            auto expression = expressionStatement->getExpression();
+            auto expression = expressionStatement->GetExpression();
 
             visitNode(expression);
         }
@@ -343,7 +343,7 @@ namespace GSLanguageCompiler::AST {
          * @return
          */
         Result visitUnaryExpression(SharedPtr<GS_UnaryExpression> unaryExpression) override {
-            auto expression = unaryExpression->getExpression();
+            auto expression = unaryExpression->GetExpression();
 
             visitNode(expression);
         }
@@ -354,8 +354,8 @@ namespace GSLanguageCompiler::AST {
          * @return
          */
         Result visitBinaryExpression(SharedPtr<GS_BinaryExpression> binaryExpression) override {
-            auto firstExpression = binaryExpression->getFirstExpression();
-            auto secondExpression = binaryExpression->getSecondExpression();
+            auto firstExpression = binaryExpression->GetFirstExpression();
+            auto secondExpression = binaryExpression->GetSecondExpression();
 
             visitNode(firstExpression);
             visitNode(secondExpression);
@@ -376,7 +376,7 @@ namespace GSLanguageCompiler::AST {
          * @return
          */
         Result visitFunctionCallingExpression(SharedPtr<GS_FunctionCallingExpression> functionCallingExpression) override {
-            auto params = functionCallingExpression->getParams();
+            auto params = functionCallingExpression->GetParams();
 
             for (auto &expression : params) {
                 visitNode(expression);
@@ -404,7 +404,7 @@ namespace GSLanguageCompiler::AST {
          * @return Transformed node
          */
         Result visitTranslationUnitDeclaration(SharedPtr<GS_TranslationUnitDeclaration> translationUnitDeclaration) override {
-            auto &nodes = translationUnitDeclaration->getNodes();
+            auto &nodes = translationUnitDeclaration->GetNodes();
 
             for (auto &node : nodes) {
                 auto transformedNode = visitNode(node);
@@ -421,7 +421,7 @@ namespace GSLanguageCompiler::AST {
          * @return Transformed node
          */
         Result visitFunctionDeclaration(SharedPtr<GS_FunctionDeclaration> functionDeclaration) override {
-            auto &body = functionDeclaration->getBody();
+            auto &body = functionDeclaration->GetBody();
 
             for (auto &statement : body) {
                 auto transformedStatement = std::reinterpret_pointer_cast<GS_Statement>(visitNode(statement));
@@ -438,7 +438,7 @@ namespace GSLanguageCompiler::AST {
          * @return Transformed node
          */
         Result visitVariableDeclarationStatement(SharedPtr<GS_VariableDeclarationStatement> variableDeclarationStatement) override {
-            auto &expression = variableDeclarationStatement->getExpression();
+            auto &expression = variableDeclarationStatement->GetExpression();
 
             auto transformedExpression = std::reinterpret_pointer_cast<GS_Expression>(visitNode(expression));
 
@@ -453,8 +453,8 @@ namespace GSLanguageCompiler::AST {
          * @return Transformed node
          */
         Result visitAssignmentStatement(SharedPtr<GS_AssignmentStatement> assignmentStatement) override {
-            auto &lvalueExpression = assignmentStatement->getLValueExpression();
-            auto &rvalueExpression = assignmentStatement->getRValueExpression();
+            auto &lvalueExpression = assignmentStatement->GetLValueExpression();
+            auto &rvalueExpression = assignmentStatement->GetRValueExpression();
 
             auto lvalueTransformedExpression = std::reinterpret_pointer_cast<GS_Expression>(visitNode(lvalueExpression));
             auto rvalueTransformedExpression = std::reinterpret_pointer_cast<GS_Expression>(visitNode(rvalueExpression));
@@ -471,7 +471,7 @@ namespace GSLanguageCompiler::AST {
          * @return Transformed node
          */
         Result visitExpressionStatement(SharedPtr<GS_ExpressionStatement> expressionStatement) override {
-            auto &expression = expressionStatement->getExpression();
+            auto &expression = expressionStatement->GetExpression();
 
             auto transformedExpression = std::reinterpret_pointer_cast<GS_Expression>(visitNode(expression));
 
@@ -495,7 +495,7 @@ namespace GSLanguageCompiler::AST {
          * @return Transformed node
          */
         Result visitUnaryExpression(SharedPtr<GS_UnaryExpression> unaryExpression) override {
-            auto &expression = unaryExpression->getExpression();
+            auto &expression = unaryExpression->GetExpression();
 
             auto transformedExpression = std::reinterpret_pointer_cast<GS_Expression>(visitNode(expression));
 
@@ -510,8 +510,8 @@ namespace GSLanguageCompiler::AST {
          * @return Transformed node
          */
         Result visitBinaryExpression(SharedPtr<GS_BinaryExpression> binaryExpression) override {
-            auto &firstExpression = binaryExpression->getFirstExpression();
-            auto &secondExpression = binaryExpression->getSecondExpression();
+            auto &firstExpression = binaryExpression->GetFirstExpression();
+            auto &secondExpression = binaryExpression->GetSecondExpression();
 
             auto firstTransformedExpression = std::reinterpret_pointer_cast<GS_Expression>(visitNode(firstExpression));
             auto secondTransformedExpression = std::reinterpret_pointer_cast<GS_Expression>(visitNode(secondExpression));
@@ -537,7 +537,7 @@ namespace GSLanguageCompiler::AST {
          * @return Transformed node
          */
         Result visitFunctionCallingExpression(SharedPtr<GS_FunctionCallingExpression> functionCallingExpression) override {
-            auto &params = functionCallingExpression->getParams();
+            auto &params = functionCallingExpression->GetParams();
 
             for (auto &expression : params) {
                 auto transformedExpression = std::reinterpret_pointer_cast<GS_Expression>(visitNode(expression));

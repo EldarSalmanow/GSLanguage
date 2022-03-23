@@ -3,62 +3,81 @@
 
 #include <Driver/GS_TranslationUnitConfig.h>
 
-namespace GSLanguageCompiler::Driver {
+namespace GSLanguageCompiler {
 
-    /**
-     * Class for representation translation unit
-     */
-    class GS_TranslationUnit {
-    public:
+    namespace AST {
 
-        /**
-         * Constructor for translation unit
-         * @param config Unit config
-         */
-        explicit GS_TranslationUnit(GSTranslationUnitConfigPtr config);
+        class GS_TranslationUnitDeclaration;
 
-    public:
+    }
+
+    namespace Driver {
 
         /**
-         * Creating translation unit
-         * @param config Unit config
-         * @return Translation unit ptr
+         * Class for representation translation unit
          */
-        static SharedPtr<GS_TranslationUnit> Create(GSTranslationUnitConfigPtr config);
+        class GS_TranslationUnit {
+        public:
 
-    public:
+            /**
+             * Constructor for translation unit
+             * @param config Unit config
+             */
+            explicit GS_TranslationUnit(GSTranslationUnitConfigPtr config);
+
+        public:
+
+            /**
+             * Creating translation unit
+             * @param config Unit config
+             * @return Translation unit ptr
+             */
+            static SharedPtr<GS_TranslationUnit> Create(GSTranslationUnitConfigPtr config);
+
+        public:
+
+            /**
+             * Compile translation unit
+             * @return Compiling result
+             */
+            I32 Compile();
+
+        public:
+
+            /**
+             * Getter for config
+             * @return Config
+             */
+            GSTranslationUnitConfigPtr GetConfig() const;
+
+        private:
+
+            /**
+             * Run frontend compiling process for translation unit
+             * @param inputFile Input file name
+             * @return AST translation unit declaration node ptr
+             */
+            SharedPtr<AST::GS_TranslationUnitDeclaration> RunFrontend(UString inputFile);
+
+        private:
+
+            /**
+             * Unit config
+             */
+            GSTranslationUnitConfigPtr _config;
+        };
 
         /**
-         * Compile translation unit
-         * @return Compiling result
+         * Translation unit ptr type
          */
-        I32 Compile();
-
-    public:
+        using GSTranslationUnitPtr = SharedPtr<GS_TranslationUnit>;
 
         /**
-         * Getter for config
-         * @return Config
+         * Translation unit ptr array type
          */
-        GSTranslationUnitConfigPtr GetConfig() const;
+        using GSTranslationUnitPtrArray = Vector<GSTranslationUnitPtr>;
 
-    private:
-
-        /**
-         * Unit config
-         */
-        GSTranslationUnitConfigPtr _config;
-    };
-
-    /**
-     * Translation unit ptr type
-     */
-    using GSTranslationUnitPtr = SharedPtr<GS_TranslationUnit>;
-
-    /**
-     * Translation unit ptr array type
-     */
-    using GSTranslationUnitPtrArray = Vector<GSTranslationUnitPtr>;
+    }
 
 }
 

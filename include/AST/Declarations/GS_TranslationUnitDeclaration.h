@@ -57,7 +57,7 @@ namespace GSLanguageCompiler::AST {
          * @return Created node
          */
         template<typename T, typename... Args>
-        inline auto createNode(Args... args) {
+        inline auto CreateNode(Args... args) {
             static_assert(std::is_base_of_v<GS_Node, T>, "Element for creating must be a node!");
 
             return T::Create(args..., _globalScope);
@@ -68,7 +68,7 @@ namespace GSLanguageCompiler::AST {
          * @param node Node
          * @return
          */
-        Void addNode(GSNodePtr node);
+        Void AddNode(GSNodePtr node);
 
         /**
          * Creating and adding new node to scope and return it
@@ -78,12 +78,12 @@ namespace GSLanguageCompiler::AST {
          * @return Created node
          */
         template<typename T, typename... Args>
-        inline auto addNode(Args... args) {
+        inline auto AddNode(Args... args) {
             static_assert(std::is_base_of_v<GS_Node, T>, "Element for creating must be node!");
 
-            auto node = createNode<T>(args...);
+            auto node = CreateNode<T>(args...);
 
-            addNode(node);
+            AddNode(node);
 
             return node;
         }
@@ -94,19 +94,19 @@ namespace GSLanguageCompiler::AST {
          * Getter for name
          * @return Name
          */
-        LRef<UString> getName();
+        LRef<UString> GetName();
 
         /**
          * Getter for nodes
          * @return Nodes
          */
-        LRef<GSNodePtrArray> getNodes();
+        LRef<GSNodePtrArray> GetNodes();
 
         /**
          * Getter for global scope
          * @return Global scope
          */
-        LRef<GSScopePtr> getGlobalScope();
+        LRef<GSScopePtr> GetGlobalScope();
 
     public:
 
@@ -114,7 +114,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for declaration type
          * @return Declaration type
          */
-        DeclarationType getDeclarationType() const override;
+        DeclarationType GetDeclarationType() const override;
 
     private:
 
@@ -137,12 +137,12 @@ namespace GSLanguageCompiler::AST {
     /**
      * Translation unit ptr type
      */
-    using GSTranslationUnitPtr = SharedPtr<GS_TranslationUnitDeclaration>;
+    using GSTranslationUnitDeclarationPtr = SharedPtr<GS_TranslationUnitDeclaration>;
 
     /**
      * Translation unit ptr array type
      */
-    using GSTranslationUnitPtrArray = Vector<GSTranslationUnitPtr>;
+    using GSTranslationUnitDeclarationPtrArray = Vector<GSTranslationUnitDeclarationPtr>;
 
 }
 

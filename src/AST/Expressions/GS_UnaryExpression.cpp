@@ -9,15 +9,15 @@ namespace GSLanguageCompiler::AST {
         return std::make_shared<GS_UnaryExpression>(operation, std::move(expression), std::move(scope));
     }
 
-    LRef<UnaryOperation> GS_UnaryExpression::getUnaryOperation() {
+    LRef<UnaryOperation> GS_UnaryExpression::GetUnaryOperation() {
         return _operation;
     }
 
-    LRef<GSExpressionPtr> GS_UnaryExpression::getExpression() {
+    LRef<GSExpressionPtr> GS_UnaryExpression::GetExpression() {
         return _expression;
     }
 
-    ExpressionType GS_UnaryExpression::getExpressionType() const {
+    ExpressionType GS_UnaryExpression::GetExpressionType() const {
         return ExpressionType::UnaryExpression;
     }
 

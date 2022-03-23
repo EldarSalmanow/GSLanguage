@@ -54,7 +54,7 @@ namespace GSLanguageCompiler::AST {
          * @return Created statement or expression
          */
         template<typename T, typename... Args>
-        inline auto createStatement(Args... args) {
+        inline auto CreateStatement(Args... args) {
             static_assert(std::is_base_of_v<GS_Statement, T> || std::is_base_of_v<GS_Expression, T>, "Element for creating must be a statement or expression!");
 
             return T::Create(args..., _functionScope);
@@ -65,7 +65,7 @@ namespace GSLanguageCompiler::AST {
          * @param statement Statement
          * @return
          */
-        Void addStatement(GSStatementPtr statement);
+        Void AddStatement(GSStatementPtr statement);
 
         /**
          * Creating and adding new statement to body and scope and return it
@@ -75,12 +75,12 @@ namespace GSLanguageCompiler::AST {
          * @return Created statement
          */
         template<typename T, typename... Args>
-        inline auto addStatement(Args... args) {
+        inline auto AddStatement(Args... args) {
             static_assert(std::is_base_of_v<GS_Statement, T>, "Element for creating must be a statement!");
 
-            auto node = createStatement<T>(args...);
+            auto node = CreateStatement<T>(args...);
 
-            addStatement(node);
+            AddStatement(node);
 
             return node;
         }
@@ -91,19 +91,19 @@ namespace GSLanguageCompiler::AST {
          * Getter for function name
          * @return Function name
          */
-        LRef<UString> getName();
+        LRef<UString> GetName();
 
         /**
          * Getter for function code
          * @return Function code
          */
-        LRef<GSStatementPtrArray> getBody();
+        LRef<GSStatementPtrArray> GetBody();
 
         /**
          * Getter for function scope
          * @return Function scope
          */
-        LRef<GSScopePtr> getFunctionScope();
+        LRef<GSScopePtr> GetFunctionScope();
 
     public:
 
@@ -111,7 +111,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for declaration type
          * @return Declaration type
          */
-        DeclarationType getDeclarationType() const override;
+        DeclarationType GetDeclarationType() const override;
 
     private:
 

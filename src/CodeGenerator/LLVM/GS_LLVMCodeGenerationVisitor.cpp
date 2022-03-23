@@ -10,8 +10,8 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitTranslationUnitDeclaration(SharedPtr<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration) {
-        auto name = translationUnitDeclaration->getName();
-        auto nodes = translationUnitDeclaration->getNodes();
+        auto name = translationUnitDeclaration->GetName();
+        auto nodes = translationUnitDeclaration->GetNodes();
 
         _getLLVMVisitorContext()->createModule(name);
 
@@ -23,8 +23,8 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitFunctionDeclaration(SharedPtr<AST::GS_FunctionDeclaration> functionDeclaration) {
-        auto name = functionDeclaration->getName();
-        auto body = functionDeclaration->getBody();
+        auto name = functionDeclaration->GetName();
+        auto body = functionDeclaration->GetBody();
 
         auto llvmFunctionType = llvm::FunctionType::get(llvm::Type::getVoidTy(_getLLVMVisitorContext()->getContext()), false);
 
@@ -44,13 +44,13 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitVariableDeclarationStatement(SharedPtr<AST::GS_VariableDeclarationStatement> variableDeclarationStatement) {
-        auto name = variableDeclarationStatement->getName();
-        auto type = variableDeclarationStatement->getType();
-        auto expression = variableDeclarationStatement->getExpression();
+        auto name = variableDeclarationStatement->GetName();
+        auto type = variableDeclarationStatement->GetType();
+        auto expression = variableDeclarationStatement->GetExpression();
 
         auto llvmFunction = _builder->GetInsertBlock()->getParent();
 
-        auto typeName = type->getName();
+        auto typeName = type->GetName();
 
         Ptr<llvm::Type> llvmType;
 
@@ -68,33 +68,33 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitAssignmentStatement(SharedPtr<AST::GS_AssignmentStatement> assignmentStatement) {
-        auto lvalueExpression = assignmentStatement->getLValueExpression();
-        auto rvalueExpression = assignmentStatement->getRValueExpression();
+        auto lvalueExpression = assignmentStatement->GetLValueExpression();
+        auto rvalueExpression = assignmentStatement->GetRValueExpression();
 
         return _builder->CreateStore(visitExpression(lvalueExpression), visitExpression(rvalueExpression));
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitExpressionStatement(SharedPtr<AST::GS_ExpressionStatement> expressionStatement) {
-        auto expression = expressionStatement->getExpression();
+        auto expression = expressionStatement->GetExpression();
 
         return visitExpression(expression);
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitConstantExpression(SharedPtr<AST::GS_ConstantExpression> constantExpression) {
-        auto value = constantExpression->getValue();
+        auto value = constantExpression->GetValue();
 
-        auto type = value->getType();
+        auto type = value->GetType();
 
-        auto typeName = type->getName();
+        auto typeName = type->GetName();
 
         Ptr<llvm::Type> llvmType;
 
         if (typeName == U"I32"_us) {
-            auto number = value->getValueWithCast<I32>();
+            auto number = value->GetValueWithCast<I32>();
 
             return llvm::ConstantInt::get(llvm::Type::getInt32Ty(_getLLVMVisitorContext()->getContext()), number);
         } else if (typeName == U"String"_us) {
-            auto string = value->getValueWithCast<UString>();
+            auto string = value->GetValueWithCast<UString>();
 
             return _builder->CreateGlobalStringPtr(string.AsString());
         } else {
@@ -103,8 +103,8 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitUnaryExpression(SharedPtr<AST::GS_UnaryExpression> unaryExpression) {
-        auto operation = unaryExpression->getUnaryOperation();
-        auto expression = unaryExpression->getExpression();
+        auto operation = unaryExpression->GetUnaryOperation();
+        auto expression = unaryExpression->GetExpression();
 
         switch (operation) {
             case AST::UnaryOperation::Minus:
@@ -115,9 +115,9 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitBinaryExpression(SharedPtr<AST::GS_BinaryExpression> binaryExpression) {
-        auto operation = binaryExpression->getBinaryOperation();
-        auto firstExpression = binaryExpression->getFirstExpression();
-        auto secondExpression = binaryExpression->getSecondExpression();
+        auto operation = binaryExpression->GetBinaryOperation();
+        auto firstExpression = binaryExpression->GetFirstExpression();
+        auto secondExpression = binaryExpression->GetSecondExpression();
 
         switch (operation) {
             case AST::BinaryOperation::Plus:
@@ -134,7 +134,7 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitVariableUsingExpression(SharedPtr<AST::GS_VariableUsingExpression> variableUsingExpression) {
-        auto name = variableUsingExpression->getName();
+        auto name = variableUsingExpression->GetName();
 
         auto llvmAllocaInstruction = _findVariableByName(name);
 
@@ -142,7 +142,7 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitFunctionCallingExpression(SharedPtr<AST::GS_FunctionCallingExpression> functionCallingExpression) {
-        auto name = functionCallingExpression->getName();
+        auto name = functionCallingExpression->GetName();
 
         auto llvmFunction = _getLLVMVisitorContext()->getModule().getFunction(name.AsString());
 
