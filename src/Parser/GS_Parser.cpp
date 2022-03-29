@@ -24,23 +24,23 @@ namespace GSLanguageCompiler::Parser {
         return unit;
     }
 
-    Bool GS_Parser::ParseDeclaration(ConstLRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration) {
+    AST::GSDeclarationPtr GS_Parser::ParseDeclaration(ConstLRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration) {
         if (IsTokenType(Lexer::TokenType::KeywordFunc)) {
             return ParseFunctionDeclaration(translationUnitDeclaration);
         }
 
-        return false;
+        return nullptr;
     }
 
-    Bool GS_Parser::ParseFunctionDeclaration(ConstLRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration) {
+    SharedPtr<AST::GS_FunctionDeclaration> GS_Parser::ParseFunctionDeclaration(ConstLRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration) {
         if (!IsTokenType(Lexer::TokenType::KeywordFunc)) {
-            return false;
+            return nullptr;
         }
 
         NextToken(); // skip 'func'
 
         if (!IsTokenType(Lexer::TokenType::Identifier)) {
-            return false;
+            return nullptr;
         }
 
         auto functionName = TokenValue();
@@ -48,19 +48,19 @@ namespace GSLanguageCompiler::Parser {
         NextToken(); // skip function name
 
         if (!IsTokenType(Lexer::TokenType::SymbolLeftParen)) {
-            return false;
+            return nullptr;
         }
 
         NextToken(); // skip '('
 
         if (!IsTokenType(Lexer::TokenType::SymbolRightParen)) {
-            return false;
+            return nullptr;
         }
 
         NextToken(); // skip ')'
 
         if (!IsTokenType(Lexer::TokenType::SymbolLeftBrace)) {
-            return false;
+            return nullptr;
         }
 
         NextToken(); // skip '{'
@@ -68,17 +68,17 @@ namespace GSLanguageCompiler::Parser {
         auto function = translationUnitDeclaration->CreateNode<AST::GS_FunctionDeclaration>(functionName);
 
         while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
-            ParseStatement(function);
+            ParseStatement(function->GetFunctionScope());
         }
 
         NextToken(); // skip '}'
 
-        return true;
+        return function;
     }
 
-    Bool GS_Parser::ParseStatement(ConstLRef<SharedPtr<AST::GS_FunctionDeclaration>> functionDeclaration) {
+    AST::GSStatementPtr GS_Parser::ParseStatement(ConstLRef<AST::GSScopePtr> scope) {
         if (IsTokenType(Lexer::TokenType::KeywordVar)) {
-            return ParseVariableDeclarationStatement(functionDeclaration);
+            return ParseVariableDeclarationStatement(scope);
         }
 
         auto expression = ParseExpression(scope);

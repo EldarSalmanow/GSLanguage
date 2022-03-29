@@ -26,6 +26,7 @@ endif()
 include(${EXTERNAL_DIR}/conanbuildinfo.cmake)
 
 find_package(LLVM REQUIRED)
+find_package(LLD REQUIRED)
 
 separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
 
@@ -45,6 +46,7 @@ add_executable(${PROJECT_NAME}
         ${PROJECT_DIR}/main.cpp)
 
 include_directories(${LLVM_INCLUDE_DIRS})
+include_directories(${LLD_INCLUDE_DIRS})
 
 include_directories(${CONAN_INCLUDE_DIRS})
 
@@ -67,6 +69,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS})
 llvm_map_components_to_libnames(LLVM_LIBS all)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LLVM_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE lldCommon lldCOFF)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_LIBRARIES})
 
