@@ -3,7 +3,7 @@
 
 #include <Driver/GS_TranslationUnitsManager.h>
 
-#include <Driver/GS_CompilerConfig.h>
+#include <Driver/GS_CompilerSessionConfig.h>
 
 namespace GSLanguageCompiler::Driver {
 

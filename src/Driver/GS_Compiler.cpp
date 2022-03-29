@@ -235,7 +235,7 @@ namespace GSLanguageCompiler::Driver {
     }
 
     I32 GS_Compiler::Start(I32 argc, Ptr<Ptr<C8>> argv) {
-        auto compilerConfig = GS_CompilerConfig::Create(argc, argv);
+        auto compilerConfig = GS_CompilerSessionConfig::CreateFromArguments(argc, argv);
 
         if (!compilerConfig) {
             return 1;
@@ -259,21 +259,24 @@ namespace GSLanguageCompiler::Driver {
 
         auto result = unitsManager->CompileUnits();
 
-        auto sdkPaths = GetWin10SDKPaths();
-
-        if (sdkPaths.empty()) {
-            result = 1;
-
-            return result;
-        }
+//        auto sdkPaths = GetWin10SDKPaths();
+//
+//        if (sdkPaths.empty()) {
+//            result = 1;
+//
+//            return result;
+//        }
 
         Vector<ConstPtr<C8>> args;
 
-        args.emplace_back(_config->GetUnitConfigs()[0]->GetOutputName().AsString().c_str());
+        auto outputName = _config->GetUnitConfigs()[0]->GetInputName().AsString() + ".o";
 
-        for (auto &path : sdkPaths) {
-            args.emplace_back(("/libpath:\"" + path + "\"").c_str());
-        }
+        args.emplace_back("");
+        args.emplace_back(outputName.c_str());
+
+        args.emplace_back(R"(/libpath:"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\lib\x64")");
+        args.emplace_back(R"(/libpath:"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64")");
+        args.emplace_back(R"(/libpath:"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\um\x64")");
 
         if (!lld::coff::link(args, llvm::outs(), llvm::errs(), false, false)) {
             result = 1;

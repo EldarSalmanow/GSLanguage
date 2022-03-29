@@ -490,7 +490,7 @@ namespace GSLanguageCompiler::Driver {
 
         std::error_code errorCode;
 
-        llvm::raw_fd_ostream stream(_config->GetOutputName().AsString(), errorCode);
+        llvm::raw_fd_ostream stream(_config->GetInputName().AsString() + ".o", errorCode);
 
         if (errorCode) {
             llvm::errs() << errorCode.message();

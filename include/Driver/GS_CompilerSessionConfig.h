@@ -1,21 +1,21 @@
-#ifndef GSLANGUAGE_GS_COMPILERCONFIG_H
-#define GSLANGUAGE_GS_COMPILERCONFIG_H
+#ifndef GSLANGUAGE_GS_COMPILERSESSIONCONFIG_H
+#define GSLANGUAGE_GS_COMPILERSESSIONCONFIG_H
 
 #include <Driver/GS_TranslationUnitConfig.h>
 
 namespace GSLanguageCompiler::Driver {
 
     /**
-     * Class for representation all configs of compiler
+     * Class for representation all session configs of compiler
      */
-    class GS_CompilerConfig {
+    class GS_CompilerSessionConfig {
     public:
 
         /**
-         * Constructor for compiler config
+         * Constructor for compiler session config
          * @param unitConfigs Unit configs
          */
-        explicit GS_CompilerConfig(GSTranslationUnitConfigPtrArray unitConfigs);
+        explicit GS_CompilerSessionConfig(GSTranslationUnitConfigPtrArray unitConfigs);
 
     public:
 
@@ -24,7 +24,7 @@ namespace GSLanguageCompiler::Driver {
          * @param unitConfigs Unit configs
          * @return Compiler config ptr
          */
-        static SharedPtr<GS_CompilerConfig> Create(GSTranslationUnitConfigPtrArray unitConfigs);
+        static SharedPtr<GS_CompilerSessionConfig> Create(GSTranslationUnitConfigPtrArray unitConfigs);
 
         /**
          * Creating compiler config with parsing command line arguments
@@ -32,7 +32,7 @@ namespace GSLanguageCompiler::Driver {
          * @param argv Arguments value
          * @return Compiler config ptr
          */
-        static SharedPtr<GS_CompilerConfig> Create(I32 argc, Ptr<Ptr<C8>> argv);
+        static SharedPtr<GS_CompilerSessionConfig> CreateFromArguments(I32 argc, Ptr<Ptr<C8>> argv);
 
     public:
 
@@ -53,8 +53,8 @@ namespace GSLanguageCompiler::Driver {
     /**
      * Compiler config ptr type
      */
-    using GSCompilerConfigPtr = SharedPtr<GS_CompilerConfig>;
+    using GSCompilerConfigPtr = SharedPtr<GS_CompilerSessionConfig>;
 
 }
 
-#endif //GSLANGUAGE_GS_COMPILERCONFIG_H
+#endif //GSLANGUAGE_GS_COMPILERSESSIONCONFIG_H

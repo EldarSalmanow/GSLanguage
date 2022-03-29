@@ -4,7 +4,7 @@ set(DRIVER_DIR ${SOURCE_DIR}/Driver)
 
 set(GS_DRIVER_SOURCE
         ${DRIVER_DIR}/GS_Compiler.cpp
-        ${DRIVER_DIR}/GS_CompilerConfig.cpp
+        ${DRIVER_DIR}/GS_CompilerSessionConfig.cpp
         ${DRIVER_DIR}/GS_TranslationUnitsManager.cpp
         ${DRIVER_DIR}/GS_TranslationUnitConfig.cpp
         ${DRIVER_DIR}/GS_TranslationUnit.cpp)

@@ -14,19 +14,10 @@ namespace GSLanguageCompiler::Driver {
         /**
          * Constructor for translation unit config
          * @param inputName Input name
-         * @param outputName Output name
          */
-        GS_TranslationUnitConfig(UString inputName, UString outputName);
+        explicit GS_TranslationUnitConfig(UString inputName);
 
     public:
-
-        /**
-         * Creating translation unit config
-         * @param inputName Input name
-         * @param outputName Output name
-         * @return Translation unit config ptr
-         */
-        static SharedPtr<GS_TranslationUnitConfig> Create(UString inputName, UString outputName);
 
         /**
          * Creating translation unit config
@@ -44,23 +35,12 @@ namespace GSLanguageCompiler::Driver {
          */
         UString GetInputName() const;
 
-        /**
-         * Getter for output name
-         * @return Output name
-         */
-        UString GetOutputName() const;
-
     private:
 
         /**
          * Input file name
          */
         UString _inputName;
-
-        /**
-         * Output file name
-         */
-        UString _outputName;
     };
 
     /**

@@ -1,17 +1,17 @@
 #include <args.hxx>
 
-#include <GS_CompilerConfig.h>
+#include <GS_CompilerSessionConfig.h>
 
 namespace GSLanguageCompiler::Driver {
 
-    GS_CompilerConfig::GS_CompilerConfig(GSTranslationUnitConfigPtrArray unitConfigs)
+    GS_CompilerSessionConfig::GS_CompilerSessionConfig(GSTranslationUnitConfigPtrArray unitConfigs)
             : _unitConfigs(std::move(unitConfigs)) {}
 
-    SharedPtr<GS_CompilerConfig> GS_CompilerConfig::Create(GSTranslationUnitConfigPtrArray unitConfigs) {
-        return std::make_shared<GS_CompilerConfig>(std::move(unitConfigs));
+    SharedPtr<GS_CompilerSessionConfig> GS_CompilerSessionConfig::Create(GSTranslationUnitConfigPtrArray unitConfigs) {
+        return std::make_shared<GS_CompilerSessionConfig>(std::move(unitConfigs));
     }
 
-    SharedPtr<GS_CompilerConfig> GS_CompilerConfig::Create(I32 argc, Ptr<Ptr<C8>> argv) {
+    SharedPtr<GS_CompilerSessionConfig> GS_CompilerSessionConfig::CreateFromArguments(I32 argc, Ptr<Ptr<C8>> argv) {
         args::ArgumentParser parser("GSLanguageCompiler - Compiler for GSLanguage");
         args::HelpFlag helpFlag(parser, "help", "Display help description about GSLanguageCompiler", {'h', "help"});
         args::ValueFlag<String> inputFile(parser, "file", "File for compiling", {'f', "file"}, args::Options::Required);
@@ -34,23 +34,17 @@ namespace GSLanguageCompiler::Driver {
         GSTranslationUnitConfigPtrArray unitConfigs;
 
         if (inputFile) {
-            GSTranslationUnitConfigPtr unitConfig;
-
-            if (outputFile) {
-                unitConfig = GS_TranslationUnitConfig::Create(inputFile.Get(), outputFile.Get());
-            } else {
-                unitConfig = GS_TranslationUnitConfig::Create(inputFile.Get());
-            }
+            auto unitConfig = GS_TranslationUnitConfig::Create(inputFile.Get());
 
             unitConfigs.emplace_back(unitConfig);
         }
 
-        auto compilerConfig = GS_CompilerConfig::Create(unitConfigs);
+        auto compilerConfig = GS_CompilerSessionConfig::Create(unitConfigs);
 
         return compilerConfig;
     }
 
-    GSTranslationUnitConfigPtrArray GS_CompilerConfig::GetUnitConfigs() const {
+    GSTranslationUnitConfigPtrArray GS_CompilerSessionConfig::GetUnitConfigs() const {
         return _unitConfigs;
     }
 

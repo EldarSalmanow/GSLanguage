@@ -20,7 +20,7 @@ RU: GSLanguage - новый компилируемый язык программ
 ```
 EN:
 1. Go to the directory with the cloned repository.
-2. Create a directory for storing assembly files.
+2. CreateFromArguments a directory for storing assembly files.
 3. Go to the previously created directory.
 4. Generating assembly files via CMake.<br>You can choose either configuration via MinGW or via MSVC.<br>Support for other compilers is not guaranteed at this time.
 5. Building an executable file via target "GSLanguage"
