@@ -9,9 +9,11 @@
 
 #include <Driver/GS_TranslationUnit.h>
 
+#include <Driver/GS_TranslationUnitsManager.h>
+
 #include <Driver/GS_CompilerSessionConfig.h>
 
-#include <Driver/GS_TranslationUnitsManager.h>
+#include <Driver/GS_CompilerSession.h>
 
 #include <Driver/GS_Compiler.h>
 

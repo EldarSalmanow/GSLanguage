@@ -32,7 +32,7 @@ namespace GSLanguageCompiler::Driver {
          * @param argv Arguments value
          * @return Compiler config ptr
          */
-        static SharedPtr<GS_CompilerSessionConfig> CreateFromArguments(I32 argc, Ptr<Ptr<C8>> argv);
+        static SharedPtr<GS_CompilerSessionConfig> Create(I32 argc, Ptr<Ptr<C8>> argv);
 
     public:
 
@@ -51,9 +51,14 @@ namespace GSLanguageCompiler::Driver {
     };
 
     /**
-     * Compiler config ptr type
+     * Compiler session config ptr type
      */
-    using GSCompilerConfigPtr = SharedPtr<GS_CompilerSessionConfig>;
+    using GSCompilerSessionConfigPtr = SharedPtr<GS_CompilerSessionConfig>;
+
+    /**
+     * Compiler session config ptr array type
+     */
+    using GSCompilerSessionConfigPtrArray = Vector<GSCompilerSessionConfigPtr>;
 
 }
 

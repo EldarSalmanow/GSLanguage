@@ -38,7 +38,7 @@ namespace GSLanguageCompiler::Driver {
          * Compile all units
          * @return Compiling result
          */
-        I32 CompileUnits();
+        Vector<CompilingResult> CompileUnits();
 
         /**
          * Adding translation unit

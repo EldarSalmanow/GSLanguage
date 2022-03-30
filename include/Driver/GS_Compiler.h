@@ -3,7 +3,7 @@
 
 #include <Driver/GS_TranslationUnitsManager.h>
 
-#include <Driver/GS_CompilerSessionConfig.h>
+#include <Driver/GS_CompilerSession.h>
 
 namespace GSLanguageCompiler::Driver {
 
@@ -15,18 +15,24 @@ namespace GSLanguageCompiler::Driver {
 
         /**
          * Constructor for compiler
-         * @param config Compiler config
+         * @param sessionConfigs Compiler session configs
          */
-        explicit GS_Compiler(GSCompilerConfigPtr config);
+        explicit GS_Compiler(GSCompilerSessionConfigPtrArray sessionConfigs);
 
     public:
 
         /**
          * Creating compiler
-         * @param config Compiler config
+         * @param sessionConfigs Compiler session configs
          * @return Compiler ptr
          */
-        static SharedPtr<GS_Compiler> Create(GSCompilerConfigPtr config);
+        static SharedPtr<GS_Compiler> Create(GSCompilerSessionConfigPtrArray sessionConfigs);
+
+        /**
+         * Creating compiler
+         * @return Compiler ptr
+         */
+        static SharedPtr<GS_Compiler> Create();
 
     public:
 
@@ -49,17 +55,26 @@ namespace GSLanguageCompiler::Driver {
     public:
 
         /**
-         * Getter for compiler config
-         * @return Compiler config
+         * Adding session config
+         * @param sessionConfig Session config
+         * @return
          */
-        GSCompilerConfigPtr GetConfig() const;
+        Void AddSessionConfig(GSCompilerSessionConfigPtr sessionConfig);
+
+    public:
+
+        /**
+         * Getter for compiler session configs
+         * @return Compiler session configs
+         */
+        GSCompilerSessionConfigPtrArray GetSessionConfigs() const;
 
     private:
 
         /**
-         * Compiler config
+         * Compiler session configs
          */
-        GSCompilerConfigPtr _config;
+        GSCompilerSessionConfigPtrArray _sessionConfigs;
     };
 
 }

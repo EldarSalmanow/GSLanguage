@@ -7,9 +7,20 @@ namespace GSLanguageCompiler {
 
     namespace AST {
 
+        /**
+         * Declaring translation unit declaration node
+         */
         class GS_TranslationUnitDeclaration;
 
     }
+
+    /**
+     * Compiling result
+     */
+    enum class CompilingResult {
+        Success,
+        Failure
+    };
 
     namespace Driver {
 
@@ -40,7 +51,7 @@ namespace GSLanguageCompiler {
              * Compile translation unit
              * @return Compiling result
              */
-            I32 Compile();
+            CompilingResult Compile();
 
         public:
 

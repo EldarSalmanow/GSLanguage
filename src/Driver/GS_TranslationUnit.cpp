@@ -444,7 +444,7 @@ namespace GSLanguageCompiler::Driver {
         return std::make_shared<GS_TranslationUnit>(std::move(config));
     }
 
-    I32 GS_TranslationUnit::Compile() {
+    CompilingResult GS_TranslationUnit::Compile() {
         auto unit = RunFrontend(_config->GetInputName());
 
         auto printer = std::make_shared<PrintVisitor>();
@@ -473,7 +473,7 @@ namespace GSLanguageCompiler::Driver {
         if (!target) {
             llvm::errs() << error;
 
-            return 1;
+            return CompilingResult::Failure;
         }
 
         auto cpu = "generic";
@@ -495,20 +495,20 @@ namespace GSLanguageCompiler::Driver {
         if (errorCode) {
             llvm::errs() << errorCode.message();
 
-            return 1;
+            return CompilingResult::Failure;
         }
 
         llvm::legacy::PassManager manager;
 
         if (machine->addPassesToEmitFile(manager, stream, nullptr, llvm::CodeGenFileType::CGFT_ObjectFile)) {
-            return 1;
+            return CompilingResult::Failure;
         }
 
         manager.run(module);
 
         stream.flush();
 
-        return 0;
+        return CompilingResult::Success;
     }
 
     SharedPtr<AST::GS_TranslationUnitDeclaration> GS_TranslationUnit::RunFrontend(UString inputFile) {

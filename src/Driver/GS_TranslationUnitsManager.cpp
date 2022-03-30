@@ -1,5 +1,3 @@
-#include <future>
-
 #include <GS_TranslationUnitsManager.h>
 
 namespace GSLanguageCompiler::Driver {
@@ -15,16 +13,16 @@ namespace GSLanguageCompiler::Driver {
         return GS_TranslationUnitsManager::Create(GSTranslationUnitPtrArray());
     }
 
-    I32 GS_TranslationUnitsManager::CompileUnits() {
-        I32 returnCode = 0;
+    Vector<CompilingResult> GS_TranslationUnitsManager::CompileUnits() {
+        Vector<CompilingResult> compilingResults;
 
         for (auto &unit : _units) {
-            if (unit->Compile()) {
-                returnCode = 1;
-            }
+            auto result = unit->Compile();
+
+            compilingResults.emplace_back(result);
         }
 
-        return returnCode;
+        return compilingResults;
     }
 
     Void GS_TranslationUnitsManager::AddUnit(GSTranslationUnitPtr unit) {
