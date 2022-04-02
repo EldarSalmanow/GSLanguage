@@ -31,16 +31,6 @@ namespace GSLanguageCompiler::Driver {
     public:
 
         /**
-         * Compiler session entry point for create and startup session
-         * @param argc Arguments counter
-         * @param argv Arguments value
-         * @return Compiler result
-         */
-        static CompilingResult Start(I32 argc, Ptr<Ptr<C8>> argv);
-
-    public:
-
-        /**
          * Run compiler session
          * @return Compiling result
          */
@@ -63,12 +53,12 @@ namespace GSLanguageCompiler::Driver {
     };
 
     /**
-     *
+     * Compiler session ptr type
      */
     using GSCompilerSessionPtr = SharedPtr<GS_CompilerSession>;
 
     /**
-     *
+     * Compiler session ptr array type
      */
     using GSCompilerSessionPtrArray = Vector<GSCompilerSessionPtr>;
 

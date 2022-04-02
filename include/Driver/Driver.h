@@ -15,6 +15,8 @@
 
 #include <Driver/GS_CompilerSession.h>
 
+#include <Driver/GS_CompilerSessionsManager.h>
+
 #include <Driver/GS_Compiler.h>
 
 #endif //GSLANGUAGE_DRIVER_H

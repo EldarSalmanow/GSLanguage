@@ -228,18 +228,6 @@ namespace GSLanguageCompiler::Driver {
         return std::make_shared<GS_CompilerSession>(std::move(compilerSessionConfig));
     }
 
-    CompilingResult GS_CompilerSession::Start(I32 argc, Ptr<Ptr<C8>> argv) {
-        auto compilerConfig = GS_CompilerSessionConfig::Create(argc, argv);
-
-        if (!compilerConfig) {
-            return CompilingResult::Failure;
-        }
-
-        auto compiler = GS_CompilerSession::Create(compilerConfig);
-
-        return compiler->Run();
-    }
-
     CompilingResult GS_CompilerSession::Run() {
         auto unitConfigs = _config->GetUnitConfigs();
 

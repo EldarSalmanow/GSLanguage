@@ -28,18 +28,18 @@ namespace GSLanguageCompiler::Driver {
     }
 
     I32 GS_Compiler::Run() {
-        GSCompilerSessionPtrArray sessions;
+        auto sessionsManager = GS_CompilerSessionsManager::Create();
 
         for (auto &sessionConfig : _sessionConfigs) {
             auto session = GS_CompilerSession::Create(sessionConfig);
 
-            sessions.emplace_back(session);
+            sessionsManager->AddSession(session);
         }
 
-        for (auto &session : sessions) {
-            auto sessionResult = session->Run();
+        auto compilingResults = sessionsManager->RunSessions();
 
-            if (sessionResult == CompilingResult::Failure) {
+        for (auto &compilingResult : compilingResults) {
+            if (compilingResult == CompilingResult::Failure) {
                 return 1;
             }
         }

@@ -1,9 +1,7 @@
 #ifndef GSLANGUAGE_GS_COMPILER_H
 #define GSLANGUAGE_GS_COMPILER_H
 
-#include <Driver/GS_TranslationUnitsManager.h>
-
-#include <Driver/GS_CompilerSession.h>
+#include <Driver/GS_CompilerSessionsManager.h>
 
 namespace GSLanguageCompiler::Driver {
 
