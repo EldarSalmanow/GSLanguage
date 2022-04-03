@@ -1,5 +1,7 @@
 #include <GS_CompilerSession.h>
 
+#include <GS_Toolchains.h>
+
 //class Key {
 //public:
 //
@@ -247,32 +249,13 @@ namespace GSLanguageCompiler::Driver {
             }
         }
 
-// TODO move linking code to new linker class
-//
-//        auto sdkPaths = GetWin10SDKPaths();
-//
-//        if (sdkPaths.empty()) {
-//            result = 1;
-//
-//            return result;
-//        }
-//
-//        Vector<ConstPtr<C8>> args;
-//
-//        auto outputName = _config->GetUnitConfigs()[0]->GetInputName().AsString() + ".o";
-//
-//        args.emplace_back("");
-//        args.emplace_back(outputName.c_str());
-//
-//        args.emplace_back(R"(/libpath:"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\lib\x64")");
-//        args.emplace_back(R"(/libpath:"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64")");
-//        args.emplace_back(R"(/libpath:"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\um\x64")");
-//
-//        if (!lld::coff::link(args, llvm::outs(), llvm::errs(), false, false)) {
-//            result = CompilingResult::Failure;
-//
-//            return result;
-//        }
+        auto toolchain = std::make_shared<GS_MSVCToolchain>();
+
+        auto linker = toolchain->GetLinker();
+
+        if (!linker->Link(unitsManager->GetUnits(), _config->GetLibrariesPaths(), _config->GetOutputName())) {
+            return CompilingResult::Failure;
+        }
 
         return CompilingResult::Success;
     }

@@ -14,17 +14,21 @@ namespace GSLanguageCompiler::Driver {
         /**
          * Constructor for compiler session config
          * @param unitConfigs Unit configs
+         * @param librariesPaths Libraries paths
+         * @param outputName Output name
          */
-        explicit GS_CompilerSessionConfig(GSTranslationUnitConfigPtrArray unitConfigs);
+        GS_CompilerSessionConfig(GSTranslationUnitConfigPtrArray unitConfigs, Vector<UString> librariesPaths, UString outputName);
 
     public:
 
         /**
          * Creating compiler config
          * @param unitConfigs Unit configs
+         * @param librariesPaths Libraries paths
+         * @param outputName Output name
          * @return Compiler config ptr
          */
-        static SharedPtr<GS_CompilerSessionConfig> Create(GSTranslationUnitConfigPtrArray unitConfigs);
+        static SharedPtr<GS_CompilerSessionConfig> Create(GSTranslationUnitConfigPtrArray unitConfigs, Vector<UString> librariesPaths, UString outputName);
 
         /**
          * Creating compiler config with parsing command line arguments
@@ -42,12 +46,34 @@ namespace GSLanguageCompiler::Driver {
          */
         GSTranslationUnitConfigPtrArray GetUnitConfigs() const;
 
+        /**
+         * Getter for libraries paths
+         * @return Libraries paths
+         */
+        Vector<UString> GetLibrariesPaths() const;
+
+        /**
+         * Getter for output name
+         * @return Output name
+         */
+        UString GetOutputName() const;
+
     private:
 
         /**
          * Unit configs
          */
         GSTranslationUnitConfigPtrArray _unitConfigs;
+
+        /**
+         * Libraries paths
+         */
+        Vector<UString> _librariesPaths;
+
+        /**
+         * Output name
+         */
+        UString _outputName;
     };
 
     /**

@@ -9,7 +9,8 @@ set(GS_DRIVER_SOURCE
         ${DRIVER_DIR}/GS_CompilerSessionConfig.cpp
         ${DRIVER_DIR}/GS_TranslationUnitsManager.cpp
         ${DRIVER_DIR}/GS_TranslationUnit.cpp
-        ${DRIVER_DIR}/GS_TranslationUnitConfig.cpp)
+        ${DRIVER_DIR}/GS_TranslationUnitConfig.cpp
+        ${DRIVER_DIR}/GS_Toolchains.cpp)
 
 add_library(
 #       Library name

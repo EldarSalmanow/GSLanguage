@@ -14,9 +14,11 @@ namespace GSLanguageCompiler::Driver {
         /**
          *
          * @param units
+         * @param librariesPaths
+         * @param outputName
          * @return
          */
-        virtual Bool Link(Vector<GSTranslationUnitPtr> units) = 0;
+        virtual Bool Link(Vector<GSTranslationUnitPtr> units, Vector<UString> librariesPaths, UString outputName) = 0;
     };
 
     /**

@@ -65,7 +65,7 @@ namespace GSLanguageCompiler::Parser {
 
         NextToken(); // skip '{'
 
-        auto function = translationUnitDeclaration->CreateNode<AST::GS_FunctionDeclaration>(functionName);
+        auto function = translationUnitDeclaration->AddNode<AST::GS_FunctionDeclaration>(functionName);
 
         while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
             ParseStatement(function->GetFunctionScope());
