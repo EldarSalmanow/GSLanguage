@@ -15,6 +15,8 @@
 
 #include <Driver/GS_CompilerSession.h>
 
+#include <Driver/GS_Toolchains.h>
+
 #include <Driver/GS_CompilerSessionsManager.h>
 
 #include <Driver/GS_Compiler.h>

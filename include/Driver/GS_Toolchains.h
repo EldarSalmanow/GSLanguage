@@ -6,45 +6,54 @@
 namespace GSLanguageCompiler::Driver {
 
     /**
-     *
+     * Class for linking translation units with external tools
      */
     class GS_Linker {
     public:
 
         /**
-         *
-         * @param units
-         * @param librariesPaths
-         * @param outputName
-         * @return
+         * Linking translation units to executable file
+         * @param units Units for linking
+         * @param outputName Output file name
+         * @return Is successfully linking
          */
-        virtual Bool Link(Vector<GSTranslationUnitPtr> units, Vector<UString> librariesPaths, UString outputName) = 0;
+        virtual Bool Link(Vector<GSTranslationUnitPtr> units, UString outputName) = 0;
     };
 
     /**
-     *
+     * Linker ptr type
+     */
+    using GSLinkerPtr = SharedPtr<GS_Linker>;
+
+    /**
+     * Class for getting any group tools
      */
     class GS_Toolchain {
     public:
 
         /**
-         *
-         * @return
+         * Getter for linker tool
+         * @return Linker tool
          */
-        virtual SharedPtr<GS_Linker> GetLinker() = 0;
+        virtual GSLinkerPtr GetLinker() = 0;
     };
 
     /**
-     *
+     * Toolchain ptr type
+     */
+    using GSToolchainPtr = SharedPtr<GS_Toolchain>;
+
+    /**
+     * Class for getting MSVC group tools
      */
     class GS_MSVCToolchain : public GS_Toolchain {
     public:
 
         /**
-         *
-         * @return
+         * Getting MSVC linker tool
+         * @return MSVC linker tool
          */
-        SharedPtr<GS_Linker> GetLinker() override;
+        GSLinkerPtr GetLinker() override;
     };
 
 }

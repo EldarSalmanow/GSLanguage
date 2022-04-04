@@ -5,6 +5,8 @@
 
 #include <Driver/GS_TranslationUnitsManager.h>
 
+#include <Driver/GS_Toolchains.h>
+
 namespace GSLanguageCompiler::Driver {
 
     /**
@@ -35,6 +37,14 @@ namespace GSLanguageCompiler::Driver {
          * @return Compiling result
          */
         CompilingResult Run();
+
+    public:
+
+        /**
+         * Getter for default toolchain
+         * @return Default toolchain
+         */
+        GSToolchainPtr GetDefaultToolchain();
 
     public:
 

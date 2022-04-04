@@ -28,20 +28,26 @@ namespace GSLanguageCompiler::Driver {
     }
 
     I32 GS_Compiler::Run() {
-        auto sessionsManager = GS_CompilerSessionsManager::Create();
+        try {
+            auto sessionsManager = GS_CompilerSessionsManager::Create();
 
-        for (auto &sessionConfig : _sessionConfigs) {
-            auto session = GS_CompilerSession::Create(sessionConfig);
+            for (auto &sessionConfig: _sessionConfigs) {
+                auto session = GS_CompilerSession::Create(sessionConfig);
 
-            sessionsManager->AddSession(session);
-        }
-
-        auto compilingResults = sessionsManager->RunSessions();
-
-        for (auto &compilingResult : compilingResults) {
-            if (compilingResult == CompilingResult::Failure) {
-                return 1;
+                sessionsManager->AddSession(session);
             }
+
+            auto compilingResults = sessionsManager->RunSessions();
+
+            for (auto &compilingResult: compilingResults) {
+                if (compilingResult == CompilingResult::Failure) {
+                    return 1;
+                }
+            }
+        } catch (LRef<std::exception> exception) {
+            COut() << exception.what() << "\n";
+
+            return 1;
         }
 
         return 0;

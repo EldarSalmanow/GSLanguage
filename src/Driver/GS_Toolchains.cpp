@@ -5,22 +5,41 @@
 namespace GSLanguageCompiler::Driver {
 
     /**
-     *
+     * Class for using MSVC linker tool
      */
     class GS_MSVCLinker : public GS_Linker {
     public:
 
         /**
-         *
-         * @param units
-         * @param librariesPaths
-         * @param outputName
-         * @return
+         * Linking translation units to executable file
+         * @param units Units for linking
+         * @param outputName Output file name
+         * @return Is successfully linking
          */
-        Bool Link(Vector<GSTranslationUnitPtr> units, Vector<UString> librariesPaths, UString outputName) override {
-            Vector<String> command;
+        Bool Link(Vector<GSTranslationUnitPtr> units, UString outputName) override {
+            Vector<ConstPtr<C8>> command;
 
-            Vector<ConstPtr<C8>> stringCommand;
+            auto stringCommand = MakeCommand(units, outputName);
+
+            for (auto &string : stringCommand) {
+                command.emplace_back(string.c_str());
+            }
+
+            auto result = lld::coff::link(command, llvm::outs(), llvm::errs(), false, false);
+
+            return result;
+        }
+
+    private:
+
+        /**
+         * Making string command for linking
+         * @param units Units for linking
+         * @param outputName Output file name
+         * @return String command
+         */
+        Vector<String> MakeCommand(Vector<GSTranslationUnitPtr> units, UString outputName) {
+            Vector<String> command;
 
             command.emplace_back("GSLanguage.exe");
 
@@ -32,17 +51,11 @@ namespace GSLanguageCompiler::Driver {
 
             command.emplace_back("/out:" + outputName.AsString());
 
-            for (auto &string : command) {
-                stringCommand.emplace_back(string.c_str());
-            }
-
-            auto result = lld::coff::link(stringCommand, llvm::outs(), llvm::errs(), false, false);
-
-            return result;
+            return command;
         }
     };
 
-    SharedPtr<GS_Linker> GS_MSVCToolchain::GetLinker() {
+    GSLinkerPtr GS_MSVCToolchain::GetLinker() {
         return std::make_shared<GS_MSVCLinker>();
     }
 
