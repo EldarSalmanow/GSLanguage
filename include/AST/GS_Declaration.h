@@ -59,6 +59,27 @@ namespace GSLanguageCompiler::AST {
      */
     GSDeclarationPtr ToDeclaration(GSNodePtr node);
 
+    /**
+     * Casting node to any type of declaration if node is declaration
+     * @tparam T Type of declaration
+     * @param node Node
+     * @return Declaration or nullptr
+     */
+    template<typename T>
+    SharedPtr<T> ToDeclaration(GSNodePtr node) {
+        static_assert(std::is_base_of_v<GS_Declaration, T>, "Element for casting must be a declaration!");
+
+        auto declaration = ToDeclaration(node);
+
+        if (!declaration) {
+            return nullptr;
+        }
+
+        auto castedDeclaration = std::reinterpret_pointer_cast<T>(declaration);
+
+        return castedDeclaration;
+    }
+
 }
 
 #endif //GSLANGUAGE_GS_DECLARATION_H
