@@ -68,7 +68,7 @@ namespace GSLanguageCompiler::AST {
      */
     template<typename T>
     SharedPtr<T> ToStatement(GSNodePtr node) {
-        static_assert(std::is_base_of_v<GS_Statement, T>, "Element for casting must be a statement!");
+        static_assert(std::is_base_of_v<GS_Statement, T>, "Type for casting must be inherited from GS_Statement!");
 
         auto statement = ToStatement(node);
 

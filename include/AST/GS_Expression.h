@@ -70,7 +70,7 @@ namespace GSLanguageCompiler::AST {
      */
     template<typename T>
     SharedPtr<T> ToExpression(GSNodePtr node) {
-        static_assert(std::is_base_of_v<GS_Expression, T>, "Element for casting must be an expression!");
+        static_assert(std::is_base_of_v<GS_Expression, T>, "Type for casting must be inherited from GS_Expression!");
 
         auto expression = ToExpression(node);
 
