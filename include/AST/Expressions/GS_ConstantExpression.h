@@ -15,13 +15,9 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Constructor for value
-         * @tparam T Type of value
          * @param type Type ptr
-         * @param data Value
          */
-        template<typename T>
-        GS_Value(GSTypePtr type, T value)
-                : _type(std::move(type)), _value(std::move(value)) {}
+        explicit GS_Value(GSTypePtr type);
 
     public:
 
@@ -34,14 +30,60 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Creating value ptr
-         * @tparam T Type of value
          * @param type Type ptr
+         * @return Value ptr
+         */
+        static SharedPtr<GS_Value> Create(GSTypePtr type);
+
+    public:
+
+        /**
+         * Getter for type ptr
+         * @return Type ptr
+         */
+        GSTypePtr GetType() const;
+
+    private:
+
+        /**
+         * Type ptr
+         */
+        GSTypePtr _type;
+    };
+
+    /**
+     * Value ptr type
+     */
+    using GSValuePtr = SharedPtr<GS_Value>;
+
+    /**
+     * Class for literal values
+     */
+    class GS_LiteralValue : public GS_Value {
+    public:
+
+        /**
+         * Constructor for value
+         * @tparam T Type of value
+         * @param data Value
+         * @param type Type ptr
+         */
+        template<typename T>
+        GS_LiteralValue(T value, GSTypePtr type)
+                : _value(std::move(value)), GS_Value(std::move(type)) {}
+
+    public:
+
+        /**
+         * Creating value ptr
+         * @tparam T Type of value
          * @param value Value
+         * @param type Type ptr
          * @return Value ptr
          */
         template<typename T>
-        static SharedPtr<GS_Value> Create(GSTypePtr type, T value) {
-            return std::make_shared<GS_Value>(std::move(type), std::move(value));
+        static SharedPtr<GS_Value> Create(T value, GSTypePtr type) {
+            return std::make_shared<GS_Value>(std::move(value), std::move(type));
         }
 
     public:
@@ -64,34 +106,18 @@ namespace GSLanguageCompiler::AST {
          */
         Any GetValue() const;
 
-        /**
-         * Getter for type ptr
-         * @return Type ptr
-         */
-        GSTypePtr GetType() const;
-
     private:
 
         /**
          * Container for value
          */
         Any _value;
-
-        /**
-         * Type ptr
-         */
-        GSTypePtr _type;
     };
-
-    /**
-     * Value ptr type
-     */
-    using GSValuePtr = SharedPtr<GS_Value>;
 
     /**
      * I32 value
      */
-    class GS_I32Value : public GS_Value {
+    class GS_I32Value : public GS_LiteralValue {
     public:
 
         /**
@@ -108,12 +134,20 @@ namespace GSLanguageCompiler::AST {
          * @return I32 value ptr
          */
         static SharedPtr<GS_I32Value> Create(I32 value);
+
+    public:
+
+        /**
+         * Getter for I32 value
+         * @return I32 value
+         */
+        I32 GetI32Value() const;
     };
 
     /**
      * String value
      */
-    class GS_StringValue : public GS_Value {
+    class GS_StringValue : public GS_LiteralValue {
     public:
 
         /**
@@ -130,7 +164,47 @@ namespace GSLanguageCompiler::AST {
          * @return String value ptr
          */
         static SharedPtr<GS_StringValue> Create(UString value);
+
+    public:
+
+        /**
+         * Getter for String value
+         * @return String value
+         */
+        UString GetStringValue() const;
     };
+
+    /**
+     * Casting any value ptr to concrete value ptr
+     * @tparam T Type of value
+     * @param value Any value ptr
+     * @return Concrete value ptr or nullptr
+     */
+    template<typename T>
+    inline SharedPtr<T> GSValueCast(GSValuePtr value) {
+        static_assert(std::is_base_of_v<GS_Value, T>, "Type for casting must be inherited from GS_Value!");
+
+        auto type = value->GetType();
+        auto name = type->GetName();
+
+        if constexpr (std::is_same_v<GS_I32Value, T>) {
+            if (name == "I32") {
+                return std::reinterpret_pointer_cast<GS_I32Value>(value);
+            }
+
+            return nullptr;
+        }
+
+        if constexpr (std::is_same_v<GS_StringValue, T>) {
+            if (name == "String") {
+                return std::reinterpret_pointer_cast<GS_StringValue>(value);
+            }
+
+            return nullptr;
+        }
+
+        return std::reinterpret_pointer_cast<T>(value);
+    }
 
     /**
      * Class for all constants in language grammar

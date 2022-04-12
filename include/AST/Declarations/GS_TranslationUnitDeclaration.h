@@ -58,7 +58,7 @@ namespace GSLanguageCompiler::AST {
          */
         template<typename T, typename... Args>
         inline auto CreateNode(Args... args) {
-            static_assert(std::is_base_of_v<GS_Node, T>, "Element for creating must be a node!");
+            static_assert(std::is_base_of_v<GS_Node, T>, "Type for creating must be inherited from GS_Node!");
 
             return T::Create(args..., _globalScope);
         }
@@ -79,7 +79,7 @@ namespace GSLanguageCompiler::AST {
          */
         template<typename T, typename... Args>
         inline auto AddNode(Args... args) {
-            static_assert(std::is_base_of_v<GS_Node, T>, "Element for creating must be node!");
+            static_assert(std::is_base_of_v<GS_Node, T>, "Type for creating must be inherited from GS_Node!");
 
             auto node = CreateNode<T>(args...);
 

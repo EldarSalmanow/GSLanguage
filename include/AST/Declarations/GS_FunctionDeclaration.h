@@ -55,7 +55,7 @@ namespace GSLanguageCompiler::AST {
          */
         template<typename T, typename... Args>
         inline auto CreateStatement(Args... args) {
-            static_assert(std::is_base_of_v<GS_Statement, T> || std::is_base_of_v<GS_Expression, T>, "Element for creating must be a statement or expression!");
+            static_assert(std::is_base_of_v<GS_Statement, T> || std::is_base_of_v<GS_Expression, T>, "Type for creating must be inherited from GS_Statement or GS_Expression!");
 
             return T::Create(args..., _functionScope);
         }
@@ -76,7 +76,7 @@ namespace GSLanguageCompiler::AST {
          */
         template<typename T, typename... Args>
         inline auto AddStatement(Args... args) {
-            static_assert(std::is_base_of_v<GS_Statement, T>, "Element for creating must be a statement!");
+            static_assert(std::is_base_of_v<GS_Statement, T>, "Type for creating must be inherited from GS_Statement!");
 
             auto node = CreateStatement<T>(args...);
 
