@@ -60,6 +60,27 @@ namespace GSLanguageCompiler::AST {
      */
     GSStatementPtr ToStatement(GSNodePtr node);
 
+    /**
+     * Casting to any type of statement if node is statement
+     * @tparam T Type of statement
+     * @param node Node
+     * @return Statement or nullptr
+     */
+    template<typename T>
+    SharedPtr<T> ToStatement(GSNodePtr node) {
+        static_assert(std::is_base_of_v<GS_Statement, T>, "Element for casting must be a statement!");
+
+        auto statement = ToStatement(node);
+
+        if (!statement) {
+            return nullptr;
+        }
+
+        auto castedStatement = std::reinterpret_pointer_cast<T>(statement);
+
+        return castedStatement;
+    }
+
 }
 
 #endif //GSLANGUAGE_GS_STATEMENT_H

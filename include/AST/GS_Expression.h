@@ -62,6 +62,27 @@ namespace GSLanguageCompiler::AST {
      */
     GSExpressionPtr ToExpression(GSNodePtr node);
 
+    /**
+     * Casting to any type of expression if node is expression
+     * @tparam T Type of expression
+     * @param node Node
+     * @return Expression or nullptr
+     */
+    template<typename T>
+    SharedPtr<T> ToExpression(GSNodePtr node) {
+        static_assert(std::is_base_of_v<GS_Expression, T>, "Element for casting must be an expression!");
+
+        auto expression = ToExpression(node);
+
+        if (!expression) {
+            return nullptr;
+        }
+
+        auto castedExpression = std::reinterpret_pointer_cast<T>(expression);
+
+        return castedExpression;
+    }
+
 }
 
 #endif //GSLANGUAGE_GS_EXPRESSION_H

@@ -7,6 +7,7 @@
 
 namespace GSLanguageCompiler::Parser {
 
+    // TODO reorganise parsing process
     class GS_Parser {
     public:
 
