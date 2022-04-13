@@ -43,6 +43,14 @@ namespace GSLanguageCompiler::AST {
          */
         GSTypePtr GetType() const;
 
+    public:
+
+        /**
+         * Is literal value
+         * @return Is literal value
+         */
+        virtual Bool IsLiteralValue();
+
     private:
 
         /**
@@ -105,6 +113,14 @@ namespace GSLanguageCompiler::AST {
          * @return Value
          */
         Any GetValue() const;
+
+    public:
+
+        /**
+         * Is literal value
+         * @return Is literal value
+         */
+        Bool IsLiteralValue() override;
 
     private:
 

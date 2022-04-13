@@ -15,8 +15,16 @@ namespace GSLanguageCompiler::AST {
         return _type;
     }
 
+    Bool GS_Value::IsLiteralValue() {
+        return false;
+    }
+
     Any GS_LiteralValue::GetValue() const {
         return _value;
+    }
+
+    Bool GS_LiteralValue::IsLiteralValue() {
+        return true;
     }
 
     GS_I32Value::GS_I32Value(I32 value)

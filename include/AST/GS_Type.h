@@ -20,6 +20,13 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
+         * Virtual destructor for supporting inheritance
+         */
+        virtual ~GS_Type();
+
+    public:
+
+        /**
          * Creating type ptr
          * @param name Name
          * @return Type ptr
@@ -33,6 +40,14 @@ namespace GSLanguageCompiler::AST {
          * @return Type name
          */
         UString GetName() const;
+
+    public:
+
+        /**
+         * Is literal type
+         * @return Is literal type
+         */
+        virtual Bool IsLiteralType();
 
     private:
 
@@ -48,9 +63,39 @@ namespace GSLanguageCompiler::AST {
     using GSTypePtr = SharedPtr<GS_Type>;
 
     /**
+     * Class for literal types
+     */
+    class GS_LiteralType : public GS_Type {
+    public:
+
+        /**
+         * Constructor for literal type
+         * @param name Type name
+         */
+        explicit GS_LiteralType(UString name);
+
+    public:
+
+        /**
+         * Creating literal type ptr
+         * @param name Name
+         * @return Literal type ptr
+         */
+        static SharedPtr<GS_LiteralType> Create(UString name);
+
+    public:
+
+        /**
+         * Is literal type
+         * @return Is literal type
+         */
+        Bool IsLiteralType() override;
+    };
+
+    /**
      * Builtin void type
      */
-    class GS_VoidType : public GS_Type {
+    class GS_VoidType : public GS_LiteralType {
     public:
 
         /**
@@ -70,7 +115,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * Builtin I32 type
      */
-    class GS_I32Type : public GS_Type {
+    class GS_I32Type : public GS_LiteralType {
     public:
 
         /**
@@ -90,7 +135,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * Builtin String type
      */
-    class GS_StringType : public GS_Type {
+    class GS_StringType : public GS_LiteralType {
     public:
 
         /**
@@ -106,13 +151,6 @@ namespace GSLanguageCompiler::AST {
          */
         static SharedPtr<GS_StringType> Create();
     };
-
-    /**
-     * Function for check is base type
-     * @param type Type ptr
-     * @return Is base input type
-     */
-    Bool IsBaseType(GSTypePtr type);
 
 }
 

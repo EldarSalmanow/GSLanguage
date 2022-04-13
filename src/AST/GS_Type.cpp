@@ -5,6 +5,8 @@ namespace GSLanguageCompiler::AST {
     GS_Type::GS_Type(UString name)
             : _name(std::move(name)) {}
 
+    GS_Type::~GS_Type() = default;
+
     SharedPtr<GS_Type> GS_Type::Create(UString name) {
         return std::make_shared<GS_Type>(std::move(name));
     }
@@ -13,22 +15,37 @@ namespace GSLanguageCompiler::AST {
         return _name;
     }
 
+    Bool GS_Type::IsLiteralType() {
+        return false;
+    }
+
+    GS_LiteralType::GS_LiteralType(UString name)
+            : GS_Type(std::move(name)) {}
+
+    SharedPtr<GS_LiteralType> GS_LiteralType::Create(UString name) {
+        return std::make_shared<GS_LiteralType>(std::move(name));
+    }
+
+    Bool GS_LiteralType::IsLiteralType() {
+        return true;
+    }
+
     GS_VoidType::GS_VoidType()
-            : GS_Type(U"Void") {}
+            : GS_LiteralType(U"Void") {}
 
     SharedPtr<GS_VoidType> GS_VoidType::Create() {
         return std::make_shared<GS_VoidType>();
     }
 
     GS_I32Type::GS_I32Type()
-            : GS_Type(U"I32") {}
+            : GS_LiteralType(U"I32") {}
 
     SharedPtr<GS_I32Type> GS_I32Type::Create() {
         return std::make_shared<GS_I32Type>();
     }
 
     GS_StringType::GS_StringType()
-            : GS_Type(U"String") {}
+            : GS_LiteralType(U"String") {}
 
     SharedPtr<GS_StringType> GS_StringType::Create() {
         return std::make_shared<GS_StringType>();
