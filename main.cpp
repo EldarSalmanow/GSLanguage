@@ -45,7 +45,7 @@ class GS_ASTContext {
 public:
 
     GS_ASTContext()
-            : _typeContext(GS_TypeContext::Create()), _globalScope(AST::GS_Scope::CreateGlobalScope()) {}
+            : _typeContext(GS_TypeContext::Create()) {}
 
 public:
 
@@ -67,15 +67,9 @@ public:
         return _typeContext->GetStringType();
     }
 
-    AST::GSScopePtr GetGlobalScope() const {
-        return _globalScope;
-    }
-
 private:
 
     SharedPtr<GS_TypeContext> _typeContext;
-
-    AST::GSScopePtr _globalScope;
 };
 
 class GS_ASTBuilder {
@@ -129,47 +123,47 @@ public:
 public:
 
     auto CreateTranslationUnitDeclaration(UString name, AST::GSNodePtrArray nodes) {
-        return AST::GS_TranslationUnitDeclaration::Create(std::move(name), std::move(nodes), _context->GetGlobalScope());
+        return AST::GS_TranslationUnitDeclaration::Create(std::move(name), std::move(nodes));
     }
 
     auto CreateTranslationUnitDeclaration(UString name) {
-        return AST::GS_TranslationUnitDeclaration::Create(std::move(name), _context->GetGlobalScope());
+        return AST::GS_TranslationUnitDeclaration::Create(std::move(name));
     }
 
     auto CreateFunctionDeclaration(UString name, AST::GSStatementPtrArray statements) {
-        return AST::GS_FunctionDeclaration::Create(std::move(name), std::move(statements), nullptr);
+        return AST::GS_FunctionDeclaration::Create(std::move(name), std::move(statements));
     }
 
     auto CreateFunctionDeclaration(UString name) {
-        return AST::GS_FunctionDeclaration::Create(std::move(name), nullptr);
+        return AST::GS_FunctionDeclaration::Create(std::move(name));
     }
 
 public:
 
     auto CreateVariableDeclarationStatement(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression) {
-        return AST::GS_VariableDeclarationStatement::Create(std::move(name), std::move(type), std::move(expression), nullptr);
+        return AST::GS_VariableDeclarationStatement::Create(std::move(name), std::move(type), std::move(expression));
     }
 
     auto CreateVariableDeclarationStatement(UString name, AST::GSTypePtr type) {
-        return AST::GS_VariableDeclarationStatement::Create(std::move(name), std::move(type), nullptr);
+        return AST::GS_VariableDeclarationStatement::Create(std::move(name), std::move(type));
     }
 
     auto CreateVariableDeclarationStatement(UString name, AST::GSExpressionPtr expression) {
-        return AST::GS_VariableDeclarationStatement::Create(std::move(name), std::move(expression), nullptr);
+        return AST::GS_VariableDeclarationStatement::Create(std::move(name), std::move(expression));
     }
 
     auto CreateAssignmentStatement(AST::GSExpressionPtr lvalueExpression, AST::GSExpressionPtr rvalueExpression) {
-        return AST::GS_AssignmentStatement::Create(std::move(lvalueExpression), std::move(rvalueExpression), nullptr);
+        return AST::GS_AssignmentStatement::Create(std::move(lvalueExpression), std::move(rvalueExpression));
     }
 
     auto CreateExpressionStatement(AST::GSExpressionPtr expression) {
-        return AST::GS_ExpressionStatement::Create(std::move(expression), nullptr);
+        return AST::GS_ExpressionStatement::Create(std::move(expression));
     }
 
 public:
 
     auto CreateConstantExpression(AST::GSValuePtr value) {
-        return AST::GS_ConstantExpression::Create(std::move(value), nullptr);
+        return AST::GS_ConstantExpression::Create(std::move(value));
     }
 
     auto CreateConstantExpression(I32 number) {
@@ -181,22 +175,30 @@ public:
     }
 
     auto CreateUnaryExpression(AST::UnaryOperation operation, AST::GSExpressionPtr expression) {
-        return AST::GS_UnaryExpression::Create(operation, std::move(expression), nullptr);
+        return AST::GS_UnaryExpression::Create(operation, std::move(expression));
     }
 
     auto CreateBinaryExpression(AST::BinaryOperation operation, AST::GSExpressionPtr firstExpression, AST::GSExpressionPtr secondExpression) {
-        return AST::GS_BinaryExpression::Create(operation, std::move(firstExpression), std::move(secondExpression), nullptr);
+        return AST::GS_BinaryExpression::Create(operation, std::move(firstExpression), std::move(secondExpression));
     }
 
     auto CreateVariableUsingExpression(UString name) {
-        return AST::GS_VariableUsingExpression::Create(std::move(name), nullptr);
+        return AST::GS_VariableUsingExpression::Create(std::move(name));
+    }
+
+public:
+
+    SharedPtr<GS_ASTContext> GetContext() {
+        return _context;
     }
 
 private:
 
     SharedPtr<GS_ASTContext> _context;
 
-    AST::GSTranslationUnitDeclarationPtr _currentUnit;
+    SharedPtr<AST::GS_TranslationUnitDeclaration> _currentUnit;
+
+    SharedPtr<AST::GS_FunctionDeclaration> _currentFunction;
 };
 
 Void Func() {
@@ -235,7 +237,7 @@ Void Func() {
 
     auto Unit = Builder->CreateTranslationUnitDeclaration("_GS_U4main");
 
-    auto Function = Builder->CreateFunctionDeclaration("main");
+    auto Function = Builder->CreateFunctionDeclaration("_GS_F4main");
 
     Unit->AddNode(Function);
 

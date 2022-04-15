@@ -2,11 +2,11 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_ExpressionStatement::GS_ExpressionStatement(GSExpressionPtr expression, GSScopePtr scope)
-            : _expression(std::move(expression)), GS_Statement(std::move(scope)) {}
+    GS_ExpressionStatement::GS_ExpressionStatement(GSExpressionPtr expression)
+            : _expression(std::move(expression)) {}
 
-    SharedPtr<GS_ExpressionStatement> GS_ExpressionStatement::Create(GSExpressionPtr expression, GSScopePtr scope) {
-        return std::make_shared<GS_ExpressionStatement>(std::move(expression), std::move(scope));
+    SharedPtr<GS_ExpressionStatement> GS_ExpressionStatement::Create(GSExpressionPtr expression) {
+        return std::make_shared<GS_ExpressionStatement>(std::move(expression));
     }
 
     LRef<GSExpressionPtr> GS_ExpressionStatement::GetExpression() {

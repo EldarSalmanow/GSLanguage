@@ -16,9 +16,8 @@ namespace GSLanguageCompiler::AST {
          * Constructor for assignment statement
          * @param lvalueExpression Left value expression ptr
          * @param rvalueExpression Right value expression ptr
-         * @param scope Assignment scope
          */
-        GS_AssignmentStatement(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression, GSScopePtr scope);
+        GS_AssignmentStatement(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression);
 
     public:
 
@@ -26,10 +25,9 @@ namespace GSLanguageCompiler::AST {
          * Creating assignment statement ptr
          * @param lvalueExpression Left value expression ptr
          * @param rvalueExpression Right value expression ptr
-         * @param scope Scope
          * @return Assignment statement ptr
          */
-        static SharedPtr<GS_AssignmentStatement> Create(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression, GSScopePtr scope);
+        static SharedPtr<GS_AssignmentStatement> Create(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression);
 
     public:
 

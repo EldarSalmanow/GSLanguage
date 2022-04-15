@@ -24,9 +24,8 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Constructor for expression
-         * @param scope Expression scope
          */
-        explicit GS_Expression(GSScopePtr scope);
+        GS_Expression();
 
     public:
 
@@ -78,9 +77,7 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        auto castedExpression = std::reinterpret_pointer_cast<T>(expression);
-
-        return castedExpression;
+        return std::reinterpret_pointer_cast<T>(expression);
     }
 
 }

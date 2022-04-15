@@ -3,8 +3,6 @@
 
 #include <AST/GS_Declaration.h>
 
-#include <AST/GS_Scope.h>
-
 namespace GSLanguageCompiler::AST {
 
     /**
@@ -17,9 +15,8 @@ namespace GSLanguageCompiler::AST {
          * Constructor for translation unit declaration
          * @param name Name
          * @param nodes Nodes
-         * @param scope Global scope
          */
-        GS_TranslationUnitDeclaration(UString name, GSNodePtrArray nodes, GSScopePtr scope);
+        GS_TranslationUnitDeclaration(UString name, GSNodePtrArray nodes);
 
     public:
 
@@ -27,21 +24,12 @@ namespace GSLanguageCompiler::AST {
          * Creating translation unit declaration ptr
          * @param name Name
          * @param nodes Nodes
-         * @param scope Global scope
          * @return Translation unit declaration ptr
          */
-        static SharedPtr<GS_TranslationUnitDeclaration> Create(UString name, GSNodePtrArray nodes, GSScopePtr scope);
+        static SharedPtr<GS_TranslationUnitDeclaration> Create(UString name, GSNodePtrArray nodes);
 
         /**
          * Creating translation unit declaration ptr
-         * @param name Name
-         * @param scope Global scope
-         * @return Translation unit declaration ptr
-         */
-        static SharedPtr<GS_TranslationUnitDeclaration> Create(UString name, GSScopePtr scope);
-
-        /**
-         * Creating translation unit ptr
          * @param name Name
          * @return Translation unit declaration ptr
          */
@@ -60,7 +48,7 @@ namespace GSLanguageCompiler::AST {
         inline auto CreateNode(Args... args) {
             static_assert(std::is_base_of_v<GS_Node, T>, "Type for creating must be inherited from GS_Node!");
 
-            return T::Create(args..., _globalScope);
+            return T::Create(args...);
         }
 
         /**
@@ -102,12 +90,6 @@ namespace GSLanguageCompiler::AST {
          */
         LRef<GSNodePtrArray> GetNodes();
 
-        /**
-         * Getter for global scope
-         * @return Global scope
-         */
-        LRef<GSScopePtr> GetGlobalScope();
-
     public:
 
         /**
@@ -127,11 +109,6 @@ namespace GSLanguageCompiler::AST {
          * Nodes
          */
         GSNodePtrArray _nodes;
-
-        /**
-         * Translation unit global scope
-         */
-        GSScopePtr _globalScope;
     };
 
     /**

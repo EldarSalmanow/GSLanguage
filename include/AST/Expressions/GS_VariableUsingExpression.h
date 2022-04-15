@@ -14,19 +14,17 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for variable using expression
          * @param name Variable name
-         * @param scope Scope
          */
-        GS_VariableUsingExpression(UString name, GSScopePtr scope);
+        explicit GS_VariableUsingExpression(UString name);
 
     public:
 
         /**
          * Creating variable using expression ptr
          * @param name Variable name
-         * @param scope Scope
          * @return Variable using expression ptr
          */
-        static SharedPtr<GS_VariableUsingExpression> Create(UString name, GSScopePtr scope);
+        static SharedPtr<GS_VariableUsingExpression> Create(UString name);
 
     public:
 

@@ -15,9 +15,8 @@ namespace GSLanguageCompiler::AST {
          * Constructor for function calling expression
          * @param name Function name
          * @param params Function params
-         * @param scope Scope
          */
-        GS_FunctionCallingExpression(UString name, GSExpressionPtrArray params, GSScopePtr scope);
+        GS_FunctionCallingExpression(UString name, GSExpressionPtrArray params);
 
     public:
 
@@ -25,10 +24,9 @@ namespace GSLanguageCompiler::AST {
          * Creating function calling expression ptr
          * @param name Function name
          * @param params Function params
-         * @param scope Scope
          * @return Function calling expression ptr
          */
-        static SharedPtr<GS_FunctionCallingExpression> Create(UString name, GSExpressionPtrArray params, GSScopePtr scope);
+        static SharedPtr<GS_FunctionCallingExpression> Create(UString name, GSExpressionPtrArray params);
 
     public:
 

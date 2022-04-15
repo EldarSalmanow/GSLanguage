@@ -11,7 +11,10 @@ namespace GSLanguageCompiler::AST {
     class GS_Node {
     public:
 
-        explicit GS_Node(GSScopePtr scope);
+        /**
+         * Constructor for node
+         */
+        GS_Node();
 
     public:
 
@@ -19,14 +22,6 @@ namespace GSLanguageCompiler::AST {
          * Virtual destructor for supporting inheritance
          */
         virtual ~GS_Node();
-
-    public:
-
-        /**
-         * Getter for scope
-         * @return Scope
-         */
-        LRef<GSScopePtr> GetScope();
 
     public:
 
@@ -47,13 +42,6 @@ namespace GSLanguageCompiler::AST {
          * @return Is expression
          */
         virtual Bool IsExpression() const;
-
-    private:
-
-        /**
-         * Scope
-         */
-        GSScopePtr _scope;
     };
 
     /**

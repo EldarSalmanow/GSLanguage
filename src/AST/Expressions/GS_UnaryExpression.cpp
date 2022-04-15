@@ -2,11 +2,11 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_UnaryExpression::GS_UnaryExpression(UnaryOperation operation, GSExpressionPtr expression, GSScopePtr scope)
-            : _operation(operation), _expression(std::move(expression)), GS_Expression(std::move(scope)) {}
+    GS_UnaryExpression::GS_UnaryExpression(UnaryOperation operation, GSExpressionPtr expression)
+            : _operation(operation), _expression(std::move(expression)) {}
 
-    SharedPtr<GS_UnaryExpression> GS_UnaryExpression::Create(UnaryOperation operation, GSExpressionPtr expression, GSScopePtr scope) {
-        return std::make_shared<GS_UnaryExpression>(operation, std::move(expression), std::move(scope));
+    SharedPtr<GS_UnaryExpression> GS_UnaryExpression::Create(UnaryOperation operation, GSExpressionPtr expression) {
+        return std::make_shared<GS_UnaryExpression>(operation, std::move(expression));
     }
 
     LRef<UnaryOperation> GS_UnaryExpression::GetUnaryOperation() {

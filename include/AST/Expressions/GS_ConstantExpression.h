@@ -231,19 +231,17 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for constant expression
          * @param value Value ptr
-         * @param scope Scope
          */
-        GS_ConstantExpression(GSValuePtr value, GSScopePtr scope);
+        explicit GS_ConstantExpression(GSValuePtr value);
 
     public:
 
         /**
          * Creating constant expression ptr
          * @param value Value ptr
-         * @param scope Scope ptr
          * @return Constant expression ptr
          */
-        static SharedPtr<GS_ConstantExpression> Create(GSValuePtr value, GSScopePtr scope);
+        static SharedPtr<GS_ConstantExpression> Create(GSValuePtr value);
 
     public:
 

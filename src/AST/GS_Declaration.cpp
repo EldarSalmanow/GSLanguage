@@ -2,8 +2,7 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_Declaration::GS_Declaration(GSScopePtr scope)
-            : GS_Node(std::move(scope)) {}
+    GS_Declaration::GS_Declaration() = default;
 
     Bool GS_Declaration::IsDeclaration() const {
         return true;

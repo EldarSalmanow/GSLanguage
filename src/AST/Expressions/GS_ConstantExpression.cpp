@@ -49,11 +49,11 @@ namespace GSLanguageCompiler::AST {
         return GetValueWithCast<UString>();
     }
 
-    GS_ConstantExpression::GS_ConstantExpression(GSValuePtr value, GSScopePtr scope)
-            : _value(std::move(value)), GS_Expression(std::move(scope)) {}
+    GS_ConstantExpression::GS_ConstantExpression(GSValuePtr value)
+            : _value(std::move(value)) {}
 
-    SharedPtr<GS_ConstantExpression> GS_ConstantExpression::Create(GSValuePtr value, GSScopePtr scope) {
-        return std::make_shared<GS_ConstantExpression>(std::move(value), std::move(scope));
+    SharedPtr<GS_ConstantExpression> GS_ConstantExpression::Create(GSValuePtr value) {
+        return std::make_shared<GS_ConstantExpression>(std::move(value));
     }
 
     LRef<GSValuePtr> GS_ConstantExpression::GetValue() {

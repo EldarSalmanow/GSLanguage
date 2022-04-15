@@ -26,9 +26,8 @@ namespace GSLanguageCompiler::AST {
          * @param operation Binary operation
          * @param firstNode First expression ptr
          * @param secondNode Second expression ptr
-         * @param scope Scope
          */
-        GS_BinaryExpression(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression, GSScopePtr scope);
+        GS_BinaryExpression(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression);
 
     public:
 
@@ -37,10 +36,9 @@ namespace GSLanguageCompiler::AST {
          * @param operation Binary operation
          * @param firstExpression First expression ptr
          * @param secondExpression Second expression ptr
-         * @param scope Scope
          * @return Binary expression ptr
          */
-        static SharedPtr<GS_BinaryExpression> Create(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression, GSScopePtr scope);
+        static SharedPtr<GS_BinaryExpression> Create(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression);
 
     public:
 

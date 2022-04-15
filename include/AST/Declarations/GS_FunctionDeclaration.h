@@ -21,9 +21,8 @@ namespace GSLanguageCompiler::AST {
          * Constructor for function declaration
          * @param name Name
          * @param body Body
-         * @param scope Scope
          */
-        GS_FunctionDeclaration(UString name, GSStatementPtrArray body, GSScopePtr scope);
+        GS_FunctionDeclaration(UString name, GSStatementPtrArray body);
 
     public:
 
@@ -31,18 +30,16 @@ namespace GSLanguageCompiler::AST {
          * Creating function declaration ptr
          * @param name Name
          * @param body Body
-         * @param scope Scope
          * @return Function declaration ptr
          */
-        static SharedPtr<GS_FunctionDeclaration> Create(UString name, GSStatementPtrArray body, GSScopePtr scope);
+        static SharedPtr<GS_FunctionDeclaration> Create(UString name, GSStatementPtrArray body);
 
         /**
          * Creating function declaration ptr
          * @param name Name
-         * @param scope Scope
          * @return Function declaration ptr
          */
-        static SharedPtr<GS_FunctionDeclaration> Create(UString name, GSScopePtr scope);
+        static SharedPtr<GS_FunctionDeclaration> Create(UString name);
 
     public:
 
@@ -57,7 +54,7 @@ namespace GSLanguageCompiler::AST {
         inline auto CreateStatement(Args... args) {
             static_assert(std::is_base_of_v<GS_Statement, T> || std::is_base_of_v<GS_Expression, T>, "Type for creating must be inherited from GS_Statement or GS_Expression!");
 
-            return T::Create(args..., _functionScope);
+            return T::Create(args...);
         }
 
         /**
@@ -99,12 +96,6 @@ namespace GSLanguageCompiler::AST {
          */
         LRef<GSStatementPtrArray> GetBody();
 
-        /**
-         * Getter for function scope
-         * @return Function scope
-         */
-        LRef<GSScopePtr> GetFunctionScope();
-
     public:
 
         /**
@@ -124,11 +115,6 @@ namespace GSLanguageCompiler::AST {
          * Function code
          */
         GSStatementPtrArray _body;
-
-        /**
-         * Function scope
-         */
-        GSScopePtr _functionScope;
     };
 
 }

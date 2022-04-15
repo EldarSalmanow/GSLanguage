@@ -2,11 +2,11 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_VariableUsingExpression::GS_VariableUsingExpression(UString name, GSScopePtr scope)
-            : _name(std::move(name)), GS_Expression(std::move(scope)) {}
+    GS_VariableUsingExpression::GS_VariableUsingExpression(UString name)
+            : _name(std::move(name)) {}
 
-    SharedPtr<GS_VariableUsingExpression> GS_VariableUsingExpression::Create(UString name, GSScopePtr scope) {
-        return std::make_shared<GS_VariableUsingExpression>(std::move(name), std::move(scope));
+    SharedPtr<GS_VariableUsingExpression> GS_VariableUsingExpression::Create(UString name) {
+        return std::make_shared<GS_VariableUsingExpression>(std::move(name));
     }
 
     LRef<UString> GS_VariableUsingExpression::GetName() {

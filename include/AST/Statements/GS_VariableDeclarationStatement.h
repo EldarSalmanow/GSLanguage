@@ -19,9 +19,8 @@ namespace GSLanguageCompiler::AST {
          * @param name Name
          * @param type Type
          * @param expression Expression
-         * @param scope Scope
          */
-        GS_VariableDeclarationStatement(UString name, GSTypePtr type, GSExpressionPtr expression, GSScopePtr scope);
+        GS_VariableDeclarationStatement(UString name, GSTypePtr type, GSExpressionPtr expression);
 
     public:
 
@@ -30,28 +29,25 @@ namespace GSLanguageCompiler::AST {
          * @param name Name
          * @param type Type
          * @param expression Expression
-         * @param scope Scope
          * @return Variable declaration statement ptr
          */
-        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSTypePtr type, GSExpressionPtr expression, GSScopePtr scope);
+        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSTypePtr type, GSExpressionPtr expression);
 
         /**
          * Creating variable declaration statement ptr
          * @param name Name
          * @param type Type
-         * @param scope Scope
          * @return Variable declaration statement ptr
          */
-        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSTypePtr type, GSScopePtr scope);
+        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSTypePtr type);
 
         /**
          * Creating variable declaration statement ptr
          * @param name Name
          * @param expression Expression
-         * @param scope Scope
          * @return Variable declaration statement ptr
          */
-        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSExpressionPtr expression, GSScopePtr scope);
+        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSExpressionPtr expression);
 
     public:
 

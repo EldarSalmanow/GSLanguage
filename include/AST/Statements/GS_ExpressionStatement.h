@@ -15,19 +15,17 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for expression statement
          * @param expression Expression ptr
-         * @param scope Scope
          */
-        GS_ExpressionStatement(GSExpressionPtr expression, GSScopePtr scope);
+        explicit GS_ExpressionStatement(GSExpressionPtr expression);
 
     public:
 
         /**
          * Creating expression statement ptr
          * @param expression Expression ptr
-         * @param scope Scope ptr
          * @return Expression statement ptr
          */
-        static SharedPtr<GS_ExpressionStatement> Create(GSExpressionPtr expression, GSScopePtr scope);
+        static SharedPtr<GS_ExpressionStatement> Create(GSExpressionPtr expression);
 
     public:
 

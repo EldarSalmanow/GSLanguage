@@ -2,19 +2,15 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_TranslationUnitDeclaration::GS_TranslationUnitDeclaration(UString name, GSNodePtrArray nodes, GSScopePtr scope)
-            : _name(std::move(name)), _nodes(std::move(nodes)), _globalScope(std::move(scope)), GS_Declaration(nullptr) {}
+    GS_TranslationUnitDeclaration::GS_TranslationUnitDeclaration(UString name, GSNodePtrArray nodes)
+            : _name(std::move(name)), _nodes(std::move(nodes)) {}
 
-    SharedPtr<GS_TranslationUnitDeclaration> GS_TranslationUnitDeclaration::Create(UString name, GSNodePtrArray nodes, GSScopePtr scope) {
-        return std::make_shared<GS_TranslationUnitDeclaration>(std::move(name), std::move(nodes), std::move(scope));
-    }
-
-    SharedPtr<GS_TranslationUnitDeclaration> GS_TranslationUnitDeclaration::Create(UString name, GSScopePtr scope) {
-        return GS_TranslationUnitDeclaration::Create(std::move(name), GSNodePtrArray(), std::move(scope));
+    SharedPtr<GS_TranslationUnitDeclaration> GS_TranslationUnitDeclaration::Create(UString name, GSNodePtrArray nodes) {
+        return std::make_shared<GS_TranslationUnitDeclaration>(std::move(name), std::move(nodes));
     }
 
     SharedPtr<GS_TranslationUnitDeclaration> GS_TranslationUnitDeclaration::Create(UString name) {
-        return GS_TranslationUnitDeclaration::Create(std::move(name), GS_Scope::CreateGlobalScope());
+        return GS_TranslationUnitDeclaration::Create(std::move(name), GSNodePtrArray());
     }
 
     Void GS_TranslationUnitDeclaration::AddNode(GSNodePtr node) {
@@ -27,10 +23,6 @@ namespace GSLanguageCompiler::AST {
 
     LRef<GSNodePtrArray> GS_TranslationUnitDeclaration::GetNodes() {
         return _nodes;
-    }
-
-    LRef<GSScopePtr> GS_TranslationUnitDeclaration::GetGlobalScope() {
-        return _globalScope;
     }
 
     DeclarationType GS_TranslationUnitDeclaration::GetDeclarationType() const {

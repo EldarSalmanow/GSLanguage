@@ -22,9 +22,8 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Constructor for statement
-         * @param scope Statement scope
          */
-        explicit GS_Statement(GSScopePtr scope);
+        GS_Statement();
 
     public:
 
@@ -76,9 +75,7 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        auto castedStatement = std::reinterpret_pointer_cast<T>(statement);
-
-        return castedStatement;
+        return std::reinterpret_pointer_cast<T>(statement);
     }
 
 }
