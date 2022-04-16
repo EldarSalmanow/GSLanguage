@@ -44,20 +44,6 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Creating new statement or expression in function scope and return it
-         * @tparam T Type of statement or expression for creating
-         * @tparam Args Argument types for creating statement or expression
-         * @param args Arguments for creating statement or expression
-         * @return Created statement or expression
-         */
-        template<typename T, typename... Args>
-        inline auto CreateStatement(Args... args) {
-            static_assert(std::is_base_of_v<GS_Statement, T> || std::is_base_of_v<GS_Expression, T>, "Type for creating must be inherited from GS_Statement or GS_Expression!");
-
-            return T::Create(args...);
-        }
-
-        /**
          * Adding statement to function body
          * @param statement Statement
          * @return
@@ -71,16 +57,16 @@ namespace GSLanguageCompiler::AST {
          * @param args Arguments for creating statement
          * @return Created statement
          */
-        template<typename T, typename... Args>
-        inline auto AddStatement(Args... args) {
-            static_assert(std::is_base_of_v<GS_Statement, T>, "Type for creating must be inherited from GS_Statement!");
-
-            auto node = CreateStatement<T>(args...);
-
-            AddStatement(node);
-
-            return node;
-        }
+//        template<typename T, typename... Args>
+//        inline auto AddStatement(Args... args) {
+//            static_assert(std::is_base_of_v<GS_Statement, T>, "Type for creating must be inherited from GS_Statement!");
+//
+//            auto node = T::Create(args...);
+//
+//            AddStatement(node);
+//
+//            return node;
+//        } TODO may be remove
 
     public:
 

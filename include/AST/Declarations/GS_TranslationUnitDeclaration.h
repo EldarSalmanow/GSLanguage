@@ -38,20 +38,6 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Creating new node in scope and return it
-         * @tparam T Type of node for creating
-         * @tparam Args Argument types for creating node
-         * @param args Arguments for creating node
-         * @return Created node
-         */
-        template<typename T, typename... Args>
-        inline auto CreateNode(Args... args) {
-            static_assert(std::is_base_of_v<GS_Node, T>, "Type for creating must be inherited from GS_Node!");
-
-            return T::Create(args...);
-        }
-
-        /**
          * Adding node to translation unit
          * @param node Node
          * @return
@@ -65,16 +51,16 @@ namespace GSLanguageCompiler::AST {
          * @param args Arguments for creating node
          * @return Created node
          */
-        template<typename T, typename... Args>
-        inline auto AddNode(Args... args) {
-            static_assert(std::is_base_of_v<GS_Node, T>, "Type for creating must be inherited from GS_Node!");
-
-            auto node = CreateNode<T>(args...);
-
-            AddNode(node);
-
-            return node;
-        }
+//        template<typename T, typename... Args>
+//        inline auto AddNode(Args... args) {
+//            static_assert(std::is_base_of_v<GS_Node, T>, "Type for creating must be inherited from GS_Node!");
+//
+//            auto node = T::Create(args...);
+//
+//            AddNode(node);
+//
+//            return node;
+//        } TODO may be remove
 
     public:
 

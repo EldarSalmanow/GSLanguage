@@ -19,35 +19,35 @@ namespace GSLanguageCompiler::Parser {
 
     private:
 
-        AST::GSDeclarationPtr ParseDeclaration(ConstLRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration);
+        AST::GSDeclarationPtr ParseDeclaration();
 
-        SharedPtr<AST::GS_FunctionDeclaration> ParseFunctionDeclaration(ConstLRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration);
+        SharedPtr<AST::GS_FunctionDeclaration> ParseFunctionDeclaration();
 
-        AST::GSStatementPtr ParseStatement(ConstLRef<AST::GSScopePtr> scope);
+        AST::GSStatementPtr ParseStatement();
 
-        SharedPtr<AST::GS_AssignmentStatement> ParseAssignmentStatement(ConstLRef<AST::GSScopePtr> scope);
+        SharedPtr<AST::GS_AssignmentStatement> ParseAssignmentStatement();
 
-        SharedPtr<AST::GS_AssignmentStatement> ParseAssignmentStatement(ConstLRef<AST::GSExpressionPtr> lvalueExpression, ConstLRef<AST::GSScopePtr> scope);
+        SharedPtr<AST::GS_AssignmentStatement> ParseAssignmentStatement(ConstLRef<AST::GSExpressionPtr> lvalueExpression);
 
-        SharedPtr<AST::GS_VariableDeclarationStatement> ParseVariableDeclarationStatement(ConstLRef<AST::GSScopePtr> scope);
+        SharedPtr<AST::GS_VariableDeclarationStatement> ParseVariableDeclarationStatement();
 
-        SharedPtr<AST::GS_ExpressionStatement> ParseExpressionStatement(ConstLRef<AST::GSScopePtr> scope);
+        SharedPtr<AST::GS_ExpressionStatement> ParseExpressionStatement();
 
-        SharedPtr<AST::GS_ExpressionStatement> ParseExpressionStatement(ConstLRef<AST::GSExpressionPtr> expression, ConstLRef<AST::GSScopePtr> scope);
+        SharedPtr<AST::GS_ExpressionStatement> ParseExpressionStatement(ConstLRef<AST::GSExpressionPtr> expression);
 
-        AST::GSExpressionPtr ParseExpression(ConstLRef<AST::GSScopePtr> scope);
+        AST::GSExpressionPtr ParseExpression();
 
-        AST::GSExpressionPtr ParseLValueExpression(ConstLRef<AST::GSScopePtr> scope);
+        AST::GSExpressionPtr ParseLValueExpression();
 
-        AST::GSExpressionPtr ParseRValueExpression(ConstLRef<AST::GSScopePtr> scope);
+        AST::GSExpressionPtr ParseRValueExpression();
 
-        AST::GSExpressionPtr ParseVariableUsingExpression(ConstLRef<AST::GSScopePtr> scope);
+        AST::GSExpressionPtr ParseVariableUsingExpression();
 
-        AST::GSExpressionPtr ParseBinaryExpression(I32 expressionPrecedence, LRef<AST::GSExpressionPtr> expression, ConstLRef<AST::GSScopePtr> scope);
+        AST::GSExpressionPtr ParseBinaryExpression(I32 expressionPrecedence, LRef<AST::GSExpressionPtr> expression);
 
-        AST::GSExpressionPtr ParseUnaryExpression(ConstLRef<AST::GSScopePtr> scope);
+        AST::GSExpressionPtr ParseUnaryExpression();
 
-        AST::GSExpressionPtr ParseConstantExpression(ConstLRef<AST::GSScopePtr> scope);
+        AST::GSExpressionPtr ParseConstantExpression();
 
         AST::GSTypePtr ParseType();
 

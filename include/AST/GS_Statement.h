@@ -75,6 +75,31 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
+        class GS_VariableDeclarationStatement;
+        class GS_AssignmentStatement;
+        class GS_ExpressionStatement;
+
+        switch (statement->GetStatementType()) {
+            case StatementType::VariableDeclarationStatement:
+                if constexpr (!std::is_same_v<GS_VariableDeclarationStatement, T>) {
+                    return nullptr;
+                }
+
+                break;
+            case StatementType::AssignmentStatement:
+                if constexpr (!std::is_same_v<GS_AssignmentStatement, T>) {
+                    return nullptr;
+                }
+
+                break;
+            case StatementType::ExpressionStatement:
+                if constexpr (!std::is_same_v<GS_ExpressionStatement, T>) {
+                    return nullptr;
+                }
+
+                break;
+        }
+
         return std::reinterpret_pointer_cast<T>(statement);
     }
 

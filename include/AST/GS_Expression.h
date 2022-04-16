@@ -77,6 +77,45 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
+        class GS_ConstantExpression;
+        class GS_UnaryExpression;
+        class GS_BinaryExpression;
+        class GS_VariableUsingExpression;
+        class GS_FunctionCallingExpression;
+
+        switch (expression->GetExpressionType()) {
+            case ExpressionType::ConstantExpression:
+                if constexpr (!std::is_same_v<GS_ConstantExpression, T>) {
+                    return nullptr;
+                }
+
+                break;
+            case ExpressionType::UnaryExpression:
+                if constexpr (!std::is_same_v<GS_UnaryExpression, T>) {
+                    return nullptr;
+                }
+
+                break;
+            case ExpressionType::BinaryExpression:
+                if constexpr (!std::is_same_v<GS_BinaryExpression, T>) {
+                    return nullptr;
+                }
+
+                break;
+            case ExpressionType::VariableUsingExpression:
+                if constexpr (!std::is_same_v<GS_VariableUsingExpression, T>) {
+                    return nullptr;
+                }
+
+                break;
+            case ExpressionType::FunctionCallingExpression:
+                if constexpr (!std::is_same_v<GS_FunctionCallingExpression, T>) {
+                    return nullptr;
+                }
+
+                break;
+        }
+
         return std::reinterpret_pointer_cast<T>(expression);
     }
 

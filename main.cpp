@@ -4,249 +4,101 @@
 
 using namespace GSLanguageCompiler;
 
-class GS_TypeContext {
+class Mangler {
 public:
 
-    GS_TypeContext()
-            : _voidType(AST::GS_VoidType::Create()),
-              _i32Type(AST::GS_I32Type::Create()),
-              _stringType(AST::GS_StringType::Create()) {}
+    virtual ~Mangler() = default;
 
 public:
 
-    static SharedPtr<GS_TypeContext> Create() {
-        return std::make_shared<GS_TypeContext>();
-    }
+    virtual UString MangleUnitName(UString name) = 0;
 
-public:
-
-    SharedPtr<AST::GS_VoidType> GetVoidType() const {
-        return _voidType;
-    }
-
-    SharedPtr<AST::GS_I32Type> GetI32Type() const {
-        return _i32Type;
-    }
-
-    SharedPtr<AST::GS_StringType> GetStringType() const {
-        return _stringType;
-    }
-
-private:
-
-    SharedPtr<AST::GS_VoidType>   _voidType;
-
-    SharedPtr<AST::GS_I32Type>    _i32Type;
-
-    SharedPtr<AST::GS_StringType> _stringType;
+    virtual UString MangleFunctionName(UString name) = 0;
 };
 
-class GS_ASTContext {
+class ABI {
 public:
 
-    GS_ASTContext()
-            : _typeContext(GS_TypeContext::Create()) {}
-
-public:
-
-    static SharedPtr<GS_ASTContext> Create() {
-        return std::make_shared<GS_ASTContext>();
-    }
+    virtual ~ABI() = default;
 
 public:
 
-    SharedPtr<AST::GS_VoidType> GetVoidType() const {
-        return _typeContext->GetVoidType();
-    }
-
-    SharedPtr<AST::GS_I32Type> GetI32Type() const {
-        return _typeContext->GetI32Type();
-    }
-
-    SharedPtr<AST::GS_StringType> GetStringType() const {
-        return _typeContext->GetStringType();
-    }
-
-private:
-
-    SharedPtr<GS_TypeContext> _typeContext;
+    virtual SharedPtr<Mangler> GetMangler() = 0;
 };
 
-class GS_ASTBuilder {
+class GS_Mangler : public Mangler {
 public:
 
-    explicit GS_ASTBuilder(SharedPtr<GS_ASTContext> context)
-            : _context(std::move(context)) {}
-
-public:
-
-    static SharedPtr<GS_ASTBuilder> Create(SharedPtr<GS_ASTContext> context) {
-        return std::make_shared<GS_ASTBuilder>(std::move(context));
-    }
-
-    static SharedPtr<GS_ASTBuilder> Create() {
-        return GS_ASTBuilder::Create(GS_ASTContext::Create());
+    static SharedPtr<GS_Mangler> Create() {
+        return std::make_shared<GS_Mangler>();
     }
 
 public:
 
-    auto CreateType(UString name) {
-        return AST::GS_Type::Create(std::move(name));
+    /**
+     * _GS_U + name size + name
+     * ex: main -> _GS_U4main
+     */
+    UString MangleUnitName(UString name) override {
+        return UString("_GS_U" + std::to_string(name.Size()) + name.AsString());
     }
 
-    auto CreateVoidType() {
-        return _context->GetVoidType();
+    /**
+     * _GS_F + name size + name
+     * ex: main -> _GS_F4main
+     */
+    UString MangleFunctionName(UString name) override {
+        return UString("_GS_F" + std::to_string(name.Size()) + name.AsString());
     }
-
-    auto CreateI32Type() {
-        return _context->GetI32Type();
-    }
-
-    auto CreateStringType() {
-        return _context->GetStringType();
-    }
-
-public:
-
-    auto CreateValue(AST::GSTypePtr type) {
-        return AST::GS_Value::Create(std::move(type));
-    }
-
-    auto CreateI32Value(I32 number) {
-        return AST::GS_I32Value::Create(number);
-    }
-
-    auto CreateStringValue(UString string) {
-        return AST::GS_StringValue::Create(std::move(string));
-    }
-
-public:
-
-    auto CreateTranslationUnitDeclaration(UString name, AST::GSNodePtrArray nodes) {
-        return AST::GS_TranslationUnitDeclaration::Create(std::move(name), std::move(nodes));
-    }
-
-    auto CreateTranslationUnitDeclaration(UString name) {
-        return AST::GS_TranslationUnitDeclaration::Create(std::move(name));
-    }
-
-    auto CreateFunctionDeclaration(UString name, AST::GSStatementPtrArray statements) {
-        return AST::GS_FunctionDeclaration::Create(std::move(name), std::move(statements));
-    }
-
-    auto CreateFunctionDeclaration(UString name) {
-        return AST::GS_FunctionDeclaration::Create(std::move(name));
-    }
-
-public:
-
-    auto CreateVariableDeclarationStatement(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression) {
-        return AST::GS_VariableDeclarationStatement::Create(std::move(name), std::move(type), std::move(expression));
-    }
-
-    auto CreateVariableDeclarationStatement(UString name, AST::GSTypePtr type) {
-        return AST::GS_VariableDeclarationStatement::Create(std::move(name), std::move(type));
-    }
-
-    auto CreateVariableDeclarationStatement(UString name, AST::GSExpressionPtr expression) {
-        return AST::GS_VariableDeclarationStatement::Create(std::move(name), std::move(expression));
-    }
-
-    auto CreateAssignmentStatement(AST::GSExpressionPtr lvalueExpression, AST::GSExpressionPtr rvalueExpression) {
-        return AST::GS_AssignmentStatement::Create(std::move(lvalueExpression), std::move(rvalueExpression));
-    }
-
-    auto CreateExpressionStatement(AST::GSExpressionPtr expression) {
-        return AST::GS_ExpressionStatement::Create(std::move(expression));
-    }
-
-public:
-
-    auto CreateConstantExpression(AST::GSValuePtr value) {
-        return AST::GS_ConstantExpression::Create(std::move(value));
-    }
-
-    auto CreateConstantExpression(I32 number) {
-        return CreateConstantExpression(CreateI32Value(number));
-    }
-
-    auto CreateConstantExpression(UString string) {
-        return CreateConstantExpression(CreateStringValue(std::move(string)));
-    }
-
-    auto CreateUnaryExpression(AST::UnaryOperation operation, AST::GSExpressionPtr expression) {
-        return AST::GS_UnaryExpression::Create(operation, std::move(expression));
-    }
-
-    auto CreateBinaryExpression(AST::BinaryOperation operation, AST::GSExpressionPtr firstExpression, AST::GSExpressionPtr secondExpression) {
-        return AST::GS_BinaryExpression::Create(operation, std::move(firstExpression), std::move(secondExpression));
-    }
-
-    auto CreateVariableUsingExpression(UString name) {
-        return AST::GS_VariableUsingExpression::Create(std::move(name));
-    }
-
-public:
-
-    SharedPtr<GS_ASTContext> GetContext() {
-        return _context;
-    }
-
-private:
-
-    SharedPtr<GS_ASTContext> _context;
-
-    SharedPtr<AST::GS_TranslationUnitDeclaration> _currentUnit;
-
-    SharedPtr<AST::GS_FunctionDeclaration> _currentFunction;
 };
 
-Void Func() {
-    auto Builder = GS_ASTBuilder::Create();
+class GS_ABI : public ABI {
+public:
+
+    static SharedPtr<GS_ABI> Create() {
+        return std::make_shared<GS_ABI>();
+    }
+
+public:
+
+    SharedPtr<Mangler> GetMangler() override {
+        return GS_Mangler::Create();
+    }
+};
+
+AST::GSTranslationUnitDeclarationPtr CreateProgram(SharedPtr<ABI> abi) {
+    auto Mangler = abi->GetMangler();
+
+    auto Builder = AST::GS_ASTBuilder::Create();
 
     /**
      * main.gs
      *
      * func main() {
-     *     var number = 7 + 11
+     *     var number = -7
      * }
      *
      */
 
-    /**
-     * main.gs
-     *
-     * Global {
-     *
-     * func main() {
-     *     Local {
-     *         var number = 7 + 11
-     *
-     *         while 1 < 2 {
-     *             Local {
-     *                 number += 1
-     *             }
-     *         }
-     *
-     *     }
-     * }
-     *
-     * }
-     *
-     */
+    auto Unit = Builder->CreateTranslationUnitDeclaration(Mangler->MangleUnitName("main"));
 
-    auto Unit = Builder->CreateTranslationUnitDeclaration("_GS_U4main");
-
-    auto Function = Builder->CreateFunctionDeclaration("_GS_F4main");
+    auto Function = Builder->CreateFunctionDeclaration(Mangler->MangleFunctionName("main"));
 
     Unit->AddNode(Function);
 
     auto Expression1 = Builder->CreateConstantExpression(7);
-    auto Expression2 = Builder->CreateConstantExpression(11);
 
-    auto Expression3 = Builder->CreateBinaryExpression(AST::BinaryOperation::Plus, Expression1, Expression2);
+    auto Expression2 = Builder->CreateUnaryExpression(AST::UnaryOperation::Minus, Expression1);
 
-    auto Variable = Builder->CreateVariableDeclarationStatement("number", Builder->CreateI32Type(), Expression3);
+    auto Variable = Builder->CreateVariableDeclarationStatement("number", Builder->CreateI32Type(), Expression2);
+
+    Function->AddStatement(Variable);
+
+    return Unit;
+}
+
+Void Func() {
+    auto program = CreateProgram(GS_ABI::Create());
 }
 
 /**

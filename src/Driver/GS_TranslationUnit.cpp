@@ -265,7 +265,7 @@ namespace GSLanguageCompiler::Driver {
 
             AddTab();
 
-            auto value = constantExpression->GetValue();
+            auto value = AST::GSValueCast<AST::GS_LiteralValue>(constantExpression->GetValue());
             auto typeName = value->GetType()->GetName();
 
             Print("Type: " + typeName.AsString());

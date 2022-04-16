@@ -5,11 +5,11 @@
  * This file includes all files from GSLanguageCompiler AST Module
  */
 
+#include <AST/GS_ASTContext.h>
+
+#include <AST/GS_ASTBuilder.h>
+
 #include <AST/GS_Node.h>
-
-#include <AST/GS_Scope.h>
-
-#include <AST/GS_Type.h>
 
 #include <AST/GS_Declaration.h>
 #include <AST/GS_Statement.h>
@@ -29,5 +29,7 @@
 #include <AST/Expressions/GS_FunctionCallingExpression.h>
 
 #include <AST/GS_Visitor.h>
+
+#include <AST/GS_Type.h>
 
 #endif //GSLANGUAGE_AST_H

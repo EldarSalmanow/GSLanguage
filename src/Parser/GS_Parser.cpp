@@ -16,23 +16,27 @@ namespace GSLanguageCompiler::Parser {
         auto unit = AST::GS_TranslationUnitDeclaration::Create(U"test"_us); // TODO add getting file name for TU
 
         while (!IsTokenType(Lexer::TokenType::EndOfFile)) {
-            if (!ParseDeclaration(unit)) {
+            auto declaration = ParseDeclaration();
+
+            if (!declaration) {
                 return nullptr;
             }
+
+            unit->AddNode(declaration);
         }
 
         return unit;
     }
 
-    AST::GSDeclarationPtr GS_Parser::ParseDeclaration(ConstLRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration) {
+    AST::GSDeclarationPtr GS_Parser::ParseDeclaration() {
         if (IsTokenType(Lexer::TokenType::KeywordFunc)) {
-            return ParseFunctionDeclaration(translationUnitDeclaration);
+            return ParseFunctionDeclaration();
         }
 
         return nullptr;
     }
 
-    SharedPtr<AST::GS_FunctionDeclaration> GS_Parser::ParseFunctionDeclaration(ConstLRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration) {
+    SharedPtr<AST::GS_FunctionDeclaration> GS_Parser::ParseFunctionDeclaration() {
         if (!IsTokenType(Lexer::TokenType::KeywordFunc)) {
             return nullptr;
         }
@@ -65,10 +69,12 @@ namespace GSLanguageCompiler::Parser {
 
         NextToken(); // skip '{'
 
-        auto function = translationUnitDeclaration->AddNode<AST::GS_FunctionDeclaration>(functionName);
+        auto function = AST::GS_FunctionDeclaration::Create(functionName);
 
         while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
-            ParseStatement(function->GetFunctionScope());
+            auto statement = ParseStatement();
+
+            function->AddStatement(statement);
         }
 
         NextToken(); // skip '}'
@@ -76,22 +82,22 @@ namespace GSLanguageCompiler::Parser {
         return function;
     }
 
-    AST::GSStatementPtr GS_Parser::ParseStatement(ConstLRef<AST::GSScopePtr> scope) {
+    AST::GSStatementPtr GS_Parser::ParseStatement() {
         if (IsTokenType(Lexer::TokenType::KeywordVar)) {
-            return ParseVariableDeclarationStatement(scope);
+            return ParseVariableDeclarationStatement();
         }
 
-        auto expression = ParseExpression(scope);
+        auto expression = ParseExpression();
 
         if (IsTokenType(Lexer::TokenType::SymbolEq)) {
-            return ParseAssignmentStatement(expression, scope);
+            return ParseAssignmentStatement(expression);
         }
 
-        return ParseExpressionStatement(expression, scope);
+        return ParseExpressionStatement(expression);
     }
 
-    SharedPtr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement(ConstLRef<AST::GSScopePtr> scope) {
-        auto lvalueExpression = ParseLValueExpression(scope);
+    SharedPtr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement() {
+        auto lvalueExpression = ParseLValueExpression();
 
         if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
             return nullptr;
@@ -99,32 +105,28 @@ namespace GSLanguageCompiler::Parser {
 
         NextToken(); // skip '='
 
-        auto rvalueExpression = ParseRValueExpression(scope);
+        auto rvalueExpression = ParseRValueExpression();
 
-        auto assignmentStatement = AST::GS_AssignmentStatement::Create(lvalueExpression, rvalueExpression, scope);
-
-        scope->AddNode(assignmentStatement);
+        auto assignmentStatement = AST::GS_AssignmentStatement::Create(lvalueExpression, rvalueExpression);
 
         return assignmentStatement;
     }
 
-    SharedPtr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement(ConstLRef<AST::GSExpressionPtr> lvalueExpression, ConstLRef<AST::GSScopePtr> scope) {
+    SharedPtr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement(ConstLRef<AST::GSExpressionPtr> lvalueExpression) {
         if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
             return nullptr;
         }
 
         NextToken(); // skip '='
 
-        auto rvalueExpression = ParseRValueExpression(scope);
+        auto rvalueExpression = ParseRValueExpression();
 
-        auto assignmentStatement = AST::GS_AssignmentStatement::Create(lvalueExpression, rvalueExpression, scope);
-
-        scope->AddNode(assignmentStatement);
+        auto assignmentStatement = AST::GS_AssignmentStatement::Create(lvalueExpression, rvalueExpression);
 
         return assignmentStatement;
     }
 
-    SharedPtr<AST::GS_VariableDeclarationStatement> GS_Parser::ParseVariableDeclarationStatement(ConstLRef<AST::GSScopePtr> scope) {
+    SharedPtr<AST::GS_VariableDeclarationStatement> GS_Parser::ParseVariableDeclarationStatement() {
         if (!IsTokenType(Lexer::TokenType::KeywordVar)) {
             return nullptr;
         }
@@ -151,28 +153,22 @@ namespace GSLanguageCompiler::Parser {
             if (IsTokenType(Lexer::TokenType::SymbolEq)) {
                 NextToken(); // skip '='
 
-                auto variableExpression = ParseRValueExpression(scope);
+                auto variableExpression = ParseRValueExpression();
 
-                auto variable = AST::GS_VariableDeclarationStatement::Create(variableName, variableType, variableExpression, scope);
-
-                scope->AddNode(variable);
+                auto variable = AST::GS_VariableDeclarationStatement::Create(variableName, variableType, variableExpression);
 
                 return variable;
             }
 
-            auto variable = AST::GS_VariableDeclarationStatement::Create(variableName, variableType, scope);
-
-            scope->AddNode(variable);
+            auto variable = AST::GS_VariableDeclarationStatement::Create(variableName, variableType);
 
             return variable;
         } else if (IsTokenType(Lexer::TokenType::SymbolEq)) {
             NextToken(); // skip '='
 
-            auto variableExpression = ParseRValueExpression(scope);
+            auto variableExpression = ParseRValueExpression();
 
-            auto variable = AST::GS_VariableDeclarationStatement::Create(variableName, variableExpression, scope);
-
-            scope->AddNode(variable);
+            auto variable = AST::GS_VariableDeclarationStatement::Create(variableName, variableExpression);
 
             return variable;
         }
@@ -180,49 +176,45 @@ namespace GSLanguageCompiler::Parser {
         return nullptr;
     }
 
-    SharedPtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement(ConstLRef<AST::GSScopePtr> scope) {
-        auto expression = ParseExpression(scope);
+    SharedPtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement() {
+        auto expression = ParseExpression();
 
-        auto expressionStatement = AST::GS_ExpressionStatement::Create(expression, scope);
-
-        scope->AddNode(expressionStatement);
+        auto expressionStatement = AST::GS_ExpressionStatement::Create(expression);
 
         return expressionStatement;
     }
 
-    SharedPtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement(ConstLRef<AST::GSExpressionPtr> expression, ConstLRef<AST::GSScopePtr> scope) {
-        auto expressionStatement = AST::GS_ExpressionStatement::Create(expression, scope);
-
-        scope->AddNode(expressionStatement);
+    SharedPtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement(ConstLRef<AST::GSExpressionPtr> expression) {
+        auto expressionStatement = AST::GS_ExpressionStatement::Create(expression);
 
         return expressionStatement;
     }
 
-    AST::GSExpressionPtr GS_Parser::ParseExpression(ConstLRef<AST::GSScopePtr> scope) {
-        auto expression = ParseLValueExpression(scope);
+    AST::GSExpressionPtr GS_Parser::ParseExpression() {
+        auto expression = ParseLValueExpression();
 
         if (!expression) {
-            expression = ParseRValueExpression(scope);
+            expression = ParseRValueExpression();
         }
 
         return expression;
     }
 
-    AST::GSExpressionPtr GS_Parser::ParseLValueExpression(ConstLRef<AST::GSScopePtr> scope) {
+    AST::GSExpressionPtr GS_Parser::ParseLValueExpression() {
         if (IsTokenType(Lexer::TokenType::Identifier)) {
-            return ParseVariableUsingExpression(scope);
+            return ParseVariableUsingExpression();
         }
 
         return nullptr;
     }
 
-    AST::GSExpressionPtr GS_Parser::ParseRValueExpression(ConstLRef<AST::GSScopePtr> scope) {
-        auto expression = ParseUnaryExpression(scope);
+    AST::GSExpressionPtr GS_Parser::ParseRValueExpression() {
+        auto expression = ParseUnaryExpression();
 
-        return ParseBinaryExpression(0, expression, scope);
+        return ParseBinaryExpression(0, expression);
     }
 
-    AST::GSExpressionPtr GS_Parser::ParseVariableUsingExpression(ConstLRef<AST::GSScopePtr> scope) {
+    AST::GSExpressionPtr GS_Parser::ParseVariableUsingExpression() {
         if (!IsTokenType(Lexer::TokenType::Identifier)) {
             return nullptr;
         }
@@ -231,10 +223,10 @@ namespace GSLanguageCompiler::Parser {
 
         NextToken();
 
-        return AST::GS_VariableUsingExpression::Create(variableName, scope);
+        return AST::GS_VariableUsingExpression::Create(variableName);
     }
 
-    AST::GSExpressionPtr GS_Parser::ParseBinaryExpression(I32 expressionPrecedence, LRef<AST::GSExpressionPtr> expression, ConstLRef<AST::GSScopePtr> scope) {
+    AST::GSExpressionPtr GS_Parser::ParseBinaryExpression(I32 expressionPrecedence, LRef<AST::GSExpressionPtr> expression) {
         while (true) {
             auto currentTokenPrecedence = TokenPrecedence();
 
@@ -267,45 +259,45 @@ namespace GSLanguageCompiler::Parser {
 
             NextToken(); // skip binary operator
 
-            auto secondExpression = ParseUnaryExpression(scope);
+            auto secondExpression = ParseUnaryExpression();
 
             auto nextTokenPrecedence = TokenPrecedence();
 
             if (currentTokenPrecedence < nextTokenPrecedence) {
-                secondExpression = ParseBinaryExpression(currentTokenPrecedence + 1, secondExpression, scope);
+                secondExpression = ParseBinaryExpression(currentTokenPrecedence + 1, secondExpression);
             }
 
-            expression = AST::GS_BinaryExpression::Create(binaryOperator, expression, secondExpression, scope);
+            expression = AST::GS_BinaryExpression::Create(binaryOperator, expression, secondExpression);
         }
     }
 
-    AST::GSExpressionPtr GS_Parser::ParseUnaryExpression(ConstLRef<AST::GSScopePtr> scope) {
+    AST::GSExpressionPtr GS_Parser::ParseUnaryExpression() {
         if (IsTokenType(Lexer::TokenType::SymbolMinus)) {
             NextToken(); // skip '-'
 
-            auto constantExpression = ParseConstantExpression(scope);
+            auto constantExpression = ParseConstantExpression();
 
-            return AST::GS_UnaryExpression::Create(AST::UnaryOperation::Minus, constantExpression, scope);
+            return AST::GS_UnaryExpression::Create(AST::UnaryOperation::Minus, constantExpression);
         }
 
-        return ParseConstantExpression(scope);
+        return ParseConstantExpression();
     }
 
-    AST::GSExpressionPtr GS_Parser::ParseConstantExpression(ConstLRef<AST::GSScopePtr> scope) {
+    AST::GSExpressionPtr GS_Parser::ParseConstantExpression() {
         if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
             auto tokenValue = AST::GS_I32Value::Create(std::stoi(TokenValue().AsString())); // TODO create converting from string to number
 
             NextToken();
 
-            return AST::GS_ConstantExpression::Create(tokenValue, scope);
+            return AST::GS_ConstantExpression::Create(tokenValue);
         } else if (IsTokenType(Lexer::TokenType::LiteralString)) {
             auto tokenValue = AST::GS_StringValue::Create(TokenValue());
 
             NextToken();
 
-            return AST::GS_ConstantExpression::Create(tokenValue, scope);
+            return AST::GS_ConstantExpression::Create(tokenValue);
         } else if (IsTokenType(Lexer::TokenType::Identifier)) {
-            return ParseVariableUsingExpression(scope);
+            return ParseVariableUsingExpression();
         }
 
         return nullptr;

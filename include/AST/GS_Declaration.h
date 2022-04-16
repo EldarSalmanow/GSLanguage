@@ -74,6 +74,24 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
+        class GS_TranslationUnitDeclaration;
+        class GS_FunctionDeclaration;
+
+        switch (declaration->GetDeclarationType()) {
+            case DeclarationType::TranslationUnitDeclaration:
+                if constexpr (!std::is_same_v<GS_TranslationUnitDeclaration, T>) {
+                    return nullptr;
+                }
+
+                break;
+            case DeclarationType::FunctionDeclaration:
+                if constexpr (!std::is_same_v<GS_FunctionDeclaration, T>) {
+                    return nullptr;
+                }
+
+                break;
+        }
+
         return std::reinterpret_pointer_cast<T>(declaration);
     }
 

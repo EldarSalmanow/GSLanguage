@@ -81,7 +81,7 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
 
     Ptr<llvm::Value> GS_LLVMCodeGenerationVisitor::visitConstantExpression(SharedPtr<AST::GS_ConstantExpression> constantExpression) {
-        auto value = constantExpression->GetValue();
+        auto value = AST::GSValueCast<AST::GS_LiteralValue>(constantExpression->GetValue());
 
         auto type = value->GetType();
 

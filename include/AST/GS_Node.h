@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_NODE_H
 #define GSLANGUAGE_GS_NODE_H
 
-#include <AST/GS_Scope.h>
+#include <GSCrossPlatform/CrossPlatform.h>
 
 namespace GSLanguageCompiler::AST {
 
