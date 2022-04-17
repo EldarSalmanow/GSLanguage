@@ -524,7 +524,7 @@ namespace GSLanguageCompiler::Driver {
 
         Parser::GS_Parser parser(tokenStream);
 
-        auto unit = parser.Parse();
+        auto unit = parser.Parse(inputFile);
 
         return unit;
     }

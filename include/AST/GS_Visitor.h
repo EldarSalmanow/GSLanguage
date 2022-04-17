@@ -16,6 +16,8 @@
 
 namespace GSLanguageCompiler::AST {
 
+    // TODO update and simplify visiting AST process
+
     /**
      * Base class for AST visitor contexts
      */

@@ -2,6 +2,8 @@
 
 namespace GSLanguageCompiler::Parser {
 
+    // TODO add normal error handler
+
     Map<Lexer::TokenType, I32> OperatorsPrecedence = {
             {Lexer::TokenType::SymbolStar,  2},
             {Lexer::TokenType::SymbolSlash, 2},
@@ -10,10 +12,11 @@ namespace GSLanguageCompiler::Parser {
     };
 
     GS_Parser::GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream)
-            : _stream(tokenStream) {}
+            : _stream(tokenStream), _builder(AST::GS_ASTBuilder::Create()) {}
 
-    AST::GSTranslationUnitDeclarationPtr GS_Parser::Parse() {
-        auto unit = AST::GS_TranslationUnitDeclaration::Create(U"test"_us); // TODO add getting file name for TU
+    AST::GSTranslationUnitDeclarationPtr GS_Parser::Parse(UString name) {
+        // TODO update getting TU name
+        auto unit = _builder->CreateTranslationUnitDeclaration(std::move(name));
 
         while (!IsTokenType(Lexer::TokenType::EndOfFile)) {
             auto declaration = ParseDeclaration();
@@ -69,7 +72,7 @@ namespace GSLanguageCompiler::Parser {
 
         NextToken(); // skip '{'
 
-        auto function = AST::GS_FunctionDeclaration::Create(functionName);
+        auto function = _builder->CreateFunctionDeclaration(functionName);
 
         while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
             auto statement = ParseStatement();
@@ -83,6 +86,8 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSStatementPtr GS_Parser::ParseStatement() {
+        // TODO update statement parsing process (add TryParse method ?)
+
         if (IsTokenType(Lexer::TokenType::KeywordVar)) {
             return ParseVariableDeclarationStatement();
         }
@@ -99,17 +104,7 @@ namespace GSLanguageCompiler::Parser {
     SharedPtr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement() {
         auto lvalueExpression = ParseLValueExpression();
 
-        if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
-            return nullptr;
-        }
-
-        NextToken(); // skip '='
-
-        auto rvalueExpression = ParseRValueExpression();
-
-        auto assignmentStatement = AST::GS_AssignmentStatement::Create(lvalueExpression, rvalueExpression);
-
-        return assignmentStatement;
+        return ParseAssignmentStatement(lvalueExpression); // TODO remove or modify
     }
 
     SharedPtr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement(ConstLRef<AST::GSExpressionPtr> lvalueExpression) {
@@ -121,12 +116,16 @@ namespace GSLanguageCompiler::Parser {
 
         auto rvalueExpression = ParseRValueExpression();
 
-        auto assignmentStatement = AST::GS_AssignmentStatement::Create(lvalueExpression, rvalueExpression);
+        auto assignmentStatement = _builder->CreateAssignmentStatement(lvalueExpression, rvalueExpression);
 
         return assignmentStatement;
     }
 
     SharedPtr<AST::GS_VariableDeclarationStatement> GS_Parser::ParseVariableDeclarationStatement() {
+        UString variableName;
+        AST::GSTypePtr variableType;
+        AST::GSExpressionPtr variableExpression;
+
         if (!IsTokenType(Lexer::TokenType::KeywordVar)) {
             return nullptr;
         }
@@ -137,60 +136,48 @@ namespace GSLanguageCompiler::Parser {
             return nullptr;
         }
 
-        auto variableName = TokenValue();
+        variableName = TokenValue();
 
         NextToken(); // skip variable name
 
         if (IsTokenType(Lexer::TokenType::SymbolColon)) {
             NextToken(); // skip ':'
 
-            auto variableType = ParseType();
+            variableType = ParseType();
 
-            if (variableType->GetName() == U"Void") {
-                return nullptr;
-            }
-
-            if (IsTokenType(Lexer::TokenType::SymbolEq)) {
-                NextToken(); // skip '='
-
-                auto variableExpression = ParseRValueExpression();
-
-                auto variable = AST::GS_VariableDeclarationStatement::Create(variableName, variableType, variableExpression);
-
-                return variable;
-            }
-
-            auto variable = AST::GS_VariableDeclarationStatement::Create(variableName, variableType);
-
-            return variable;
-        } else if (IsTokenType(Lexer::TokenType::SymbolEq)) {
-            NextToken(); // skip '='
-
-            auto variableExpression = ParseRValueExpression();
-
-            auto variable = AST::GS_VariableDeclarationStatement::Create(variableName, variableExpression);
-
-            return variable;
+//            if (variableType->GetName() == U"Void") {
+//                return nullptr;
+//            } TODO add semantic check and remove
         }
 
-        return nullptr;
+        if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
+            return nullptr;
+        }
+
+        NextToken(); // skip '='
+
+        variableExpression = ParseRValueExpression();
+
+        auto variable = _builder->CreateVariableDeclarationStatement(variableName, variableType, variableExpression);
+
+        return variable;
     }
 
     SharedPtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement() {
         auto expression = ParseExpression();
 
-        auto expressionStatement = AST::GS_ExpressionStatement::Create(expression);
-
-        return expressionStatement;
+        return ParseExpressionStatement(expression); // TODO remove of modify
     }
 
     SharedPtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement(ConstLRef<AST::GSExpressionPtr> expression) {
-        auto expressionStatement = AST::GS_ExpressionStatement::Create(expression);
+        auto expressionStatement = _builder->CreateExpressionStatement(expression);
 
         return expressionStatement;
     }
 
     AST::GSExpressionPtr GS_Parser::ParseExpression() {
+        // TODO update parsing expression process
+
         auto expression = ParseLValueExpression();
 
         if (!expression) {
@@ -221,9 +208,9 @@ namespace GSLanguageCompiler::Parser {
 
         auto variableName = TokenValue();
 
-        NextToken();
+        NextToken(); // skip variable name
 
-        return AST::GS_VariableUsingExpression::Create(variableName);
+        return _builder->CreateVariableUsingExpression(variableName);
     }
 
     AST::GSExpressionPtr GS_Parser::ParseBinaryExpression(I32 expressionPrecedence, LRef<AST::GSExpressionPtr> expression) {
@@ -254,7 +241,7 @@ namespace GSLanguageCompiler::Parser {
 
                     break;
                 default:
-                    throw UException(U"Unknown binary operator!"_us);
+                    throw UException(U"Unknown binary operator!"_us); // TODO remove
             }
 
             NextToken(); // skip binary operator
@@ -267,7 +254,7 @@ namespace GSLanguageCompiler::Parser {
                 secondExpression = ParseBinaryExpression(currentTokenPrecedence + 1, secondExpression);
             }
 
-            expression = AST::GS_BinaryExpression::Create(binaryOperator, expression, secondExpression);
+            expression = _builder->CreateBinaryExpression(binaryOperator, expression, secondExpression);
         }
     }
 
@@ -277,7 +264,7 @@ namespace GSLanguageCompiler::Parser {
 
             auto constantExpression = ParseConstantExpression();
 
-            return AST::GS_UnaryExpression::Create(AST::UnaryOperation::Minus, constantExpression);
+            return _builder->CreateUnaryExpression(AST::UnaryOperation::Minus, constantExpression);
         }
 
         return ParseConstantExpression();
@@ -285,17 +272,17 @@ namespace GSLanguageCompiler::Parser {
 
     AST::GSExpressionPtr GS_Parser::ParseConstantExpression() {
         if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
-            auto tokenValue = AST::GS_I32Value::Create(std::stoi(TokenValue().AsString())); // TODO create converting from string to number
+            auto number = _builder->CreateI32Value(std::stoi(TokenValue().AsString())); // TODO create converting from string to number
 
-            NextToken();
+            NextToken(); // skip number
 
-            return AST::GS_ConstantExpression::Create(tokenValue);
+            return _builder->CreateConstantExpression(number);
         } else if (IsTokenType(Lexer::TokenType::LiteralString)) {
-            auto tokenValue = AST::GS_StringValue::Create(TokenValue());
+            auto string = _builder->CreateStringValue(TokenValue());
 
             NextToken();
 
-            return AST::GS_ConstantExpression::Create(tokenValue);
+            return _builder->CreateConstantExpression(string);
         } else if (IsTokenType(Lexer::TokenType::Identifier)) {
             return ParseVariableUsingExpression();
         }
@@ -312,14 +299,16 @@ namespace GSLanguageCompiler::Parser {
 
         NextToken(); // skip variable type
 
-        AST::GSTypePtr variableType = nullptr;
+        AST::GSTypePtr variableType;
 
-        if (stringVariableType == U"Void") {
-            variableType = AST::GS_VoidType::Create();
-        } else if (stringVariableType == U"I32") {
-            variableType = AST::GS_I32Type::Create();
-        } else if (stringVariableType == U"String") {
-            variableType = AST::GS_StringType::Create();
+        // TODO add UString operator""_us(const char *, U64);
+
+        if (stringVariableType == U"Void"_us) {
+            variableType = _builder->CreateVoidType();
+        } else if (stringVariableType == U"I32"_us) {
+            variableType = _builder->CreateI32Type();
+        } else if (stringVariableType == U"String"_us) {
+            variableType = _builder->CreateStringType();
         }
 
         return variableType;

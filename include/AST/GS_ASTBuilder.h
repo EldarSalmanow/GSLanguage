@@ -22,12 +22,12 @@ namespace GSLanguageCompiler::AST {
     class GS_ASTBuilder {
     public:
 
-        explicit GS_ASTBuilder(SharedPtr<GS_ASTContext> context)
+        explicit GS_ASTBuilder(GSASTContextPtr context)
                 : _context(std::move(context)) {}
 
     public:
 
-        static SharedPtr<GS_ASTBuilder> Create(SharedPtr<GS_ASTContext> context) {
+        static SharedPtr<GS_ASTBuilder> Create(GSASTContextPtr context) {
             return std::make_shared<GS_ASTBuilder>(std::move(context));
         }
 
@@ -135,14 +135,16 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
-        SharedPtr<GS_ASTContext> GetContext() {
+        GSASTContextPtr GetContext() {
             return _context;
         }
 
     private:
 
-        SharedPtr<GS_ASTContext> _context;
+        GSASTContextPtr _context;
     };
+
+    using GSASTBuilderPtr = SharedPtr<GS_ASTBuilder>;
 
 }
 

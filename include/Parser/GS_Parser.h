@@ -15,7 +15,7 @@ namespace GSLanguageCompiler::Parser {
 
     public:
 
-        AST::GSTranslationUnitDeclarationPtr Parse();
+        AST::GSTranslationUnitDeclarationPtr Parse(UString name);
 
     private:
 
@@ -68,6 +68,8 @@ namespace GSLanguageCompiler::Parser {
     private:
 
         Lexer::GS_TokenStream _stream;
+
+        AST::GSASTBuilderPtr _builder;
     };
 
     /**

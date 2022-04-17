@@ -6,18 +6,18 @@
 namespace GSLanguageCompiler::AST {
 
     // TODO comment all
-    class GS_TypeContext {
+    class GS_ASTTypeContext {
     public:
 
-        GS_TypeContext()
+        GS_ASTTypeContext()
                 : _voidType(AST::GS_VoidType::Create()),
                   _i32Type(AST::GS_I32Type::Create()),
                   _stringType(AST::GS_StringType::Create()) {}
 
     public:
 
-        static SharedPtr<GS_TypeContext> Create() {
-            return std::make_shared<GS_TypeContext>();
+        static SharedPtr<GS_ASTTypeContext> Create() {
+            return std::make_shared<GS_ASTTypeContext>();
         }
 
     public:
@@ -43,11 +43,13 @@ namespace GSLanguageCompiler::AST {
         SharedPtr<AST::GS_StringType> _stringType;
     };
 
+    using GSASTTypeContextPtr = SharedPtr<GS_ASTTypeContext>;
+
     class GS_ASTContext {
     public:
 
         GS_ASTContext()
-                : _typeContext(GS_TypeContext::Create()) {}
+                : _typeContext(GS_ASTTypeContext::Create()) {}
 
     public:
 
@@ -71,14 +73,16 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
-        SharedPtr<GS_TypeContext> GetTypeContext() const {
+        GSASTTypeContextPtr GetTypeContext() const {
             return _typeContext;
         }
 
     private:
 
-        SharedPtr<GS_TypeContext> _typeContext;
+        GSASTTypeContextPtr _typeContext;
     };
+
+    using GSASTContextPtr = SharedPtr<GS_ASTContext>;
 
 }
 
