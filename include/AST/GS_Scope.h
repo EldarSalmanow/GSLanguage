@@ -23,6 +23,8 @@ namespace GSLanguageCompiler {
          */
         class GS_Node;
 
+        // TODO update scope semantic
+
         /**
          * Class for representation scope in AST
          */

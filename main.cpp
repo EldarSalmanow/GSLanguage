@@ -67,10 +67,6 @@ public:
 };
 
 AST::GSTranslationUnitDeclarationPtr CreateProgram(SharedPtr<ABI> abi) {
-    auto Mangler = abi->GetMangler();
-
-    auto Builder = AST::GS_ASTBuilder::Create();
-
     /**
      * main.gs
      *
@@ -80,9 +76,11 @@ AST::GSTranslationUnitDeclarationPtr CreateProgram(SharedPtr<ABI> abi) {
      *
      */
 
-    auto Unit = Builder->CreateTranslationUnitDeclaration(Mangler->MangleUnitName("main"));
+    auto Builder = AST::GS_ASTBuilder::Create();
 
-    auto Function = Builder->CreateFunctionDeclaration(Mangler->MangleFunctionName("main"));
+    auto Unit = Builder->CreateTranslationUnitDeclaration("main");
+
+    auto Function = Builder->CreateFunctionDeclaration("main");
 
     Unit->AddNode(Function);
 
