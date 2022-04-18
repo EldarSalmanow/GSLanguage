@@ -31,21 +31,21 @@ namespace GSLanguageCompiler::AST {
     }
 
     GS_VoidType::GS_VoidType()
-            : GS_LiteralType(U"Void") {}
+            : GS_LiteralType("Void"_us) {}
 
     SharedPtr<GS_VoidType> GS_VoidType::Create() {
         return std::make_shared<GS_VoidType>();
     }
 
     GS_I32Type::GS_I32Type()
-            : GS_LiteralType(U"I32") {}
+            : GS_LiteralType("I32"_us) {}
 
     SharedPtr<GS_I32Type> GS_I32Type::Create() {
         return std::make_shared<GS_I32Type>();
     }
 
     GS_StringType::GS_StringType()
-            : GS_LiteralType(U"String") {}
+            : GS_LiteralType("String"_us) {}
 
     SharedPtr<GS_StringType> GS_StringType::Create() {
         return std::make_shared<GS_StringType>();
@@ -54,11 +54,7 @@ namespace GSLanguageCompiler::AST {
     Bool isBaseType(GSTypePtr type) {
         auto typeName = type->GetName();
 
-        if (typeName == U"Void"_us || typeName == U"I32"_us || typeName == U"String"_us) {
-            return true;
-        } else {
-            return false;
-        }
+        return typeName == "Void"_us || typeName == "I32"_us || typeName == "String"_us;
     }
 
 }

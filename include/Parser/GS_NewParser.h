@@ -313,7 +313,7 @@ namespace GSLanguageCompiler::Parser::New {
 //
 //            AST::GSExpressionPtr ParseConstantExpression(ConstLRef<AST::GSScopePtr> scope) {
 //                if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
-//                    auto tokenValue = std::make_shared<AST::GS_I32Value>(std::stoi(TokenValue().asString())); // TODO create converting from string to number
+//                    auto tokenValue = std::make_shared<AST::GS_I32Value>(std::stoi(TokenValue().asString()));
 //
 //                    NextToken();
 //
@@ -470,10 +470,6 @@ namespace GSLanguageCompiler::Parser::New {
             }
 
             tokenStream->next();
-
-            /*
-             * TODO: Add supporting params list
-             */
 
             if (!tokenStream->isEqualTypes(Lexer::TokenType::SymbolRightParen)) {
                 addError("function declaration", "missed symbol \')\' for params list");

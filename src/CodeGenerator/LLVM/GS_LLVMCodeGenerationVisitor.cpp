@@ -54,7 +54,7 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         Ptr<llvm::Type> llvmType;
 
-        if (typeName == U"I32"_us) {
+        if (typeName == "I32"_us) {
             llvmType = llvm::Type::getInt32Ty(_getLLVMVisitorContext()->getContext());
         } else {
             return nullptr;
@@ -89,11 +89,11 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         Ptr<llvm::Type> llvmType;
 
-        if (typeName == U"I32"_us) {
+        if (typeName == "I32"_us) {
             auto number = value->GetValueWithCast<I32>();
 
             return llvm::ConstantInt::get(llvm::Type::getInt32Ty(_getLLVMVisitorContext()->getContext()), number);
-        } else if (typeName == U"String"_us) {
+        } else if (typeName == "String"_us) {
             auto string = value->GetValueWithCast<UString>();
 
             return _builder->CreateGlobalStringPtr(string.AsString());

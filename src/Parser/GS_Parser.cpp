@@ -241,7 +241,7 @@ namespace GSLanguageCompiler::Parser {
 
                     break;
                 default:
-                    throw UException(U"Unknown binary operator!"_us); // TODO remove
+                    throw UException("Unknown binary operator!"_us); // TODO remove
             }
 
             NextToken(); // skip binary operator
@@ -270,9 +270,14 @@ namespace GSLanguageCompiler::Parser {
         return ParseConstantExpression();
     }
 
+    // TODO move to UString (GSCrossPlatform)
+    inline I32 AsI32(ConstLRef<UString> string) {
+        return std::stoi(string.AsString());
+    }
+
     AST::GSExpressionPtr GS_Parser::ParseConstantExpression() {
         if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
-            auto number = _builder->CreateI32Value(std::stoi(TokenValue().AsString())); // TODO create converting from string to number
+            auto number = _builder->CreateI32Value(AsI32(TokenValue()));
 
             NextToken(); // skip number
 
@@ -301,13 +306,11 @@ namespace GSLanguageCompiler::Parser {
 
         AST::GSTypePtr variableType;
 
-        // TODO add UString operator""_us(const char *, U64);
-
-        if (stringVariableType == U"Void"_us) {
+        if (stringVariableType == "Void"_us) {
             variableType = _builder->CreateVoidType();
-        } else if (stringVariableType == U"I32"_us) {
+        } else if (stringVariableType == "I32"_us) {
             variableType = _builder->CreateI32Type();
-        } else if (stringVariableType == U"String"_us) {
+        } else if (stringVariableType == "String"_us) {
             variableType = _builder->CreateStringType();
         }
 

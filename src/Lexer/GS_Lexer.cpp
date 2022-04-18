@@ -3,15 +3,15 @@
 namespace GSLanguageCompiler::Lexer {
 
     Vector<std::pair<UString, TokenType>> ReservedWords = {
-            {U"var"_us, TokenType::KeywordVar},
-            {U"func"_us, TokenType::KeywordFunc}
+            {"var"_us, TokenType::KeywordVar},
+            {"func"_us, TokenType::KeywordFunc}
     };
 
     Vector<std::pair<USymbol, TokenType>> ReservedSymbols = {
             {U'(', TokenType::SymbolLeftParen},
-            {U')', TokenType::SymbolRightParen},
-            {U'{', TokenType::SymbolLeftBrace},
-            {U'}', TokenType::SymbolRightBrace},
+            {')', TokenType::SymbolRightParen},
+            {'{', TokenType::SymbolLeftBrace},
+            {'}', TokenType::SymbolRightBrace},
 
             {U':', TokenType::SymbolColon},
             {U',', TokenType::SymbolComma},

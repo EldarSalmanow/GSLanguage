@@ -270,9 +270,9 @@ namespace GSLanguageCompiler::Driver {
 
             Print("Type: " + typeName.AsString());
 
-            if (typeName == U"I32") {
+            if (typeName == "I32"_us) {
                 Print("Value: " + std::to_string(value->GetValueWithCast<I32>()));
-            } else if (typeName == U"String") {
+            } else if (typeName == "String"_us {
                 Print("Value: " + value->GetValueWithCast<UString>().AsString());
             }
 
