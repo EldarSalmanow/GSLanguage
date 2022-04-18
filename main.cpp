@@ -84,11 +84,9 @@ AST::GSTranslationUnitDeclarationPtr CreateProgram(SharedPtr<ABI> abi) {
 
     Unit->AddNode(Function);
 
-    auto Expression1 = Builder->CreateConstantExpression(7);
+    auto Expression = Builder->CreateUnaryExpression(AST::UnaryOperation::Minus, Builder->CreateConstantExpression(7));
 
-    auto Expression2 = Builder->CreateUnaryExpression(AST::UnaryOperation::Minus, Expression1);
-
-    auto Variable = Builder->CreateVariableDeclarationStatement("number", Builder->CreateI32Type(), Expression2);
+    auto Variable = Builder->CreateVariableDeclarationStatement("number", Builder->CreateI32Type(), Expression);
 
     Function->AddStatement(Variable);
 

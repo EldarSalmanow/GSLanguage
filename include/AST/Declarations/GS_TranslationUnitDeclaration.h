@@ -51,16 +51,16 @@ namespace GSLanguageCompiler::AST {
          * @param args Arguments for creating node
          * @return Created node
          */
-//        template<typename T, typename... Args>
-//        inline auto AddNode(Args... args) {
-//            static_assert(std::is_base_of_v<GS_Node, T>, "Type for creating must be inherited from GS_Node!");
-//
-//            auto node = T::Create(args...);
-//
-//            AddNode(node);
-//
-//            return node;
-//        } TODO may be remove
+        template<typename T, typename... Args>
+        inline auto AddNode(Args... args) {
+            static_assert(std::is_base_of_v<GS_Node, T>, "Type for creating must be inherited from GS_Node!");
+
+            auto node = T::Create(args...);
+
+            AddNode(node);
+
+            return node;
+        }
 
     public:
 
