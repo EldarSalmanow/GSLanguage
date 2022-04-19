@@ -14,9 +14,13 @@ namespace GSLanguageCompiler::Parser {
     GS_Parser::GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream)
             : _stream(tokenStream), _builder(AST::GS_ASTBuilder::Create()) {}
 
-    AST::GSTranslationUnitDeclarationPtr GS_Parser::Parse(UString name) {
+    AST::GSTranslationUnitDeclarationPtr GS_Parser::Parse() {
+        return ParseTranslationUnitDeclaration();
+    }
+
+    AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseTranslationUnitDeclaration() {
         // TODO update getting TU name
-        auto unit = _builder->CreateTranslationUnitDeclaration(std::move(name));
+        auto unit = _builder->CreateTranslationUnitDeclaration(""_us);
 
         while (!IsTokenType(Lexer::TokenType::EndOfFile)) {
             auto declaration = ParseDeclaration();
@@ -290,6 +294,24 @@ namespace GSLanguageCompiler::Parser {
             return _builder->CreateConstantExpression(string);
         } else if (IsTokenType(Lexer::TokenType::Identifier)) {
             return ParseVariableUsingExpression();
+        }
+
+        return nullptr;
+    }
+
+    AST::GSValuePtr GS_Parser::ParseValue() {
+        if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
+            auto number = AsI32(TokenValue());
+
+            NextToken(); // skip number
+
+            return _builder->CreateI32Value(number);
+        } else if (IsTokenType(Lexer::TokenType::LiteralString)) {
+            auto string = TokenValue();
+
+            NextToken();
+
+            return _builder->CreateStringValue(string);
         }
 
         return nullptr;

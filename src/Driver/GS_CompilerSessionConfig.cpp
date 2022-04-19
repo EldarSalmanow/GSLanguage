@@ -20,13 +20,13 @@ namespace GSLanguageCompiler::Driver {
         try {
             parser.ParseCLI(argc, argv);
         } catch (LRef<args::Help> help) {
-            COut() << parser.Help();
+            UCOut() << parser.Help();
 
             return nullptr;
         } catch (LRef<args::Error> error) {
-            COut() << error.what() << "\n\n";
+            UCOut() << error.what() << "\n\n";
 
-            COut() << parser.Help();
+            UCOut() << parser.Help();
 
             return nullptr;
         }

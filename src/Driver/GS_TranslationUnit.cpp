@@ -272,7 +272,7 @@ namespace GSLanguageCompiler::Driver {
 
             if (typeName == "I32"_us) {
                 Print("Value: " + std::to_string(value->GetValueWithCast<I32>()));
-            } else if (typeName == "String"_us {
+            } else if (typeName == "String"_us) {
                 Print("Value: " + value->GetValueWithCast<UString>().AsString());
             }
 
@@ -524,7 +524,7 @@ namespace GSLanguageCompiler::Driver {
 
         Parser::GS_Parser parser(tokenStream);
 
-        auto unit = parser.Parse(inputFile);
+        auto unit = parser.Parse();
 
         return unit;
     }

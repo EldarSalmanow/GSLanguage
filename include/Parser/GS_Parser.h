@@ -7,6 +7,52 @@
 
 namespace GSLanguageCompiler::Parser {
 
+    /**
+     *
+     * Parser Grammar
+     *
+     * translation_unit_decl -> decl...
+     *
+     * decl -> func_decl (, translation_unit_decl)
+     *
+     * func_decl -> 'func' id '(' ')' '{' stmt... '}'
+     *
+     * stmt -> var_decl_stmt, assignment_stmt, expr_stmt
+     *
+     * var_decl_stmt -> 'var' id (':' id) '=' rvalue_expr
+     *
+     * assignment_stmt -> lvalue_expr '=' rvalue_expr
+     *
+     * expr_stmt -> expr
+     *
+     * expr -> lvalue_expr, rvalue_expr
+     *
+     * lvalue_expr -> var_using_expr
+     *
+     * var_using_expr -> id
+     *
+     * rvalue_expr -> const_expr, unary_expr, binary_expr
+     *
+     * const_expr -> num, str
+     *
+     * unary_expr -> unary_op expr
+     *
+     * unary_op -> '-'
+     *
+     * binary_expr -> expr binary_op expr
+     *
+     * binary_op -> '+', '-', '*', '/'
+     *
+     * Lexer Grammar
+     *
+     * id -> [A-z]([A-z] | [0-9])*
+     *
+     * num -> [1-9]([0-9])*
+     *
+     * str -> '"' * '"'
+     *
+     */
+
     // TODO reorganise parsing process
     // UPD: in progress
     class GS_Parser {
@@ -16,9 +62,11 @@ namespace GSLanguageCompiler::Parser {
 
     public:
 
-        AST::GSTranslationUnitDeclarationPtr Parse(UString name);
+        AST::GSTranslationUnitDeclarationPtr Parse();
 
-    private:
+    public:
+
+        AST::GSTranslationUnitDeclarationPtr ParseTranslationUnitDeclaration();
 
         AST::GSDeclarationPtr ParseDeclaration();
 
@@ -26,15 +74,11 @@ namespace GSLanguageCompiler::Parser {
 
         AST::GSStatementPtr ParseStatement();
 
-        SharedPtr<AST::GS_AssignmentStatement> ParseAssignmentStatement();
-
-        SharedPtr<AST::GS_AssignmentStatement> ParseAssignmentStatement(ConstLRef<AST::GSExpressionPtr> lvalueExpression);
-
         SharedPtr<AST::GS_VariableDeclarationStatement> ParseVariableDeclarationStatement();
 
-        SharedPtr<AST::GS_ExpressionStatement> ParseExpressionStatement();
+        SharedPtr<AST::GS_AssignmentStatement> ParseAssignmentStatement();
 
-        SharedPtr<AST::GS_ExpressionStatement> ParseExpressionStatement(ConstLRef<AST::GSExpressionPtr> expression);
+        SharedPtr<AST::GS_ExpressionStatement> ParseExpressionStatement();
 
         AST::GSExpressionPtr ParseExpression();
 
@@ -42,13 +86,15 @@ namespace GSLanguageCompiler::Parser {
 
         AST::GSExpressionPtr ParseRValueExpression();
 
-        AST::GSExpressionPtr ParseVariableUsingExpression();
-
-        AST::GSExpressionPtr ParseBinaryExpression(I32 expressionPrecedence, LRef<AST::GSExpressionPtr> expression);
-
         AST::GSExpressionPtr ParseUnaryExpression();
 
+        AST::GSExpressionPtr ParseBinaryExpression(I32 precedence, LRef<AST::GSExpressionPtr> expression);
+
         AST::GSExpressionPtr ParseConstantExpression();
+
+    public:
+
+        AST::GSValuePtr ParseValue();
 
         AST::GSTypePtr ParseType();
 

@@ -45,8 +45,8 @@ namespace GSLanguageCompiler::Driver {
             }
 
             _inputs.clear();
-            _output = "";
-            _entry = "";
+            _output = ""_us;
+            _entry = ""_us;
 
             return command;
         }

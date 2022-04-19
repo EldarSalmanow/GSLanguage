@@ -45,7 +45,7 @@ namespace GSLanguageCompiler::Driver {
                 }
             }
         } catch (LRef<std::exception> exception) {
-            COut() << exception.what() << "\n";
+            UCOut() << exception.what() << "\n"_us;
 
             return 1;
         }

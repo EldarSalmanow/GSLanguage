@@ -9,9 +9,9 @@ namespace GSLanguageCompiler::Lexer {
 
     Vector<std::pair<USymbol, TokenType>> ReservedSymbols = {
             {U'(', TokenType::SymbolLeftParen},
-            {')', TokenType::SymbolRightParen},
-            {'{', TokenType::SymbolLeftBrace},
-            {'}', TokenType::SymbolRightBrace},
+            {U')', TokenType::SymbolRightParen},
+            {U'{', TokenType::SymbolLeftBrace},
+            {U'}', TokenType::SymbolRightBrace},
 
             {U':', TokenType::SymbolColon},
             {U',', TokenType::SymbolComma},
