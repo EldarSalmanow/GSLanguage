@@ -18,6 +18,526 @@ namespace GSLanguageCompiler::AST {
 
     // TODO update and simplify visiting AST process
 
+    namespace New {
+
+        class Visitor {
+        public:
+
+            /**
+             * Visit node
+             * @param node Node
+             * @return
+             */
+            virtual Void VisitNode(LRef<GSNodePtr> node) {
+                if (node->IsDeclaration()) {
+                    auto declaration = ToDeclaration(node);
+
+                    return VisitDeclaration(declaration);
+                }
+
+                if (node->IsStatement()) {
+                    auto statement = ToStatement(node);
+
+                    return VisitStatement(statement);
+                }
+
+                if (node->IsExpression()) {
+                    auto expression = ToExpression(node);
+
+                    return VisitExpression(expression);
+                }
+            }
+
+            /**
+             * Visit declaration
+             * @param declaration Declaration
+             * @return
+             */
+            virtual Void VisitDeclaration(LRef<GSDeclarationPtr> declaration) {
+                switch (declaration->GetDeclarationType()) {
+                    case DeclarationType::TranslationUnitDeclaration: {
+                        auto translationUnitDeclaration = ToDeclaration<GS_TranslationUnitDeclaration>(declaration);
+
+                        return VisitTranslationUnitDeclaration(translationUnitDeclaration);
+                    }
+                    case DeclarationType::FunctionDeclaration: {
+                        auto functionDeclaration = ToDeclaration<GS_FunctionDeclaration>(declaration);
+                        
+                        return VisitFunctionDeclaration(functionDeclaration);
+                    }
+                }
+            }
+
+            /**
+             * Visit statement
+             * @param statement Statement
+             * @return
+             */
+            virtual Void VisitStatement(LRef<GSStatementPtr> statement) {
+                switch (statement->GetStatementType()) {
+                    case StatementType::VariableDeclarationStatement: {
+                        auto variableDeclarationStatement = ToStatement<GS_VariableDeclarationStatement>(statement);
+                        
+                        return VisitVariableDeclarationStatement(variableDeclarationStatement);
+                    }
+                    case StatementType::AssignmentStatement: {
+                        auto assignmentStatement = ToStatement<GS_AssignmentStatement>(statement);
+                        
+                        return VisitAssignmentStatement(assignmentStatement);
+                    }
+                    case StatementType::ExpressionStatement: {
+                        auto expressionStatement = ToStatement<GS_ExpressionStatement>(statement);
+                        
+                        return VisitExpressionStatement(expressionStatement);
+                    }
+                }
+            }
+
+            /**
+             * Visit expression
+             * @param expression Expression
+             * @return
+             */
+            virtual Void VisitExpression(LRef<GSExpressionPtr> expression) {
+                switch (expression->GetExpressionType()) {
+                    case ExpressionType::ConstantExpression: {
+                        auto constantExpression = ToExpression<GS_ConstantExpression>(expression);
+                        
+                        return VisitConstantExpression(constantExpression);
+                    }
+                    case ExpressionType::UnaryExpression: {
+                        auto unaryExpression = ToExpression<GS_UnaryExpression>(expression);
+                        
+                        return VisitUnaryExpression(unaryExpression);
+                    }
+                    case ExpressionType::BinaryExpression: {
+                        auto binaryExpression = ToExpression<GS_BinaryExpression>(expression);
+                        
+                        return VisitBinaryExpression(binaryExpression);
+                    }
+                    case ExpressionType::VariableUsingExpression: {
+                        auto variableUsingExpression = ToExpression<GS_VariableUsingExpression>(expression);
+                        
+                        return VisitVariableUsingExpression(variableUsingExpression);
+                    }
+                    case ExpressionType::FunctionCallingExpression: {
+                        auto functionCallingExpression = ToExpression<GS_FunctionCallingExpression>(expression);
+
+                        return VisitFunctionCallingExpression(functionCallingExpression);
+                    }
+                }
+            }
+
+            /**
+             * Visit translation unit declaration
+             * @param translationUnitDeclaration Translation unit declaration
+             * @return
+             */
+            virtual Void VisitTranslationUnitDeclaration(LRef<SharedPtr<GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
+                auto nodes = translationUnitDeclaration->GetNodes();
+
+                for (auto &node : nodes) {
+                    VisitNode(node);
+                }
+            }
+
+            /**
+             * Visit function declaration
+             * @param functionDeclaration Function declaration
+             * @return
+             */
+            virtual Void VisitFunctionDeclaration(LRef<SharedPtr<GS_FunctionDeclaration>> functionDeclaration) {
+                auto statements = functionDeclaration->GetBody();
+
+                for (auto &statement : statements) {
+                    VisitStatement(statement);
+                }
+            }
+
+            /**
+             * Visit variable declaration statement
+             * @param variableDeclarationStatement Variable declaration statement
+             * @return
+             */
+            virtual Void VisitVariableDeclarationStatement(LRef<SharedPtr<GS_VariableDeclarationStatement>> variableDeclarationStatement) {
+                auto expression = variableDeclarationStatement->GetExpression();
+
+                VisitExpression(expression);
+            }
+
+            /**
+             * Visit assignment statement
+             * @param assignmentStatement Assignment statement
+             * @return
+             */
+            virtual Void VisitAssignmentStatement(LRef<SharedPtr<GS_AssignmentStatement>> assignmentStatement) {
+                auto lvalueExpression = assignmentStatement->GetLValueExpression();
+                auto rvalueExpression = assignmentStatement->GetRValueExpression();
+
+                VisitExpression(lvalueExpression);
+                VisitExpression(rvalueExpression);
+            }
+
+            /**
+             * Visit expression statement
+             * @param expressionStatement Expression statement
+             * @return
+             */
+            virtual Void VisitExpressionStatement(LRef<SharedPtr<GS_ExpressionStatement>> expressionStatement) {
+                auto expression = expressionStatement->GetExpression();
+
+                VisitExpression(expression);
+            }
+
+            /**
+             * Visit constant expression
+             * @param constantExpression Constant expression
+             * @return
+             */
+            virtual Void VisitConstantExpression(LRef<SharedPtr<GS_ConstantExpression>> constantExpression) {
+
+            }
+
+            /**
+             * Visit unary expression
+             * @param unaryExpression Unary expression
+             * @return
+             */
+            virtual Void VisitUnaryExpression(LRef<SharedPtr<GS_UnaryExpression>> unaryExpression) {
+                auto expression = unaryExpression->GetExpression();
+
+                VisitExpression(expression);
+            }
+
+            /**
+             * Visit binary expression
+             * @param binaryExpression Binary expression
+             * @return
+             */
+            virtual Void VisitBinaryExpression(LRef<SharedPtr<GS_BinaryExpression>> binaryExpression) {
+                auto firstExpression = binaryExpression->GetFirstExpression();
+                auto secondExpression = binaryExpression->GetSecondExpression();
+
+                VisitExpression(firstExpression);
+                VisitExpression(secondExpression);
+            }
+
+            /**
+             * Visit variable using expression
+             * @param variableUsingExpression Variable using expression
+             * @return
+             */
+            virtual Void VisitVariableUsingExpression(LRef<SharedPtr<GS_VariableUsingExpression>> variableUsingExpression) {
+
+            }
+
+            /**
+             * Visit function calling expression
+             * @param functionCallingExpression Function calling expression
+             * @return
+             */
+            virtual Void VisitFunctionCallingExpression(LRef<SharedPtr<GS_FunctionCallingExpression>> functionCallingExpression) {
+
+            }
+        };
+        
+        class Transformer {
+        public:
+
+            /**
+             * Visit node
+             * @param node Node
+             * @return Transformed node
+             */
+            virtual GSNodePtr TransformNode(LRef<GSNodePtr> node) {
+                if (node->IsDeclaration()) {
+                    auto declaration = ToDeclaration(node);
+
+                    return TransformDeclaration(declaration);
+                }
+
+                if (node->IsStatement()) {
+                    auto statement = ToStatement(node);
+
+                    return TransformStatement(statement);
+                }
+
+                if (node->IsExpression()) {
+                    auto expression = ToExpression(node);
+
+                    return TransformExpression(expression);
+                }
+
+                return nullptr;
+            }
+
+            /**
+             * Visit declaration
+             * @param declaration Declaration
+             * @return Transformed declaration
+             */
+            virtual GSNodePtr TransformDeclaration(LRef<GSDeclarationPtr> declaration) {
+                switch (declaration->GetDeclarationType()) {
+                    case DeclarationType::TranslationUnitDeclaration: {
+                        auto translationUnitDeclaration = ToDeclaration<GS_TranslationUnitDeclaration>(declaration);
+
+                        return TransformTranslationUnitDeclaration(translationUnitDeclaration);
+                    }
+                    case DeclarationType::FunctionDeclaration: {
+                        auto functionDeclaration = ToDeclaration<GS_FunctionDeclaration>(declaration);
+
+                        return TransformFunctionDeclaration(functionDeclaration);
+                    }
+                }
+
+                return nullptr;
+            }
+
+            /**
+             * Visit statement
+             * @param statement Statement
+             * @return Transformed statement
+             */
+            virtual GSNodePtr TransformStatement(LRef<GSStatementPtr> statement) {
+                switch (statement->GetStatementType()) {
+                    case StatementType::VariableDeclarationStatement: {
+                        auto variableDeclarationStatement = ToStatement<GS_VariableDeclarationStatement>(statement);
+
+                        return TransformVariableDeclarationStatement(variableDeclarationStatement);
+                    }
+                    case StatementType::AssignmentStatement: {
+                        auto assignmentStatement = ToStatement<GS_AssignmentStatement>(statement);
+
+                        return TransformAssignmentStatement(assignmentStatement);
+                    }
+                    case StatementType::ExpressionStatement: {
+                        auto expressionStatement = ToStatement<GS_ExpressionStatement>(statement);
+
+                        return TransformExpressionStatement(expressionStatement);
+                    }
+                }
+
+                return nullptr;
+            }
+
+            /**
+             * Visit expression
+             * @param expression Expression
+             * @return Transformed expression
+             */
+            virtual GSNodePtr TransformExpression(LRef<GSExpressionPtr> expression) {
+                switch (expression->GetExpressionType()) {
+                    case ExpressionType::ConstantExpression: {
+                        auto constantExpression = ToExpression<GS_ConstantExpression>(expression);
+
+                        return TransformConstantExpression(constantExpression);
+                    }
+                    case ExpressionType::UnaryExpression: {
+                        auto unaryExpression = ToExpression<GS_UnaryExpression>(expression);
+
+                        return TransformUnaryExpression(unaryExpression);
+                    }
+                    case ExpressionType::BinaryExpression: {
+                        auto binaryExpression = ToExpression<GS_BinaryExpression>(expression);
+
+                        return TransformBinaryExpression(binaryExpression);
+                    }
+                    case ExpressionType::VariableUsingExpression: {
+                        auto variableUsingExpression = ToExpression<GS_VariableUsingExpression>(expression);
+
+                        return TransformVariableUsingExpression(variableUsingExpression);
+                    }
+                    case ExpressionType::FunctionCallingExpression: {
+                        auto functionCallingExpression = ToExpression<GS_FunctionCallingExpression>(expression);
+
+                        return TransformFunctionCallingExpression(functionCallingExpression);
+                    }
+                }
+
+                return nullptr;
+            }
+
+            /**
+             * Visit translation unit declaration
+             * @param translationUnitDeclaration Translation unit declaration
+             * @return Transformed translation unit declaration
+             */
+            virtual GSNodePtr TransformTranslationUnitDeclaration(LRef<SharedPtr<GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
+                auto &nodes = translationUnitDeclaration->GetNodes();
+
+                for (auto &node : nodes) {
+                    auto transformedNode = TransformNode(node);
+
+                    node.swap(transformedNode);
+                }
+
+                return translationUnitDeclaration;
+            }
+
+            /**
+             * Visit function declaration
+             * @param functionDeclaration Function declaration
+             * @return Transformed function declaration
+             */
+            virtual GSNodePtr TransformFunctionDeclaration(LRef<SharedPtr<GS_FunctionDeclaration>> functionDeclaration) {
+                auto statements = functionDeclaration->GetBody();
+
+                for (auto &statement : statements) {
+                    auto transformedStatement = ToStatement(TransformStatement(statement));
+
+                    statement.swap(transformedStatement);
+                }
+
+                return functionDeclaration;
+            }
+
+            /**
+             * Visit variable declaration statement
+             * @param variableDeclarationStatement Variable declaration statement
+             * @return Transformed variable declaration statement
+             */
+            virtual GSNodePtr TransformVariableDeclarationStatement(LRef<SharedPtr<GS_VariableDeclarationStatement>> variableDeclarationStatement) {
+                auto expression = variableDeclarationStatement->GetExpression();
+
+                auto transformedExpression = ToExpression(expression);
+
+                expression.swap(transformedExpression);
+
+                return variableDeclarationStatement;
+            }
+
+            /**
+             * Visit assignment statement
+             * @param assignmentStatement Assignment statement
+             * @return Transformed assignment statement
+             */
+            virtual GSNodePtr TransformAssignmentStatement(LRef<SharedPtr<GS_AssignmentStatement>> assignmentStatement) {
+                auto lvalueExpression = assignmentStatement->GetLValueExpression();
+                auto rvalueExpression = assignmentStatement->GetRValueExpression();
+
+                auto transformedLvalueExpression = ToExpression(TransformExpression(lvalueExpression));
+                auto transformedRvalueExpression = ToExpression(TransformExpression(rvalueExpression));
+
+                lvalueExpression.swap(transformedLvalueExpression);
+                rvalueExpression.swap(transformedRvalueExpression);
+
+                return assignmentStatement;
+            }
+
+            /**
+             * Visit expression statement
+             * @param expressionStatement Expression statement
+             * @return Transformed expression statement
+             */
+            virtual GSNodePtr TransformExpressionStatement(LRef<SharedPtr<GS_ExpressionStatement>> expressionStatement) {
+                auto expression = expressionStatement->GetExpression();
+
+                auto transformedExpression = ToExpression(expression);
+
+                expression.swap(transformedExpression);
+
+                return expressionStatement;
+            }
+
+            /**
+             * Visit constant expression
+             * @param constantExpression Constant expression
+             * @return Transformed constant expression
+             */
+            virtual GSNodePtr TransformConstantExpression(LRef<SharedPtr<GS_ConstantExpression>> constantExpression) {
+                return constantExpression;
+            }
+
+            /**
+             * Visit unary expression
+             * @param unaryExpression Unary expression
+             * @return Transformed unary expression
+             */
+            virtual GSNodePtr TransformUnaryExpression(LRef<SharedPtr<GS_UnaryExpression>> unaryExpression) {
+                auto expression = unaryExpression->GetExpression();
+
+                auto transformedExpression = ToExpression(expression);
+
+                expression.swap(transformedExpression);
+
+                return unaryExpression;
+            }
+
+            /**
+             * Visit binary expression
+             * @param binaryExpression Binary expression
+             * @return Transformed binary expression
+             */
+            virtual GSNodePtr TransformBinaryExpression(LRef<SharedPtr<GS_BinaryExpression>> binaryExpression) {
+                auto firstExpression = binaryExpression->GetFirstExpression();
+                auto secondExpression = binaryExpression->GetSecondExpression();
+
+                auto transformedFirstExpression = ToExpression(TransformExpression(firstExpression));
+                auto transformedSecondExpression = ToExpression(TransformExpression(secondExpression));
+
+                firstExpression.swap(transformedFirstExpression);
+                secondExpression.swap(transformedSecondExpression);
+
+                return binaryExpression;
+            }
+
+            /**
+             * Visit variable using expression
+             * @param variableUsingExpression Variable using expression
+             * @return Transformed variable using expression
+             */
+            virtual GSNodePtr TransformVariableUsingExpression(LRef<SharedPtr<GS_VariableUsingExpression>> variableUsingExpression) {
+                return variableUsingExpression;
+            }
+
+            /**
+             * Transform function calling expression
+             * @param functionCallingExpression Function calling expression
+             * @return Transformed function calling expression
+             */
+            virtual GSNodePtr TransformFunctionCallingExpression(LRef<SharedPtr<GS_FunctionCallingExpression>> functionCallingExpression) {
+                return functionCallingExpression;
+            }
+        };
+
+        class ConstantFoldingTransformer : public Transformer {
+        public:
+
+            GSNodePtr TransformUnaryExpression(LRef<SharedPtr<GS_UnaryExpression>> unaryExpression) override {
+                unaryExpression = Transformer::TransformUnaryExpression(unaryExpression);
+
+                auto expression = unaryExpression->GetExpression();
+                auto operation = unaryExpression->GetUnaryOperation();
+
+                if (auto constantExpression = ToExpression<GS_ConstantExpression>(expression)) {
+                    auto value = constantExpression->GetValue();
+
+                    if (auto i32Value = GSValueCast<GS_I32Value>(value)) {
+                        auto number = i32Value->GetI32Value();
+
+                        switch (operation) {
+                            case UnaryOperation::Minus:
+                                number = -number;
+
+                                break;
+                        }
+
+                        return GS_ConstantExpression::Create(GS_I32Value::Create(number));
+                    }
+                }
+
+                return unaryExpression;
+            }
+        };
+
+        class GS_Pass {
+        public:
+
+            virtual Void Run()
+        };
+
+    }
+    
     /**
      * Base class for AST visitor contexts
      */

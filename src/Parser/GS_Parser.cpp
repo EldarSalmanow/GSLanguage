@@ -309,7 +309,7 @@ namespace GSLanguageCompiler::Parser {
         } else if (IsTokenType(Lexer::TokenType::LiteralString)) {
             auto string = TokenValue();
 
-            NextToken();
+            NextToken(); // skip string
 
             return _builder->CreateStringValue(string);
         }
