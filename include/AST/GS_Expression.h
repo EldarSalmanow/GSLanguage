@@ -62,6 +62,15 @@ namespace GSLanguageCompiler::AST {
     GSExpressionPtr ToExpression(GSNodePtr node);
 
     /**
+     * Declaring for cast function
+     */
+    class GS_ConstantExpression;
+    class GS_UnaryExpression;
+    class GS_BinaryExpression;
+    class GS_VariableUsingExpression;
+    class GS_FunctionCallingExpression;
+
+    /**
      * Casting to any type of expression if node is expression
      * @tparam T Type of expression
      * @param node Node
@@ -76,12 +85,6 @@ namespace GSLanguageCompiler::AST {
         if (!expression) {
             return nullptr;
         }
-
-        class GS_ConstantExpression;
-        class GS_UnaryExpression;
-        class GS_BinaryExpression;
-        class GS_VariableUsingExpression;
-        class GS_FunctionCallingExpression;
 
         switch (expression->GetExpressionType()) {
             case ExpressionType::ConstantExpression:

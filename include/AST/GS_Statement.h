@@ -60,6 +60,13 @@ namespace GSLanguageCompiler::AST {
     GSStatementPtr ToStatement(GSNodePtr node);
 
     /**
+     * Declaring for cast function
+     */
+    class GS_VariableDeclarationStatement;
+    class GS_AssignmentStatement;
+    class GS_ExpressionStatement;
+
+    /**
      * Casting to any type of statement if node is statement
      * @tparam T Type of statement
      * @param node Node
@@ -74,10 +81,6 @@ namespace GSLanguageCompiler::AST {
         if (!statement) {
             return nullptr;
         }
-
-        class GS_VariableDeclarationStatement;
-        class GS_AssignmentStatement;
-        class GS_ExpressionStatement;
 
         switch (statement->GetStatementType()) {
             case StatementType::VariableDeclarationStatement:

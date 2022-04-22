@@ -84,19 +84,40 @@ namespace GSLanguageCompiler::Parser {
 
         AST::GSExpressionPtr ParseLValueExpression();
 
+        AST::GSExpressionPtr ParseVariableUsingExpression();
+
         AST::GSExpressionPtr ParseRValueExpression();
+
+        AST::GSExpressionPtr ParseConstantExpression();
 
         AST::GSExpressionPtr ParseUnaryExpression();
 
         AST::GSExpressionPtr ParseBinaryExpression(I32 precedence, LRef<AST::GSExpressionPtr> expression);
 
-        AST::GSExpressionPtr ParseConstantExpression();
+        AST::GSExpressionPtr ParsePrimaryExpression();
 
     public:
 
         AST::GSValuePtr ParseValue();
 
         AST::GSTypePtr ParseType();
+
+    public:
+
+        template<typename Ret, typename... Args>
+        Ret TryParse(Ret (GS_Parser::* function)(Args...)) {
+            auto stream = _stream;
+
+            auto result = function();
+
+            if (!result) {
+                _stream = stream;
+
+                return nullptr;
+            }
+
+            return result;
+        }
 
     public:
 

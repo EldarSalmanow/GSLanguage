@@ -4,6 +4,42 @@
 
 using namespace GSLanguageCompiler;
 
+class ConstantFoldingTransformer : public AST::GS_Transformer {
+public:
+
+    AST::GSNodePtr TransformUnaryExpression(LRef<SharedPtr<AST::GS_UnaryExpression>> unaryExpression) override {
+        unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(GS_Transformer::TransformUnaryExpression(unaryExpression));
+
+        auto expression = unaryExpression->GetExpression();
+        auto operation = unaryExpression->GetUnaryOperation();
+
+        if (auto constantExpression = AST::ToExpression<AST::GS_ConstantExpression>(expression)) {
+            auto value = constantExpression->GetValue();
+
+            if (auto i32Value = AST::GSValueCast<AST::GS_I32Value>(value)) {
+                auto number = i32Value->GetI32Value();
+
+                switch (operation) {
+                    case AST::UnaryOperation::Minus:
+                        number = -number;
+
+                        break;
+                }
+
+                return AST::GS_ConstantExpression::Create(AST::GS_I32Value::Create(number));
+            }
+        }
+
+        return unaryExpression;
+    }
+};
+
+class ConstantFoldingPass : public AST::GS_TransformPass<ConstantFoldingTransformer> {};
+
+inline AST::GSPassPtr CreateConstantFoldingPass() {
+    return std::make_shared<ConstantFoldingPass>();
+}
+
 class Mangler {
 public:
 
@@ -71,7 +107,7 @@ AST::GSTranslationUnitDeclarationPtr CreateProgram(SharedPtr<ABI> abi) {
      * main.gs
      *
      * func main() {
-     *     var number = -7
+     *     var number = -3
      * }
      *
      */
@@ -84,7 +120,7 @@ AST::GSTranslationUnitDeclarationPtr CreateProgram(SharedPtr<ABI> abi) {
 
     Unit->AddNode(Function);
 
-    auto Expression = Builder->CreateUnaryExpression(AST::UnaryOperation::Minus, Builder->CreateConstantExpression(7));
+    auto Expression = Builder->CreateUnaryExpression(AST::UnaryOperation::Minus, Builder->CreateConstantExpression(3));
 
     auto Variable = Builder->CreateVariableDeclarationStatement("number", Builder->CreateI32Type(), Expression);
 
@@ -95,6 +131,12 @@ AST::GSTranslationUnitDeclarationPtr CreateProgram(SharedPtr<ABI> abi) {
 
 Void Func() {
     auto program = CreateProgram(GS_ABI::Create());
+
+    auto PM = AST::GS_PassManager::Create();
+
+    PM->AddPass(CreateConstantFoldingPass());
+
+    PM->Run(program);
 }
 
 /**
@@ -102,5 +144,8 @@ Void Func() {
  * @return Compiler result
  */
 I32 main(I32 argc, Ptr<Ptr<C8>> argv) {
-    return Driver::GS_Compiler::Start(argc, argv);
+    Func();
+
+    return 0;
+//    return Driver::GS_Compiler::Start(argc, argv);
 }

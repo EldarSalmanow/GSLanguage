@@ -33,7 +33,7 @@ namespace GSLanguageCompiler::Driver {
             command.emplace_back("GSLanguage.exe");
 
             for (auto &input : _inputs) {
-                command.emplace_back(input);
+                command.emplace_back(input.AsString());
             }
 
             if (!_entry.Empty()) {

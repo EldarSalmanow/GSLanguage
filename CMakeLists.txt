@@ -39,7 +39,7 @@ set(PROJECT_LIBRARIES
         GSASTLibrary
         GSCodeGeneratorLibrary
         GSSemanticLibrary
-        GSParserLibrary
+#        GSParserLibrary
         )
 
 add_executable(${PROJECT_NAME}
@@ -56,7 +56,7 @@ add_subdirectory(${INCLUDE_DIR}/Reader)
 add_subdirectory(${INCLUDE_DIR}/Lexer)
 add_subdirectory(${INCLUDE_DIR}/Driver)
 add_subdirectory(${INCLUDE_DIR}/AST)
-add_subdirectory(${INCLUDE_DIR}/Parser)
+#add_subdirectory(${INCLUDE_DIR}/Parser)
 add_subdirectory(${INCLUDE_DIR}/Semantic)
 add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
 

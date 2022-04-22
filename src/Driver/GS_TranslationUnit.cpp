@@ -10,7 +10,7 @@
 
 #include <Reader/Reader.h>
 #include <Lexer/Lexer.h>
-#include <Parser/Parser.h>
+//#include <Parser/Parser.h>
 #include <AST/AST.h>
 #include <CodeGenerator/CodeGenerator.h>
 
@@ -512,21 +512,23 @@ namespace GSLanguageCompiler::Driver {
     }
 
     SharedPtr<AST::GS_TranslationUnitDeclaration> GS_TranslationUnit::RunFrontend(UString inputFile) {
-        auto file = File::Create(inputFile, InMode);
+//        auto file = File::Create(inputFile, InMode);
+//
+//        Reader::GS_Reader reader(file);
+//
+//        Reader::GS_TextStream textStream(reader);
+//
+//        Lexer::GS_Lexer lexer(textStream);
+//
+//        Lexer::GS_TokenStream tokenStream(lexer);
+//
+//        Parser::GS_Parser parser(tokenStream);
+//
+//        auto unit = parser.Parse();
+//
+//        return unit;
 
-        Reader::GS_Reader reader(file);
-
-        Reader::GS_TextStream textStream(reader);
-
-        Lexer::GS_Lexer lexer(textStream);
-
-        Lexer::GS_TokenStream tokenStream(lexer);
-
-        Parser::GS_Parser parser(tokenStream);
-
-        auto unit = parser.Parse();
-
-        return unit;
+        return nullptr;
     }
 
     GSTranslationUnitConfigPtr GS_TranslationUnit::GetConfig() const {

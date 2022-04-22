@@ -59,6 +59,12 @@ namespace GSLanguageCompiler::AST {
     GSDeclarationPtr ToDeclaration(GSNodePtr node);
 
     /**
+     * Declaring for cast function
+     */
+    class GS_TranslationUnitDeclaration;
+    class GS_FunctionDeclaration;
+
+    /**
      * Casting node to any type of declaration if node is declaration
      * @tparam T Type of declaration
      * @param node Node
@@ -73,9 +79,6 @@ namespace GSLanguageCompiler::AST {
         if (!declaration) {
             return nullptr;
         }
-
-        class GS_TranslationUnitDeclaration;
-        class GS_FunctionDeclaration;
 
         switch (declaration->GetDeclarationType()) {
             case DeclarationType::TranslationUnitDeclaration:

@@ -90,28 +90,26 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSStatementPtr GS_Parser::ParseStatement() {
-        // TODO update statement parsing process (add TryParse method ?)
+        AST::GSStatementPtr statement;
 
-        if (IsTokenType(Lexer::TokenType::KeywordVar)) {
-            return ParseVariableDeclarationStatement();
+        statement = TryParse(&GS_Parser::ParseVariableDeclarationStatement);
+
+        if (statement) {
+            return statement;
         }
 
-        auto expression = ParseExpression();
+        statement = TryParse(&GS_Parser::ParseAssignmentStatement);
 
-        if (IsTokenType(Lexer::TokenType::SymbolEq)) {
-            return ParseAssignmentStatement(expression);
+        if (statement) {
+            return statement;
         }
 
-        return ParseExpressionStatement(expression);
+        return ParseExpressionStatement();
     }
 
     SharedPtr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement() {
         auto lvalueExpression = ParseLValueExpression();
 
-        return ParseAssignmentStatement(lvalueExpression); // TODO remove or modify
-    }
-
-    SharedPtr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement(ConstLRef<AST::GSExpressionPtr> lvalueExpression) {
         if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
             return nullptr;
         }
@@ -170,10 +168,6 @@ namespace GSLanguageCompiler::Parser {
     SharedPtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement() {
         auto expression = ParseExpression();
 
-        return ParseExpressionStatement(expression); // TODO remove of modify
-    }
-
-    SharedPtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement(ConstLRef<AST::GSExpressionPtr> expression) {
         auto expressionStatement = _builder->CreateExpressionStatement(expression);
 
         return expressionStatement;
@@ -182,10 +176,10 @@ namespace GSLanguageCompiler::Parser {
     AST::GSExpressionPtr GS_Parser::ParseExpression() {
         // TODO update parsing expression process
 
-        auto expression = ParseLValueExpression();
+        auto expression = ParseRValueExpression();
 
         if (!expression) {
-            expression = ParseRValueExpression();
+            expression = ParseLValueExpression();
         }
 
         return expression;
@@ -199,12 +193,6 @@ namespace GSLanguageCompiler::Parser {
         return nullptr;
     }
 
-    AST::GSExpressionPtr GS_Parser::ParseRValueExpression() {
-        auto expression = ParseUnaryExpression();
-
-        return ParseBinaryExpression(0, expression);
-    }
-
     AST::GSExpressionPtr GS_Parser::ParseVariableUsingExpression() {
         if (!IsTokenType(Lexer::TokenType::Identifier)) {
             return nullptr;
@@ -215,6 +203,47 @@ namespace GSLanguageCompiler::Parser {
         NextToken(); // skip variable name
 
         return _builder->CreateVariableUsingExpression(variableName);
+    }
+
+    AST::GSExpressionPtr GS_Parser::ParseRValueExpression() {
+        auto expression = ParseUnaryExpression();
+
+        return ParseBinaryExpression(0, expression);
+    }
+
+    // TODO move to UString (GSCrossPlatform)
+    inline I32 AsI32(ConstLRef<UString> string) {
+        return std::stoi(string.AsString());
+    }
+
+    AST::GSExpressionPtr GS_Parser::ParseConstantExpression() {
+        if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
+            auto number = _builder->CreateI32Value(AsI32(TokenValue()));
+
+            NextToken(); // skip number
+
+            return _builder->CreateConstantExpression(number);
+        } else if (IsTokenType(Lexer::TokenType::LiteralString)) {
+            auto string = _builder->CreateStringValue(TokenValue());
+
+            NextToken();
+
+            return _builder->CreateConstantExpression(string);
+        }
+
+        return nullptr;
+    }
+
+    AST::GSExpressionPtr GS_Parser::ParseUnaryExpression() {
+        if (IsTokenType(Lexer::TokenType::SymbolMinus)) {
+            NextToken(); // skip '-'
+
+            auto constantExpression = ParsePrimaryExpression();
+
+            return _builder->CreateUnaryExpression(AST::UnaryOperation::Minus, constantExpression);
+        }
+
+        return ParsePrimaryExpression();
     }
 
     AST::GSExpressionPtr GS_Parser::ParseBinaryExpression(I32 expressionPrecedence, LRef<AST::GSExpressionPtr> expression) {
@@ -262,38 +291,19 @@ namespace GSLanguageCompiler::Parser {
         }
     }
 
-    AST::GSExpressionPtr GS_Parser::ParseUnaryExpression() {
-        if (IsTokenType(Lexer::TokenType::SymbolMinus)) {
-            NextToken(); // skip '-'
+    AST::GSExpressionPtr GS_Parser::ParsePrimaryExpression() {
+        AST::GSExpressionPtr expression;
 
-            auto constantExpression = ParseConstantExpression();
+        expression = TryParse(&GS_Parser::ParseConstantExpression);
 
-            return _builder->CreateUnaryExpression(AST::UnaryOperation::Minus, constantExpression);
+        if (expression) {
+            return expression;
         }
 
-        return ParseConstantExpression();
-    }
+        expression = TryParse(&GS_Parser::ParseVariableUsingExpression);
 
-    // TODO move to UString (GSCrossPlatform)
-    inline I32 AsI32(ConstLRef<UString> string) {
-        return std::stoi(string.AsString());
-    }
-
-    AST::GSExpressionPtr GS_Parser::ParseConstantExpression() {
-        if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
-            auto number = _builder->CreateI32Value(AsI32(TokenValue()));
-
-            NextToken(); // skip number
-
-            return _builder->CreateConstantExpression(number);
-        } else if (IsTokenType(Lexer::TokenType::LiteralString)) {
-            auto string = _builder->CreateStringValue(TokenValue());
-
-            NextToken();
-
-            return _builder->CreateConstantExpression(string);
-        } else if (IsTokenType(Lexer::TokenType::Identifier)) {
-            return ParseVariableUsingExpression();
+        if (expression) {
+            return expression;
         }
 
         return nullptr;
@@ -334,6 +344,8 @@ namespace GSLanguageCompiler::Parser {
             variableType = _builder->CreateI32Type();
         } else if (stringVariableType == "String"_us) {
             variableType = _builder->CreateStringType();
+        } else {
+            return _builder->CreateType(stringVariableType);
         }
 
         return variableType;
