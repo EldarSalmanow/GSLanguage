@@ -28,8 +28,10 @@
 #include <AST/Expressions/GS_VariableUsingExpression.h>
 #include <AST/Expressions/GS_FunctionCallingExpression.h>
 
+#include <AST/GS_Type.h>
+
 #include <AST/GS_Visitor.h>
 
-#include <AST/GS_Type.h>
+#include <AST/GS_Pass.h>
 
 #endif //GSLANGUAGE_AST_H

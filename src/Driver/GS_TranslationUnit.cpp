@@ -12,7 +12,7 @@
 #include <Lexer/Lexer.h>
 //#include <Parser/Parser.h>
 #include <AST/AST.h>
-#include <CodeGenerator/CodeGenerator.h>
+//#include <CodeGenerator/CodeGenerator.h>
 
 #include <GS_TranslationUnit.h>
 
@@ -139,304 +139,6 @@ namespace GSLanguageCompiler::Driver {
 //        }
 //    };
 
-    class PrintVisitor : public AST::GS_Visitor<Void> {
-    public:
-
-        Void visitTranslationUnitDeclaration(
-                SharedPtr<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration) override {
-            Print("TranslationUnitDeclaration: {");
-
-            AddTab();
-
-            Print("Nodes: {");
-
-            AddTab();
-
-            for (auto &node: translationUnitDeclaration->GetNodes()) {
-                visitNode(node);
-            }
-
-            SubTab();
-
-            Print("}");
-
-            SubTab();
-
-            Print("}");
-        }
-
-        Void visitFunctionDeclaration(SharedPtr<AST::GS_FunctionDeclaration> functionDeclaration) override {
-            Print("FunctionDeclaration: {");
-
-            AddTab();
-
-            Print("Name: " + functionDeclaration->GetName().AsString());
-
-            Print("Body: {");
-
-            AddTab();
-
-            for (auto &statement: functionDeclaration->GetBody()) {
-                visitStatement(statement);
-            }
-
-            SubTab();
-
-            Print("}");
-
-            SubTab();
-
-            Print("}");
-        }
-
-        Void visitVariableDeclarationStatement(
-                SharedPtr<AST::GS_VariableDeclarationStatement> variableDeclarationStatement) override {
-            Print("VariableDeclarationStatement: {");
-
-            AddTab();
-
-            Print("Name: " + variableDeclarationStatement->GetName().AsString());
-
-            Print("Type: " + variableDeclarationStatement->GetType()->GetName().AsString());
-
-            Print("Expression: {");
-
-            AddTab();
-
-            visitExpression(variableDeclarationStatement->GetExpression());
-
-            SubTab();
-
-            Print("}");
-
-            SubTab();
-
-            Print("}");
-        }
-
-        Void visitAssignmentStatement(SharedPtr<AST::GS_AssignmentStatement> assignmentStatement) override {
-            Print("AssignmentStatement: {");
-
-            AddTab();
-
-            Print("LValueExpression: {");
-
-            AddTab();
-
-            visitExpression(assignmentStatement->GetLValueExpression());
-
-            SubTab();
-
-            Print("}");
-
-            Print("RValueExpression: {");
-
-            AddTab();
-
-            visitExpression(assignmentStatement->GetRValueExpression());
-
-            SubTab();
-
-            Print("}");
-
-            SubTab();
-
-            Print("}");
-        }
-
-        Void visitExpressionStatement(SharedPtr<AST::GS_ExpressionStatement> expressionStatement) override {
-            Print("ExpressionStatement: {");
-
-            AddTab();
-
-            visitExpression(expressionStatement->GetExpression());
-
-            SubTab();
-
-            Print("}");
-        }
-
-        Void visitConstantExpression(SharedPtr<AST::GS_ConstantExpression> constantExpression) override {
-            Print("ConstantExpression: {");
-
-            AddTab();
-
-            Print("Value: {");
-
-            AddTab();
-
-            auto value = AST::GSValueCast<AST::GS_LiteralValue>(constantExpression->GetValue());
-            auto typeName = value->GetType()->GetName();
-
-            Print("Type: " + typeName.AsString());
-
-            if (typeName == "I32"_us) {
-                Print("Value: " + std::to_string(value->GetValueWithCast<I32>()));
-            } else if (typeName == "String"_us) {
-                Print("Value: " + value->GetValueWithCast<UString>().AsString());
-            }
-
-            SubTab();
-
-            Print("}");
-
-            SubTab();
-
-            Print("}");
-        }
-
-        Void visitUnaryExpression(SharedPtr<AST::GS_UnaryExpression> unaryExpression) override {
-            Print("UnaryExpression: {");
-
-            AddTab();
-
-            Print("Expression: {");
-
-            AddTab();
-
-            visitExpression(unaryExpression->GetExpression());
-
-            SubTab();
-
-            Print("}");
-
-            auto operation = unaryExpression->GetUnaryOperation();
-
-            String stringOperation;
-
-            switch (operation) {
-                case AST::UnaryOperation::Minus:
-                    stringOperation = "Minus (-)";
-
-                    break;
-            }
-
-            Print("Operation: " + stringOperation);
-
-            SubTab();
-
-            Print("}");
-        }
-
-        Void visitBinaryExpression(SharedPtr<AST::GS_BinaryExpression> binaryExpression) override {
-            Print("BinaryExpression: {");
-
-            AddTab();
-
-            Print("FirstExpression: {");
-
-            AddTab();
-
-            visitExpression(binaryExpression->GetFirstExpression());
-
-            SubTab();
-
-            Print("}");
-
-            Print("SecondExpression: {");
-
-            AddTab();
-
-            visitExpression(binaryExpression->GetSecondExpression());
-
-            SubTab();
-
-            Print("}");
-
-            auto operation = binaryExpression->GetBinaryOperation();
-
-            String stringOperation;
-
-            switch (operation) {
-                case AST::BinaryOperation::Plus:
-                    stringOperation = "Plus (+)";
-
-                    break;
-                case AST::BinaryOperation::Minus:
-                    stringOperation = "Minus (-)";
-
-                    break;
-                case AST::BinaryOperation::Star:
-                    stringOperation = "Star (*)";
-
-                    break;
-                case AST::BinaryOperation::Slash:
-                    stringOperation = "Slash (/)";
-
-                    break;
-            }
-
-            Print("Operation: " + stringOperation);
-
-            SubTab();
-
-            Print("}");
-        }
-
-        Void visitVariableUsingExpression(SharedPtr<AST::GS_VariableUsingExpression> variableUsingExpression) override {
-            Print("VariableUsingExpression: {");
-
-            AddTab();
-
-            Print("Name: " + variableUsingExpression->GetName().AsString());
-
-            SubTab();
-
-            Print("}");
-        }
-
-        Void visitFunctionCallingExpression(
-                SharedPtr<AST::GS_FunctionCallingExpression> functionCallingExpression) override {
-            Print("FunctionCallingExpression: {");
-
-            AddTab();
-
-            Print("Name: " + functionCallingExpression->GetName().AsString());
-
-            Print("Params: {");
-
-            AddTab();
-
-            for (auto &param: functionCallingExpression->GetParams()) {
-                visitExpression(param);
-            }
-
-            SubTab();
-
-            Print("}");
-
-            SubTab();
-
-            Print("}");
-        }
-
-    private:
-
-        Void Print(String message) {
-            PrintTabs();
-
-            std::cout << message << std::endl;
-        }
-
-        Void PrintTabs() {
-            for (auto i = 0; i < tabsNumber; ++i) {
-                std::cout << "  ";
-            }
-        }
-
-        Void AddTab() {
-            ++tabsNumber;
-        }
-
-        Void SubTab() {
-            --tabsNumber;
-        }
-
-    private:
-
-        I32 tabsNumber = 0;
-    };
-
     GS_TranslationUnit::GS_TranslationUnit(GSTranslationUnitConfigPtr config)
             : _config(std::move(config)) {}
 
@@ -447,16 +149,19 @@ namespace GSLanguageCompiler::Driver {
     CompilingResult GS_TranslationUnit::Compile() {
         auto unit = RunFrontend(_config->GetInputName());
 
-        auto printer = std::make_shared<PrintVisitor>();
+//        auto printer = std::make_shared<PrintVisitor>();
+//
+//        printer->visitNode(unit);
 
-        printer->visitNode(unit);
+//        auto codeGen = std::make_shared<CodeGenerator::GS_LLVMCodeGenerationVisitor>();
+//
+//        codeGen->visitTranslationUnitDeclaration(unit);
 
-        auto codeGen = std::make_shared<CodeGenerator::GS_LLVMCodeGenerationVisitor>();
+//        auto &module = std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCodeGenerationVisitorContext>(
+//                codeGen->getContext())->getModule();
 
-        codeGen->visitTranslationUnitDeclaration(unit);
-
-        auto &module = std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCodeGenerationVisitorContext>(
-                codeGen->getContext())->getModule();
+        llvm::LLVMContext c;
+        llvm::Module module("t", c);
 
         module.print(llvm::errs(), nullptr);
 
