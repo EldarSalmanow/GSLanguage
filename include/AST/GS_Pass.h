@@ -149,6 +149,8 @@ namespace GSLanguageCompiler::AST {
         GSPassPtrArray _passes;
     };
 
+    using GSPassManagerPtr = SharedPtr<GS_PassManager>;
+
 }
 
 #endif //GSLANGUAGE_GS_PASS_H

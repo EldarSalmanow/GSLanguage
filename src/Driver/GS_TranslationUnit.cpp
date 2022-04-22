@@ -12,7 +12,7 @@
 #include <Lexer/Lexer.h>
 //#include <Parser/Parser.h>
 #include <AST/AST.h>
-//#include <CodeGenerator/CodeGenerator.h>
+#include <CodeGenerator/CodeGenerator.h>
 
 #include <GS_TranslationUnit.h>
 
@@ -149,19 +149,11 @@ namespace GSLanguageCompiler::Driver {
     CompilingResult GS_TranslationUnit::Compile() {
         auto unit = RunFrontend(_config->GetInputName());
 
-//        auto printer = std::make_shared<PrintVisitor>();
-//
-//        printer->visitNode(unit);
+        auto codeGen = std::make_shared<CodeGenerator::GS_LLVMCodeGenerationVisitor>();
 
-//        auto codeGen = std::make_shared<CodeGenerator::GS_LLVMCodeGenerationVisitor>();
-//
-//        codeGen->visitTranslationUnitDeclaration(unit);
+        codeGen->GenerateTranslationUnitDeclaration(unit);
 
-//        auto &module = std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCodeGenerationVisitorContext>(
-//                codeGen->getContext())->getModule();
-
-        llvm::LLVMContext c;
-        llvm::Module module("t", c);
+        auto &module = codeGen->GetModule();
 
         module.print(llvm::errs(), nullptr);
 
