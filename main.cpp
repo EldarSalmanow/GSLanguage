@@ -1,6 +1,7 @@
 //#include <Driver/Driver.h>
 
 #include <AST/AST.h>
+#include <CodeGenerator/CodeGenerator.h>
 
 using namespace GSLanguageCompiler;
 
@@ -405,15 +406,11 @@ public:
     }
 };
 
-inline SharedPtr<ABI> GetABI() {
-    return GS_ABI::Create();
-};
-
 class MangleVisitor : public AST::GS_Visitor {
 public:
 
-    explicit MangleVisitor()
-            : _mangler(GetABI()->GetMangler()) {}
+    explicit MangleVisitor(SharedPtr<Mangler> mangler)
+            : _mangler(std::move(mangler)) {}
 
 public:
 
@@ -438,10 +435,27 @@ private:
     SharedPtr<Mangler> _mangler;
 };
 
-class ManglePass : public AST::GS_VisitPass<MangleVisitor> {};
+class ManglePass : public AST::GS_Pass {
+public:
 
-inline AST::GSPassPtr CreateManglePass() {
-    return std::make_shared<ManglePass>();
+    explicit ManglePass(SharedPtr<Mangler> mangler)
+            : _mangler(std::move(mangler)) {}
+
+public:
+
+    Void Run(LRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration) override {
+        MangleVisitor visitor(_mangler);
+
+        visitor.VisitTranslationUnitDeclaration(translationUnitDeclaration);
+    }
+
+private:
+
+    SharedPtr<Mangler> _mangler;
+};
+
+inline AST::GSPassPtr CreateManglePass(SharedPtr<Mangler> mangler) {
+    return std::make_shared<ManglePass>(mangler);
 }
 
 AST::GSTranslationUnitDeclarationPtr CreateProgram(SharedPtr<ABI> abi) {
@@ -478,13 +492,17 @@ Void Func() {
 
     PM->AddPass(CreatePrintPass());
 
-    PM->AddPass(CreateManglePass());
+    PM->AddPass(CreateManglePass(GS_ABI::Create()->GetMangler()));
 
     PM->AddPass(CreatePrintPass());
 
     PM->AddPass(CreateConstantFoldingPass());
 
     PM->AddPass(CreatePrintPass());
+
+    CodeGenerator::GSCodeHolderPtr codeHolder = std::make_shared<CodeGenerator::GS_LLVMCodeHolder>();
+
+    PM->AddPass(CodeGenerator::CreateCGPass(CodeGenerator::CGBackend::LLVM, codeHolder));
 
     PM->Run(program);
 }

@@ -149,11 +149,14 @@ namespace GSLanguageCompiler::Driver {
     CompilingResult GS_TranslationUnit::Compile() {
         auto unit = RunFrontend(_config->GetInputName());
 
-        auto codeGen = std::make_shared<CodeGenerator::GS_LLVMCodeGenerationVisitor>();
+//        auto codeGen = std::make_shared<CodeGenerator::GS_LLVMCodeGenerationVisitor>();
+//
+//        codeGen->GenerateTranslationUnitDeclaration(unit);
 
-        codeGen->GenerateTranslationUnitDeclaration(unit);
+//        auto &module = codeGen->GetModule();
 
-        auto &module = codeGen->GetModule();
+        llvm::LLVMContext c;
+        llvm::Module module("test", c);
 
         module.print(llvm::errs(), nullptr);
 

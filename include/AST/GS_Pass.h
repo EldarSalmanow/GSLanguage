@@ -42,7 +42,7 @@ namespace GSLanguageCompiler::AST {
         Void Run(LRef<GSNodePtrArray> nodes) override {
             T visitor;
 
-            for (auto &node: nodes) {
+            for (auto &node : nodes) {
                 visitor.VisitNode(node);
             }
         }
@@ -50,7 +50,7 @@ namespace GSLanguageCompiler::AST {
         Void Run(LRef<GSDeclarationPtrArray> declarations) override {
             T visitor;
 
-            for (auto &declaration: declarations) {
+            for (auto &declaration : declarations) {
                 visitor.VisitDeclaration(declaration);
             }
         }
@@ -58,7 +58,7 @@ namespace GSLanguageCompiler::AST {
         Void Run(LRef<GSStatementPtrArray> statements) override {
             T visitor;
 
-            for (auto &statement: statements) {
+            for (auto &statement : statements) {
                 visitor.VisitStatement(statement);
             }
         }
@@ -66,7 +66,7 @@ namespace GSLanguageCompiler::AST {
         Void Run(LRef<GSExpressionPtrArray> expressions) override {
             T visitor;
 
-            for (auto &expression: expressions) {
+            for (auto &expression : expressions) {
                 visitor.VisitExpression(expression);
             }
         }
@@ -85,7 +85,7 @@ namespace GSLanguageCompiler::AST {
         Void Run(LRef<GSNodePtrArray> nodes) override {
             T transformer;
 
-            for (auto &node: nodes) {
+            for (auto &node : nodes) {
                 node = transformer.TransformNode(node);
             }
         }
@@ -93,7 +93,7 @@ namespace GSLanguageCompiler::AST {
         Void Run(LRef<GSDeclarationPtrArray> declarations) override {
             T transformer;
 
-            for (auto &declaration: declarations) {
+            for (auto &declaration : declarations) {
                 declaration = ToDeclaration(transformer.TransformDeclaration(declaration));
             }
         }
@@ -101,7 +101,7 @@ namespace GSLanguageCompiler::AST {
         Void Run(LRef<GSStatementPtrArray> statements) override {
             T transformer;
 
-            for (auto &statement: statements) {
+            for (auto &statement : statements) {
                 statement = ToStatement(transformer.TransformStatement(statement));
             }
         }
@@ -109,7 +109,7 @@ namespace GSLanguageCompiler::AST {
         Void Run(LRef<GSExpressionPtrArray> expressions) override {
             T transformer;
 
-            for (auto &expression: expressions) {
+            for (auto &expression : expressions) {
                 expression = ToExpression(transformer.TransformExpression(expression));
             }
         }

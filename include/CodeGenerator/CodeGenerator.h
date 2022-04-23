@@ -5,7 +5,10 @@
  * This file includes all files from GSLanguageCompiler CodeGenerator Module
  */
 
-#include <CodeGenerator/LLVM/GS_LLVMCodeGenerationVisitor.h>
-#include <CodeGenerator/LLVM/GS_LLVMCodeGenerationPass.h>
+#include <CodeGenerator/GS_CodeHolder.h>
+#include <CodeGenerator/GS_CGPass.h>
+
+#include <CodeGenerator/LLVM/GS_LLVMCodeHolder.h>
+#include <CodeGenerator/LLVM/GS_LLVMCGVisitor.h>
 
 #endif //GSLANGUAGE_CODEGENERATOR_H
