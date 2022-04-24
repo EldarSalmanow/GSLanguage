@@ -5,7 +5,7 @@
 
 #include <AST/GS_Visitor.h>
 
-#include <CodeGenerator/LLVM/GS_LLVMCodeHolder.h>
+#include <CodeGenerator/LLVM/GS_LLVMCGContext.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
@@ -17,9 +17,9 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         /**
          * Constructor for LLVM code generation visitor
-         * @param codeHolder LLVM code holder
+         * @param context LLVM code generation context
          */
-        explicit GS_LLVMCGVisitor(LRef<SharedPtr<GS_LLVMCodeHolder>> codeHolder);
+        explicit GS_LLVMCGVisitor(LRef<GSLLVMCGContextPtr> context);
 
     public:
 
@@ -124,9 +124,9 @@ namespace GSLanguageCompiler::CodeGenerator {
     private:
 
         /**
-         * LLVM code holder
+         * LLVM code generation context
          */
-        SharedPtr<GS_LLVMCodeHolder> _codeHolder;
+        LRef<GSLLVMCGContextPtr> _context;
 
         /**
          * LLVM IR builder

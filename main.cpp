@@ -20,24 +20,73 @@ public:
             if (auto i32Value = AST::GSValueCast<AST::GS_I32Value>(value)) {
                 auto number = i32Value->GetI32Value();
 
+                I32 result;
+
                 switch (operation) {
                     case AST::UnaryOperation::Minus:
-                        number = -number;
+                        result = -number;
 
                         break;
                 }
 
-                return AST::GS_ConstantExpression::Create(AST::GS_I32Value::Create(number));
+                return AST::GS_ASTBuilder::Create()->CreateConstantExpression(result);
             }
         }
 
         return unaryExpression;
     }
+
+    AST::GSNodePtr TransformBinaryExpression(LRef<SharedPtr<AST::GS_BinaryExpression>> binaryExpression) override {
+        binaryExpression = AST::ToExpression<AST::GS_BinaryExpression>(GS_Transformer::TransformBinaryExpression(binaryExpression));
+
+        auto firstExpression = binaryExpression->GetFirstExpression();
+        auto secondExpression = binaryExpression->GetSecondExpression();
+        auto operation = binaryExpression->GetBinaryOperation();
+
+        if (auto firstConstantExpression = AST::ToExpression<AST::GS_ConstantExpression>(firstExpression)) {
+            if (auto secondConstantExpression = AST::ToExpression<AST::GS_ConstantExpression>(secondExpression)) {
+                auto firstValue = firstConstantExpression->GetValue();
+                auto secondValue = secondConstantExpression->GetValue();
+
+                if (auto firstI32Value = AST::GSValueCast<AST::GS_I32Value>(firstValue)) {
+                    if (auto secondI32Value = AST::GSValueCast<AST::GS_I32Value>(secondValue)) {
+                        auto firstNumber = firstI32Value->GetI32Value();
+                        auto secondNumber = secondI32Value->GetI32Value();
+
+                        I32 result;
+
+                        switch (operation) {
+                            case AST::BinaryOperation::Plus:
+                                result = firstNumber + secondNumber;
+
+                                break;
+                            case AST::BinaryOperation::Minus:
+                                result = firstNumber - secondNumber;
+
+                                break;
+                            case AST::BinaryOperation::Star:
+                                result = firstNumber * secondNumber;
+
+                                break;
+                            case AST::BinaryOperation::Slash:
+                                result = firstNumber / secondNumber;
+
+                                break;
+                        }
+
+                        return AST::GS_ASTBuilder::Create()->CreateConstantExpression(result);
+                    }
+                }
+            }
+        }
+
+        return binaryExpression;
+    }
 };
 
 class ConstantFoldingPass : public AST::GS_TransformPass<ConstantFoldingTransformer> {};
 
-inline AST::GSPassPtr CreateConstantFoldingPass() {
+AST::GSPassPtr CreateConstantFoldingPass() {
     return std::make_shared<ConstantFoldingPass>();
 }
 
@@ -340,7 +389,7 @@ private:
 
 class PrintPass : public AST::GS_VisitPass<PrintVisitor> {};
 
-inline AST::GSPassPtr CreatePrintPass() {
+AST::GSPassPtr CreatePrintPass() {
     return std::make_shared<PrintPass>();
 }
 
@@ -454,11 +503,15 @@ private:
     SharedPtr<Mangler> _mangler;
 };
 
-inline AST::GSPassPtr CreateManglePass(SharedPtr<Mangler> mangler) {
+AST::GSPassPtr CreateManglePass(SharedPtr<Mangler> mangler) {
     return std::make_shared<ManglePass>(mangler);
 }
 
-AST::GSTranslationUnitDeclarationPtr CreateProgram(SharedPtr<ABI> abi) {
+inline Void PrintModule(LRef<CodeGenerator::GSCGContextPtr> context) {
+    std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCGContext>(context)->GetModule().print(llvm::errs(), nullptr);
+}
+
+AST::GSTranslationUnitDeclarationPtr CreateProgram() {
     /**
      * main.gs
      *
@@ -486,7 +539,7 @@ AST::GSTranslationUnitDeclarationPtr CreateProgram(SharedPtr<ABI> abi) {
 }
 
 Void Func() {
-    auto program = CreateProgram(GS_ABI::Create());
+    auto program = CreateProgram();
 
     auto PM = AST::GS_PassManager::Create();
 
@@ -500,11 +553,13 @@ Void Func() {
 
     PM->AddPass(CreatePrintPass());
 
-    CodeGenerator::GSCodeHolderPtr codeHolder = std::make_shared<CodeGenerator::GS_LLVMCodeHolder>();
+    CodeGenerator::GSCGContextPtr context = CodeGenerator::GS_LLVMCGContext::Create();
 
-    PM->AddPass(CodeGenerator::CreateCGPass(CodeGenerator::CGBackend::LLVM, codeHolder));
+    PM->AddPass(CodeGenerator::CreateCGPass(CodeGenerator::CGBackend::LLVM, context));
 
     PM->Run(program);
+
+    PrintModule(context);
 }
 
 /**

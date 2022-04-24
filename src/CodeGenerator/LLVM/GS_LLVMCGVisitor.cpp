@@ -2,8 +2,8 @@
 
 namespace GSLanguageCompiler::CodeGenerator {
 
-    GS_LLVMCGVisitor::GS_LLVMCGVisitor(LRef<SharedPtr<GS_LLVMCodeHolder>> codeHolder)
-            : _codeHolder(codeHolder), _builder(_codeHolder->GetContext()) {}
+    GS_LLVMCGVisitor::GS_LLVMCGVisitor(LRef<GSLLVMCGContextPtr> context)
+            : _context(context), _builder(_context->GetContext()) {}
 
     Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateNode(LRef<AST::GSNodePtr> node) {
         if (node->IsDeclaration()) {
@@ -102,7 +102,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         auto name = translationUnitDeclaration->GetName();
         auto nodes = translationUnitDeclaration->GetNodes();
 
-        _codeHolder->CreateModule(name);
+        _context->CreateModule(name);
 
         for (auto &node : nodes) {
             GenerateNode(node);
@@ -115,11 +115,11 @@ namespace GSLanguageCompiler::CodeGenerator {
         auto name = functionDeclaration->GetName();
         auto body = functionDeclaration->GetBody();
 
-        auto llvmFunctionType = llvm::FunctionType::get(llvm::Type::getVoidTy(_codeHolder->GetContext()), false);
+        auto llvmFunctionType = llvm::FunctionType::get(llvm::Type::getVoidTy(_context->GetContext()), false);
 
-        auto llvmFunction = llvm::Function::Create(llvmFunctionType, llvm::Function::LinkageTypes::ExternalLinkage, name.AsString(), _codeHolder->GetModule());
+        auto llvmFunction = llvm::Function::Create(llvmFunctionType, llvm::Function::LinkageTypes::ExternalLinkage, name.AsString(), _context->GetModule());
 
-        auto block = llvm::BasicBlock::Create(_codeHolder->GetContext(), "entry", llvmFunction);
+        auto block = llvm::BasicBlock::Create(_context->GetContext(), "entry", llvmFunction);
 
         _builder.SetInsertPoint(block);
 
@@ -146,7 +146,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         Ptr<llvm::Type> llvmType;
 
         if (typeName == "I32"_us) {
-            llvmType = llvm::Type::getInt32Ty(_codeHolder->GetContext());
+            llvmType = llvm::Type::getInt32Ty(_context->GetContext());
         } else {
             return nullptr;
         }
@@ -183,7 +183,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         if (typeName == "I32"_us) {
             auto number = value->GetValueWithCast<I32>();
 
-            return llvm::ConstantInt::get(llvm::Type::getInt32Ty(_codeHolder->GetContext()), number);
+            return llvm::ConstantInt::get(llvm::Type::getInt32Ty(_context->GetContext()), number);
         } else if (typeName == "String"_us) {
             auto string = value->GetValueWithCast<UString>();
 
@@ -243,7 +243,7 @@ namespace GSLanguageCompiler::CodeGenerator {
     Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateFunctionCallingExpression(LRef<SharedPtr<AST::GS_FunctionCallingExpression>> functionCallingExpression) {
         auto name = functionCallingExpression->GetName();
 
-        auto llvmFunction = _codeHolder->GetModule().getFunction(name.AsString());
+        auto llvmFunction = _context->GetModule().getFunction(name.AsString());
 
         if (llvmFunction != nullptr) {
             return _builder.CreateCall(llvmFunction);

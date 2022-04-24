@@ -1,28 +1,27 @@
-#include <LLVM/GS_LLVMCodeHolder.h>
 #include <LLVM/GS_LLVMCGVisitor.h>
 
 #include <GS_CGPass.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
-    GS_CGPass::GS_CGPass(CGBackend backend, LRef<GSCodeHolderPtr> codeHolder)
-            : _backend(backend), _codeHolder(codeHolder) {}
+    GS_CGPass::GS_CGPass(CGBackend backend, LRef<GSCGContextPtr> context)
+            : _backend(backend), _context(context) {}
 
     Void GS_CGPass::Run(LRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration) {
         switch (_backend) {
             case CGBackend::LLVM:
-                auto llvmCodeHolder = std::reinterpret_pointer_cast<GS_LLVMCodeHolder>(_codeHolder);
+                auto llvmContext = std::reinterpret_pointer_cast<GS_LLVMCGContext>(_context);
 
-                GS_LLVMCGVisitor visitor(llvmCodeHolder);
+                GS_LLVMCGVisitor visitor(llvmContext);
 
                 visitor.GenerateTranslationUnitDeclaration(translationUnitDeclaration);
 
-                // TODO remove
-
-                llvmCodeHolder->GetModule().print(llvm::errs(), nullptr);
-
                 break;
         }
+    }
+
+    AST::GSPassPtr CreateCGPass(CGBackend backend, LRef<GSCGContextPtr> context) {
+        return std::make_shared<GS_CGPass>(backend, context);
     }
 
 }

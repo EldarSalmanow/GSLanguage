@@ -3,7 +3,9 @@
 
 #include <AST/GS_Pass.h>
 
-#include <CodeGenerator/GS_CodeHolder.h>
+#include <CodeGenerator/GS_CGContext.h>
+
+#include <CodeGenerator/LLVM/GS_LLVMCGContext.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
@@ -20,22 +22,42 @@ namespace GSLanguageCompiler::CodeGenerator {
     class GS_CGPass : public AST::GS_Pass {
     public:
 
-        explicit GS_CGPass(CGBackend backend, LRef<GSCodeHolderPtr> codeHolder);
+        /**
+         * Constructor for code generation pass
+         * @param backend Code generation backend
+         * @param context Code generation context
+         */
+        GS_CGPass(CGBackend backend, LRef<GSCGContextPtr> context);
 
     public:
 
+        /**
+         * Run code generation pass
+         * @param translationUnitDeclaration Translation unit declaration
+         * @return
+         */
         Void Run(LRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration) override;
 
     private:
 
+        /**
+         * Code generation backend
+         */
         CGBackend _backend;
 
-        LRef<GSCodeHolderPtr> _codeHolder;
+        /**
+         * Code generation context
+         */
+        LRef<GSCGContextPtr> _context;
     };
 
-    inline AST::GSPassPtr CreateCGPass(CGBackend backend, LRef<GSCodeHolderPtr> codeHolder) {
-        return std::make_shared<GS_CGPass>(backend, codeHolder);
-    }
+    /**
+     * Create code generation pass
+     * @param backend Code generation backend
+     * @param context Code generation context
+     * @return AST pass ptr
+     */
+    AST::GSPassPtr CreateCGPass(CGBackend backend, LRef<GSCGContextPtr> context);
 
 }
 
