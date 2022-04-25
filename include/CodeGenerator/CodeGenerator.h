@@ -5,6 +5,8 @@
  * This file includes all files from GSLanguageCompiler CodeGenerator Module
  */
 
+#include <CodeGenerator/GS_CodeGenerator.h>
+
 #include <CodeGenerator/GS_CGContext.h>
 #include <CodeGenerator/GS_CGPass.h>
 

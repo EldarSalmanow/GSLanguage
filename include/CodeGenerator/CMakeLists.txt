@@ -3,11 +3,13 @@ project(GSCodeGeneratorLibrary)
 set(CODEGENERATOR_DIR ${SOURCE_DIR}/CodeGenerator)
 
 set(GS_CODEGENERATOR_SOURCE
+        ${CODEGENERATOR_DIR}/GS_CodeGenerator.cpp
+
         ${CODEGENERATOR_DIR}/GS_CGContext.cpp
-        ${CODEGENERATOR_DIR}/GS_CGPass.cpp
 
         ${CODEGENERATOR_DIR}/LLVM/GS_LLVMCGContext.cpp
-        ${CODEGENERATOR_DIR}/LLVM/GS_LLVMCGVisitor.cpp)
+        ${CODEGENERATOR_DIR}/LLVM/GS_LLVMCGVisitor.cpp
+        ${CODEGENERATOR_DIR}/LLVM/GS_LLVMCGPass.cpp)
 
 add_library(
 #       Library name

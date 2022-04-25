@@ -529,7 +529,7 @@ AST::GSTranslationUnitDeclarationPtr CreateProgram() {
 
     Unit->AddNode(Function);
 
-    auto Expression = Builder->CreateUnaryExpression(AST::UnaryOperation::Minus, Builder->CreateConstantExpression(3));
+    auto Expression = Builder->CreateBinaryExpression(AST::BinaryOperation::Plus, Builder->CreateConstantExpression(3), Builder->CreateConstantExpression(10));
 
     auto Variable = Builder->CreateVariableDeclarationStatement("number", Builder->CreateI32Type(), Expression);
 
@@ -537,6 +537,8 @@ AST::GSTranslationUnitDeclarationPtr CreateProgram() {
 
     return Unit;
 }
+
+// TODO add Writer module for writing output code
 
 Void Func() {
     auto program = CreateProgram();
@@ -553,11 +555,13 @@ Void Func() {
 
     PM->AddPass(CreatePrintPass());
 
-    CodeGenerator::GSCGContextPtr context = CodeGenerator::GS_LLVMCGContext::Create();
-
-    PM->AddPass(CodeGenerator::CreateCGPass(CodeGenerator::CGBackend::LLVM, context));
-
     PM->Run(program);
+
+    auto CG = CodeGenerator::GS_CodeGenerator::CreateLLVMCG();
+
+    CG->Generate(program);
+
+    auto context = CG->GetContext();
 
     PrintModule(context);
 }
