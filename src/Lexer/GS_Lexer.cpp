@@ -44,6 +44,8 @@ namespace GSLanguageCompiler::Lexer {
         return TokenType::Unknown;
     }
 
+    // TODO add saving information in token about location
+
     GS_Lexer::GS_Lexer(LRef<Reader::GS_TextStream> textStream)
             : _stream(textStream) {}
 

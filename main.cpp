@@ -1,3 +1,5 @@
+//#include <rapidjson/document.h>
+
 //#include <Driver/Driver.h>
 
 #include <AST/AST.h>
@@ -94,13 +96,13 @@ class PrintVisitor : public AST::GS_Visitor {
 public:
 
     Void VisitTranslationUnitDeclaration(LRef<SharedPtr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) override {
-        Print("TranslationUnitDeclaration: {");
+        Print("TranslationUnitDeclaration: {"_us);
 
         AddTab();
 
-        Print("Name: " + translationUnitDeclaration->GetName().AsString());
+        Print("Name: "_us + translationUnitDeclaration->GetName());
 
-        Print("Nodes: {");
+        Print("Nodes: {"_us);
 
         AddTab();
 
@@ -110,21 +112,21 @@ public:
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
     }
 
     Void VisitFunctionDeclaration(LRef<SharedPtr<AST::GS_FunctionDeclaration>> functionDeclaration) override {
-        Print("FunctionDeclaration: {");
+        Print("FunctionDeclaration: {"_us);
 
         AddTab();
 
-        Print("Name: " + functionDeclaration->GetName().AsString());
+        Print("Name: "_us + functionDeclaration->GetName());
 
-        Print("Body: {");
+        Print("Body: {"_us);
 
         AddTab();
 
@@ -134,23 +136,23 @@ public:
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
     }
 
     Void VisitVariableDeclarationStatement(LRef<SharedPtr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement) override {
-        Print("VariableDeclarationStatement: {");
+        Print("VariableDeclarationStatement: {"_us);
 
         AddTab();
 
-        Print("Name: " + variableDeclarationStatement->GetName().AsString());
+        Print("Name: "_us + variableDeclarationStatement->GetName());
 
-        Print("Type: " + variableDeclarationStatement->GetType()->GetName().AsString());
+        Print("Type: "_us + variableDeclarationStatement->GetType()->GetName());
 
-        Print("Expression: {");
+        Print("Expression: {"_us);
 
         AddTab();
 
@@ -158,19 +160,19 @@ public:
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
     }
 
     Void VisitAssignmentStatement(LRef<SharedPtr<AST::GS_AssignmentStatement>> assignmentStatement) override {
-        Print("AssignmentStatement: {");
+        Print("AssignmentStatement: {"_us);
 
         AddTab();
 
-        Print("LValueExpression: {");
+        Print("LValueExpression: {"_us);
 
         AddTab();
 
@@ -178,9 +180,9 @@ public:
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
 
-        Print("RValueExpression: {");
+        Print("RValueExpression: {"_us);
 
         AddTab();
 
@@ -188,15 +190,15 @@ public:
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
     }
 
     Void VisitExpressionStatement(LRef<SharedPtr<AST::GS_ExpressionStatement>> expressionStatement) override {
-        Print("ExpressionStatement: {");
+        Print("ExpressionStatement: {"_us);
 
         AddTab();
 
@@ -204,15 +206,15 @@ public:
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
     }
 
     Void VisitConstantExpression(LRef<SharedPtr<AST::GS_ConstantExpression>> constantExpression) override {
-        Print("ConstantExpression: {");
+        Print("ConstantExpression: {"_us);
 
         AddTab();
 
-        Print("Value: {");
+        Print("Value: {"_us);
 
         AddTab();
 
@@ -222,26 +224,26 @@ public:
         Print("Type: " + typeName.AsString());
 
         if (typeName == "I32"_us) {
-            Print("Value: " + std::to_string(value->GetValueWithCast<I32>()));
+            Print("Value: "_us + UString(std::to_string(value->GetValueWithCast<I32>())));
         } else if (typeName == "String"_us) {
-            Print("Value: " + value->GetValueWithCast<UString>().AsString());
+            Print("Value: "_us + value->GetValueWithCast<UString>());
         }
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
     }
 
     Void VisitUnaryExpression(LRef<SharedPtr<AST::GS_UnaryExpression>> unaryExpression) override {
-        Print("UnaryExpression: {");
+        Print("UnaryExpression: {"_us);
 
         AddTab();
 
-        Print("Expression: {");
+        Print("Expression: {"_us);
 
         AddTab();
 
@@ -249,32 +251,32 @@ public:
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
 
         auto operation = unaryExpression->GetUnaryOperation();
 
-        String stringOperation;
+        UString stringOperation;
 
         switch (operation) {
             case AST::UnaryOperation::Minus:
-                stringOperation = "Minus (-)";
+                stringOperation = "Minus (-)"_us;
 
                 break;
         }
 
-        Print("Operation: " + stringOperation);
+        Print("Operation: "_us + stringOperation);
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
     }
 
     Void VisitBinaryExpression(LRef<SharedPtr<AST::GS_BinaryExpression>> binaryExpression) override {
-        Print("BinaryExpression: {");
+        Print("BinaryExpression: {"_us);
 
         AddTab();
 
-        Print("FirstExpression: {");
+        Print("FirstExpression: {"_us);
 
         AddTab();
 
@@ -282,9 +284,9 @@ public:
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
 
-        Print("SecondExpression: {");
+        Print("SecondExpression: {"_us);
 
         AddTab();
 
@@ -292,58 +294,58 @@ public:
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
 
         auto operation = binaryExpression->GetBinaryOperation();
 
-        String stringOperation;
+        UString stringOperation;
 
         switch (operation) {
             case AST::BinaryOperation::Plus:
-                stringOperation = "Plus (+)";
+                stringOperation = "Plus (+)"_us;
 
                 break;
             case AST::BinaryOperation::Minus:
-                stringOperation = "Minus (-)";
+                stringOperation = "Minus (-)"_us;
 
                 break;
             case AST::BinaryOperation::Star:
-                stringOperation = "Star (*)";
+                stringOperation = "Star (*)"_us;
 
                 break;
             case AST::BinaryOperation::Slash:
-                stringOperation = "Slash (/)";
+                stringOperation = "Slash (/)"_us;
 
                 break;
         }
 
-        Print("Operation: " + stringOperation);
+        Print("Operation: "_us + stringOperation);
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
     }
 
     Void VisitVariableUsingExpression(LRef<SharedPtr<AST::GS_VariableUsingExpression>> variableUsingExpression) override {
-        Print("VariableUsingExpression: {");
+        Print("VariableUsingExpression: {"_us);
 
         AddTab();
 
-        Print("Name: " + variableUsingExpression->GetName().AsString());
+        Print("Name: "_us + variableUsingExpression->GetName());
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
     }
 
     Void VisitFunctionCallingExpression(LRef<SharedPtr<AST::GS_FunctionCallingExpression>> functionCallingExpression) override {
-        Print("FunctionCallingExpression: {");
+        Print("FunctionCallingExpression: {"_us);
 
         AddTab();
 
-        Print("Name: " + functionCallingExpression->GetName().AsString());
+        Print("Name: "_us + functionCallingExpression->GetName());
 
-        Print("Params: {");
+        Print("Params: {"_us);
 
         AddTab();
 
@@ -353,24 +355,24 @@ public:
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
 
         SubTab();
 
-        Print("}");
+        Print("}"_us);
     }
 
 private:
 
-    Void Print(String message) {
+    Void Print(UString message) {
         PrintTabs();
 
-        std::cout << message << std::endl;
+        UCOut() << message << "\n"_us;
     }
 
     Void PrintTabs() {
         for (auto i = 0; i < tabsNumber; ++i) {
-            std::cout << "  ";
+            UCOut() << "  "_us;
         }
     }
 
@@ -391,6 +393,76 @@ class PrintPass : public AST::GS_VisitPass<PrintVisitor> {};
 
 AST::GSPassPtr CreatePrintPass() {
     return std::make_shared<PrintPass>();
+}
+
+class TypeCheckVisitor : public AST::GS_Visitor {
+public:
+
+    Void VisitVariableDeclarationStatement(LRef<SharedPtr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement) override {
+        auto type = variableDeclarationStatement->GetType();
+        auto expression = variableDeclarationStatement->GetExpression();
+
+        auto calculatedExpressionType = CalculateType(expression);
+
+        auto typeName = type->GetName();
+        auto calculatedExpressionTypeName = calculatedExpressionType->GetName();
+
+        if (typeName != calculatedExpressionTypeName) {
+            UCOut() << typeName << " != "_us << calculatedExpressionTypeName << "\n"_us;
+        }
+    }
+
+public:
+
+    AST::GSTypePtr CalculateType(LRef<AST::GSExpressionPtr> expression) {
+        if (auto constantExpression = AST::ToExpression<AST::GS_ConstantExpression>(expression)) {
+            return CalculateType(constantExpression);
+        }
+
+        if (auto unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(expression)) {
+            return CalculateType(unaryExpression);
+        }
+
+        if (auto binaryExpression = AST::ToExpression<AST::GS_BinaryExpression>(expression)) {
+            return CalculateType(binaryExpression);
+        }
+
+        return nullptr;
+    }
+
+    AST::GSTypePtr CalculateType(SharedPtr<AST::GS_ConstantExpression> constantExpression) {
+        auto value = constantExpression->GetValue();
+
+        auto valueType = value->GetType();
+
+        return valueType;
+    }
+
+    AST::GSTypePtr CalculateType(SharedPtr<AST::GS_UnaryExpression> unaryExpression) {
+        auto expression = unaryExpression->GetExpression();
+
+        return CalculateType(expression);
+    }
+
+    AST::GSTypePtr CalculateType(SharedPtr<AST::GS_BinaryExpression> binaryExpression) {
+        auto firstExpression = binaryExpression->GetFirstExpression();
+        auto secondExpression = binaryExpression->GetSecondExpression();
+
+        auto firstExpressionType = CalculateType(firstExpression);
+        auto secondExpressionType = CalculateType(secondExpression);
+
+        if (firstExpressionType->GetName() == secondExpressionType->GetName()) {
+            return firstExpressionType;
+        }
+
+        return nullptr;
+    }
+};
+
+class TypeCheckPass : public AST::GS_VisitPass<TypeCheckVisitor> {};
+
+AST::GSPassPtr CreateTypeCheckPass() {
+    return std::make_shared<TypeCheckPass>();
 }
 
 class Mangler {
@@ -511,6 +583,8 @@ inline Void PrintModule(LRef<CodeGenerator::GSCGContextPtr> context) {
     std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCGContext>(context)->GetModule().print(llvm::errs(), nullptr);
 }
 
+#include <Parser/Parser.h>
+
 AST::GSTranslationUnitDeclarationPtr CreateProgram() {
     /**
      * main.gs
@@ -547,11 +621,15 @@ Void Func() {
 
     PM->AddPass(CreatePrintPass());
 
-    PM->AddPass(CreateManglePass(GS_ABI::Create()->GetMangler()));
+    PM->AddPass(CreateTypeCheckPass());
 
     PM->AddPass(CreatePrintPass());
 
     PM->AddPass(CreateConstantFoldingPass());
+
+    PM->AddPass(CreatePrintPass());
+
+    PM->AddPass(CreateManglePass(GS_ABI::Create()->GetMangler()));
 
     PM->AddPass(CreatePrintPass());
 

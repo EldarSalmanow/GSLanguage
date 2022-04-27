@@ -64,11 +64,25 @@ namespace GSLanguageCompiler {
         private:
 
             /**
-             * Run frontend compiling process for translation unit
+             * Run front compiling process for translation unit
              * @param inputFile Input file name
              * @return AST translation unit declaration node ptr
              */
-            SharedPtr<AST::GS_TranslationUnitDeclaration> RunFrontend(UString inputFile);
+            SharedPtr<AST::GS_TranslationUnitDeclaration> RunFrontEnd(UString inputFile);
+
+            /**
+             * Run middle compilation process for translation unit
+             * @param translationUnitDeclaration Translation unit declaration
+             * @return
+             */
+            Bool RunMiddleEnd(LRef<SharedPtr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration);
+
+            /**
+             * Run back compilation process for translation unit
+             * @param translationUnitDeclaration Translation unit declaration
+             * @return
+             */
+            Bool RunBackEnd(LRef<SharedPtr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration);
 
         private:
 

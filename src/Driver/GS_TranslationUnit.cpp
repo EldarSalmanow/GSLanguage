@@ -1,5 +1,3 @@
-//#include <rapidjson/document.h>
-
 #include <llvm/IR/LegacyPassManager.h>
 #include <llvm/MC/TargetRegistry.h>
 #include <llvm/Target/TargetOptions.h>
@@ -10,7 +8,7 @@
 
 #include <Reader/Reader.h>
 #include <Lexer/Lexer.h>
-//#include <Parser/Parser.h>
+#include <Parser/Parser.h>
 #include <AST/AST.h>
 #include <CodeGenerator/CodeGenerator.h>
 
@@ -26,16 +24,59 @@ namespace GSLanguageCompiler::Driver {
     }
 
     CompilingResult GS_TranslationUnit::Compile() {
-        auto unit = RunFrontend(_config->GetInputName());
+        auto unit = RunFrontEnd(_config->GetInputName());
 
-//        auto codeGen = std::make_shared<CodeGenerator::GS_LLVMCodeGenerationVisitor>();
-//
-//        codeGen->GenerateTranslationUnitDeclaration(unit);
+        if (!unit) {
+            return CompilingResult::Failure;
+        }
 
-//        auto &module = codeGen->GetModule();
+        if (!RunMiddleEnd(unit)) {
+            return CompilingResult::Failure;
+        }
 
-        llvm::LLVMContext c;
-        llvm::Module module("test", c);
+        if (!RunBackEnd(unit)) {
+            return CompilingResult::Failure;
+        }
+
+        return CompilingResult::Success;
+    }
+
+    SharedPtr<AST::GS_TranslationUnitDeclaration> GS_TranslationUnit::RunFrontEnd(UString inputFile) {
+        auto file = File::Create(inputFile, InMode);
+
+        Reader::GS_Reader reader(file);
+
+        Reader::GS_TextStream textStream(reader);
+
+        Lexer::GS_Lexer lexer(textStream);
+
+        Lexer::GS_TokenStream tokenStream(lexer);
+
+        Parser::GS_Parser parser(tokenStream, AST::GS_ASTContext::Create());
+
+        auto unit = parser.Parse();
+
+        return unit;
+    }
+
+    Bool GS_TranslationUnit::RunMiddleEnd(LRef<SharedPtr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
+        auto passManager = AST::GS_PassManager::Create();
+
+        passManager->Run(translationUnitDeclaration);
+
+        return true;
+    }
+
+    Bool GS_TranslationUnit::RunBackEnd(LRef<SharedPtr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
+        auto codeGenerator = CodeGenerator::GS_CodeGenerator::CreateLLVMCG();
+
+        codeGenerator->Generate(translationUnitDeclaration);
+
+        auto codeGenerationContext = codeGenerator->GetContext();
+
+        auto llvmCodeGenerationContext = std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCGContext>(codeGenerationContext);
+
+        auto &module = llvmCodeGenerationContext->GetModule();
 
         module.print(llvm::errs(), nullptr);
 
@@ -52,7 +93,7 @@ namespace GSLanguageCompiler::Driver {
         if (!target) {
             llvm::errs() << error;
 
-            return CompilingResult::Failure;
+            return false;
         }
 
         auto cpu = "generic";
@@ -74,40 +115,20 @@ namespace GSLanguageCompiler::Driver {
         if (errorCode) {
             llvm::errs() << errorCode.message();
 
-            return CompilingResult::Failure;
+            return false;
         }
 
         llvm::legacy::PassManager manager;
 
         if (machine->addPassesToEmitFile(manager, stream, nullptr, llvm::CodeGenFileType::CGFT_ObjectFile)) {
-            return CompilingResult::Failure;
+            return false;
         }
 
         manager.run(module);
 
         stream.flush();
 
-        return CompilingResult::Success;
-    }
-
-    SharedPtr<AST::GS_TranslationUnitDeclaration> GS_TranslationUnit::RunFrontend(UString inputFile) {
-//        auto file = File::Create(inputFile, InMode);
-//
-//        Reader::GS_Reader reader(file);
-//
-//        Reader::GS_TextStream textStream(reader);
-//
-//        Lexer::GS_Lexer lexer(textStream);
-//
-//        Lexer::GS_TokenStream tokenStream(lexer);
-//
-//        Parser::GS_Parser parser(tokenStream);
-//
-//        auto unit = parser.Parse();
-//
-//        return unit;
-
-        return nullptr;
+        return true;
     }
 
     GSTranslationUnitConfigPtr GS_TranslationUnit::GetConfig() const {

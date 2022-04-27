@@ -58,7 +58,7 @@ namespace GSLanguageCompiler::Parser {
     class GS_Parser {
     public:
 
-        explicit GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream);
+        GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream, AST::GSASTContextPtr context);
 
     public:
 
@@ -104,26 +104,11 @@ namespace GSLanguageCompiler::Parser {
 
     public:
 
-        template<typename Ret, typename... Args>
-        Ret TryParse(Ret (GS_Parser::* function)(Args...)) {
-            auto stream = _stream;
-
-            auto result = function();
-
-            if (!result) {
-                _stream = stream;
-
-                return nullptr;
-            }
-
-            return result;
-        }
-
-    public:
-
         I32 TokenPrecedence();
 
         Bool IsTokenType(Lexer::TokenType type);
+
+        Lexer::GS_TokenLocation TokenLocation();
 
         UString TokenValue();
 
@@ -137,126 +122,10 @@ namespace GSLanguageCompiler::Parser {
 
         Lexer::GS_TokenStream _stream;
 
+        AST::GSASTContextPtr _context;
+
         AST::GSASTBuilderPtr _builder;
     };
-
-    /**
-     * Class for generating and parsing AST
-     */
-//    class GS_Parser {
-//    public:
-//
-//        /**
-//         * Constructor for GS_Parser
-//         * @param stream Input tokens stream
-//         */
-//        explicit GS_Parser(Ptr<Lexer::GS_TokenStream> stream);
-//
-//    public:
-//
-//        /**
-//         * Main function for start parsing
-//         * @return Program AST
-//         */
-//        AST::GSDeclarationPtrArray parse();
-//
-//    private:
-//
-//        /**
-//         * Parse program
-//         * @return Program AST
-//         */
-//        AST::GSDeclarationPtrArray _parseProgram();
-//
-//        /**
-//         * Parse declaration
-//         * @return Declaration node
-//         */
-//        AST::GSDeclarationPtr _parseDeclaration();
-//
-//        /**
-//         * Parse function declaration
-//         * @return Function declaration node
-//         */
-//        AST::GSDeclarationPtr _parseFunctionDeclaration();
-//
-//        /**
-//         * Parse statement
-//         * @return Statement node
-//         */
-//        AST::GSStatementPtr _parseStatement();
-//
-//        /**
-//         * Parse variable declaration
-//         * @return Variable declaration node
-//         */
-//        AST::GSStatementPtr _parseVariableDeclaration();
-//
-//        /**
-//         * Parse assignment statement
-//         * @return Assignment statement node
-//         */
-//        AST::GSStatementPtr _parseAssignmentStatement();
-//
-//        /**
-//         * Parse expression
-//         * @return Expression node
-//         */
-//        AST::GSExpressionPtr _parseExpression();
-//
-//        /**
-//         * Parse binary expression
-//         * @param expressionPrecedence Expression precedence
-//         * @param expression Expression
-//         * @return Binary expression node
-//         */
-//        AST::GSExpressionPtr _parseBinaryExpression(I32 expressionPrecedence, AST::GSExpressionPtr expression);
-//
-//        /**
-//         * Parse unary expression
-//         * @return Unary expression node
-//         */
-//        AST::GSExpressionPtr _parseUnaryExpression();
-//
-//        /**
-//         * Parse primary expression
-//         * @return Primary expression nodes
-//         */
-//        AST::GSExpressionPtr _parsePrimaryExpression();
-//
-//    private:
-//
-//        /**
-//         *
-//         * @return
-//         */
-//        Void _nextToken();
-//
-//        /**
-//         * Current token precedence
-//         * @return Current token precedence
-//         */
-//        I32 _currentTokenPrecedence();
-//
-//        /**
-//         *
-//         * @param type
-//         * @return
-//         */
-//        Bool _isEqualTokenTypes(Lexer::TokenType type);
-//
-//    private:
-//
-//        /**
-//         * Input tokens stream
-//         */
-//        Ptr<Lexer::GS_TokenStream> _tokenStream;
-//
-//        /**
-//         *
-//         */
-//        Lexer::GSTokenPtr _token;
-//    };
 
 }
 

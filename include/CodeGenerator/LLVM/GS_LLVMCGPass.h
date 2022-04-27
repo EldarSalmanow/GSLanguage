@@ -37,7 +37,7 @@ namespace GSLanguageCompiler::CodeGenerator {
     };
 
     /**
-     * Create LLVM code generation pass
+     * Creating LLVM code generation pass
      * @param context LLVM code generation context
      * @return LLVM code generation pass
      */

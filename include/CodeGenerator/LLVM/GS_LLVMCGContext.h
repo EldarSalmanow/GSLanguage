@@ -29,7 +29,7 @@ namespace GSLanguageCompiler::CodeGenerator {
     public:
 
         /**
-         * Create LLVM code generation context
+         * Creating LLVM code generation context
          * @return LLVM code generation context ptr
          */
         static SharedPtr<GS_LLVMCGContext> Create();
