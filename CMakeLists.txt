@@ -39,6 +39,7 @@ set(PROJECT_LIBRARIES
         GSASTLibrary
         GSCodeGeneratorLibrary
         GSSemanticLibrary
+        GSOptimizerLibrary
         GSParserLibrary
         )
 
@@ -58,6 +59,7 @@ add_subdirectory(${INCLUDE_DIR}/Driver)
 add_subdirectory(${INCLUDE_DIR}/AST)
 add_subdirectory(${INCLUDE_DIR}/Parser)
 add_subdirectory(${INCLUDE_DIR}/Semantic)
+add_subdirectory(${INCLUDE_DIR}/Optimizer)
 add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
 
 #add_subdirectory(tests)

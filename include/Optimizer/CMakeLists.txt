@@ -4,8 +4,8 @@ set(OPTIMIZER_DIR ${SOURCE_DIR}/Optimizer)
 
 set(GS_OPTIMIZER_SOURCE
         ${OPTIMIZER_DIR}/GS_Optimizer.cpp
-        ${OPTIMIZER_DIR}/GS_OptimizerPass.cpp
-        ${OPTIMIZER_DIR}/GS_ConstantFoldingPass.cpp)
+
+        ${OPTIMIZER_DIR}/Passes/GS_ConstantFoldingPass.cpp)
 
 add_library(
 #       Library name
