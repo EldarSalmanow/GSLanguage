@@ -530,7 +530,354 @@ AST::GSTranslationUnitDeclarationPtr CreateProgram() {
 
 // TODO add Writer module for writing output code
 
+class Symbol {
+public:
+
+    virtual ~Symbol() = default;
+
+public:
+
+    virtual Bool IsStructure() const {
+        return false;
+    }
+
+    virtual Bool IsFunction() const {
+        return false;
+    }
+
+    virtual Bool IsVariable() const {
+        return false;
+    }
+};
+
+using SymbolPtr = SharedPtr<Symbol>;
+
+using SymbolPtrArray = Vector<SymbolPtr>;
+
+class StructureMethod {
+public:
+
+    StructureMethod(UString name, AST::GSStatementPtrArray body)
+            : _name(std::move(name)), _body(std::move(body)) {}
+
+public:
+
+    static StructureMethod Create(UString name, AST::GSStatementPtrArray body) {
+        return StructureMethod(std::move(name), std::move(body));
+    }
+
+public:
+
+    UString GetName() const {
+        return _name;
+    }
+
+    AST::GSStatementPtrArray GetBody() const {
+        return _body;
+    }
+
+private:
+
+    UString _name;
+
+    AST::GSStatementPtrArray _body;
+};
+
+class StructureField {
+public:
+
+    StructureField(UString name, AST::GSTypePtr type)
+            : _name(std::move(name)), _type(std::move(type)) {}
+
+public:
+
+    static StructureField Create(UString name, AST::GSTypePtr type) {
+        return StructureField(std::move(name), std::move(type));
+    }
+
+public:
+
+    UString GetName() const {
+        return _name;
+    }
+
+    AST::GSTypePtr GetType() const {
+        return _type;
+    }
+
+private:
+
+    UString _name;
+
+    AST::GSTypePtr _type;
+};
+
+#include <optional>
+
+class StructureSymbol : public Symbol {
+public:
+
+    StructureSymbol(UString name, Vector<StructureMethod> methods, Vector<StructureField> fields)
+            : _name(std::move(name)), _methods(std::move(methods)), _fields(std::move(fields)) {}
+
+public:
+
+    static SharedPtr<StructureSymbol> Create(UString name, Vector<StructureMethod> methods, Vector<StructureField> fields) {
+        return std::make_shared<StructureSymbol>(std::move(name), std::move(methods), std::move(fields));
+    }
+
+public:
+
+    std::optional<StructureMethod> FindMethod(UString name) {
+        for (auto &method : _methods) {
+            if (method.GetName() == name) {
+                return std::make_optional(method);
+            }
+        }
+
+        return std::nullopt;
+    }
+
+public:
+
+    UString GetName() const {
+        return _name;
+    }
+
+    Vector<StructureMethod> GetMethods() const {
+        return _methods;
+    }
+
+    Vector<StructureField> GetFields() const {
+        return _fields;
+    }
+
+public:
+
+    Bool IsStructure() const override {
+        return true;
+    }
+
+private:
+
+    UString _name;
+
+    Vector<StructureMethod> _methods;
+
+    Vector<StructureField> _fields;
+};
+
+class FunctionSymbol : public Symbol {
+public:
+
+    FunctionSymbol(UString name, AST::GSStatementPtrArray body)
+            : _name(std::move(name)), _body(std::move(body)) {}
+
+public:
+
+    static SharedPtr<FunctionSymbol> Create(UString name, AST::GSStatementPtrArray body) {
+        return std::make_shared<FunctionSymbol>(std::move(name), std::move(body));
+    }
+
+public:
+
+    UString GetName() const {
+        return _name;
+    }
+
+    LRef<AST::GSStatementPtrArray> GetBody() {
+        return _body;
+    }
+
+public:
+
+    Bool IsFunction() const override {
+        return true;
+    }
+
+private:
+
+    UString _name;
+
+    AST::GSStatementPtrArray _body;
+};
+
+class VariableSymbol : public Symbol {
+public:
+
+    VariableSymbol(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression)
+            : _name(std::move(name)), _type(std::move(type)), _expression(std::move(expression)) {}
+
+public:
+
+    static SharedPtr<VariableSymbol> Create(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression) {
+        return std::make_shared<VariableSymbol>(std::move(name), std::move(type), std::move(expression));
+    }
+
+public:
+
+    UString GetName() const {
+        return _name;
+    }
+
+    LRef<AST::GSTypePtr> GetType() {
+        return _type;
+    }
+
+    LRef<AST::GSExpressionPtr> GetExpression() {
+        return _expression;
+    }
+
+public:
+
+    Bool IsVariable() const override {
+        return true;
+    }
+
+private:
+
+    UString _name;
+
+    AST::GSTypePtr _type;
+
+    AST::GSExpressionPtr _expression;
+};
+
+class TableOfSymbols {
+public:
+
+    explicit TableOfSymbols(SymbolPtrArray symbols)
+            : _symbols(std::move(symbols)) {}
+
+public:
+
+    static SharedPtr<TableOfSymbols> Create(SymbolPtrArray symbols) {
+        return std::make_shared<TableOfSymbols>(std::move(symbols));
+    }
+
+    static SharedPtr<TableOfSymbols> Create() {
+        return TableOfSymbols::Create(SymbolPtrArray());
+    }
+
+public:
+
+    Void AddSymbol(SymbolPtr symbol) {
+        _symbols.emplace_back(std::move(symbol));
+    }
+
+    Void AddFunction(UString name, AST::GSStatementPtrArray body) {
+        AddSymbol(FunctionSymbol::Create(std::move(name), std::move(body)));
+    }
+
+    Void AddVariable(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression) {
+        AddSymbol(VariableSymbol::Create(std::move(name), std::move(type), std::move(expression)));
+    }
+
+    Void AddStructure(UString name, Vector<StructureMethod> methods, Vector<StructureField> fields) {
+        AddSymbol(StructureSymbol::Create(std::move(name), std::move(methods), std::move(fields)));
+    }
+
+    SharedPtr<FunctionSymbol> GetFunction(UString name) {
+        for (auto &symbol : _symbols) {
+            if (symbol->IsFunction()) {
+                auto functionSymbol = std::reinterpret_pointer_cast<FunctionSymbol>(symbol);
+
+                if (functionSymbol->GetName() == name) {
+                    return functionSymbol;
+                }
+            }
+        }
+
+        return nullptr;
+    }
+
+    SharedPtr<VariableSymbol> GetVariable(UString name) {
+        for (auto &symbol : _symbols) {
+            if (symbol->IsVariable()) {
+                auto variableSymbol = std::reinterpret_pointer_cast<VariableSymbol>(symbol);
+
+                if (variableSymbol->GetName() == name) {
+                    return variableSymbol;
+                }
+            }
+        }
+
+        return nullptr;
+    }
+
+    SharedPtr<StructureSymbol> GetStructure(UString name) {
+        for (auto &symbol : _symbols) {
+            if (symbol->IsStructure()) {
+                auto structureSymbol = std::reinterpret_pointer_cast<StructureSymbol>(symbol);
+
+                if (structureSymbol->GetName() == name) {
+                    return structureSymbol;
+                }
+            }
+        }
+
+        return nullptr;
+    }
+
+private:
+
+    SymbolPtrArray _symbols;
+};
+
+using TableOfSymbolsPtr = SharedPtr<TableOfSymbols>;
+
+class SymbolsPlaceholderVisitor : public AST::GS_Visitor {
+public:
+
+    explicit SymbolsPlaceholderVisitor(LRef<TableOfSymbolsPtr> tableOfSymbols)
+            : _tableOfSymbols(tableOfSymbols) {}
+
+public:
+
+    Void VisitFunctionDeclaration(LRef<SharedPtr<AST::GS_FunctionDeclaration>> functionDeclaration) override {
+        AST::GS_Visitor::VisitFunctionDeclaration(functionDeclaration);
+
+        auto name = functionDeclaration->GetName();
+        auto body = functionDeclaration->GetBody();
+
+        _tableOfSymbols->AddFunction(name, body);
+    }
+
+    Void VisitVariableDeclarationStatement(LRef<SharedPtr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement) override {
+        AST::GS_Visitor::VisitVariableDeclarationStatement(variableDeclarationStatement);
+
+        auto name = variableDeclarationStatement->GetName();
+        auto type = variableDeclarationStatement->GetType();
+        auto expression = variableDeclarationStatement->GetExpression();
+
+        _tableOfSymbols->AddVariable(name, type, expression);
+    }
+
+private:
+
+    LRef<TableOfSymbolsPtr> _tableOfSymbols;
+};
+
 Void Func() {
+    auto Builder = AST::GS_ASTBuilder::Create();
+
+    auto TOS = TableOfSymbols::Create();
+
+    auto Console = StructureSymbol::Create(
+            "Console",
+            {
+                StructureMethod::Create("Print", {
+                    AST::ToStatement(Builder->CreateConstantExpression(0))
+                }),
+
+                StructureMethod::Create("Input", {
+                    AST::ToStatement(Builder->CreateConstantExpression(1))
+                })
+            },
+            {
+
+            });
+
     auto program = CreateProgram();
 
     auto PM = AST::GS_PassManager::Create();

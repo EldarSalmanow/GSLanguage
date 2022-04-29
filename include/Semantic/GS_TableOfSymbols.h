@@ -14,16 +14,20 @@ namespace GSLanguageCompiler::Semantic {
     class GS_Symbol {
     public:
 
+        virtual ~GS_Symbol();
+
+    public:
+
         /**
          *
          * @return
          */
-        virtual Bool isVariable() const;
+        virtual Bool IsVariable() const;
 
         /**
          *
          */
-        virtual Bool isFunction() const;
+        virtual Bool IsFunction() const;
     };
 
     /**
@@ -56,19 +60,19 @@ namespace GSLanguageCompiler::Semantic {
          *
          * @return
          */
-        UString getName() const;
+        UString GetName() const;
 
         /**
          *
          * @return
          */
-        LRef<AST::GSTypePtr> getType();
+        LRef<AST::GSTypePtr> GetType();
 
         /**
          *
          * @return
          */
-        LRef<AST::GSExpressionPtr> getExpression();
+        LRef<AST::GSExpressionPtr> GetExpression();
 
     public:
 
@@ -76,7 +80,7 @@ namespace GSLanguageCompiler::Semantic {
          *
          * @return
          */
-        Bool isVariable() const override;
+        Bool IsVariable() const override;
 
     private:
 
@@ -115,13 +119,13 @@ namespace GSLanguageCompiler::Semantic {
          *
          * @return
          */
-        UString getName() const;
+        UString GetName() const;
 
         /**
          *
          * @return
          */
-        LRef<AST::GSStatementPtrArray> getBody();
+        LRef<AST::GSStatementPtrArray> GetBody();
 
     public:
 
@@ -129,7 +133,7 @@ namespace GSLanguageCompiler::Semantic {
          *
          * @return
          */
-        Bool isFunction() const override;
+        Bool IsFunction() const override;
 
     private:
 
@@ -162,7 +166,7 @@ namespace GSLanguageCompiler::Semantic {
          * @param symbol
          * @return
          */
-        Void addSymbol(GSSymbolPtr symbol);
+        Void AddSymbol(GSSymbolPtr symbol);
 
         /**
          *
@@ -171,7 +175,7 @@ namespace GSLanguageCompiler::Semantic {
          * @param expression
          * @return
          */
-        Void addVariable(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression);
+        Void AddVariable(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression);
 
         /**
          *
@@ -179,21 +183,21 @@ namespace GSLanguageCompiler::Semantic {
          * @param body
          * @return
          */
-        Void addFunction(UString name, AST::GSStatementPtrArray body);
+        Void AddFunction(UString name, AST::GSStatementPtrArray body);
 
         /**
          *
          * @param name
          * @return
          */
-        SharedPtr<GS_VariableSymbol> getVariable(UString name);
+        SharedPtr<GS_VariableSymbol> GetVariable(UString name);
 
         /**
          *
          * @param name
          * @return
          */
-        SharedPtr<GS_FunctionSymbol> getFunction(UString name);
+        SharedPtr<GS_FunctionSymbol> GetFunction(UString name);
 
     private:
 
