@@ -13,7 +13,7 @@ namespace GSLanguageCompiler::Optimizer {
         AST::GSNodePtr TransformBinaryExpression(LRef<SharedPtr<AST::GS_BinaryExpression>> binaryExpression) override;
     };
 
-    class ConstantFoldingPass : public AST::GS_TransformPass<GS_ConstantFoldingTransformer> {};
+    class GS_ConstantFoldingPass : public AST::GS_TransformPass<GS_ConstantFoldingTransformer> {};
 
     AST::GSPassPtr CreateConstantFoldingPass();
 

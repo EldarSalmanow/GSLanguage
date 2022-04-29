@@ -1,22 +1,30 @@
 #include <GS_Optimizer.h>
 
-#include <AST/GS_Node.h>
-
 namespace GSLanguageCompiler::Optimizer {
 
-    GS_Optimizer::GS_Optimizer() = default;
+    GS_Optimizer::GS_Optimizer(AST::GSPassPtrArray passes)
+            : _passes(std::move(passes)) {}
 
-    GSVoid GS_Optimizer::run(Starter::GSContextPtr &context) {
-        auto root = context->getRootNode();
-        auto passes = context->getOptimizerPasses();
+    SharedPtr<GS_Optimizer> GS_Optimizer::Create(AST::GSPassPtrArray passes) {
+        return std::make_shared<GS_Optimizer>(std::move(passes));
+    }
 
-        for (auto &pass : passes) {
-            pass->setup(context);
+    SharedPtr<GS_Optimizer> GS_Optimizer::Create() {
+        AST::GSPassPtrArray passes;
 
-            root = root->accept(pass.get());
+        passes.emplace_back(CreateConstantFoldingPass());
+
+        return GS_Optimizer::Create(passes);
+    }
+
+    Void GS_Optimizer::Optimize(LRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration) {
+        auto passManager = AST::GS_PassManager::Create();
+
+        for (auto &pass : _passes) {
+            passManager->AddPass(pass);
         }
 
-        context->setOptimizedRootNode(root);
+        passManager->Run(translationUnitDeclaration);
     }
 
 }

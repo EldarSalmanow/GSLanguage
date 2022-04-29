@@ -13,7 +13,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         visitor.GenerateTranslationUnitDeclaration(translationUnitDeclaration);
     }
 
-    AST::GSPassPtr CreateLLVMCGPass(LRef<GSLLVMCGContextPtr> context) {
+    GSCGPassPtr CreateLLVMCGPass(LRef<GSLLVMCGContextPtr> context) {
         return std::make_shared<GS_LLVMCGPass>(context);
     }
 

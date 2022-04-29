@@ -80,7 +80,7 @@ namespace GSLanguageCompiler::Optimizer {
     }
 
     AST::GSPassPtr CreateConstantFoldingPass() {
-        return std::make_shared<ConstantFoldingPass>();
+        return std::make_shared<GS_ConstantFoldingPass>();
     }
 
 }

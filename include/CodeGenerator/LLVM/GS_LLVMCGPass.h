@@ -41,7 +41,7 @@ namespace GSLanguageCompiler::CodeGenerator {
      * @param context LLVM code generation context
      * @return LLVM code generation pass
      */
-    AST::GSPassPtr CreateLLVMCGPass(LRef<GSLLVMCGContextPtr> context);
+    GSCGPassPtr CreateLLVMCGPass(LRef<GSLLVMCGContextPtr> context);
 
 }
 

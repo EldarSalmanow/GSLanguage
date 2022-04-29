@@ -10,6 +10,7 @@
 #include <Lexer/Lexer.h>
 #include <Parser/Parser.h>
 #include <AST/AST.h>
+#include <Optimizer/Optimizer.h>
 #include <CodeGenerator/CodeGenerator.h>
 
 #include <GS_TranslationUnit.h>
@@ -60,9 +61,9 @@ namespace GSLanguageCompiler::Driver {
     }
 
     Bool GS_TranslationUnit::RunMiddleEnd(LRef<SharedPtr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
-        auto passManager = AST::GS_PassManager::Create();
+        auto Optimizer = Optimizer::GS_Optimizer::Create();
 
-        passManager->Run(translationUnitDeclaration);
+        Optimizer->Optimize(translationUnitDeclaration);
 
         return true;
     }
