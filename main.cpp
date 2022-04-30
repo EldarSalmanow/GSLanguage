@@ -863,20 +863,30 @@ Void Func() {
 
     auto TOS = TableOfSymbols::Create();
 
-    auto Console = StructureSymbol::Create(
+    auto Console = AST::StructType::Create(
             "Console",
             {
-                StructureMethod::Create("Print", {
-                    AST::ToStatement(Builder->CreateConstantExpression(0))
-                }),
-
-                StructureMethod::Create("Input", {
-                    AST::ToStatement(Builder->CreateConstantExpression(1))
-                })
+                AST::StructureMethod::Create("Print", {}),
+                AST::StructureMethod::Create("Input", {})
             },
             {
 
             });
+
+//    auto Console = StructureSymbol::Create(
+//            "Console",
+//            {
+//                StructureMethod::Create("Print", {
+//                    AST::ToStatement(Builder->CreateConstantExpression(0))
+//                }),
+//
+//                StructureMethod::Create("Input", {
+//                    AST::ToStatement(Builder->CreateConstantExpression(1))
+//                })
+//            },
+//            {
+//
+//            });
 
     auto program = CreateProgram();
 

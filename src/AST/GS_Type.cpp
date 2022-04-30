@@ -15,7 +15,7 @@ namespace GSLanguageCompiler::AST {
         return _name;
     }
 
-    Bool GS_Type::IsLiteralType() {
+    Bool GS_Type::IsLiteralType() const {
         return false;
     }
 
@@ -26,7 +26,7 @@ namespace GSLanguageCompiler::AST {
         return std::make_shared<GS_LiteralType>(std::move(name));
     }
 
-    Bool GS_LiteralType::IsLiteralType() {
+    Bool GS_LiteralType::IsLiteralType() const {
         return true;
     }
 
