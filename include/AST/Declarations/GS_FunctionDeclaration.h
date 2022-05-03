@@ -51,7 +51,7 @@ namespace GSLanguageCompiler::AST {
         Void AddStatement(GSStatementPtr statement);
 
         /**
-         * Creating and adding new statement to body and scope and return it
+         * Creating and adding new statement to body and return it
          * @tparam T Type of statement for creating
          * @tparam Args Argument types for creating statement
          * @param args Arguments for creating statement

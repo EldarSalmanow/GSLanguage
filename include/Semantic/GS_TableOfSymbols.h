@@ -43,6 +43,64 @@ namespace GSLanguageCompiler::Semantic {
     /**
      *
      */
+    class GS_FunctionSymbol : public GS_Symbol {
+    public:
+
+        /**
+         *
+         * @param name
+         * @param body
+         */
+        GS_FunctionSymbol(UString name, AST::GSStatementPtrArray body);
+
+    public:
+
+        /**
+         *
+         * @param name
+         * @param body
+         * @return
+         */
+        static SharedPtr<GS_FunctionSymbol> Create(UString name, AST::GSStatementPtrArray body);
+
+    public:
+
+        /**
+         *
+         * @return
+         */
+        UString GetName() const;
+
+        /**
+         *
+         * @return
+         */
+        LRef<AST::GSStatementPtrArray> GetBody();
+
+    public:
+
+        /**
+         *
+         * @return
+         */
+        Bool IsFunction() const override;
+
+    private:
+
+        /**
+         *
+         */
+        UString _name;
+
+        /**
+         *
+         */
+        AST::GSStatementPtrArray _body;
+    };
+
+    /**
+     *
+     */
     class GS_VariableSymbol : public GS_Symbol {
     public:
 
@@ -53,6 +111,17 @@ namespace GSLanguageCompiler::Semantic {
          * @param expression
          */
         GS_VariableSymbol(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression);
+
+    public:
+
+        /**
+         *
+         * @param name
+         * @param type
+         * @param expression
+         * @return
+         */
+        static SharedPtr<GS_VariableSymbol> Create(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression);
 
     public:
 
@@ -103,54 +172,6 @@ namespace GSLanguageCompiler::Semantic {
     /**
      *
      */
-    class GS_FunctionSymbol : public GS_Symbol {
-    public:
-
-        /**
-         *
-         * @param name
-         * @param body
-         */
-        GS_FunctionSymbol(UString name, AST::GSStatementPtrArray body);
-
-    public:
-
-        /**
-         *
-         * @return
-         */
-        UString GetName() const;
-
-        /**
-         *
-         * @return
-         */
-        LRef<AST::GSStatementPtrArray> GetBody();
-
-    public:
-
-        /**
-         *
-         * @return
-         */
-        Bool IsFunction() const override;
-
-    private:
-
-        /**
-         *
-         */
-        UString _name;
-
-        /**
-         *
-         */
-        AST::GSStatementPtrArray _body;
-    };
-
-    /**
-     *
-     */
     class GS_TableOfSymbols {
     public:
 
@@ -158,6 +179,14 @@ namespace GSLanguageCompiler::Semantic {
          *
          */
         GS_TableOfSymbols();
+
+    public:
+
+        /**
+         *
+         * @return
+         */
+        static SharedPtr<GS_TableOfSymbols> Create();
 
     public:
 
@@ -175,7 +204,7 @@ namespace GSLanguageCompiler::Semantic {
          * @param expression
          * @return
          */
-        Void AddVariable(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression);
+//        Void AddVariable(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression);
 
         /**
          *
@@ -183,7 +212,7 @@ namespace GSLanguageCompiler::Semantic {
          * @param body
          * @return
          */
-        Void AddFunction(UString name, AST::GSStatementPtrArray body);
+//        Void AddFunction(UString name, AST::GSStatementPtrArray body);
 
         /**
          *

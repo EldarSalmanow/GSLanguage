@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_ASTCONTEXT_H
 #define GSLANGUAGE_GS_ASTCONTEXT_H
 
+#include <AST/GS_Expression.h>
+
 #include <AST/GS_Type.h>
 
 namespace GSLanguageCompiler::AST {
@@ -14,10 +16,7 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for AST type context
          */
-        GS_ASTTypeContext()
-                : _voidType(AST::GS_VoidType::Create()),
-                  _i32Type(AST::GS_I32Type::Create()),
-                  _stringType(AST::GS_StringType::Create()) {}
+        GS_ASTTypeContext();
 
     public:
 
@@ -25,9 +24,7 @@ namespace GSLanguageCompiler::AST {
          * Creating AST type context
          * @return AST type context ptr
          */
-        static SharedPtr<GS_ASTTypeContext> Create() {
-            return std::make_shared<GS_ASTTypeContext>();
-        }
+        static SharedPtr<GS_ASTTypeContext> Create();
 
     public:
 
@@ -35,42 +32,36 @@ namespace GSLanguageCompiler::AST {
          * Getter for default Void type
          * @return Void type
          */
-        SharedPtr<AST::GS_VoidType> GetVoidType() const {
-            return _voidType;
-        }
+        SharedPtr<GS_VoidType> GetVoidType() const;
 
         /**
          * Getter for default I32 type
          * @return I32 type
          */
-        SharedPtr<AST::GS_I32Type> GetI32Type() const {
-            return _i32Type;
-        }
+        SharedPtr<GS_I32Type> GetI32Type() const;
 
         /**
          * Getter for default String type
          * @return String type
          */
-        SharedPtr<AST::GS_StringType> GetStringType() const {
-            return _stringType;
-        }
+        SharedPtr<GS_StringType> GetStringType() const;
 
     private:
 
         /**
          * Void type
          */
-        SharedPtr<AST::GS_VoidType>   _voidType;
+        SharedPtr<GS_VoidType> _voidType;
 
         /**
          * I32 type
          */
-        SharedPtr<AST::GS_I32Type>    _i32Type;
+        SharedPtr<GS_I32Type> _i32Type;
 
         /**
          * String type
          */
-        SharedPtr<AST::GS_StringType> _stringType;
+        SharedPtr<GS_StringType> _stringType;
     };
 
     /**
@@ -87,8 +78,7 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for AST context
          */
-        GS_ASTContext()
-                : _typeContext(GS_ASTTypeContext::Create()) {}
+        GS_ASTContext();
 
     public:
 
@@ -96,9 +86,7 @@ namespace GSLanguageCompiler::AST {
          * Creating AST context
          * @return AST context ptr
          */
-        static SharedPtr<GS_ASTContext> Create() {
-            return std::make_shared<GS_ASTContext>();
-        }
+        static SharedPtr<GS_ASTContext> Create();
 
     public:
 
@@ -106,25 +94,19 @@ namespace GSLanguageCompiler::AST {
          * Getter for default Void type
          * @return Void type
          */
-        SharedPtr<AST::GS_VoidType> GetVoidType() const {
-            return _typeContext->GetVoidType();
-        }
+        SharedPtr<GS_VoidType> GetVoidType() const;
 
         /**
          * Getter for default I32 type
          * @return I32 type
          */
-        SharedPtr<AST::GS_I32Type> GetI32Type() const {
-            return _typeContext->GetI32Type();
-        }
+        SharedPtr<GS_I32Type> GetI32Type() const;
 
         /**
          * Getter for default String type
          * @return String type
          */
-        SharedPtr<AST::GS_StringType> GetStringType() const {
-            return _typeContext->GetStringType();
-        }
+        SharedPtr<GS_StringType> GetStringType() const;
 
     public:
 
@@ -132,9 +114,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for AST type context
          * @return AST type context
          */
-        GSASTTypeContextPtr GetTypeContext() const {
-            return _typeContext;
-        }
+        GSASTTypeContextPtr GetTypeContext() const;
 
     private:
 

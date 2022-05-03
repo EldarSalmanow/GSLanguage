@@ -66,11 +66,8 @@ namespace GSLanguageCompiler::Lexer {
     }
 
     GS_Token GS_Lexer::GetToken() {
-        if (CurrentSymbol().IsWhitespace()) {
+        while (CurrentSymbol().IsWhitespace()) {
             NextSymbol();
-
-            return GetToken();
-//            return GS_Token::Create(TokenType::SymbolSpace); // TODO delete or modify
         }
 
         auto type = ReservedSymbolsType(CurrentSymbol());

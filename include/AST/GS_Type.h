@@ -3,8 +3,6 @@
 
 #include <GSCrossPlatform/CrossPlatform.h>
 
-#include <AST/GS_Statement.h>
-
 namespace GSLanguageCompiler::AST {
 
     /**
@@ -51,10 +49,6 @@ namespace GSLanguageCompiler::AST {
          */
         virtual Bool IsLiteralType() const;
 
-        virtual Bool IsStructType() const {
-            return false;
-        }
-
     private:
 
         /**
@@ -67,119 +61,6 @@ namespace GSLanguageCompiler::AST {
      * Type ptr type
      */
     using GSTypePtr = SharedPtr<GS_Type>;
-
-    class StructureMethod {
-    public:
-
-        StructureMethod(UString name, GSStatementPtrArray body)
-                : _name(std::move(name)), _body(std::move(body)) {}
-
-    public:
-
-        static StructureMethod Create(UString name, GSStatementPtrArray body) {
-            return StructureMethod(std::move(name), std::move(body));
-        }
-
-    public:
-
-        UString GetName() const {
-            return _name;
-        }
-
-        GSStatementPtrArray GetBody() const {
-            return _body;
-        }
-
-    private:
-
-        UString _name;
-
-        GSStatementPtrArray _body;
-    };
-
-    class StructureField {
-    public:
-
-        StructureField(UString name, GSTypePtr type)
-                : _name(std::move(name)), _type(std::move(type)) {}
-
-    public:
-
-        static StructureField Create(UString name, GSTypePtr type) {
-            return StructureField(std::move(name), std::move(type));
-        }
-
-    public:
-
-        UString GetName() const {
-            return _name;
-        }
-
-        GSTypePtr GetType() const {
-            return _type;
-        }
-
-    private:
-
-        UString _name;
-
-        GSTypePtr _type;
-    };
-
-#include <optional>
-
-    class StructType : public GS_Type {
-    public:
-
-        StructType(UString name, Vector<StructureMethod> methods, Vector<StructureField> fields)
-                : _name(std::move(name)), _methods(std::move(methods)), _fields(std::move(fields)), GS_Type(_name) {}
-
-    public:
-
-        static SharedPtr<StructType> Create(UString name, Vector<StructureMethod> methods, Vector<StructureField> fields) {
-            return std::make_shared<StructType>(std::move(name), std::move(methods), std::move(fields));
-        }
-
-    public:
-
-        std::optional<StructureMethod> FindMethod(UString name) {
-            for (auto &method : _methods) {
-                if (method.GetName() == name) {
-                    return std::make_optional(method);
-                }
-            }
-
-            return std::nullopt;
-        }
-
-    public:
-
-        UString GetName() const {
-            return _name;
-        }
-
-        Vector<StructureMethod> GetMethods() const {
-            return _methods;
-        }
-
-        Vector<StructureField> GetFields() const {
-            return _fields;
-        }
-
-    public:
-
-        Bool IsStructType() const override {
-            return true;
-        }
-
-    private:
-
-        UString _name;
-
-        Vector<StructureMethod> _methods;
-
-        Vector<StructureField> _fields;
-    };
 
     /**
      * Class for literal types

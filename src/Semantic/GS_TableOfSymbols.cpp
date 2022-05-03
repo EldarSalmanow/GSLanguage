@@ -13,6 +13,10 @@ namespace GSLanguageCompiler::Semantic {
     GS_VariableSymbol::GS_VariableSymbol(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression)
             : _name(std::move(name)), _type(std::move(type)), _expression(std::move(expression)) {}
 
+    SharedPtr<GS_VariableSymbol> GS_VariableSymbol::Create(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression) {
+        return std::make_shared<GS_VariableSymbol>(std::move(name), std::move(type), std::move(expression));
+    }
+
     UString GS_VariableSymbol::getName() const {
         return _name;
     }
@@ -32,6 +36,10 @@ namespace GSLanguageCompiler::Semantic {
     GS_FunctionSymbol::GS_FunctionSymbol(UString name, AST::GSStatementPtrArray body)
             : _name(std::move(name)), _body(std::move(body)) {}
 
+    SharedPtr<GS_FunctionSymbol> GS_FunctionSymbol::Create(UString name, AST::GSStatementPtrArray body) {
+        return std::make_shared<GS_FunctionSymbol>(std::move(name), std::move(body));
+    }
+
     UString GS_FunctionSymbol::getName() const {
         return _name;
     }
@@ -45,6 +53,10 @@ namespace GSLanguageCompiler::Semantic {
     }
 
     GS_TableOfSymbols::GS_TableOfSymbols() = default;
+
+    SharedPtr<GS_TableOfSymbols> GS_TableOfSymbols::Create() {
+        return std::make_shared<GS_TableOfSymbols>();
+    }
 
     Void GS_TableOfSymbols::addSymbol(GSSymbolPtr symbol) {
         _symbols.emplace_back(std::move(symbol));

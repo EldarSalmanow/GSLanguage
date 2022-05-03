@@ -45,7 +45,7 @@ namespace GSLanguageCompiler::AST {
         Void AddNode(GSNodePtr node);
 
         /**
-         * Creating and adding new node to scope and return it
+         * Creating and adding new node to nodes and return it
          * @tparam T Type of node for creating
          * @tparam Args Argument types for creating node
          * @param args Arguments for creating node

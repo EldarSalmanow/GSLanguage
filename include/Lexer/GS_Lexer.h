@@ -52,7 +52,7 @@ namespace GSLanguageCompiler::Lexer {
     private:
 
         /**
-         *
+         * Text stream
          */
         Reader::GS_TextStream _stream;
     };

@@ -3,6 +3,10 @@ project(GSASTLibrary)
 set(AST_DIR ${SOURCE_DIR}/AST)
 
 set(GS_AST_SOURCE
+        ${AST_DIR}/GS_ASTContext.cpp
+
+        ${AST_DIR}/GS_ASTBuilder.cpp
+
         ${AST_DIR}/GS_Node.cpp
 
         ${AST_DIR}/GS_Scope.cpp

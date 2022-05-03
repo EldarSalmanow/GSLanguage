@@ -40,8 +40,12 @@ namespace GSLanguageCompiler::Lexer {
         return GS_Token::Create(type, std::move(value), GS_TokenLocation::Create());
     }
 
+    GS_Token GS_Token::Create(TokenType type, GS_TokenLocation location) {
+        return GS_Token::Create(type, UString(), std::move(location));
+    }
+
     GS_Token GS_Token::Create(TokenType type) {
-        return GS_Token::Create(type, UString());
+        return GS_Token::Create(type, GS_TokenLocation::Create());
     }
 
     TokenType GS_Token::GetType() const {
