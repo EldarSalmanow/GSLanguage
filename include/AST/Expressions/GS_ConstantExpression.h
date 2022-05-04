@@ -1,9 +1,9 @@
 #ifndef GSLANGUAGE_GS_CONSTANTEXPRESSION_H
 #define GSLANGUAGE_GS_CONSTANTEXPRESSION_H
 
-#include <AST/GS_Expression.h>
+#include <Semantic/GS_Type.h>
 
-#include <AST/GS_Type.h>
+#include <AST/GS_Expression.h>
 
 namespace GSLanguageCompiler::AST {
 
@@ -17,7 +17,7 @@ namespace GSLanguageCompiler::AST {
          * Constructor for value
          * @param type Type ptr
          */
-        explicit GS_Value(GSTypePtr type);
+        explicit GS_Value(Semantic::GSTypePtr type);
 
     public:
 
@@ -33,7 +33,7 @@ namespace GSLanguageCompiler::AST {
          * @param type Type ptr
          * @return Value ptr
          */
-        static SharedPtr<GS_Value> Create(GSTypePtr type);
+        static SharedPtr<GS_Value> Create(Semantic::GSTypePtr type);
 
     public:
 
@@ -41,7 +41,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for type ptr
          * @return Type ptr
          */
-        GSTypePtr GetType() const;
+        Semantic::GSTypePtr GetType() const;
 
     public:
 
@@ -56,7 +56,7 @@ namespace GSLanguageCompiler::AST {
         /**
          * Type ptr
          */
-        GSTypePtr _type;
+        Semantic::GSTypePtr _type;
     };
 
     /**
@@ -77,7 +77,7 @@ namespace GSLanguageCompiler::AST {
          * @param type Type ptr
          */
         template<typename T>
-        GS_LiteralValue(T value, GSTypePtr type)
+        GS_LiteralValue(T value, Semantic::GSTypePtr type)
                 : _value(std::move(value)), GS_Value(std::move(type)) {}
 
     public:
@@ -90,7 +90,7 @@ namespace GSLanguageCompiler::AST {
          * @return Value ptr
          */
         template<typename T>
-        static SharedPtr<GS_Value> Create(T value, GSTypePtr type) {
+        static SharedPtr<GS_Value> Create(T value, Semantic::GSTypePtr type) {
             return std::make_shared<GS_Value>(std::move(value), std::move(type));
         }
 

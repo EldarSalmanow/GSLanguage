@@ -9,10 +9,6 @@ set(GS_AST_SOURCE
 
         ${AST_DIR}/GS_Node.cpp
 
-        ${AST_DIR}/GS_Scope.cpp
-
-        ${AST_DIR}/GS_Type.cpp
-
         ${AST_DIR}/GS_Declaration.cpp
         ${AST_DIR}/GS_Statement.cpp
         ${AST_DIR}/GS_Expression.cpp

@@ -126,7 +126,7 @@ namespace GSLanguageCompiler::Parser {
 
     SharedPtr<AST::GS_VariableDeclarationStatement> GS_Parser::ParseVariableDeclarationStatement() {
         UString variableName;
-        AST::GSTypePtr variableType;
+        Semantic::GSTypePtr variableType;
         AST::GSExpressionPtr variableExpression;
 
         if (!IsTokenType(Lexer::TokenType::KeywordVar)) {
@@ -324,7 +324,7 @@ namespace GSLanguageCompiler::Parser {
         return nullptr;
     }
 
-    AST::GSTypePtr GS_Parser::ParseType() {
+    Semantic::GSTypePtr GS_Parser::ParseType() {
         if (!IsTokenType(Lexer::TokenType::Identifier)) {
             return nullptr;
         }
@@ -333,7 +333,7 @@ namespace GSLanguageCompiler::Parser {
 
         NextToken(); // skip variable type
 
-        AST::GSTypePtr variableType;
+        Semantic::GSTypePtr variableType;
 
         if (stringVariableType == "Void"_us) {
             variableType = _builder->CreateVoidType();

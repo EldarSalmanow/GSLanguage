@@ -2,16 +2,16 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_Value::GS_Value(GSTypePtr type)
+    GS_Value::GS_Value(Semantic::GSTypePtr type)
             : _type(std::move(type)) {}
 
     GS_Value::~GS_Value() = default;
 
-    SharedPtr<GS_Value> GS_Value::Create(GSTypePtr type) {
+    SharedPtr<GS_Value> GS_Value::Create(Semantic::GSTypePtr type) {
         return std::make_shared<GS_Value>(std::move(type));
     }
 
-    GSTypePtr GS_Value::GetType() const {
+    Semantic::GSTypePtr GS_Value::GetType() const {
         return _type;
     }
 
@@ -28,7 +28,7 @@ namespace GSLanguageCompiler::AST {
     }
 
     GS_I32Value::GS_I32Value(I32 value)
-            : GS_LiteralValue(value, GS_I32Type::Create()) {}
+            : GS_LiteralValue(value, Semantic::GS_I32Type::Create()) {}
 
     SharedPtr<GS_I32Value> GS_I32Value::Create(I32 value) {
         return std::make_shared<GS_I32Value>(value);
@@ -39,7 +39,7 @@ namespace GSLanguageCompiler::AST {
     }
 
     GS_StringValue::GS_StringValue(UString value)
-            : GS_LiteralValue(std::move(value), GS_StringType::Create()) {}
+            : GS_LiteralValue(std::move(value), Semantic::GS_StringType::Create()) {}
 
     SharedPtr<GS_StringValue> GS_StringValue::Create(UString value) {
         return std::make_shared<GS_StringValue>(std::move(value));

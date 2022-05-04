@@ -100,7 +100,7 @@ namespace GSLanguageCompiler::Parser {
 
         AST::GSValuePtr ParseValue();
 
-        AST::GSTypePtr ParseType();
+        Semantic::GSTypePtr ParseType();
 
     public:
 

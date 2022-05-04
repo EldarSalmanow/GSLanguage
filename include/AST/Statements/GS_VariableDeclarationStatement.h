@@ -1,10 +1,10 @@
 #ifndef GSLANGUAGE_GS_VARIABLEDECLARATIONSTATEMENT_H
 #define GSLANGUAGE_GS_VARIABLEDECLARATIONSTATEMENT_H
 
+#include <Semantic/GS_Type.h>
+
 #include <AST/GS_Statement.h>
 #include <AST/GS_Expression.h>
-
-#include <AST/GS_Type.h>
 
 namespace GSLanguageCompiler::AST {
 
@@ -20,7 +20,7 @@ namespace GSLanguageCompiler::AST {
          * @param type Type
          * @param expression Expression
          */
-        GS_VariableDeclarationStatement(UString name, GSTypePtr type, GSExpressionPtr expression);
+        GS_VariableDeclarationStatement(UString name, Semantic::GSTypePtr type, GSExpressionPtr expression);
 
     public:
 
@@ -31,7 +31,7 @@ namespace GSLanguageCompiler::AST {
          * @param expression Expression
          * @return Variable declaration statement ptr
          */
-        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSTypePtr type, GSExpressionPtr expression);
+        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, Semantic::GSTypePtr type, GSExpressionPtr expression);
 
         /**
          * Creating variable declaration statement ptr
@@ -39,7 +39,7 @@ namespace GSLanguageCompiler::AST {
          * @param type Type
          * @return Variable declaration statement ptr
          */
-        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSTypePtr type);
+        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, Semantic::GSTypePtr type);
 
         /**
          * Creating variable declaration statement ptr
@@ -61,7 +61,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for variable type
          * @return Variable type
          */
-        LRef<GSTypePtr> GetType();
+        LRef<Semantic::GSTypePtr> GetType();
 
         /**
          * Getter for expression for variable
@@ -87,7 +87,7 @@ namespace GSLanguageCompiler::AST {
         /**
          * Variable type
          */
-        GSTypePtr _type;
+        Semantic::GSTypePtr _type;
 
         /**
          * Expression for variable

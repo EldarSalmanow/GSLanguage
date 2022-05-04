@@ -4,6 +4,7 @@
 
 #include <AST/AST.h>
 #include <Optimizer/Optimizer.h>
+#include <Semantic/Semantic.h>
 #include <CodeGenerator/CodeGenerator.h>
 
 using namespace GSLanguageCompiler;
@@ -41,6 +42,21 @@ public:
         AddTab();
 
         Print("Name: "_us + functionDeclaration->GetName());
+
+        auto signature = functionDeclaration->GetSignature();
+
+        auto paramTypes = signature.GetParamTypes();
+        auto returnType = signature.GetReturnType();
+
+        auto signatureMessage = "Signature: ("_us;
+
+        for (auto &paramType : paramTypes) {
+            signatureMessage += paramType->GetName() + " "_us;
+        }
+
+        signatureMessage += ") -> "_us + returnType->GetName();
+
+        Print(signatureMessage);
 
         Print("Body: {"_us);
 
@@ -330,7 +346,7 @@ public:
 
 public:
 
-    AST::GSTypePtr CalculateType(LRef<AST::GSExpressionPtr> expression) {
+    Semantic::GSTypePtr CalculateType(LRef<AST::GSExpressionPtr> expression) {
         if (auto constantExpression = AST::ToExpression<AST::GS_ConstantExpression>(expression)) {
             return CalculateType(constantExpression);
         }
@@ -346,7 +362,7 @@ public:
         return nullptr;
     }
 
-    AST::GSTypePtr CalculateType(SharedPtr<AST::GS_ConstantExpression> constantExpression) {
+    Semantic::GSTypePtr CalculateType(SharedPtr<AST::GS_ConstantExpression> constantExpression) {
         auto value = constantExpression->GetValue();
 
         auto valueType = value->GetType();
@@ -354,13 +370,13 @@ public:
         return valueType;
     }
 
-    AST::GSTypePtr CalculateType(SharedPtr<AST::GS_UnaryExpression> unaryExpression) {
+    Semantic::GSTypePtr CalculateType(SharedPtr<AST::GS_UnaryExpression> unaryExpression) {
         auto expression = unaryExpression->GetExpression();
 
         return CalculateType(expression);
     }
 
-    AST::GSTypePtr CalculateType(SharedPtr<AST::GS_BinaryExpression> binaryExpression) {
+    Semantic::GSTypePtr CalculateType(SharedPtr<AST::GS_BinaryExpression> binaryExpression) {
         auto firstExpression = binaryExpression->GetFirstExpression();
         auto secondExpression = binaryExpression->GetSecondExpression();
 
@@ -535,7 +551,9 @@ AST::GSTranslationUnitDeclarationPtr BuildMain() {
 
     auto Unit = Builder->CreateTranslationUnitDeclaration("main");
 
-    auto Function = Builder->CreateFunctionDeclaration("main");
+    auto FunctionSignature = Builder->CreateFunctionSignature(Builder->CreateI32Type());
+
+    auto Function = Builder->CreateFunctionDeclaration("main", FunctionSignature);
 
     Unit->AddNode(Function);
 
@@ -543,33 +561,33 @@ AST::GSTranslationUnitDeclarationPtr BuildMain() {
 }
 
 Void Func() {
-    auto program = CreateProgram();
+    auto program = BuildMain();
 
     auto PM = AST::GS_PassManager::Create();
 
     PM->AddPass(CreatePrintPass());
 
-    PM->AddPass(CreateTypeCheckPass());
+//    PM->AddPass(CreateTypeCheckPass());
 
-    PM->AddPass(CreatePrintPass());
+//    PM->AddPass(CreatePrintPass());
 
-    PM->AddPass(CreateManglePass(GS_ABI::Create()->GetMangler()));
+//    PM->AddPass(CreateManglePass(GS_ABI::Create()->GetMangler()));
 
-    PM->AddPass(CreatePrintPass());
+//    PM->AddPass(CreatePrintPass());
 
     PM->Run(program);
 
-    auto Optimizer = Optimizer::GS_Optimizer::Create();
-
-    Optimizer->Optimize(program);
-
-    auto CG = CodeGenerator::GS_CodeGenerator::CreateLLVMCG();
-
-    CG->Generate(program);
-
-    auto context = CG->GetContext();
-
-    PrintModule(context);
+//    auto Optimizer = Optimizer::GS_Optimizer::Create();
+//
+//    Optimizer->Optimize(program);
+//
+//    auto CG = CodeGenerator::GS_CodeGenerator::CreateLLVMCG();
+//
+//    CG->Generate(program);
+//
+//    auto context = CG->GetContext();
+//
+//    PrintModule(context);
 }
 
 /**

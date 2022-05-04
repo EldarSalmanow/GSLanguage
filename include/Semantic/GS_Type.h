@@ -3,7 +3,7 @@
 
 #include <GSCrossPlatform/CrossPlatform.h>
 
-namespace GSLanguageCompiler::AST {
+namespace GSLanguageCompiler::Semantic {
 
     /**
      * Class for all types in language
@@ -61,6 +61,11 @@ namespace GSLanguageCompiler::AST {
      * Type ptr type
      */
     using GSTypePtr = SharedPtr<GS_Type>;
+
+    /**
+     * Type ptr array type
+     */
+    using GSTypePtrArray = Vector<GSTypePtr>;
 
     /**
      * Class for literal types
@@ -151,6 +156,68 @@ namespace GSLanguageCompiler::AST {
          */
         static SharedPtr<GS_StringType> Create();
     };
+
+    /**
+     * Context for containing information about types
+     */
+    class GS_TypeContext {
+    public:
+
+        /**
+         * Constructor for type context
+         */
+        GS_TypeContext();
+
+    public:
+
+        /**
+         * Creating type context
+         * @return Ttype context ptr
+         */
+        static SharedPtr<GS_TypeContext> Create();
+
+    public:
+
+        /**
+         * Getter for default Void type
+         * @return Void type
+         */
+        SharedPtr<Semantic::GS_VoidType> GetVoidType() const;
+
+        /**
+         * Getter for default I32 type
+         * @return I32 type
+         */
+        SharedPtr<Semantic::GS_I32Type> GetI32Type() const;
+
+        /**
+         * Getter for default String type
+         * @return String type
+         */
+        SharedPtr<Semantic::GS_StringType> GetStringType() const;
+
+    private:
+
+        /**
+         * Void type
+         */
+        SharedPtr<Semantic::GS_VoidType> _voidType;
+
+        /**
+         * I32 type
+         */
+        SharedPtr<Semantic::GS_I32Type> _i32Type;
+
+        /**
+         * String type
+         */
+        SharedPtr<Semantic::GS_StringType> _stringType;
+    };
+
+    /**
+     * Type context ptr type
+     */
+    using GSTypeContextPtr = SharedPtr<GS_TypeContext>;
 
 }
 

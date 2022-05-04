@@ -13,23 +13,23 @@ namespace GSLanguageCompiler::AST {
         return GS_ASTBuilder::Create(GS_ASTContext::Create());
     }
 
-    GSTypePtr GS_ASTBuilder::CreateType(UString name) {
-        return GS_Type::Create(std::move(name));
+    Semantic::GSTypePtr GS_ASTBuilder::CreateType(UString name) {
+        return Semantic::GS_Type::Create(std::move(name));
     }
 
-    SharedPtr<GS_VoidType> GS_ASTBuilder::CreateVoidType() {
+    SharedPtr<Semantic::GS_VoidType> GS_ASTBuilder::CreateVoidType() {
         return _context->GetVoidType();
     }
 
-    SharedPtr<GS_I32Type> GS_ASTBuilder::CreateI32Type() {
+    SharedPtr<Semantic::GS_I32Type> GS_ASTBuilder::CreateI32Type() {
         return _context->GetI32Type();
     }
 
-    SharedPtr<GS_StringType> GS_ASTBuilder::CreateStringType() {
+    SharedPtr<Semantic::GS_StringType> GS_ASTBuilder::CreateStringType() {
         return _context->GetStringType();
     }
 
-    GSValuePtr GS_ASTBuilder::CreateValue(GSTypePtr type) {
+    GSValuePtr GS_ASTBuilder::CreateValue(Semantic::GSTypePtr type) {
         return GS_Value::Create(std::move(type));
     }
 
@@ -49,6 +49,30 @@ namespace GSLanguageCompiler::AST {
         return GS_TranslationUnitDeclaration::Create(std::move(name));
     }
 
+    GS_FunctionSignature GS_ASTBuilder::CreateFunctionSignature(Semantic::GSTypePtrArray paramTypes, Semantic::GSTypePtr returnType) {
+        return GS_FunctionSignature::Create(std::move(paramTypes), std::move(returnType));
+    }
+
+    GS_FunctionSignature GS_ASTBuilder::CreateFunctionSignature(Semantic::GSTypePtrArray paramTypes) {
+        return GS_FunctionSignature::Create(std::move(paramTypes));
+    }
+
+    GS_FunctionSignature GS_ASTBuilder::CreateFunctionSignature(Semantic::GSTypePtr returnType) {
+        return GS_FunctionSignature::Create(std::move(returnType));
+    }
+
+    GS_FunctionSignature GS_ASTBuilder::CreateFunctionSignature() {
+        return GS_FunctionSignature::Create();
+    }
+
+    SharedPtr<GS_FunctionDeclaration> GS_ASTBuilder::CreateFunctionDeclaration(UString name, GS_FunctionSignature signature, GSStatementPtrArray body) {
+        return GS_FunctionDeclaration::Create(std::move(name), std::move(signature), std::move(body));
+    }
+
+    SharedPtr<GS_FunctionDeclaration> GS_ASTBuilder::CreateFunctionDeclaration(UString name, GS_FunctionSignature signature) {
+        return GS_FunctionDeclaration::Create(std::move(name), std::move(signature));
+    }
+
     SharedPtr<GS_FunctionDeclaration> GS_ASTBuilder::CreateFunctionDeclaration(UString name, GSStatementPtrArray statements) {
         return GS_FunctionDeclaration::Create(std::move(name), std::move(statements));
     }
@@ -57,11 +81,11 @@ namespace GSLanguageCompiler::AST {
         return GS_FunctionDeclaration::Create(std::move(name));
     }
 
-    SharedPtr<GS_VariableDeclarationStatement> GS_ASTBuilder::CreateVariableDeclarationStatement(UString name, GSTypePtr type, GSExpressionPtr expression) {
+    SharedPtr<GS_VariableDeclarationStatement> GS_ASTBuilder::CreateVariableDeclarationStatement(UString name, Semantic::GSTypePtr type, GSExpressionPtr expression) {
         return GS_VariableDeclarationStatement::Create(std::move(name), std::move(type), std::move(expression));
     }
 
-    SharedPtr<GS_VariableDeclarationStatement> GS_ASTBuilder::CreateVariableDeclarationStatement(UString name, GSTypePtr type) {
+    SharedPtr<GS_VariableDeclarationStatement> GS_ASTBuilder::CreateVariableDeclarationStatement(UString name, Semantic::GSTypePtr type) {
         return GS_VariableDeclarationStatement::Create(std::move(name), std::move(type));
     }
 

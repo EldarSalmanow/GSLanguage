@@ -123,7 +123,7 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         _builder.SetInsertPoint(block);
 
-        llvm::StructType s;
+//        llvm::StructType s;
 
         for (auto &statement : body) {
             GenerateStatement(statement);

@@ -4,9 +4,11 @@
 #include <AST/GS_Statement.h>
 #include <AST/GS_Expression.h>
 
-#include <AST/GS_Type.h>
+#include <Semantic/GS_Type.h>
 
 namespace GSLanguageCompiler::Semantic {
+
+    // TODO test it
 
     /**
      *
@@ -110,7 +112,7 @@ namespace GSLanguageCompiler::Semantic {
          * @param type
          * @param expression
          */
-        GS_VariableSymbol(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression);
+        GS_VariableSymbol(UString name, GSTypePtr type, AST::GSExpressionPtr expression);
 
     public:
 
@@ -121,7 +123,7 @@ namespace GSLanguageCompiler::Semantic {
          * @param expression
          * @return
          */
-        static SharedPtr<GS_VariableSymbol> Create(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression);
+        static SharedPtr<GS_VariableSymbol> Create(UString name, GSTypePtr type, AST::GSExpressionPtr expression);
 
     public:
 
@@ -135,7 +137,7 @@ namespace GSLanguageCompiler::Semantic {
          *
          * @return
          */
-        LRef<AST::GSTypePtr> GetType();
+        LRef<GSTypePtr> GetType();
 
         /**
          *
@@ -161,7 +163,7 @@ namespace GSLanguageCompiler::Semantic {
         /**
          *
          */
-        AST::GSTypePtr _type;
+        GSTypePtr _type;
 
         /**
          *
@@ -192,10 +194,11 @@ namespace GSLanguageCompiler::Semantic {
 
         /**
          *
-         * @param symbol
+         * @param name
+         * @param body
          * @return
          */
-        Void AddSymbol(GSSymbolPtr symbol);
+        Void AddFunction(UString name, AST::GSStatementPtrArray body);
 
         /**
          *
@@ -204,36 +207,33 @@ namespace GSLanguageCompiler::Semantic {
          * @param expression
          * @return
          */
-//        Void AddVariable(UString name, AST::GSTypePtr type, AST::GSExpressionPtr expression);
-
-        /**
-         *
-         * @param name
-         * @param body
-         * @return
-         */
-//        Void AddFunction(UString name, AST::GSStatementPtrArray body);
+        Void AddVariable(UString name, GSTypePtr type, AST::GSExpressionPtr expression);
 
         /**
          *
          * @param name
          * @return
          */
-        SharedPtr<GS_VariableSymbol> GetVariable(UString name);
+        SharedPtr<GS_FunctionSymbol> FindFunction(UString name);
 
         /**
          *
          * @param name
          * @return
          */
-        SharedPtr<GS_FunctionSymbol> GetFunction(UString name);
+        SharedPtr<GS_VariableSymbol> FindVariable(UString name);
 
     private:
 
         /**
          *
          */
-        GSSymbolPtrArray _symbols;
+        Vector<SharedPtr<GS_FunctionSymbol>> _functions;
+
+        /**
+         *
+         */
+        Vector<SharedPtr<GS_VariableSymbol>> _variables;
     };
 
     /**

@@ -3,7 +3,9 @@ project(GSSemanticLibrary)
 set(SEMANTIC_DIR ${SOURCE_DIR}/Semantic)
 
 set(GS_SEMANTIC_SOURCE
-        ${SEMANTIC_DIR}/GS_TableOfSymbols.cpp) #../../src/Semantic/Visitors/GS_VariablesPlaceholderVisitor.cpp)
+        ${SEMANTIC_DIR}/GS_Type.cpp
+
+        ${SEMANTIC_DIR}/GS_TableOfSymbols.cpp)
 
 add_library(
 #       Library name

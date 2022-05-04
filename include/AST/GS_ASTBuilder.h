@@ -52,25 +52,25 @@ namespace GSLanguageCompiler::AST {
          * @param name Name
          * @return Type
          */
-        GSTypePtr CreateType(UString name);
+        Semantic::GSTypePtr CreateType(UString name);
 
         /**
          * Create Void type
          * @return Void type
          */
-        SharedPtr<GS_VoidType> CreateVoidType();
+        SharedPtr<Semantic::GS_VoidType> CreateVoidType();
 
         /**
          * Create I32 type
          * @return I32 type
          */
-        SharedPtr<GS_I32Type> CreateI32Type();
+        SharedPtr<Semantic::GS_I32Type> CreateI32Type();
 
         /**
          * Create String type
          * @return String type
          */
-        SharedPtr<GS_StringType> CreateStringType();
+        SharedPtr<Semantic::GS_StringType> CreateStringType();
 
     public:
 
@@ -79,7 +79,7 @@ namespace GSLanguageCompiler::AST {
          * @param type Type
          * @return Value
          */
-        GSValuePtr CreateValue(GSTypePtr type);
+        GSValuePtr CreateValue(Semantic::GSTypePtr type);
 
         /**
          * Create I32 value
@@ -113,6 +113,51 @@ namespace GSLanguageCompiler::AST {
         GSTranslationUnitDeclarationPtr CreateTranslationUnitDeclaration(UString name);
 
         /**
+         * Create function signature
+         * @param paramTypes Param types
+         * @param returnType Return type
+         * @return Function signature
+         */
+        GS_FunctionSignature CreateFunctionSignature(Semantic::GSTypePtrArray paramTypes, Semantic::GSTypePtr returnType);
+
+        /**
+         * Create function signature
+         * @param paramTypes Param types
+         * @return Function signature
+         */
+        GS_FunctionSignature CreateFunctionSignature(Semantic::GSTypePtrArray paramTypes);
+
+        /**
+         * Create function signature
+         * @param returnType Return type
+         * @return Function signature
+         */
+        GS_FunctionSignature CreateFunctionSignature(Semantic::GSTypePtr returnType);
+
+        /**
+         * Create function signature
+         * @return Function signature
+         */
+        GS_FunctionSignature CreateFunctionSignature();
+
+        /**
+         * Create function declaration
+         * @param name Name
+         * @param signature Signature
+         * @param body Body
+         * @return Function declaration
+         */
+        SharedPtr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name, GS_FunctionSignature signature, GSStatementPtrArray body);
+
+        /**
+         * Create function declaration
+         * @param name Name
+         * @param signature Signature
+         * @return Function declaration
+         */
+        SharedPtr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name, GS_FunctionSignature signature);
+
+        /**
          * Create function declaration
          * @param name Name
          * @param statements Statements
@@ -136,7 +181,7 @@ namespace GSLanguageCompiler::AST {
          * @param expression Expression
          * @return Variable declaration statement
          */
-        SharedPtr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name, GSTypePtr type, GSExpressionPtr expression);
+        SharedPtr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name, Semantic::GSTypePtr type, GSExpressionPtr expression);
 
         /**
          * Create variable declaration statement
@@ -144,7 +189,7 @@ namespace GSLanguageCompiler::AST {
          * @param type Type
          * @return Variable declaration statement
          */
-        SharedPtr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name, GSTypePtr type);
+        SharedPtr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name, Semantic::GSTypePtr type);
 
         /**
          * Create variable declaration statement

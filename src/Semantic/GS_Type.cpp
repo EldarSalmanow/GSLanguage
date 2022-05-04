@@ -1,6 +1,6 @@
 #include <GS_Type.h>
 
-namespace GSLanguageCompiler::AST {
+namespace GSLanguageCompiler::Semantic {
 
     GS_Type::GS_Type(UString name)
             : _name(std::move(name)) {}
@@ -51,10 +51,25 @@ namespace GSLanguageCompiler::AST {
         return std::make_shared<GS_StringType>();
     }
 
-    Bool isBaseType(GSTypePtr type) {
-        auto typeName = type->GetName();
+    GS_TypeContext::GS_TypeContext()
+            : _voidType(Semantic::GS_VoidType::Create()),
+              _i32Type(Semantic::GS_I32Type::Create()),
+              _stringType(Semantic::GS_StringType::Create()) {}
 
-        return typeName == "Void"_us || typeName == "I32"_us || typeName == "String"_us;
+    SharedPtr<GS_TypeContext> GS_TypeContext::Create() {
+        return std::make_shared<GS_TypeContext>();
+    }
+
+    SharedPtr<Semantic::GS_VoidType> GS_TypeContext::GetVoidType() const {
+        return _voidType;
+    }
+
+    SharedPtr<Semantic::GS_I32Type> GS_TypeContext::GetI32Type() const {
+        return _i32Type;
+    }
+
+    SharedPtr<Semantic::GS_StringType> GS_TypeContext::GetStringType() const {
+        return _stringType;
     }
 
 }

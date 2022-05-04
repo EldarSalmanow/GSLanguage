@@ -1,10 +1,82 @@
 #ifndef GSLANGUAGE_GS_FUNCTIONDECLARATION_H
 #define GSLANGUAGE_GS_FUNCTIONDECLARATION_H
 
+#include <Semantic/GS_Type.h>
+
 #include <AST/GS_Declaration.h>
 #include <AST/GS_Statement.h>
 
 namespace GSLanguageCompiler::AST {
+
+    /**
+     * Class for containing information about function signature
+     */
+    class GS_FunctionSignature {
+    public:
+
+        /**
+         * Constructor for function signature
+         * @param paramTypes Param types
+         * @param returnType Return type
+         */
+        GS_FunctionSignature(Semantic::GSTypePtrArray paramTypes, Semantic::GSTypePtr returnType);
+
+    public:
+
+        /**
+         * Creating function signature
+         * @param paramTypes Param types
+         * @param returnType Return type
+         * @return Function signature
+         */
+        static GS_FunctionSignature Create(Semantic::GSTypePtrArray paramTypes, Semantic::GSTypePtr returnType);
+
+        /**
+         * Creating function signature
+         * @param paramTypes Param types
+         * @return Function signature
+         */
+        static GS_FunctionSignature Create(Semantic::GSTypePtrArray paramTypes);
+
+        /**
+         * Creating function signature
+         * @param returnType Return type
+         * @return Function signature
+         */
+        static GS_FunctionSignature Create(Semantic::GSTypePtr returnType);
+
+        /**
+         * Creating function signature
+         * @return Function signature
+         */
+        static GS_FunctionSignature Create();
+
+    public:
+
+        /**
+         * Getter for param types
+         * @return Param types
+         */
+        Semantic::GSTypePtrArray GetParamTypes() const;
+
+        /**
+         * Getter for return type
+         * @return Return type
+         */
+        Semantic::GSTypePtr GetReturnType() const;
+
+    private:
+
+        /**
+         * Param types
+         */
+        Semantic::GSTypePtrArray _paramTypes;
+
+        /**
+         * Return type
+         */
+        Semantic::GSTypePtr _returnType;
+    };
 
     /**
      * Declaring expression
@@ -20,11 +92,29 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for function declaration
          * @param name Name
+         * @param signature Signature
          * @param body Body
          */
-        GS_FunctionDeclaration(UString name, GSStatementPtrArray body);
+        GS_FunctionDeclaration(UString name, GS_FunctionSignature signature, GSStatementPtrArray body);
 
     public:
+
+        /**
+         * Creating function declaration ptr
+         * @param name Name
+         * @param signature Signature
+         * @param body Body
+         * @return Function declaration ptr
+         */
+        static SharedPtr<GS_FunctionDeclaration> Create(UString name, GS_FunctionSignature signature, GSStatementPtrArray body);
+
+        /**
+         * Creating function declaration ptr
+         * @param name Name
+         * @param signature Signature
+         * @return Function declaration ptr
+         */
+        static SharedPtr<GS_FunctionDeclaration> Create(UString name, GS_FunctionSignature signature);
 
         /**
          * Creating function declaration ptr
@@ -77,6 +167,12 @@ namespace GSLanguageCompiler::AST {
         LRef<UString> GetName();
 
         /**
+         * Getter for function signature
+         * @return Function signature
+         */
+        LRef<GS_FunctionSignature> GetSignature();
+
+        /**
          * Getter for function code
          * @return Function code
          */
@@ -96,6 +192,11 @@ namespace GSLanguageCompiler::AST {
          * Function name
          */
         UString _name;
+
+        /**
+         * Function signature
+         */
+        GS_FunctionSignature _signature;
 
         /**
          * Function code
