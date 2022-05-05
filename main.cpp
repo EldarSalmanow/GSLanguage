@@ -515,8 +515,6 @@ inline Void PrintModule(LRef<CodeGenerator::GSCGContextPtr> context) {
     std::reinterpret_pointer_cast<CodeGenerator::GS_LLVMCGContext>(context)->GetModule().print(llvm::errs(), nullptr);
 }
 
-#include <Parser/Parser.h>
-
 AST::GSTranslationUnitDeclarationPtr CreateProgram() {
     /**
      * main.gs
@@ -560,8 +558,38 @@ AST::GSTranslationUnitDeclarationPtr BuildMain() {
     return Unit;
 }
 
+Void PrintTOS(Semantic::GSTableOfSymbolsPtr tableOfSymbols) {
+    UCOut() << "---------- Table Of Symbols Dump ----------\n"_us;
+    
+    auto functions = tableOfSymbols->GetFunctions();
+
+    if (!functions.empty()) {
+        UCOut() << "----------       Functions       ----------\n"_us;
+
+        for (auto index = 0; index < functions.size(); ++index) {
+            auto function = functions[index];
+
+            UCOut() << UString(std::to_string(index + 1)) << ": \n  Name -> "_us << function->GetName() << "\n"_us;
+        }
+    }
+
+    auto variables = tableOfSymbols->GetVariables();
+
+    if (!variables.empty()) {
+        UCOut() << "----------       Variables       ----------\n"_us;
+
+        for (auto index = 0; index < variables.size(); ++index) {
+            auto variable = variables[index];
+
+            UCOut() << UString(std::to_string(index + 1)) << ": \n  Name -> "_us << variable->GetName() << "\n  Type -> " << variable->GetType()->GetName() << "\n"_us;
+        }
+    }
+    
+    UCOut() << "-------------------------------------------\n"_us;
+}
+
 Void Func() {
-    auto program = BuildMain();
+    auto program = CreateProgram();
 
     auto PM = AST::GS_PassManager::Create();
 
@@ -576,6 +604,22 @@ Void Func() {
 //    PM->AddPass(CreatePrintPass());
 
     PM->Run(program);
+
+    auto TOS = Semantic::GS_TableOfSymbols::Create();
+
+    auto Builder = AST::GS_ASTBuilder::Create();
+
+    auto Function = Builder->CreateFunctionDeclaration("main");
+
+    auto Expression = Builder->CreateBinaryExpression(AST::BinaryOperation::Plus, Builder->CreateConstantExpression(3), Builder->CreateConstantExpression(10));
+
+    auto Variable = Builder->CreateVariableDeclarationStatement("number", Builder->CreateI32Type(), Expression);
+
+    TOS->AddFunction(Function->GetName(), Function->GetBody());
+
+    TOS->AddVariable(Variable->GetName(), Variable->GetType(), Variable->GetExpression());
+
+    PrintTOS(TOS);
 
 //    auto Optimizer = Optimizer::GS_Optimizer::Create();
 //

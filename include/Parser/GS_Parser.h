@@ -7,6 +7,61 @@
 
 namespace GSLanguageCompiler::Parser {
 
+    // TODO update error handler
+
+    class GS_Error {
+    public:
+
+        explicit GS_Error(UString message)
+                : _message(std::move(message)) {}
+
+    public:
+
+        static GS_Error Create(UString message) {
+            return GS_Error(std::move(message));
+        }
+
+    public:
+
+        UString GetMessage() const {
+            return _message;
+        }
+
+    private:
+
+        UString _message;
+    };
+
+    class GS_ErrorHandler {
+    public:
+
+        GS_ErrorHandler() = default;
+
+    public:
+
+        static SharedPtr<GS_ErrorHandler> Create() {
+            return GS_ErrorHandler();
+        }
+
+    public:
+
+        Void AddError(UString message) {
+            _errors.emplace_back(GS_Error::Create(std::move(message)));
+        }
+
+    public:
+
+        Vector<GS_Error> GetErrors() const {
+            return _errors;
+        }
+
+    private:
+
+        Vector<GS_Error> _errors;
+    };
+
+    using GSErrorHandlerPtr = SharedPtr<GS_ErrorHandler>;
+
     /**
      *
      * Parser Grammar
@@ -118,6 +173,8 @@ namespace GSLanguageCompiler::Parser {
 
         Void NextToken();
 
+        Void AddError(UString error);
+
     private:
 
         Lexer::GS_TokenStream _stream;
@@ -125,6 +182,8 @@ namespace GSLanguageCompiler::Parser {
         AST::GSASTContextPtr _context;
 
         AST::GSASTBuilderPtr _builder;
+
+        GSErrorHandlerPtr _errorHandler;
     };
 
 }

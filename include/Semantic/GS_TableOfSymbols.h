@@ -8,8 +8,6 @@
 
 namespace GSLanguageCompiler::Semantic {
 
-    // TODO test it
-
     /**
      *
      */
@@ -222,6 +220,20 @@ namespace GSLanguageCompiler::Semantic {
          * @return
          */
         SharedPtr<GS_VariableSymbol> FindVariable(UString name);
+
+    public:
+
+        /**
+         *
+         * @return
+         */
+        Vector<SharedPtr<GS_FunctionSymbol>> GetFunctions() const;
+
+        /**
+         *
+         * @return
+         */
+        Vector<SharedPtr<GS_VariableSymbol>> GetVariables() const;
 
     private:
 

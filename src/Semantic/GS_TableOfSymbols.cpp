@@ -92,4 +92,12 @@ namespace GSLanguageCompiler::Semantic {
         return nullptr;
     }
 
+    Vector<SharedPtr<GS_FunctionSymbol>> GS_TableOfSymbols::GetFunctions() const {
+        return _functions;
+    }
+
+    Vector<SharedPtr<GS_VariableSymbol>> GS_TableOfSymbols::GetVariables() const {
+        return _variables;
+    }
+
 }

@@ -2,8 +2,6 @@
 
 namespace GSLanguageCompiler::Parser {
 
-    // TODO add normal error handler
-
     Map<Lexer::TokenType, I32> OperatorsPrecedence = {
             {Lexer::TokenType::SymbolStar,  2},
             {Lexer::TokenType::SymbolSlash, 2},
@@ -208,14 +206,9 @@ namespace GSLanguageCompiler::Parser {
         return ParseBinaryExpression(0, expression);
     }
 
-    // TODO move to UString (GSCrossPlatform)
-    inline I32 AsI32(ConstLRef<UString> string) {
-        return std::stoi(string.AsString());
-    }
-
     AST::GSExpressionPtr GS_Parser::ParseConstantExpression() {
         if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
-            auto number = _builder->CreateI32Value(AsI32(TokenValue()));
+            auto number = _builder->CreateI32Value(std::stoi(TokenValue().AsString()));
 
             NextToken(); // skip number
 
@@ -271,7 +264,9 @@ namespace GSLanguageCompiler::Parser {
 
                     break;
                 default:
-                    throw UException("Unknown binary operator!"_us); // TODO remove
+                    AddError("Unknown binary operator!"_us);
+
+                    return nullptr;
             }
 
             NextToken(); // skip binary operator
@@ -380,6 +375,10 @@ namespace GSLanguageCompiler::Parser {
 
     Void GS_Parser::NextToken() {
         _stream.NextToken();
+    }
+
+    Void GS_Parser::AddError(UString error) {
+        _errorHandler->AddError(std::move(error));
     }
 
 }
