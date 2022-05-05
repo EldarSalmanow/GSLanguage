@@ -40,7 +40,7 @@ namespace GSLanguageCompiler::Parser {
     public:
 
         static SharedPtr<GS_ErrorHandler> Create() {
-            return GS_ErrorHandler();
+            return std::make_shared<GS_ErrorHandler>();
         }
 
     public:

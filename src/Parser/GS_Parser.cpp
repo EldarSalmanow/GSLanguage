@@ -10,7 +10,7 @@ namespace GSLanguageCompiler::Parser {
     };
 
     GS_Parser::GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream, AST::GSASTContextPtr context)
-            : _stream(tokenStream), _context(std::move(context)), _builder(AST::GS_ASTBuilder::Create(_context)) {}
+            : _stream(tokenStream), _context(std::move(context)), _builder(AST::GS_ASTBuilder::Create(_context)), _errorHandler(GS_ErrorHandler::Create()) {}
 
     AST::GSTranslationUnitDeclarationPtr GS_Parser::Parse() {
         return ParseTranslationUnitDeclaration();
