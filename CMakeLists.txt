@@ -33,14 +33,15 @@ separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
 add_definitions(${LLVM_DEFINITIONS_LIST})
 
 set(PROJECT_LIBRARIES
+        GSDriverLibrary
         GSReaderLibrary
         GSLexerLibrary
-        GSDriverLibrary
-        GSASTLibrary
-        GSCodeGeneratorLibrary
-        GSSemanticLibrary
-        GSOptimizerLibrary
         GSParserLibrary
+        GSASTLibrary
+        GSOptimizerLibrary
+        GSSemanticLibrary
+        GSCodeGeneratorLibrary
+        GSDebugLibrary
         )
 
 add_executable(${PROJECT_NAME}
@@ -53,16 +54,17 @@ include_directories(${CONAN_INCLUDE_DIRS})
 
 include_directories(${INCLUDE_DIR})
 
+add_subdirectory(${INCLUDE_DIR}/Driver)
 add_subdirectory(${INCLUDE_DIR}/Reader)
 add_subdirectory(${INCLUDE_DIR}/Lexer)
-add_subdirectory(${INCLUDE_DIR}/Driver)
-add_subdirectory(${INCLUDE_DIR}/AST)
 add_subdirectory(${INCLUDE_DIR}/Parser)
-add_subdirectory(${INCLUDE_DIR}/Semantic)
+add_subdirectory(${INCLUDE_DIR}/AST)
 add_subdirectory(${INCLUDE_DIR}/Optimizer)
+add_subdirectory(${INCLUDE_DIR}/Semantic)
 add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
+add_subdirectory(${INCLUDE_DIR}/Debug)
 
-#add_subdirectory(tests)
+#add_subdirectory(tests) TODO update
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CONAN_LIB_DIRS})
 
