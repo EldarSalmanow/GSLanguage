@@ -10,7 +10,10 @@ namespace GSLanguageCompiler::Parser {
     };
 
     GS_Parser::GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream, AST::GSASTContextPtr context)
-            : _stream(tokenStream), _context(std::move(context)), _builder(AST::GS_ASTBuilder::Create(_context)), _errorHandler(GS_ErrorHandler::Create()) {}
+            : _stream(tokenStream),
+              _context(std::move(context)),
+              _builder(AST::GS_ASTBuilder::Create(_context)),
+              _errorHandler(GS_ErrorHandler::Create()) {}
 
     AST::GSTranslationUnitDeclarationPtr GS_Parser::Parse() {
         return ParseTranslationUnitDeclaration();
@@ -87,17 +90,15 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSStatementPtr GS_Parser::ParseStatement() {
-        // TODO update statement parsing process
-
         AST::GSStatementPtr statement;
 
-//        statement = TryParse(&GS_Parser::ParseVariableDeclarationStatement);
+        statement = TryParse(&GS_Parser::ParseVariableDeclarationStatement);
 
         if (statement) {
             return statement;
         }
 
-//        statement = TryParse(&GS_Parser::ParseAssignmentStatement);
+        statement = TryParse(&GS_Parser::ParseAssignmentStatement);
 
         if (statement) {
             return statement;
@@ -169,15 +170,21 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSExpressionPtr GS_Parser::ParseExpression() {
-        // TODO update parsing expression process
+        AST::GSExpressionPtr expression;
 
-        auto expression = ParseRValueExpression();
+        expression = TryParse(&GS_Parser::ParseRValueExpression);
 
-        if (!expression) {
-            expression = ParseLValueExpression();
+        if (expression) {
+            return expression;
         }
 
-        return expression;
+        expression = TryParse(&GS_Parser::ParseLValueExpression);
+
+        if (expression) {
+            return expression;
+        }
+
+        return nullptr;
     }
 
     AST::GSExpressionPtr GS_Parser::ParseLValueExpression() {
@@ -207,33 +214,25 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSExpressionPtr GS_Parser::ParseConstantExpression() {
-        if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
-            auto number = _builder->CreateI32Value(std::stoi(TokenValue().AsString()));
+        auto value = ParseValue();
 
-            NextToken(); // skip number
-
-            return _builder->CreateConstantExpression(number);
-        } else if (IsTokenType(Lexer::TokenType::LiteralString)) {
-            auto string = _builder->CreateStringValue(TokenValue());
-
-            NextToken();
-
-            return _builder->CreateConstantExpression(string);
+        if (!value) {
+            return nullptr;
         }
 
-        return nullptr;
+        return _builder->CreateConstantExpression(value);
     }
 
     AST::GSExpressionPtr GS_Parser::ParseUnaryExpression() {
         if (IsTokenType(Lexer::TokenType::SymbolMinus)) {
             NextToken(); // skip '-'
 
-            auto constantExpression = ParsePrimaryExpression();
+            auto constantExpression = ParseConstantExpression();
 
             return _builder->CreateUnaryExpression(AST::UnaryOperation::Minus, constantExpression);
         }
 
-        return ParsePrimaryExpression();
+        return ParseConstantExpression();
     }
 
     AST::GSExpressionPtr GS_Parser::ParseBinaryExpression(I32 expressionPrecedence, LRef<AST::GSExpressionPtr> expression) {
@@ -283,27 +282,33 @@ namespace GSLanguageCompiler::Parser {
         }
     }
 
-    AST::GSExpressionPtr GS_Parser::ParsePrimaryExpression() {
-        AST::GSExpressionPtr expression;
-
-//        expression = TryParse(&GS_Parser::ParseConstantExpression);
-
-        if (expression) {
-            return expression;
+    AST::GSExpressionPtr GS_Parser::ParseFunctionCallingExpression() {
+        if (!IsTokenType(Lexer::TokenType::Identifier)) {
+            return nullptr;
         }
 
-//        expression = TryParse(&GS_Parser::ParseVariableUsingExpression);
+        auto name = TokenValue();
 
-        if (expression) {
-            return expression;
+        NextToken(); // skip function name
+
+        if (!IsTokenType(Lexer::TokenType::SymbolLeftParen)) {
+            return nullptr;
         }
 
-        return nullptr;
+        AST::GSExpressionPtrArray params;
+
+        while (!IsTokenType(Lexer::TokenType::SymbolRightParen)) {
+            auto param = ParseExpression();
+
+            params.emplace_back(param);
+        }
+
+        return _builder->CreateFunctionCallingExpression(name, params);
     }
 
     AST::GSValuePtr GS_Parser::ParseValue() {
         if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
-            auto number = AsI32(TokenValue());
+            auto number = std::stoi(TokenValue().AsString());
 
             NextToken(); // skip number
 

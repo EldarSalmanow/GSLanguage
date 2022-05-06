@@ -86,7 +86,7 @@ namespace GSLanguageCompiler::Parser {
      *
      * var_using_expr -> id
      *
-     * rvalue_expr -> const_expr, unary_expr, binary_expr
+     * rvalue_expr -> const_expr, unary_expr, binary_expr, func_call_expr
      *
      * const_expr -> num, str
      *
@@ -98,13 +98,7 @@ namespace GSLanguageCompiler::Parser {
      *
      * binary_op -> '+', '-', '*', '/'
      *
-     * Lexer Grammar
-     *
-     * id -> [A-z]([A-z] | [0-9])*
-     *
-     * num -> [1-9]([0-9])*
-     *
-     * str -> '"' * '"'
+     * func_call_expr -> id '(' (expr...) ')'
      *
      */
 
@@ -149,13 +143,36 @@ namespace GSLanguageCompiler::Parser {
 
         AST::GSExpressionPtr ParseBinaryExpression(I32 precedence, LRef<AST::GSExpressionPtr> expression);
 
-        AST::GSExpressionPtr ParsePrimaryExpression();
+        AST::GSExpressionPtr ParseFunctionCallingExpression();
 
     public:
 
         AST::GSValuePtr ParseValue();
 
         Semantic::GSTypePtr ParseType();
+
+    public:
+
+        template<typename T>
+        inline T TryParse(T (GS_Parser:: *method) ()) {
+            auto stream = _stream;
+            auto context = _context;
+            auto builder = _builder;
+            auto errorHandler = _errorHandler;
+
+            auto result = (this->*method)();
+
+            if (!result) {
+                _stream = stream;
+                _context = context;
+                _builder = builder;
+                _errorHandler = errorHandler;
+
+                return nullptr;
+            }
+
+            return result;
+        }
 
     public:
 

@@ -56,4 +56,8 @@ namespace GSLanguageCompiler::Lexer {
         return _value;
     }
 
+    GS_TokenLocation GS_Token::GetLocation() const {
+        return _location;
+    }
+
 }

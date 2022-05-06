@@ -76,5 +76,3 @@ target_link_libraries(${PROJECT_NAME} PRIVATE lldCommon lldCOFF)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_LIBRARIES})
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${BINARY_DIR})
-
-# TODO reorganise (?) build script
