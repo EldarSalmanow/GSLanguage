@@ -3,7 +3,12 @@
 
 #include <GSCrossPlatform/CrossPlatform.h>
 
-namespace GSLanguageCompiler::Reader {
+namespace GSLanguageCompiler::IO {
+
+    /**
+     * Declaring text stream
+     */
+    class GS_TextStream;
 
     /**
      * Reader for read files
@@ -20,10 +25,34 @@ namespace GSLanguageCompiler::Reader {
     public:
 
         /**
+         * Creating reader
+         * @param file File
+         * @return Reader
+         */
+        static GS_Reader Create(LRef<UniquePtr<File>> file);
+
+        /**
+         * Creating reader
+         * @param name File name
+         * @return Reader
+         */
+        static GS_Reader Create(UString name);
+
+    public:
+
+        /**
          * Reading text from source
          * @return Text
          */
         UString ReadText();
+
+    public:
+
+        /**
+         * Creating text stream for reading text
+         * @return Text stream
+         */
+        GS_TextStream CreateStream();
 
     private:
 

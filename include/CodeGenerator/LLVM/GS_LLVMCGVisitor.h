@@ -124,6 +124,20 @@ namespace GSLanguageCompiler::CodeGenerator {
     private:
 
         /**
+         * Getter for LLVM context
+         * @return LLVM context
+         */
+        LRef<llvm::LLVMContext> GetLLVMContext();
+
+        /**
+         * Getter for LLVM IR module
+         * @return LLVM IR module
+         */
+        LRef<llvm::Module> GetLLVMModule();
+
+    private:
+
+        /**
          * LLVM code generation context
          */
         LRef<GSLLVMCGContextPtr> _context;

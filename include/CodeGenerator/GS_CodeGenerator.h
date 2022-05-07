@@ -6,13 +6,6 @@
 namespace GSLanguageCompiler::CodeGenerator {
 
     /**
-     * Code generation backend
-     */
-    enum class CGBackend {
-        LLVM
-    };
-
-    /**
      * CLass for generating code from AST
      */
     class GS_CodeGenerator {

@@ -13,9 +13,25 @@ namespace GSLanguageCompiler::Lexer {
 
         /**
          * Constructor for token stream
-         * @param lexer Lexer
+         * @param tokens Tokens
          */
-        explicit GS_TokenStream(LRef<GS_Lexer> lexer);
+        explicit GS_TokenStream(GSTokenArray tokens);
+
+    public:
+
+        /**
+         * Creating token stream
+         * @param tokens Tokens
+         * @return Token stream
+         */
+        static GS_TokenStream Create(GSTokenArray tokens);
+
+        /**
+         * Creating token stream
+         * @param lexer Lexer
+         * @return Token stream
+         */
+        static GS_TokenStream Create(LRef<GS_Lexer> lexer);
 
     public:
 

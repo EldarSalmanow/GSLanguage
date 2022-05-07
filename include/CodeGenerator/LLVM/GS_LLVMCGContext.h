@@ -63,17 +63,25 @@ namespace GSLanguageCompiler::CodeGenerator {
          */
         LRef<llvm::Module> GetModule();
 
+    public:
+
+        /**
+         * Getter for code generation backend
+         * @return Code generation backend
+         */
+        CGBackend GetBackend() override;
+
     private:
 
         /**
          * LLVM context
          */
-        SharedPtr<llvm::LLVMContext> _context;
+        UniquePtr<llvm::LLVMContext> _context;
 
         /**
          * LLVM IR module
          */
-        SharedPtr<llvm::Module> _module;
+        UniquePtr<llvm::Module> _module;
     };
 
     /**

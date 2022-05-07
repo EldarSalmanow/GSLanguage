@@ -6,6 +6,13 @@
 namespace GSLanguageCompiler::CodeGenerator {
 
     /**
+     * Code generation backend
+     */
+    enum class CGBackend {
+        LLVM
+    };
+
+    /**
      * Class for containing information about code generation
      */
     class GS_CGContext {
@@ -15,6 +22,14 @@ namespace GSLanguageCompiler::CodeGenerator {
          * Virtual destructor for supporting inheritance
          */
         virtual ~GS_CGContext();
+
+    public:
+
+        /**
+         * Getter for code generation backend
+         * @return Code generation backend
+         */
+        virtual CGBackend GetBackend() = 0;
     };
 
     /**

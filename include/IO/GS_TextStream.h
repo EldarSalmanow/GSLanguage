@@ -1,9 +1,9 @@
 #ifndef GSLANGUAGE_GS_TEXTSTREAM_H
 #define GSLANGUAGE_GS_TEXTSTREAM_H
 
-#include <Reader/GS_Reader.h>
+#include <IO/GS_Reader.h>
 
-namespace GSLanguageCompiler::Reader {
+namespace GSLanguageCompiler::IO {
 
     /**
      * Stream class for source code
@@ -13,9 +13,25 @@ namespace GSLanguageCompiler::Reader {
 
         /**
          * Constructor for text stream
-         * @param reader Reader
+         * @param text Text
          */
-        explicit GS_TextStream(LRef<GS_Reader> reader);
+        explicit GS_TextStream(UString text);
+
+    public:
+
+        /**
+         * Creating text stream
+         * @param text Text
+         * @return Text stream
+         */
+        static GS_TextStream Create(UString text);
+
+        /**
+         * Creating text stream
+         * @param reader Reader
+         * @return Text stream
+         */
+        static GS_TextStream Create(LRef<GS_Reader> reader);
 
     public:
 

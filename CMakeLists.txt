@@ -34,7 +34,7 @@ add_definitions(${LLVM_DEFINITIONS_LIST})
 
 set(PROJECT_LIBRARIES
         GSDriverLibrary
-        GSReaderLibrary
+        GSIOLibrary
         GSLexerLibrary
         GSParserLibrary
         GSASTLibrary
@@ -55,7 +55,7 @@ include_directories(${CONAN_INCLUDE_DIRS})
 include_directories(${INCLUDE_DIR})
 
 add_subdirectory(${INCLUDE_DIR}/Driver)
-add_subdirectory(${INCLUDE_DIR}/Reader)
+add_subdirectory(${INCLUDE_DIR}/IO)
 add_subdirectory(${INCLUDE_DIR}/Lexer)
 add_subdirectory(${INCLUDE_DIR}/Parser)
 add_subdirectory(${INCLUDE_DIR}/AST)

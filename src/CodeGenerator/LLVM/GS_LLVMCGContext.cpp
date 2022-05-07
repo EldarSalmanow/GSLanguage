@@ -3,7 +3,7 @@
 namespace GSLanguageCompiler::CodeGenerator {
 
     GS_LLVMCGContext::GS_LLVMCGContext()
-            : _context(std::make_shared<llvm::LLVMContext>()) {}
+            : _context(std::make_unique<llvm::LLVMContext>()) {}
 
     GS_LLVMCGContext::~GS_LLVMCGContext() = default;
 
@@ -14,7 +14,7 @@ namespace GSLanguageCompiler::CodeGenerator {
     Void GS_LLVMCGContext::CreateModule(UString name) {
         DestroyModule();
 
-        _module = std::make_shared<llvm::Module>(name.AsString(), *_context);
+        _module = std::make_unique<llvm::Module>(name.AsString(), *_context);
     }
 
     Void GS_LLVMCGContext::DestroyModule() {
@@ -27,6 +27,10 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     LRef<llvm::Module> GS_LLVMCGContext::GetModule() {
         return *_module;
+    }
+
+    CGBackend GS_LLVMCGContext::GetBackend() {
+        return CGBackend::LLVM;
     }
 
 }

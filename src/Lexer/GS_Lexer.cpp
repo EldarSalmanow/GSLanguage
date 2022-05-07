@@ -1,3 +1,5 @@
+#include <GS_TokenStream.h>
+
 #include <GS_Lexer.h>
 
 namespace GSLanguageCompiler::Lexer {
@@ -44,8 +46,12 @@ namespace GSLanguageCompiler::Lexer {
         return TokenType::Unknown;
     }
 
-    GS_Lexer::GS_Lexer(LRef<Reader::GS_TextStream> textStream)
+    GS_Lexer::GS_Lexer(LRef<IO::GS_TextStream> textStream)
             : _stream(textStream) {}
+
+    GS_Lexer GS_Lexer::Create(LRef<IO::GS_TextStream> textStream) {
+        return GS_Lexer(textStream);
+    }
 
     GSTokenArray GS_Lexer::Tokenize() {
         GSTokenArray tokens;
@@ -61,6 +67,10 @@ namespace GSLanguageCompiler::Lexer {
         tokens.emplace_back(GS_Token::Create(TokenType::EndOfFile));
 
         return tokens;
+    }
+
+    GS_TokenStream GS_Lexer::CreateStream() {
+        return GS_TokenStream::Create(*this);
     }
 
     GS_Token GS_Lexer::GetToken() {

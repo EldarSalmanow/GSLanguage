@@ -14,15 +14,15 @@ namespace GSLanguageCompiler {
 
     }
 
-    /**
-     * Compiling result
-     */
-    enum class CompilingResult {
-        Success,
-        Failure
-    };
-
     namespace Driver {
+
+        /**
+         * Compiling result
+         */
+        enum class CompilingResult {
+            Success,
+            Failure
+        };
 
         /**
          * Class for representation translation unit

@@ -111,6 +111,12 @@ namespace GSLanguageCompiler::Parser {
 
     public:
 
+        static GS_Parser Create(LRef<Lexer::GS_TokenStream> tokenStream, AST::GSASTContextPtr context);
+
+        static GS_Parser Create(LRef<Lexer::GS_TokenStream> tokenStream);
+
+    public:
+
         AST::GSTranslationUnitDeclarationPtr Parse();
 
     public:

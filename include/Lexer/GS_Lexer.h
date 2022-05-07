@@ -1,11 +1,16 @@
 #ifndef GSLANGUAGE_GS_LEXER_H
 #define GSLANGUAGE_GS_LEXER_H
 
-#include <Reader/Reader.h>
+#include <IO/IO.h>
 
 #include <Lexer/GS_Token.h>
 
 namespace GSLanguageCompiler::Lexer {
+
+    /**
+     * Declaring token stream
+     */
+    class GS_TokenStream;
 
     /**
      * Class for tokenizing source code
@@ -17,7 +22,16 @@ namespace GSLanguageCompiler::Lexer {
          * Constructor for lexer
          * @param textStream Text stream
          */
-        explicit GS_Lexer(LRef<Reader::GS_TextStream> textStream);
+        explicit GS_Lexer(LRef<IO::GS_TextStream> textStream);
+
+    public:
+
+        /**
+         * Creating lexer
+         * @param textStream Text stream
+         * @return Lexer
+         */
+        static GS_Lexer Create(LRef<IO::GS_TextStream> textStream);
 
     public:
 
@@ -26,6 +40,14 @@ namespace GSLanguageCompiler::Lexer {
          * @return Tokens
          */
         GSTokenArray Tokenize();
+
+    public:
+
+        /**
+         * Create token stream for reading tokens
+         * @return Token stream
+         */
+        GS_TokenStream CreateStream();
 
     private:
 
@@ -54,7 +76,7 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Text stream
          */
-        Reader::GS_TextStream _stream;
+        IO::GS_TextStream _stream;
     };
 
 }
