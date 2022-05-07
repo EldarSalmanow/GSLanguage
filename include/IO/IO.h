@@ -9,4 +9,8 @@
 
 #include <IO/GS_TextStream.h>
 
+#include <IO/GS_Error.h>
+
+#include <IO/GS_ErrorHandler.h>
+
 #endif //GSLANGUAGE_IO_H
