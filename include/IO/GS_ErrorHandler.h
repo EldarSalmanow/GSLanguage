@@ -41,7 +41,20 @@ namespace GSLanguageCompiler::IO {
     public:
 
         Void PrintErrors() {
+            for (auto &error : _errors) {
+                auto errorLevel = error.GetErrorLevel();
 
+                switch (errorLevel) {
+                    case ErrorLevel::Message:
+                        break;
+                    case ErrorLevel::Warning:
+                        break;
+                    case ErrorLevel::Error:
+                        break;
+                    case ErrorLevel::Fatal:
+                        break;
+                }
+            }
         }
 
     public:

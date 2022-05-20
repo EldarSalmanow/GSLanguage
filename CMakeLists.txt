@@ -64,7 +64,7 @@ add_subdirectory(${INCLUDE_DIR}/Semantic)
 add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
 add_subdirectory(${INCLUDE_DIR}/Debug)
 
-#add_subdirectory(tests) TODO update
+add_subdirectory(tests)
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CONAN_LIB_DIRS})
 
