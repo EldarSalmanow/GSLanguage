@@ -1,5 +1,7 @@
 #include <AST/AST.h>
 
+#include <Debug/Debug.h>
+
 /**
  * Simple example of creating translation unit with AST builder
  * @return Translation unit declaration ptr
@@ -35,5 +37,11 @@ AST::GSTranslationUnitDeclarationPtr CreateUnit() {
 }
 
 I32 main(I32 argc, Ptr<Ptr<C8>> argv) {
+    // create translation unit
+    auto unit = CreateUnit();
+
+    // dump AST node to console
+    Debug::DumpAST(unit);
+
     return 0;
 }

@@ -65,10 +65,10 @@ namespace GSLanguageCompiler {
 
             /**
              * Run front compiling process for translation unit
-             * @param inputFile Input file name
+             * @param stream Input stream
              * @return AST translation unit declaration node ptr
              */
-            SharedPtr<AST::GS_TranslationUnitDeclaration> RunFrontEnd(UString inputFile);
+            SharedPtr<AST::GS_TranslationUnitDeclaration> RunFrontEnd(LRef<std::istream> stream);
 
             /**
              * Run middle compilation process for translation unit

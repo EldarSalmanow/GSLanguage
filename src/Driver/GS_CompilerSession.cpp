@@ -33,7 +33,7 @@ namespace GSLanguageCompiler::Driver {
         auto linker = toolchain->GetLinker();
 
         auto linkerResult = linker->Link(unitsManager->GetUnits(), _config->GetOutputName());
-        
+
         if (!linkerResult) {
             return CompilingResult::Failure;
         }

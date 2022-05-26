@@ -263,7 +263,9 @@ namespace GSLanguageCompiler::Driver {
     }
 
     CompilingResult GS_TranslationUnit::Compile() {
-        auto unit = RunFrontEnd(_config->GetInputName());
+        std::ifstream stream(_config->GetInputName().AsUTF8String());
+
+        auto unit = RunFrontEnd(stream);
 
         if (!unit) {
             return CompilingResult::Failure;
@@ -282,8 +284,8 @@ namespace GSLanguageCompiler::Driver {
         return CompilingResult::Success;
     }
 
-    SharedPtr<AST::GS_TranslationUnitDeclaration> GS_TranslationUnit::RunFrontEnd(UString inputFile) {
-        auto textStream = IO::GS_Reader::Create(std::move(inputFile)).CreateStream();
+    SharedPtr<AST::GS_TranslationUnitDeclaration> GS_TranslationUnit::RunFrontEnd(LRef<std::istream> stream) {
+        auto textStream = IO::GS_Reader::Create(stream).CreateStream();
 
         auto tokenStream = Lexer::GS_Lexer::Create(textStream).CreateStream();
 

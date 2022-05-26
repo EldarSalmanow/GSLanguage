@@ -31,13 +31,6 @@ namespace GSLanguageCompiler::IO {
          */
         static GS_Reader Create(LRef<std::istream> stream);
 
-        /**
-         * Creating reader
-         * @param name File name
-         * @return Reader
-         */
-        static GS_Reader Create(UString name);
-
     public:
 
         /**

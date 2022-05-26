@@ -11,12 +11,6 @@ namespace GSLanguageCompiler::IO {
         return GS_Reader(stream);
     }
 
-    GS_Reader GS_Reader::Create(UString name) {
-        std::ifstream file(name.AsUTF8String());
-
-        return GS_Reader::Create(file);
-    }
-
     UString GS_Reader::ReadText() {
         UString text;
 
