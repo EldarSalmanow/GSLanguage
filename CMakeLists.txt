@@ -64,8 +64,6 @@ add_subdirectory(${INCLUDE_DIR}/Semantic)
 add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
 add_subdirectory(${INCLUDE_DIR}/Debug)
 
-add_subdirectory(tests)
-
 target_link_directories(${PROJECT_NAME} PRIVATE ${CONAN_LIB_DIRS})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS})
@@ -76,5 +74,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${LLVM_LIBS})
 target_link_libraries(${PROJECT_NAME} PRIVATE lldCommon lldCOFF)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_LIBRARIES})
+
+add_subdirectory(tests)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${BINARY_DIR})

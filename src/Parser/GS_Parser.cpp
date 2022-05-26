@@ -316,7 +316,7 @@ namespace GSLanguageCompiler::Parser {
 
     AST::GSValuePtr GS_Parser::ParseValue() {
         if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
-            auto number = std::stoi(TokenValue().AsString());
+            auto number = std::stoi(TokenValue().AsUTF8String());
 
             NextToken(); // skip number
 

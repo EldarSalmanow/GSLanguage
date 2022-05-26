@@ -31,7 +31,7 @@ namespace GSLanguageCompiler::Driver {
         try {
             auto sessionsManager = GS_CompilerSessionsManager::Create();
 
-            for (auto &sessionConfig: _sessionConfigs) {
+            for (auto &sessionConfig : _sessionConfigs) {
                 auto session = GS_CompilerSession::Create(sessionConfig);
 
                 sessionsManager->AddSession(session);
@@ -39,13 +39,13 @@ namespace GSLanguageCompiler::Driver {
 
             auto compilingResults = sessionsManager->RunSessions();
 
-            for (auto &compilingResult: compilingResults) {
+            for (auto &compilingResult : compilingResults) {
                 if (compilingResult == CompilingResult::Failure) {
                     return 1;
                 }
             }
         } catch (LRef<std::exception> exception) {
-            UCOut() << exception.what() << "\n"_us;
+            std::cout << exception.what() << std::endl;
 
             return 1;
         }

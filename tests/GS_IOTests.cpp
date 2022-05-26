@@ -24,7 +24,7 @@ protected:
 
     UString _inputString = "func main() {\n\tvar a = 10\n}"_us;
 
-    IO::GS_TextStream *_textStream;
+    Ptr<IO::GS_TextStream> _textStream;
 };
 
 TEST_F(IOTest, TextStream) {

@@ -18,18 +18,18 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Constructor for reader
-         * @param file Input file
+         * @param stream Input stream
          */
-        explicit GS_Reader(LRef<UniquePtr<File>> file);
+        explicit GS_Reader(LRef<std::istream> stream);
 
     public:
 
         /**
          * Creating reader
-         * @param file File
+         * @param stream Stream
          * @return Reader
          */
-        static GS_Reader Create(LRef<UniquePtr<File>> file);
+        static GS_Reader Create(LRef<std::istream> stream);
 
         /**
          * Creating reader
@@ -57,9 +57,9 @@ namespace GSLanguageCompiler::IO {
     private:
 
         /**
-         * file for reading code
+         * Stream for reading text
          */
-        UniquePtr<File> _file;
+        LRef<std::istream> _stream;
     };
 
 }

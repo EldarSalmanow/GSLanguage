@@ -313,7 +313,7 @@ namespace GSLanguageCompiler::Parser::New {
 //
 //            AST::GSExpressionPtr ParseConstantExpression(ConstLRef<AST::GSScopePtr> scope) {
 //                if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
-//                    auto tokenValue = std::make_shared<AST::GS_I32Value>(std::stoi(TokenValue().asString()));
+//                    auto tokenValue = std::make_shared<AST::GS_I32Value>(std::stoi(TokenValue().AsUTF8String()));
 //
 //                    NextToken();
 //

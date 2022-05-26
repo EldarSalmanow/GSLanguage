@@ -24,14 +24,13 @@ protected:
 
     Lexer::GSTokenArray _inputTokens = {
             Lexer::GS_Token::Create(Lexer::TokenType::KeywordVar),
-            Lexer::GS_Token::Create(Lexer::TokenType::SymbolSpace),
-            Lexer::GS_Token::Create(Lexer::TokenType::Identifier, "a"),
+            Lexer::GS_Token::Create(Lexer::TokenType::Identifier, "a"_us),
             Lexer::GS_Token::Create(Lexer::TokenType::SymbolEq),
-            Lexer::GS_Token::Create(Lexer::TokenType::LiteralNumber, "10"),
+            Lexer::GS_Token::Create(Lexer::TokenType::LiteralNumber, "10"_us),
             Lexer::GS_Token::Create(Lexer::TokenType::EndOfFile)
     };
 
-    Lexer::GS_TokenStream *_tokenStream;
+    Ptr<Lexer::GS_TokenStream> _tokenStream;
 };
 
 TEST_F(LexerTest, TokenStream) {

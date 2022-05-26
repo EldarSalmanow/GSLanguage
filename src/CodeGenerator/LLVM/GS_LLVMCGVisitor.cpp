@@ -34,7 +34,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         } else if (typeName == "String"_us) {
             auto string = literalValue->GetValueWithCast<UString>();
 
-            return builder.CreateGlobalStringPtr(string.AsString());
+            return builder.CreateGlobalStringPtr(string.AsUTF8String());
         }
 
         return nullptr;
@@ -167,7 +167,7 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         auto llvmFunctionType = llvm::FunctionType::get(llvmReturnType, llvmParamTypes, false);
 
-        auto llvmFunction = llvm::Function::Create(llvmFunctionType, llvm::Function::LinkageTypes::ExternalLinkage, name.AsString(), GetLLVMModule());
+        auto llvmFunction = llvm::Function::Create(llvmFunctionType, llvm::Function::LinkageTypes::ExternalLinkage, name.AsUTF8String(), GetLLVMModule());
 
         auto block = llvm::BasicBlock::Create(GetLLVMContext(), "entry", llvmFunction);
 
@@ -269,13 +269,13 @@ namespace GSLanguageCompiler::CodeGenerator {
             }
         }
 
-        return _builder.CreateLoad(llvmAllocaInstruction->getAllocatedType(), llvmAllocaInstruction, name.AsString());
+        return _builder.CreateLoad(llvmAllocaInstruction->getAllocatedType(), llvmAllocaInstruction, name.AsUTF8String());
     }
 
     Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateFunctionCallingExpression(LRef<SharedPtr<AST::GS_FunctionCallingExpression>> functionCallingExpression) {
         auto name = functionCallingExpression->GetName();
 
-        auto llvmFunction = GetLLVMModule().getFunction(name.AsString());
+        auto llvmFunction = GetLLVMModule().getFunction(name.AsUTF8String());
 
         if (llvmFunction != nullptr) {
             return _builder.CreateCall(llvmFunction);

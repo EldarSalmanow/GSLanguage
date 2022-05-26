@@ -150,7 +150,7 @@ namespace GSLanguageCompiler::Debug {
             auto value = AST::GSValueCast<AST::GS_LiteralValue>(constantExpression->GetValue());
             auto typeName = value->GetType()->GetName();
 
-            Print("Type: " + typeName.AsString());
+            Print("Type: " + typeName.AsUTF8String());
 
             if (typeName == "I32"_us) {
                 Print("Value: "_us + UString(std::to_string(value->GetValueWithCast<I32>())));
@@ -296,12 +296,12 @@ namespace GSLanguageCompiler::Debug {
         Void Print(UString message) {
             PrintTabs();
 
-            UCOut() << message << "\n"_us;
+            std::cout << message << std::endl;
         }
 
         Void PrintTabs() {
             for (auto i = 0; i < tabsNumber; ++i) {
-                UCOut() << "  "_us;
+                std::cout << "  "_us;
             }
         }
 

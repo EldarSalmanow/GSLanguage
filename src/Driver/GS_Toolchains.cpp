@@ -33,15 +33,15 @@ namespace GSLanguageCompiler::Driver {
             command.emplace_back("GSLanguage.exe");
 
             for (auto &input : _inputs) {
-                command.emplace_back(input.AsString());
+                command.emplace_back(input.AsUTF8String());
             }
 
             if (!_entry.Empty()) {
-                command.emplace_back("/entry:" + _entry.AsString());
+                command.emplace_back("/entry:" + _entry.AsUTF8String());
             }
 
             if (!_output.Empty()) {
-                command.emplace_back("/out:" + _output.AsString());
+                command.emplace_back("/out:" + _output.AsUTF8String());
             }
 
             _inputs.clear();
@@ -112,7 +112,7 @@ namespace GSLanguageCompiler::Driver {
             auto LCB = std::make_shared<MSVCLinkerCommandBuilder>();
 
             for (auto &unit : units) {
-                LCB->AddInput(unit->GetConfig()->GetInputName().AsString() + ".o");
+                LCB->AddInput(unit->GetConfig()->GetInputName().AsUTF8String() + ".o");
             }
 
             LCB->AddEntry("main");
@@ -124,12 +124,12 @@ namespace GSLanguageCompiler::Driver {
 //            Vector<String> command;
 //
 //            for (auto &unit : units) {
-//                command.emplace_back(unit->GetConfig()->GetInputName().AsString() + ".o");
+//                command.emplace_back(unit->GetConfig()->GetInputName().AsUTF8String() + ".o");
 //            }
 //
 //            command.emplace_back("/entry:main");
 //
-//            command.emplace_back("/out:" + outputName.AsString());
+//            command.emplace_back("/out:" + outputName.AsUTF8String());
 //
 //            return command;
         }

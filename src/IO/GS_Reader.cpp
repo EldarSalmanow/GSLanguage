@@ -4,21 +4,37 @@
 
 namespace GSLanguageCompiler::IO {
 
-    GS_Reader::GS_Reader(LRef<UniquePtr<File>> file)
-            : _file(std::move(file)) {}
+    GS_Reader::GS_Reader(LRef<std::istream> stream)
+            : _stream(stream) {}
 
-    GS_Reader GS_Reader::Create(LRef<UniquePtr<File>> file) {
-        return GS_Reader(file);
+    GS_Reader GS_Reader::Create(LRef<std::istream> stream) {
+        return GS_Reader(stream);
     }
 
     GS_Reader GS_Reader::Create(UString name) {
-        auto file = File::Create(name, InMode);
+        std::ifstream file(name.AsUTF8String());
 
         return GS_Reader::Create(file);
     }
 
     UString GS_Reader::ReadText() {
-        return _file->ReadInput();
+        UString text;
+
+        while (true) {
+            UString string;
+
+            _stream >> string;
+
+            if (_stream.eof()) {
+                break;
+            }
+
+            string += "\n"_us;
+
+            text += string;
+        }
+
+        return text;
     }
 
     GS_TextStream GS_Reader::CreateStream() {

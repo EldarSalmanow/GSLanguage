@@ -39,7 +39,7 @@ namespace GSLanguageCompiler::Driver {
             auto calculatedExpressionTypeName = calculatedExpressionType->GetName();
 
             if (typeName != calculatedExpressionTypeName) {
-                UCOut() << typeName << " != "_us << calculatedExpressionTypeName << "\n"_us;
+                std::cout << typeName << " != "_us << calculatedExpressionTypeName << std::endl;
             }
         }
 
@@ -177,7 +177,7 @@ namespace GSLanguageCompiler::Driver {
          * ex: main -> _GS_U4main
          */
         UString MangleUnitName(UString name) override {
-            return UString("_GS_U" + std::to_string(name.Size()) + name.AsString());
+            return UString("_GS_U" + std::to_string(name.Size()) + name.AsUTF8String());
         }
 
         /**
@@ -185,7 +185,7 @@ namespace GSLanguageCompiler::Driver {
          * ex: main -> _GS_F4main
          */
         UString MangleFunctionName(UString name) override {
-            return UString("_GS_F" + std::to_string(name.Size()) + name.AsString());
+            return UString("_GS_F" + std::to_string(name.Size()) + name.AsUTF8String());
         }
     };
 
@@ -341,7 +341,7 @@ namespace GSLanguageCompiler::Driver {
 
                 std::error_code errorCode;
 
-                llvm::raw_fd_ostream stream(outputName.AsString(), errorCode);
+                llvm::raw_fd_ostream stream(outputName.AsUTF8String(), errorCode);
 
                 if (errorCode) {
                     llvm::errs() << errorCode.message();

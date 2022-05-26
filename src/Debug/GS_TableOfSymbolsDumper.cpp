@@ -10,33 +10,33 @@ namespace GSLanguageCompiler::Debug {
     }
 
     Void GS_TableOfSymbolsDumper::Dump() {
-        UCOut() << "---------- Table Of Symbols Dump ----------\n"_us;
+        std::cout << "---------- Table Of Symbols Dump ----------"_us << std::endl;
 
         auto functions = _tableOfSymbols->GetFunctions();
 
         if (!functions.empty()) {
-            UCOut() << "----------       Functions       ----------\n"_us;
+            std::cout << "----------       Functions       ----------"_us << std::endl;
 
             for (auto index = 0; index < functions.size(); ++index) {
                 auto function = functions[index];
 
-                UCOut() << UString(std::to_string(index + 1)) << ": \n  Name -> "_us << function->GetName() << "\n"_us;
+                std::cout << UString(std::to_string(index + 1)) << ": " << std::endl << "  Name -> "_us << function->GetName() << std::endl;
             }
         }
 
         auto variables = _tableOfSymbols->GetVariables();
 
         if (!variables.empty()) {
-            UCOut() << "----------       Variables       ----------\n"_us;
+            std::cout << "----------       Variables       ----------"_us << std::endl;
 
             for (auto index = 0; index < variables.size(); ++index) {
                 auto variable = variables[index];
 
-                UCOut() << UString(std::to_string(index + 1)) << ": \n  Name -> "_us << variable->GetName() << "\n  Type -> " << variable->GetType()->GetName() << "\n"_us;
+                std::cout << UString(std::to_string(index + 1)) << ": " << std::endl << "  Name -> "_us << variable->GetName() << std::endl << "  Type -> " << variable->GetType()->GetName() << std::endl;
             }
         }
 
-        UCOut() << "-------------------------------------------\n"_us;
+        std::cout << "-------------------------------------------"_us << std::endl;
     }
 
     Void DumpTableOfSymbols(Semantic::GSTableOfSymbolsPtr tableOfSymbols) {
