@@ -141,7 +141,7 @@ namespace containers {
                 return _data[index];
             }
 
-            throw std::runtime_error("containers::Array::operator[]: Index out of range!");
+            throw std::runtime_error("containers::Array::operator[](const std::uint64_t &): Index out of range!");
         }
 
         inline constexpr const ValueType &operator[](const std::uint64_t &index) const {
@@ -149,7 +149,7 @@ namespace containers {
                 return _data[index];
             }
 
-            throw std::runtime_error("containers::Array::operator[] const: Index out of range!");
+            throw std::runtime_error("containers::Array::operator[](const std::uint64_t &) const: Index out of range!");
         }
 
     private:
@@ -232,7 +232,7 @@ namespace containers {
 
     public:
 
-        void append(const ValueType &value) {
+        constexpr Vector<ValueType> &Append(const ValueType &value) {
             if (_size == _allocatedSize) {
                 _allocatedSize += ChunkSize;
 
@@ -252,6 +252,16 @@ namespace containers {
             ++_size;
 
             _data[_size] = value;
+
+            return *this;
+        }
+
+        constexpr Vector<ValueType> &Append(std::initializer_list<ValueType> initializerList) {
+            for (auto &value : initializerList) {
+                Append(value);
+            }
+
+            return *this;
         }
 
     public:
@@ -353,7 +363,7 @@ namespace containers {
                 return _data[index];
             }
 
-            throw std::runtime_error("containers::Vector::operator[]: Index out of range!");
+            throw std::runtime_error("containers::Vector::operator[](const std::uint64_t &): Index out of range!");
         }
 
         inline constexpr const ValueType &operator[](const std::uint64_t &index) const {
@@ -361,16 +371,263 @@ namespace containers {
                 return _data[index];
             }
 
-            throw std::runtime_error("containers::Vector::operator[] const: Index out of range!");
+            throw std::runtime_error("containers::Vector::operator[](const std:uint64_t &) const: Index out of range!");
         }
 
-    public:
+    private:
 
         ValueType *_data;
 
         std::uint64_t _size;
 
         std::uint64_t _allocatedSize;
+    };
+
+    template<typename KeyT, typename ValueT>
+    class Pair {
+    public:
+
+        using KeyType = KeyT;
+
+        using ValueType = ValueT;
+
+    public:
+
+        constexpr Pair() = default;
+
+        constexpr Pair(KeyType key, ValueType value)
+                : _key(key), _value(value) {}
+
+        constexpr Pair(const Pair<KeyType, ValueType> &pair) {
+            if (this == &pair) {
+                return;
+            }
+
+            _key = pair.Key();
+
+            _value = pair.Value();
+        }
+
+        constexpr Pair(Pair<KeyType, ValueType> &&pair) noexcept {
+            if (this == &pair) {
+                return;
+            }
+
+            _key = std::move(pair.Key());
+
+            _value = std::move(pair.Value());
+        }
+
+    public:
+
+        inline constexpr KeyType Key() {
+            return _key;
+        }
+
+        inline constexpr ValueType Value() {
+            return _value;
+        }
+
+        inline constexpr KeyType Key() const {
+            return _key;
+        }
+
+        inline constexpr ValueType Value() const {
+            return _value;
+        }
+
+    public:
+
+        inline constexpr Pair<KeyType, ValueType> &operator=(const Pair<KeyType, ValueType> &pair) {
+            if (this == &pair) {
+                return *this;
+            }
+
+            _key = pair.Key();
+
+            _value = pair.Value();
+
+            return *this;
+        }
+
+        inline constexpr Pair<KeyType, ValueType> &operator=(Pair<KeyType, ValueType> &&pair) noexcept {
+            if (this == &pair) {
+                return *this;
+            }
+
+            _key = std::move(pair.Key());
+
+            _value = std::move(pair.Value());
+
+            return *this;
+        }
+
+        inline constexpr Bool operator==(const Pair<KeyType, ValueType> &pair) const {
+            if (_key != pair.Key() || _value != pair.Value()) {
+                return false;
+            }
+
+            return true;
+        }
+
+        inline constexpr Bool operator!=(const Pair<KeyType, ValueType> &pair) const {
+            return !(*this == pair);
+        }
+
+    private:
+
+        KeyType _key;
+
+        ValueType _value;
+    };
+
+    template<typename KeyT, typename ValueT>
+    class Map {
+    public:
+
+        using KeyType = KeyT;
+
+        using ValueType = ValueT;
+
+    public:
+
+        constexpr Map() = default;
+
+        constexpr Map(std::initializer_list<Pair<KeyType, ValueType>> initializerList) {
+            for (auto &pair : initializerList) {
+                _pairs.append(pair);
+            }
+        }
+
+        constexpr Map(const Map<KeyType, ValueType> &map) {
+            if (this == &map) {
+                return;
+            }
+
+            _pairs = map.Pairs();
+        }
+
+        constexpr Map(Map<KeyType, ValueType> &&map) noexcept {
+            if (this == &map) {
+                return;
+            }
+
+            _pairs = std::move(map.Pairs());
+        }
+
+    public:
+
+        inline constexpr Map<KeyType, ValueType> &Append(const Pair<KeyType, ValueType> &pair) {
+            _pairs.Append(pair);
+
+            return *this;
+        }
+
+        inline constexpr Map<KeyType, ValueType> &Append(std::initializer_list<Pair<KeyType, ValueType>> pairs) {
+            for (auto &pair : pairs) {
+                Append(pair);
+            }
+
+            return *this;
+        }
+
+    public:
+
+        inline constexpr Pair<KeyType, ValueType> *Data() {
+            return _pairs.Data();
+        }
+
+        inline constexpr std::uint64_t Size() const {
+            return _pairs.Size();
+        }
+
+    public:
+
+        inline constexpr Pair<KeyType, ValueType> *begin() {
+            return _pairs.begin();
+        }
+
+        inline constexpr Pair<KeyType, ValueType> *end() {
+            return _pairs.end();
+        }
+
+        inline constexpr const Pair<KeyType, ValueType> *begin() const {
+            return _pairs.begin();
+        }
+
+        inline constexpr const Pair<KeyType, ValueType> *end() const {
+            return _pairs.end();
+        }
+
+    public:
+
+        inline constexpr Vector<Pair<KeyType, ValueType>> Pairs() const {
+            return _pairs;
+        }
+
+    public:
+
+        inline constexpr Map<KeyType, ValueType> &operator=(const Map<KeyType, ValueType> &map) {
+            if (this == &map) {
+                return *this;
+            }
+
+            _pairs = map.Pairs();
+
+            return *this;
+        }
+
+        inline constexpr Map<KeyType, ValueType> &operator=(Map<KeyType, ValueType> &&map) noexcept {
+            if (this == &map) {
+                return *this;
+            }
+
+            _pairs = std::move(map.Pairs());
+
+            return *this;
+        }
+
+        inline constexpr Bool operator==(const Map<KeyType, ValueType> &map) const {
+            if (_pairs.Size() != map.Size()) {
+                return false;
+            }
+
+            for (std::uint64_t index = 0; auto &pair : map) {
+                if (_pairs[index] != pair) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        inline constexpr Bool operator!=(const Map<KeyType, ValueType> &map) const {
+            return !(*this == map);
+        }
+
+        inline constexpr ValueType &operator[](const KeyType &key) {
+            for (auto &pair : _pairs) {
+                if (pair.Key() == key) {
+                    return pair.Value();
+                }
+            }
+
+            throw std::runtime_error("containers::Map::operator[](const KeyType &): Can`t found key in map!");
+        }
+
+        inline constexpr const ValueType &operator[](const KeyType &key) const {
+            for (auto &pair : _pairs) {
+                if (pair.Key() == key) {
+                    return pair.Value();
+                }
+            }
+
+            throw std::runtime_error("containers::Map::operator[](const KeyType &) const: Can`t found key in map!");
+        }
+
+    private:
+
+        Vector<Pair<KeyType, ValueType>> _pairs;
     };
 
     template<typename ValueT, auto SizeV>
@@ -413,6 +670,46 @@ namespace containers {
         return Vector<ValueT>(vector);
     }
 
+    template<typename KeyT, typename ValueT>
+    inline constexpr Pair<KeyT, ValueT> make_pair() {
+        return Pair<KeyT, ValueT>();
+    }
+
+    template<typename KeyT, typename ValueT>
+    inline constexpr Pair<KeyT, ValueT> make_pair(KeyT key, ValueT value) {
+        return Pair<KeyT, ValueT>(key, value);
+    }
+
+    template<typename KeyT, typename ValueT>
+    inline constexpr Pair<KeyT, ValueT> make_pair(const Pair<KeyT, ValueT> &pair) {
+        return Pair<KeyT, ValueT>(pair);
+    }
+
+    template<typename KeyT, typename ValueT>
+    inline constexpr Pair<KeyT, ValueT> make_pair(Pair<KeyT, ValueT> &&pair) {
+        return Pair<KeyT, ValueT>(pair);
+    }
+
+    template<typename KeyT, typename ValueT>
+    inline constexpr Map<KeyT, ValueT> make_map() {
+        return Map<KeyT, ValueT>();
+    }
+
+    template<typename KeyT, typename ValueT>
+    inline constexpr Map<KeyT, ValueT> make_map(std::initializer_list<Pair<KeyT, ValueT>> initializerList) {
+        return Map<KeyT, ValueT>(initializerList);
+    }
+
+    template<typename KeyT, typename ValueT>
+    inline constexpr Map<KeyT, ValueT> make_map(const Map<KeyT, ValueT> &map) {
+        return Map<KeyT, ValueT>(map);
+    }
+
+    template<typename KeyT, typename ValueT>
+    inline constexpr Map<KeyT, ValueT> make_map(Map<KeyT, ValueT> &&map) {
+        return Map<KeyT, ValueT>(map);
+    }
+
 }
 
 namespace std {
@@ -437,15 +734,31 @@ namespace std {
         return vector.Data();
     }
 
+    template<typename KeyT, typename ValueT>
+    constexpr size_t size(const containers::Map<KeyT, ValueT> &map) noexcept {
+        return map.Size();
+    }
+
+    template<typename KeyT, typename ValueT>
+    constexpr auto data(containers::Map<KeyT, ValueT> &map) {
+        return map.Data();
+    }
+
 }
 
-void main() {
-    auto vec = containers::make_vector<UString>({"Эльдар", "Азамат"});
+#include <Lexer/Lexer.h>
 
-    vec.append("Эмиль");
+void test() {
+    containers::Vector<int> vector;
 
-    std::cout << *std::find(vec.begin(), vec.end(), "Эмиль");
+    vector.Append({1, 2, 3, 4});
 
-    return 0;
+    containers::Map<int, UString> map;
+
+    map.Append({1, "Эльдар"});
+
+    auto reservedWords = containers::make_map<UString, Lexer::TokenType>();
+
+    reservedWords["var"] = Lexer::TokenType::KeywordVar;
 }
 
