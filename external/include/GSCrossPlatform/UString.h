@@ -9,7 +9,7 @@ public:
     constexpr USymbol()
             : _codePoint(InvalidCodePoint) {}
 
-    constexpr USymbol(const std::uint32_t &codePoint)
+    constexpr USymbol(const U32 &codePoint)
             : _codePoint(codePoint) {}
 
 public:
@@ -22,27 +22,27 @@ public:
 
 public:
 
-    inline constexpr Vector<std::uint8_t> as_utf8() const {
-        auto bytes = to_utf8(_codePoint);
+    inline constexpr Vector<U8> AsUTF8() const {
+        auto bytes = ToUTF8(_codePoint);
 
         return bytes;
     }
 
-    inline constexpr Vector<std::uint8_t> as_utf16() const {
-        auto bytes = to_utf16(_codePoint);
+    inline constexpr Vector<U8> AsUTF16() const {
+        auto bytes = ToUTF16(_codePoint);
 
         return bytes;
     }
 
-    inline constexpr Vector<std::uint8_t> as_utf32() const {
-        auto bytes = to_utf32(_codePoint);
+    inline constexpr Vector<U8> AsUTF32() const {
+        auto bytes = ToUTF32(_codePoint);
 
         return bytes;
     }
 
 public:
 
-    inline constexpr std::uint32_t code_point() const {
+    inline constexpr U32 CodePoint() const {
         return _codePoint;
     }
 
@@ -68,20 +68,26 @@ public:
         return *this;
     }
 
-    inline constexpr bool operator==(const USymbol &symbol) const {
+    inline constexpr Bool operator==(const USymbol &symbol) const {
         return _codePoint == symbol._codePoint;
     }
 
-    inline constexpr bool operator!=(const USymbol &symbol) const {
+    inline constexpr Bool operator!=(const USymbol &symbol) const {
         return !(*this == symbol);
     }
 
 private:
 
-    std::uint32_t _codePoint;
+    U32 _codePoint;
 };
 
 class UString {
+public:
+
+    using Iterator = Vector<USymbol>::Iterator;
+
+    using ConstIterator = Vector<USymbol>::ConstIterator;
+
 public:
 
     constexpr UString() = default;
@@ -90,24 +96,24 @@ public:
             : _symbols(std::move(symbols)) {}
 
     constexpr UString(const char *string) {
-        for (std::uint64_t index = 0; string[index] != 0; ++index) {
-            auto byte = static_cast<std::uint8_t>(string[index]);
+        for (U64 index = 0; string[index] != 0; ++index) {
+            auto byte = static_cast<U8>(string[index]);
 
-            auto symbolSize = utf8_size(byte);
+            auto symbolSize = UTF8Size(byte);
 
-            Vector<std::uint8_t> bytes;
+            Vector<U8> bytes;
 
             bytes.Append(byte);
 
-            for (std::uint64_t i = 1; i < symbolSize; ++i) {
+            for (U64 i = 1; i < symbolSize; ++i) {
                 ++index;
 
-                byte = static_cast<std::uint8_t>(string[index]);
+                byte = static_cast<U8>(string[index]);
 
                 bytes.Append(byte);
             }
 
-            auto codePoint = from_utf8(bytes);
+            auto codePoint = FromUTF8(bytes);
 
             _symbols.Append(USymbol(codePoint));
         }
@@ -124,8 +130,8 @@ public:
     constexpr UString(const char16_t *string);
 
     constexpr UString(const char32_t *string) {
-        for (std::uint64_t index = 0; string[index] != 0; ++index) {
-            _symbols.Append(USymbol(static_cast<std::uint32_t>(string[index])));
+        for (U64 index = 0; string[index] != 0; ++index) {
+            _symbols.Append(USymbol(static_cast<U32>(string[index])));
         }
     }
 
@@ -155,7 +161,7 @@ public:
 
 public:
 
-    inline constexpr UString &append(const USymbol &symbol) {
+    inline constexpr UString &Append(const USymbol &symbol) {
         _symbols.Append(symbol);
 
         return *this;
@@ -163,21 +169,21 @@ public:
 
 public:
 
-    inline constexpr std::uint64_t size() const {
+    inline constexpr U64 Size() const {
         return _symbols.Size();
     }
 
-    inline constexpr bool empty() const {
+    inline constexpr Bool Empty() const {
         return _symbols.Empty();
     }
 
 public:
 
-    inline std::string as_utf8() const {
+    inline std::string AsUTF8() const {
         std::string string;
 
         for (auto &symbol: _symbols) {
-            for (auto &byte : to_utf8(symbol.code_point())) {
+            for (auto &byte : ToUTF8(symbol.CodePoint())) {
                 string += static_cast<char>(byte);
             }
         }
@@ -185,7 +191,7 @@ public:
         return string;
     }
 
-    inline std::u16string as_utf16() const {
+    inline std::u16string AsUTF16() const {
         std::u16string u16string;
 
         // ...
@@ -193,11 +199,11 @@ public:
         return u16string;
     }
 
-    inline std::u32string as_utf32() const {
+    inline std::u32string AsUTF32() const {
         std::u32string u32string;
 
         for (auto &symbol: _symbols) {
-            u32string += static_cast<char32_t>(symbol.code_point());
+            u32string += static_cast<char32_t>(symbol.CodePoint());
         }
 
         return u32string;
@@ -205,25 +211,19 @@ public:
 
 public:
 
-    inline constexpr Vector<USymbol> symbols() const {
-        return _symbols;
-    }
-
-public:
-
-    inline constexpr Vector<USymbol>::Iterator begin() {
+    inline constexpr Iterator begin() {
         return _symbols.begin();
     }
 
-    inline constexpr Vector<USymbol>::Iterator end() {
+    inline constexpr Iterator end() {
         return _symbols.end();
     }
 
-    inline constexpr Vector<USymbol>::ConstIterator begin() const {
+    inline constexpr ConstIterator begin() const {
         return _symbols.begin();
     }
 
-    inline constexpr Vector<USymbol>::ConstIterator end() const {
+    inline constexpr ConstIterator end() const {
         return _symbols.end();
     }
 
@@ -283,12 +283,12 @@ public:
         return outputString;
     }
 
-    inline constexpr bool operator==(const UString &string) const {
-        if (size() != string.size()) {
+    inline constexpr Bool operator==(const UString &string) const {
+        if (Size() != string.Size()) {
             return false;
         }
 
-        for (std::uint64_t index = 0; index < size(); ++index) {
+        for (U64 index = 0; index < Size(); ++index) {
             if ((*this)[index] != string[index]) {
                 return false;
             }
@@ -297,19 +297,19 @@ public:
         return true;
     }
 
-    inline constexpr bool operator!=(const UString &string) const {
+    inline constexpr Bool operator!=(const UString &string) const {
         return !(*this == string);
     }
 
     inline constexpr auto operator<=>(const UString &string) const {
-        return size() <=> string.size();
+        return Size() <=> string.Size();
     }
 
-    inline constexpr USymbol &operator[](const std::uint64_t &index) {
+    inline constexpr USymbol &operator[](const U64 &index) {
         return _symbols[index];
     }
 
-    inline constexpr const USymbol &operator[](const std::uint64_t &index) const {
+    inline constexpr const USymbol &operator[](const U64 &index) const {
         return _symbols[index];
     }
 
@@ -318,23 +318,23 @@ private:
     Vector<USymbol> _symbols;
 };
 
-inline constexpr UString operator""_us(const char *string, std::uint64_t size) {
+inline constexpr UString operator""_us(const char *string, U64 size) {
     return UString(string);
 }
 
 #if defined(__cpp_lib_char8_t)
 
-inline constexpr UString operator""_us(const char8_t *string, std::uint64_t size) {
+inline constexpr UString operator""_us(const char8_t *string, U64 size) {
     return UString(string);
 }
 
 #endif
 
-inline constexpr UString operator""_us(const char16_t *string, std::uint64_t size) {
+inline constexpr UString operator""_us(const char16_t *string, U64 size) {
     return UString(string);
 }
 
-inline constexpr UString operator""_us(const char32_t *string, std::uint64_t size) {
+inline constexpr UString operator""_us(const char32_t *string, U64 size) {
     return UString(string);
 }
 

@@ -33,7 +33,7 @@ namespace GSLanguageCompiler::AST {
          * @param expression Expression ptr
          * @return Unary expression ptr
          */
-        static SharedPtr<GS_UnaryExpression> Create(UnaryOperation operation, GSExpressionPtr expression);
+        static std::shared_ptr<GS_UnaryExpression> Create(UnaryOperation operation, GSExpressionPtr expression);
 
     public:
 

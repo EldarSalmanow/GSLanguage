@@ -32,19 +32,19 @@ namespace GSLanguageCompiler::AST {
     GS_FunctionDeclaration::GS_FunctionDeclaration(UString name, GS_FunctionSignature signature, GSStatementPtrArray body)
             : _name(std::move(name)), _signature(std::move(signature)), _body(std::move(body)) {}
 
-    SharedPtr<GS_FunctionDeclaration> GS_FunctionDeclaration::Create(UString name, GS_FunctionSignature signature, GSStatementPtrArray body) {
+    std::shared_ptr<GS_FunctionDeclaration> GS_FunctionDeclaration::Create(UString name, GS_FunctionSignature signature, GSStatementPtrArray body) {
         return std::make_shared<GS_FunctionDeclaration>(std::move(name), std::move(signature), std::move(body));
     }
 
-    SharedPtr<GS_FunctionDeclaration> GS_FunctionDeclaration::Create(UString name, GS_FunctionSignature signature) {
+    std::shared_ptr<GS_FunctionDeclaration> GS_FunctionDeclaration::Create(UString name, GS_FunctionSignature signature) {
         return GS_FunctionDeclaration::Create(std::move(name), std::move(signature), GSStatementPtrArray());
     }
 
-    SharedPtr<GS_FunctionDeclaration> GS_FunctionDeclaration::Create(UString name, GSStatementPtrArray body) {
+    std::shared_ptr<GS_FunctionDeclaration> GS_FunctionDeclaration::Create(UString name, GSStatementPtrArray body) {
         return GS_FunctionDeclaration::Create(std::move(name), GS_FunctionSignature::Create(), std::move(body));
     }
 
-    SharedPtr<GS_FunctionDeclaration> GS_FunctionDeclaration::Create(UString name) {
+    std::shared_ptr<GS_FunctionDeclaration> GS_FunctionDeclaration::Create(UString name) {
         return GS_FunctionDeclaration::Create(std::move(name), GS_FunctionSignature::Create(), GSStatementPtrArray());
     }
 

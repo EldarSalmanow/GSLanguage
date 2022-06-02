@@ -27,11 +27,11 @@ namespace GSLanguageCompiler::AST {
     GS_PassManager::GS_PassManager(GSPassPtrArray passes)
             : _passes(std::move(passes)) {}
 
-    SharedPtr<GS_PassManager> GS_PassManager::Create(GSPassPtrArray passes) {
+    std::shared_ptr<GS_PassManager> GS_PassManager::Create(GSPassPtrArray passes) {
         return std::make_shared<GS_PassManager>(std::move(passes));
     }
 
-    SharedPtr<GS_PassManager> GS_PassManager::Create() {
+    std::shared_ptr<GS_PassManager> GS_PassManager::Create() {
         return GS_PassManager::Create(GSPassPtrArray());
     }
 

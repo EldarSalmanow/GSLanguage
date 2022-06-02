@@ -7,7 +7,7 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     GS_LLVMCGContext::~GS_LLVMCGContext() = default;
 
-    SharedPtr<GS_LLVMCGContext> GS_LLVMCGContext::Create() {
+    std::shared_ptr<GS_LLVMCGContext> GS_LLVMCGContext::Create() {
         return std::make_shared<GS_LLVMCGContext>();
     }
 

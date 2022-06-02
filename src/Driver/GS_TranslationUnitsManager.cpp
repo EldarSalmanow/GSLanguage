@@ -5,11 +5,11 @@ namespace GSLanguageCompiler::Driver {
     GS_TranslationUnitsManager::GS_TranslationUnitsManager(GSTranslationUnitPtrArray units)
             : _units(std::move(units)) {}
 
-    SharedPtr<GS_TranslationUnitsManager> GS_TranslationUnitsManager::Create(GSTranslationUnitPtrArray units) {
+    std::shared_ptr<GS_TranslationUnitsManager> GS_TranslationUnitsManager::Create(GSTranslationUnitPtrArray units) {
         return std::make_shared<GS_TranslationUnitsManager>(std::move(units));
     }
 
-    SharedPtr<GS_TranslationUnitsManager> GS_TranslationUnitsManager::Create() {
+    std::shared_ptr<GS_TranslationUnitsManager> GS_TranslationUnitsManager::Create() {
         return GS_TranslationUnitsManager::Create(GSTranslationUnitPtrArray());
     }
 

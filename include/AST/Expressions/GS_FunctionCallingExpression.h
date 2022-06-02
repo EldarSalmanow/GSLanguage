@@ -26,7 +26,7 @@ namespace GSLanguageCompiler::AST {
          * @param params Function params
          * @return Function calling expression ptr
          */
-        static SharedPtr<GS_FunctionCallingExpression> Create(UString name, GSExpressionPtrArray params);
+        static std::shared_ptr<GS_FunctionCallingExpression> Create(UString name, GSExpressionPtrArray params);
 
     public:
 

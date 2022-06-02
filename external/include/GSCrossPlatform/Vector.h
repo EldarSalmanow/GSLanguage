@@ -3,13 +3,15 @@
 
 #include <stdexcept>
 
+#include <GSCrossPlatform/Types.h>
+
 template<typename ValueT>
 class Vector {
 public:
 
     using ValueType = ValueT;
 
-    inline static constexpr const std::uint64_t ChunkSize = 4;
+    inline static constexpr const U64 ChunkSize = 4;
 
 public:
 
@@ -35,7 +37,7 @@ public:
 
             _data = new ValueType[_allocatedSize];
 
-            for (std::uint64_t index = 0; auto &value : initializerList) {
+            for (U64 index = 0; auto &value : initializerList) {
                 _data[index] = value;
 
                 ++index;
@@ -59,7 +61,7 @@ public:
 
             _data = new ValueType[_allocatedSize];
 
-            for (std::uint64_t index = 0; auto &value : vector) {
+            for (U64 index = 0; auto &value : vector) {
                 _data[index] = value;
 
                 ++index;
@@ -83,7 +85,7 @@ public:
 
             _data = new ValueType[_allocatedSize];
 
-            for (std::uint64_t index = 0; auto &value : vector) {
+            for (U64 index = 0; auto &value : vector) {
                 _data[index] = std::move(value);
 
                 ++index;
@@ -109,7 +111,7 @@ public:
 
             auto newData = new ValueType[_allocatedSize];
 
-            for (std::uint64_t index = 0; auto &vectorValue : *this) {
+            for (U64 index = 0; auto &vectorValue : *this) {
                 newData[index] = vectorValue;
 
                 ++index;
@@ -141,11 +143,11 @@ public:
         return _data;
     }
 
-    inline constexpr std::uint64_t Size() const {
+    inline constexpr U64 Size() const {
         return _size;
     }
 
-    inline constexpr bool Empty() const {
+    inline constexpr Bool Empty() const {
         return _size == 0;
     }
 
@@ -183,7 +185,7 @@ public:
 
             _data = new ValueType[_allocatedSize];
 
-            for (std::uint64_t index = 0; auto &value : vector) {
+            for (U64 index = 0; auto &value : vector) {
                 _data[index] = value;
 
                 ++index;
@@ -211,7 +213,7 @@ public:
 
             _data = new ValueType[_allocatedSize];
 
-            for (std::uint64_t index = 0; auto &value : vector) {
+            for (U64 index = 0; auto &value : vector) {
                 _data[index] = std::move(value);
 
                 ++index;
@@ -225,12 +227,12 @@ public:
         return *this;
     }
 
-    inline constexpr bool operator==(const Vector<ValueType> &vector) const {
+    inline constexpr Bool operator==(const Vector<ValueType> &vector) const {
         if (_size != vector.Size()) {
             return false;
         }
 
-        for (std::uint64_t index = 0; auto &value : vector) {
+        for (U64 index = 0; auto &value : vector) {
             if (_data[index] != value) {
                 return false;
             }
@@ -241,19 +243,19 @@ public:
         return true;
     }
 
-    inline constexpr bool operator!=(const Vector<ValueType> &vector) const {
+    inline constexpr Bool operator!=(const Vector<ValueType> &vector) const {
         return !(*this == vector);
     }
 
-    inline constexpr ValueType &operator[](const std::uint64_t &index) {
+    inline constexpr ValueType &operator[](const U64 &index) {
         if (index >= 0 && index < _size) {
             return _data[index];
         }
 
-        throw std::runtime_error("Vector::operator[](const std::uint64_t &): Index out of range!");
+        throw std::runtime_error("Vector::operator[](const U64 &): Index out of range!");
     }
 
-    inline constexpr const ValueType &operator[](const std::uint64_t &index) const {
+    inline constexpr const ValueType &operator[](const U64 &index) const {
         if (index >= 0 && index < _size) {
             return _data[index];
         }
@@ -263,7 +265,7 @@ public:
 
 private:
 
-    inline constexpr std::uint64_t AlignSize(const std::uint64_t &size) const {
+    inline constexpr U64 AlignSize(const U64 &size) const {
         return (size / ChunkSize + ((size % ChunkSize) > 0 ? 1 : 0)) * ChunkSize;
     }
 
@@ -271,9 +273,9 @@ private:
 
     ValueType *_data;
 
-    std::uint64_t _size;
+    U64 _size;
 
-    std::uint64_t _allocatedSize;
+    U64 _allocatedSize;
 };
 
 template<typename ValueT>

@@ -39,7 +39,7 @@ namespace GSLanguageCompiler::Parser {
 
     public:
 
-        static SharedPtr<GS_ErrorHandler> Create() {
+        static std::shared_ptr<GS_ErrorHandler> Create() {
             return std::make_shared<GS_ErrorHandler>();
         }
 
@@ -51,16 +51,16 @@ namespace GSLanguageCompiler::Parser {
 
     public:
 
-        Vector<GS_Error> GetErrors() const {
+        std::vector<GS_Error> GetErrors() const {
             return _errors;
         }
 
     private:
 
-        Vector<GS_Error> _errors;
+        std::vector<GS_Error> _errors;
     };
 
-    using GSErrorHandlerPtr = SharedPtr<GS_ErrorHandler>;
+    using GSErrorHandlerPtr = std::shared_ptr<GS_ErrorHandler>;
 
     /**
      *
@@ -125,15 +125,15 @@ namespace GSLanguageCompiler::Parser {
 
         AST::GSDeclarationPtr ParseDeclaration();
 
-        SharedPtr<AST::GS_FunctionDeclaration> ParseFunctionDeclaration();
+        std::shared_ptr<AST::GS_FunctionDeclaration> ParseFunctionDeclaration();
 
         AST::GSStatementPtr ParseStatement();
 
-        SharedPtr<AST::GS_VariableDeclarationStatement> ParseVariableDeclarationStatement();
+        std::shared_ptr<AST::GS_VariableDeclarationStatement> ParseVariableDeclarationStatement();
 
-        SharedPtr<AST::GS_AssignmentStatement> ParseAssignmentStatement();
+        std::shared_ptr<AST::GS_AssignmentStatement> ParseAssignmentStatement();
 
-        SharedPtr<AST::GS_ExpressionStatement> ParseExpressionStatement();
+        std::shared_ptr<AST::GS_ExpressionStatement> ParseExpressionStatement();
 
         AST::GSExpressionPtr ParseExpression();
 

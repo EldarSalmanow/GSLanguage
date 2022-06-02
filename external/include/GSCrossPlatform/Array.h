@@ -3,6 +3,8 @@
 
 #include <stdexcept>
 
+#include <GSCrossPlatform/Types.h>
+
 template<typename ValueT, auto SizeV>
 class Array {
 public:
@@ -25,10 +27,10 @@ public:
 
     constexpr Array(std::initializer_list<ValueType> initializerList) {
         if (initializerList.size() > SizeValue) {
-            throw std::runtime_error("Array::Array(std::initializer_list<ValueType>): Initializer list bigger than array size!");
+            throw std::runtime_error("Array::Array(std::initializer_list<ValueType>): Initializer list bigger than array Size!");
         }
 
-        for (std::uint64_t index = 0; auto &value : initializerList) {
+        for (U64 index = 0; auto &value : initializerList) {
             _data[index] = value;
 
             ++index;
@@ -40,7 +42,7 @@ public:
             return;
         }
 
-        for (std::uint64_t index = 0; auto &value : array) {
+        for (U64 index = 0; auto &value : array) {
             _data[index] = value;
 
             ++index;
@@ -52,7 +54,7 @@ public:
             return;
         }
 
-        for (std::uint64_t index = 0; auto &value : array) {
+        for (U64 index = 0; auto &value : array) {
             _data[index] = value;
 
             ++index;
@@ -94,7 +96,7 @@ public:
             return *this;
         }
 
-        for (std::uint64_t index = 0; auto &value : array) {
+        for (U64 index = 0; auto &value : array) {
             _data[index] = value;
 
             ++index;
@@ -108,7 +110,7 @@ public:
             return *this;
         }
 
-        for (std::uint64_t index = 0; auto &value : array) {
+        for (U64 index = 0; auto &value : array) {
             _data[index] = value;
 
             ++index;
@@ -117,8 +119,8 @@ public:
         return *this;
     }
 
-    inline constexpr bool operator==(const Array<ValueType, SizeValue> &array) const {
-        for (std::uint64_t index = 0; auto &value : array) {
+    inline constexpr Bool operator==(const Array<ValueType, SizeValue> &array) const {
+        for (U64 index = 0; auto &value : array) {
             if (_data[index] != value) {
                 return false;
             }
@@ -129,24 +131,24 @@ public:
         return true;
     }
 
-    inline constexpr bool operator!=(const Array<ValueType, SizeValue> &array) const {
+    inline constexpr Bool operator!=(const Array<ValueType, SizeValue> &array) const {
         return !(*this == array);
     }
 
-    inline constexpr ValueType &operator[](const std::uint64_t &index) {
+    inline constexpr ValueType &operator[](const U64 &index) {
         if (index >= 0 && index < SizeValue) {
             return _data[index];
         }
 
-        throw std::runtime_error("Array::operator[](const std::uint64_t &): Index out of range!");
+        throw std::runtime_error("Array::operator[](const U64 &): Index out of range!");
     }
 
-    inline constexpr const ValueType &operator[](const std::uint64_t &index) const {
+    inline constexpr const ValueType &operator[](const U64 &index) const {
         if (index >= 0 && index < SizeValue) {
             return _data[index];
         }
 
-        throw std::runtime_error("Array::operator[](const std::uint64_t &) const: Index out of range!");
+        throw std::runtime_error("Array::operator[](const U64 &) const: Index out of range!");
     }
 
 private:

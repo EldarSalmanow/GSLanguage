@@ -51,7 +51,7 @@ namespace GSLanguageCompiler::Parser {
         return nullptr;
     }
 
-    SharedPtr<AST::GS_FunctionDeclaration> GS_Parser::ParseFunctionDeclaration() {
+    std::shared_ptr<AST::GS_FunctionDeclaration> GS_Parser::ParseFunctionDeclaration() {
         if (!IsTokenType(Lexer::TokenType::KeywordFunc)) {
             return nullptr;
         }
@@ -115,7 +115,7 @@ namespace GSLanguageCompiler::Parser {
         return ParseExpressionStatement();
     }
 
-    SharedPtr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement() {
+    std::shared_ptr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement() {
         auto lvalueExpression = ParseLValueExpression();
 
         if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
@@ -131,7 +131,7 @@ namespace GSLanguageCompiler::Parser {
         return assignmentStatement;
     }
 
-    SharedPtr<AST::GS_VariableDeclarationStatement> GS_Parser::ParseVariableDeclarationStatement() {
+    std::shared_ptr<AST::GS_VariableDeclarationStatement> GS_Parser::ParseVariableDeclarationStatement() {
         UString variableName;
         Semantic::GSTypePtr variableType;
         AST::GSExpressionPtr variableExpression;
@@ -169,7 +169,7 @@ namespace GSLanguageCompiler::Parser {
         return variable;
     }
 
-    SharedPtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement() {
+    std::shared_ptr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement() {
         auto expression = ParseExpression();
 
         auto expressionStatement = _builder->CreateExpressionStatement(expression);

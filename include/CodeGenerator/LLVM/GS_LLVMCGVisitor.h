@@ -56,70 +56,70 @@ namespace GSLanguageCompiler::CodeGenerator {
          * @param translationUnitDeclaration Translation unit declaration
          * @return
          */
-        Ptr<llvm::Value> GenerateTranslationUnitDeclaration(LRef<SharedPtr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration);
+        Ptr<llvm::Value> GenerateTranslationUnitDeclaration(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration);
 
         /**
          * Generate function declaration
          * @param functionDeclaration Function declaration
          * @return
          */
-        Ptr<llvm::Value> GenerateFunctionDeclaration(LRef<SharedPtr<AST::GS_FunctionDeclaration>> functionDeclaration);
+        Ptr<llvm::Value> GenerateFunctionDeclaration(LRef<std::shared_ptr<AST::GS_FunctionDeclaration>> functionDeclaration);
 
         /**
          * Generate variable declaration statement
          * @param variableDeclarationStatement Variable declaration statement
          * @return
          */
-        Ptr<llvm::Value> GenerateVariableDeclarationStatement(LRef<SharedPtr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement);
+        Ptr<llvm::Value> GenerateVariableDeclarationStatement(LRef<std::shared_ptr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement);
 
         /**
          * Generate assignment statement
          * @param assignmentStatement Assignment statement
          * @return
          */
-        Ptr<llvm::Value> GenerateAssignmentStatement(LRef<SharedPtr<AST::GS_AssignmentStatement>> assignmentStatement);
+        Ptr<llvm::Value> GenerateAssignmentStatement(LRef<std::shared_ptr<AST::GS_AssignmentStatement>> assignmentStatement);
 
         /**
          * Generate expression statement
          * @param expressionStatement Expression statement
          * @return
          */
-        Ptr<llvm::Value> GenerateExpressionStatement(LRef<SharedPtr<AST::GS_ExpressionStatement>> expressionStatement);
+        Ptr<llvm::Value> GenerateExpressionStatement(LRef<std::shared_ptr<AST::GS_ExpressionStatement>> expressionStatement);
 
         /**
          * Generate constant expression
          * @param constantExpression Constant expression
          * @return
          */
-        Ptr<llvm::Value> GenerateConstantExpression(LRef<SharedPtr<AST::GS_ConstantExpression>> constantExpression);
+        Ptr<llvm::Value> GenerateConstantExpression(LRef<std::shared_ptr<AST::GS_ConstantExpression>> constantExpression);
 
         /**
          * Generate unary expression
          * @param unaryExpression Unary expression
          * @return
          */
-        Ptr<llvm::Value> GenerateUnaryExpression(LRef<SharedPtr<AST::GS_UnaryExpression>> unaryExpression);
+        Ptr<llvm::Value> GenerateUnaryExpression(LRef<std::shared_ptr<AST::GS_UnaryExpression>> unaryExpression);
 
         /**
          * Generate binary expression
          * @param binaryExpression Binary expression
          * @return
          */
-        Ptr<llvm::Value> GenerateBinaryExpression(LRef<SharedPtr<AST::GS_BinaryExpression>> binaryExpression);
+        Ptr<llvm::Value> GenerateBinaryExpression(LRef<std::shared_ptr<AST::GS_BinaryExpression>> binaryExpression);
 
         /**
          * Generate variable using expression
          * @param variableUsingExpression Variable using expression
          * @return
          */
-        Ptr<llvm::Value> GenerateVariableUsingExpression(LRef<SharedPtr<AST::GS_VariableUsingExpression>> variableUsingExpression);
+        Ptr<llvm::Value> GenerateVariableUsingExpression(LRef<std::shared_ptr<AST::GS_VariableUsingExpression>> variableUsingExpression);
 
         /**
          * Generate function calling expression
          * @param functionCallingExpression Function calling expression
          * @return
          */
-        Ptr<llvm::Value> GenerateFunctionCallingExpression(LRef<SharedPtr<AST::GS_FunctionCallingExpression>> functionCallingExpression);
+        Ptr<llvm::Value> GenerateFunctionCallingExpression(LRef<std::shared_ptr<AST::GS_FunctionCallingExpression>> functionCallingExpression);
 
     private:
 

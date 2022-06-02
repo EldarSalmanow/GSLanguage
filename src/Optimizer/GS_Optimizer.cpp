@@ -5,11 +5,11 @@ namespace GSLanguageCompiler::Optimizer {
     GS_Optimizer::GS_Optimizer(AST::GSPassPtrArray passes)
             : _passes(std::move(passes)) {}
 
-    SharedPtr<GS_Optimizer> GS_Optimizer::Create(AST::GSPassPtrArray passes) {
+    std::shared_ptr<GS_Optimizer> GS_Optimizer::Create(AST::GSPassPtrArray passes) {
         return std::make_shared<GS_Optimizer>(std::move(passes));
     }
 
-    SharedPtr<GS_Optimizer> GS_Optimizer::Create() {
+    std::shared_ptr<GS_Optimizer> GS_Optimizer::Create() {
         AST::GSPassPtrArray passes;
 
         passes.emplace_back(CreateConstantFoldingPass());

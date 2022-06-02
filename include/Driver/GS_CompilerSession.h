@@ -28,7 +28,7 @@ namespace GSLanguageCompiler::Driver {
          * @param compilerSessionConfig Compiler session config
          * @return Compiler session ptr
          */
-        static SharedPtr<GS_CompilerSession> Create(GSCompilerSessionConfigPtr compilerSessionConfig);
+        static std::shared_ptr<GS_CompilerSession> Create(GSCompilerSessionConfigPtr compilerSessionConfig);
 
     public:
 
@@ -65,12 +65,12 @@ namespace GSLanguageCompiler::Driver {
     /**
      * Compiler session ptr type
      */
-    using GSCompilerSessionPtr = SharedPtr<GS_CompilerSession>;
+    using GSCompilerSessionPtr = std::shared_ptr<GS_CompilerSession>;
 
     /**
      * Compiler session ptr array type
      */
-    using GSCompilerSessionPtrArray = Vector<GSCompilerSessionPtr>;
+    using GSCompilerSessionPtrArray = std::vector<GSCompilerSessionPtr>;
 
 }
 

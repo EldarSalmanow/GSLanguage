@@ -8,9 +8,9 @@ namespace GSLanguageCompiler::Optimizer {
     class GS_ConstantFoldingTransformer : public AST::GS_Transformer {
     public:
 
-        AST::GSNodePtr TransformUnaryExpression(LRef<SharedPtr<AST::GS_UnaryExpression>> unaryExpression) override;
+        AST::GSNodePtr TransformUnaryExpression(LRef<std::shared_ptr<AST::GS_UnaryExpression>> unaryExpression) override;
 
-        AST::GSNodePtr TransformBinaryExpression(LRef<SharedPtr<AST::GS_BinaryExpression>> binaryExpression) override;
+        AST::GSNodePtr TransformBinaryExpression(LRef<std::shared_ptr<AST::GS_BinaryExpression>> binaryExpression) override;
     };
 
     class GS_ConstantFoldingPass : public AST::GS_TransformPass<GS_ConstantFoldingTransformer> {};

@@ -9,7 +9,7 @@ namespace GSLanguageCompiler::Debug {
     class GS_ASTDumpVisitor : public AST::GS_Visitor {
     public:
 
-        Void VisitTranslationUnitDeclaration(LRef<SharedPtr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) override {
+        Void VisitTranslationUnitDeclaration(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) override {
             Print("TranslationUnitDeclaration: {"_us);
 
             AddTab();
@@ -33,7 +33,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitFunctionDeclaration(LRef<SharedPtr<AST::GS_FunctionDeclaration>> functionDeclaration) override {
+        Void VisitFunctionDeclaration(LRef<std::shared_ptr<AST::GS_FunctionDeclaration>> functionDeclaration) override {
             Print("FunctionDeclaration: {"_us);
 
             AddTab();
@@ -72,7 +72,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitVariableDeclarationStatement(LRef<SharedPtr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement) override {
+        Void VisitVariableDeclarationStatement(LRef<std::shared_ptr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement) override {
             Print("VariableDeclarationStatement: {"_us);
 
             AddTab();
@@ -96,7 +96,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitAssignmentStatement(LRef<SharedPtr<AST::GS_AssignmentStatement>> assignmentStatement) override {
+        Void VisitAssignmentStatement(LRef<std::shared_ptr<AST::GS_AssignmentStatement>> assignmentStatement) override {
             Print("AssignmentStatement: {"_us);
 
             AddTab();
@@ -126,7 +126,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitExpressionStatement(LRef<SharedPtr<AST::GS_ExpressionStatement>> expressionStatement) override {
+        Void VisitExpressionStatement(LRef<std::shared_ptr<AST::GS_ExpressionStatement>> expressionStatement) override {
             Print("ExpressionStatement: {"_us);
 
             AddTab();
@@ -138,7 +138,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitConstantExpression(LRef<SharedPtr<AST::GS_ConstantExpression>> constantExpression) override {
+        Void VisitConstantExpression(LRef<std::shared_ptr<AST::GS_ConstantExpression>> constantExpression) override {
             Print("ConstantExpression: {"_us);
 
             AddTab();
@@ -167,7 +167,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitUnaryExpression(LRef<SharedPtr<AST::GS_UnaryExpression>> unaryExpression) override {
+        Void VisitUnaryExpression(LRef<std::shared_ptr<AST::GS_UnaryExpression>> unaryExpression) override {
             Print("UnaryExpression: {"_us);
 
             AddTab();
@@ -200,7 +200,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitBinaryExpression(LRef<SharedPtr<AST::GS_BinaryExpression>> binaryExpression) override {
+        Void VisitBinaryExpression(LRef<std::shared_ptr<AST::GS_BinaryExpression>> binaryExpression) override {
             Print("BinaryExpression: {"_us);
 
             AddTab();
@@ -255,7 +255,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitVariableUsingExpression(LRef<SharedPtr<AST::GS_VariableUsingExpression>> variableUsingExpression) override {
+        Void VisitVariableUsingExpression(LRef<std::shared_ptr<AST::GS_VariableUsingExpression>> variableUsingExpression) override {
             Print("VariableUsingExpression: {"_us);
 
             AddTab();
@@ -267,7 +267,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitFunctionCallingExpression(LRef<SharedPtr<AST::GS_FunctionCallingExpression>> functionCallingExpression) override {
+        Void VisitFunctionCallingExpression(LRef<std::shared_ptr<AST::GS_FunctionCallingExpression>> functionCallingExpression) override {
             Print("FunctionCallingExpression: {"_us);
 
             AddTab();
@@ -321,7 +321,7 @@ namespace GSLanguageCompiler::Debug {
     GS_ASTDumper::GS_ASTDumper(AST::GSNodePtr node)
             : _node(std::move(node)) {}
 
-    SharedPtr<GS_ASTDumper> GS_ASTDumper::Create(AST::GSNodePtr node) {
+    std::shared_ptr<GS_ASTDumper> GS_ASTDumper::Create(AST::GSNodePtr node) {
         return std::make_shared<GS_ASTDumper>(std::move(node));
     }
 

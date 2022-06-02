@@ -7,7 +7,7 @@ class Exception : public std::exception {
 public:
 
     explicit Exception(UString string)
-            : _string(std::move(string)), _utf8String(_string.as_utf8()) {}
+            : _string(std::move(string)), _utf8String(_string.AsUTF8()) {}
 
 public:
 

@@ -26,7 +26,7 @@ namespace GSLanguageCompiler::Debug {
          * @param tableOfSymbols Table of symbols
          * @return Table of symbols dumper ptr
          */
-        static SharedPtr<GS_TableOfSymbolsDumper> Create(Semantic::GSTableOfSymbolsPtr tableOfSymbols);
+        static std::shared_ptr<GS_TableOfSymbolsDumper> Create(Semantic::GSTableOfSymbolsPtr tableOfSymbols);
 
     public:
 

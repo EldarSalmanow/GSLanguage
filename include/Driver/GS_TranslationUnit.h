@@ -43,7 +43,7 @@ namespace GSLanguageCompiler {
              * @param config Unit config
              * @return Translation unit ptr
              */
-            static SharedPtr<GS_TranslationUnit> Create(GSTranslationUnitConfigPtr config);
+            static std::shared_ptr<GS_TranslationUnit> Create(GSTranslationUnitConfigPtr config);
 
         public:
 
@@ -68,21 +68,21 @@ namespace GSLanguageCompiler {
              * @param stream Input stream
              * @return AST translation unit declaration node ptr
              */
-            SharedPtr<AST::GS_TranslationUnitDeclaration> RunFrontEnd(LRef<std::istream> stream);
+            std::shared_ptr<AST::GS_TranslationUnitDeclaration> RunFrontEnd(LRef<std::istream> stream);
 
             /**
              * Run middle compilation process for translation unit
              * @param translationUnitDeclaration Translation unit declaration
              * @return
              */
-            Bool RunMiddleEnd(LRef<SharedPtr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration);
+            Bool RunMiddleEnd(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration);
 
             /**
              * Run back compilation process for translation unit
              * @param translationUnitDeclaration Translation unit declaration
              * @return
              */
-            Bool RunBackEnd(LRef<SharedPtr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration);
+            Bool RunBackEnd(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration);
 
         private:
 
@@ -95,12 +95,12 @@ namespace GSLanguageCompiler {
         /**
          * Translation unit ptr type
          */
-        using GSTranslationUnitPtr = SharedPtr<GS_TranslationUnit>;
+        using GSTranslationUnitPtr = std::shared_ptr<GS_TranslationUnit>;
 
         /**
          * Translation unit ptr array type
          */
-        using GSTranslationUnitPtrArray = Vector<GSTranslationUnitPtr>;
+        using GSTranslationUnitPtrArray = std::vector<GSTranslationUnitPtr>;
 
     }
 

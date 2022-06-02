@@ -15,9 +15,9 @@ namespace GSLanguageCompiler::Optimizer {
 
     public:
 
-        static SharedPtr<GS_Optimizer> Create(AST::GSPassPtrArray passes);
+        static std::shared_ptr<GS_Optimizer> Create(AST::GSPassPtrArray passes);
 
-        static SharedPtr<GS_Optimizer> Create();
+        static std::shared_ptr<GS_Optimizer> Create();
 
     public:
 

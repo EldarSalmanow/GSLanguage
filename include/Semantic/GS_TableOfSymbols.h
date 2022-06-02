@@ -33,12 +33,12 @@ namespace GSLanguageCompiler::Semantic {
     /**
      * Symbol ptr type
      */
-    using GSSymbolPtr = SharedPtr<GS_Symbol>;
+    using GSSymbolPtr = std::shared_ptr<GS_Symbol>;
 
     /**
      * Symbol ptr array type
      */
-    using GSSymbolPtrArray = Vector<GSSymbolPtr>;
+    using GSSymbolPtrArray = std::vector<GSSymbolPtr>;
 
     /**
      *
@@ -61,7 +61,7 @@ namespace GSLanguageCompiler::Semantic {
          * @param body
          * @return
          */
-        static SharedPtr<GS_FunctionSymbol> Create(UString name, AST::GSStatementPtrArray body);
+        static std::shared_ptr<GS_FunctionSymbol> Create(UString name, AST::GSStatementPtrArray body);
 
     public:
 
@@ -121,7 +121,7 @@ namespace GSLanguageCompiler::Semantic {
          * @param expression
          * @return
          */
-        static SharedPtr<GS_VariableSymbol> Create(UString name, GSTypePtr type, AST::GSExpressionPtr expression);
+        static std::shared_ptr<GS_VariableSymbol> Create(UString name, GSTypePtr type, AST::GSExpressionPtr expression);
 
     public:
 
@@ -186,7 +186,7 @@ namespace GSLanguageCompiler::Semantic {
          *
          * @return
          */
-        static SharedPtr<GS_TableOfSymbols> Create();
+        static std::shared_ptr<GS_TableOfSymbols> Create();
 
     public:
 
@@ -212,14 +212,14 @@ namespace GSLanguageCompiler::Semantic {
          * @param name
          * @return
          */
-        SharedPtr<GS_FunctionSymbol> FindFunction(UString name);
+        std::shared_ptr<GS_FunctionSymbol> FindFunction(UString name);
 
         /**
          *
          * @param name
          * @return
          */
-        SharedPtr<GS_VariableSymbol> FindVariable(UString name);
+        std::shared_ptr<GS_VariableSymbol> FindVariable(UString name);
 
     public:
 
@@ -227,31 +227,31 @@ namespace GSLanguageCompiler::Semantic {
          *
          * @return
          */
-        Vector<SharedPtr<GS_FunctionSymbol>> GetFunctions() const;
+        std::vector<std::shared_ptr<GS_FunctionSymbol>> GetFunctions() const;
 
         /**
          *
          * @return
          */
-        Vector<SharedPtr<GS_VariableSymbol>> GetVariables() const;
+        std::vector<std::shared_ptr<GS_VariableSymbol>> GetVariables() const;
 
     private:
 
         /**
          *
          */
-        Vector<SharedPtr<GS_FunctionSymbol>> _functions;
+        std::vector<std::shared_ptr<GS_FunctionSymbol>> _functions;
 
         /**
          *
          */
-        Vector<SharedPtr<GS_VariableSymbol>> _variables;
+        std::vector<std::shared_ptr<GS_VariableSymbol>> _variables;
     };
 
     /**
      * Table of symbols ptr
      */
-    using GSTableOfSymbolsPtr = SharedPtr<GS_TableOfSymbols>;
+    using GSTableOfSymbolsPtr = std::shared_ptr<GS_TableOfSymbols>;
 
 }
 

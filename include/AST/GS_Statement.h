@@ -45,12 +45,12 @@ namespace GSLanguageCompiler::AST {
     /**
      * Statement ptr type
      */
-    using GSStatementPtr = SharedPtr<GS_Statement>;
+    using GSStatementPtr = std::shared_ptr<GS_Statement>;
 
     /**
      * Statement ptr array type
      */
-    using GSStatementPtrArray = Vector<GSStatementPtr>;
+    using GSStatementPtrArray = std::vector<GSStatementPtr>;
 
     /**
      * Casting to statement if node is statement
@@ -73,7 +73,7 @@ namespace GSLanguageCompiler::AST {
      * @return Statement or nullptr
      */
     template<typename T>
-    inline SharedPtr<T> ToStatement(GSNodePtr node) {
+    inline std::shared_ptr<T> ToStatement(GSNodePtr node) {
         static_assert(std::is_base_of_v<GS_Statement, T>, "Type for casting must be inherited from GS_Statement!");
 
         auto statement = ToStatement(node);

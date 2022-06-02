@@ -5,11 +5,11 @@ namespace GSLanguageCompiler::Driver {
     GS_CompilerSessionsManager::GS_CompilerSessionsManager(GSCompilerSessionPtrArray sessions)
             : _sessions(std::move(sessions)) {}
 
-    SharedPtr<GS_CompilerSessionsManager> GS_CompilerSessionsManager::Create(GSCompilerSessionPtrArray sessions) {
+    std::shared_ptr<GS_CompilerSessionsManager> GS_CompilerSessionsManager::Create(GSCompilerSessionPtrArray sessions) {
         return std::make_shared<GS_CompilerSessionsManager>(std::move(sessions));
     }
 
-    SharedPtr<GS_CompilerSessionsManager> GS_CompilerSessionsManager::Create() {
+    std::shared_ptr<GS_CompilerSessionsManager> GS_CompilerSessionsManager::Create() {
         return GS_CompilerSessionsManager::Create(GSCompilerSessionPtrArray());
     }
 

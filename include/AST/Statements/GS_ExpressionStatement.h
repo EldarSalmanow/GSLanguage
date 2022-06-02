@@ -25,7 +25,7 @@ namespace GSLanguageCompiler::AST {
          * @param expression Expression ptr
          * @return Expression statement ptr
          */
-        static SharedPtr<GS_ExpressionStatement> Create(GSExpressionPtr expression);
+        static std::shared_ptr<GS_ExpressionStatement> Create(GSExpressionPtr expression);
 
     public:
 

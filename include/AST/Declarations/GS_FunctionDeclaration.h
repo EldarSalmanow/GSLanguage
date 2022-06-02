@@ -106,7 +106,7 @@ namespace GSLanguageCompiler::AST {
          * @param body Body
          * @return Function declaration ptr
          */
-        static SharedPtr<GS_FunctionDeclaration> Create(UString name, GS_FunctionSignature signature, GSStatementPtrArray body);
+        static std::shared_ptr<GS_FunctionDeclaration> Create(UString name, GS_FunctionSignature signature, GSStatementPtrArray body);
 
         /**
          * Creating function declaration ptr
@@ -114,7 +114,7 @@ namespace GSLanguageCompiler::AST {
          * @param signature Signature
          * @return Function declaration ptr
          */
-        static SharedPtr<GS_FunctionDeclaration> Create(UString name, GS_FunctionSignature signature);
+        static std::shared_ptr<GS_FunctionDeclaration> Create(UString name, GS_FunctionSignature signature);
 
         /**
          * Creating function declaration ptr
@@ -122,14 +122,14 @@ namespace GSLanguageCompiler::AST {
          * @param body Body
          * @return Function declaration ptr
          */
-        static SharedPtr<GS_FunctionDeclaration> Create(UString name, GSStatementPtrArray body);
+        static std::shared_ptr<GS_FunctionDeclaration> Create(UString name, GSStatementPtrArray body);
 
         /**
          * Creating function declaration ptr
          * @param name Name
          * @return Function declaration ptr
          */
-        static SharedPtr<GS_FunctionDeclaration> Create(UString name);
+        static std::shared_ptr<GS_FunctionDeclaration> Create(UString name);
 
     public:
 

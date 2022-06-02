@@ -25,9 +25,9 @@ namespace GSLanguageCompiler::AST {
         virtual Void Run(LRef<GSExpressionPtrArray> expressions);
     };
 
-    using GSPassPtr = SharedPtr<GS_Pass>;
+    using GSPassPtr = std::shared_ptr<GS_Pass>;
 
-    using GSPassPtrArray = Vector<GSPassPtr>;
+    using GSPassPtrArray = std::vector<GSPassPtr>;
 
     template<typename T>
     class GS_VisitPass : public GS_Pass {
@@ -122,9 +122,9 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
-        static SharedPtr<GS_PassManager> Create(GSPassPtrArray passes);
+        static std::shared_ptr<GS_PassManager> Create(GSPassPtrArray passes);
 
-        static SharedPtr<GS_PassManager> Create();
+        static std::shared_ptr<GS_PassManager> Create();
 
     public:
 
@@ -149,7 +149,7 @@ namespace GSLanguageCompiler::AST {
         GSPassPtrArray _passes;
     };
 
-    using GSPassManagerPtr = SharedPtr<GS_PassManager>;
+    using GSPassManagerPtr = std::shared_ptr<GS_PassManager>;
 
 }
 

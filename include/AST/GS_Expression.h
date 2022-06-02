@@ -47,12 +47,12 @@ namespace GSLanguageCompiler::AST {
     /**
      * Expression ptr type
      */
-    using GSExpressionPtr = SharedPtr<GS_Expression>;
+    using GSExpressionPtr = std::shared_ptr<GS_Expression>;
 
     /**
      * Expression ptr array type
      */
-    using GSExpressionPtrArray = Vector<GSExpressionPtr>;
+    using GSExpressionPtrArray = std::vector<GSExpressionPtr>;
 
     /**
      * Casting to expression if node is expression
@@ -77,7 +77,7 @@ namespace GSLanguageCompiler::AST {
      * @return Expression or nullptr
      */
     template<typename T>
-    inline SharedPtr<T> ToExpression(GSNodePtr node) {
+    inline std::shared_ptr<T> ToExpression(GSNodePtr node) {
         static_assert(std::is_base_of_v<GS_Expression, T>, "Type for casting must be inherited from GS_Expression!");
 
         auto expression = ToExpression(node);

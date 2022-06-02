@@ -25,7 +25,7 @@ namespace GSLanguageCompiler::Driver {
          * @param inputName Input name
          * @return Translation unit config ptr
          */
-        static SharedPtr<GS_TranslationUnitConfig> Create(UString inputName);
+        static std::shared_ptr<GS_TranslationUnitConfig> Create(UString inputName);
 
     public:
 
@@ -46,12 +46,12 @@ namespace GSLanguageCompiler::Driver {
     /**
      * Translation unit config ptr type
      */
-    using GSTranslationUnitConfigPtr = SharedPtr<GS_TranslationUnitConfig>;
+    using GSTranslationUnitConfigPtr = std::shared_ptr<GS_TranslationUnitConfig>;
 
     /**
      * Translation unit config ptr array type
      */
-    using GSTranslationUnitConfigPtrArray = Vector<GSTranslationUnitConfigPtr>;
+    using GSTranslationUnitConfigPtrArray = std::vector<GSTranslationUnitConfigPtr>;
 
 }
 

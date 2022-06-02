@@ -32,7 +32,7 @@ namespace GSLanguageCompiler::CodeGenerator {
          * Creating LLVM code generation context
          * @return LLVM code generation context ptr
          */
-        static SharedPtr<GS_LLVMCGContext> Create();
+        static std::shared_ptr<GS_LLVMCGContext> Create();
 
     public:
 
@@ -76,18 +76,18 @@ namespace GSLanguageCompiler::CodeGenerator {
         /**
          * LLVM context
          */
-        UniquePtr<llvm::LLVMContext> _context;
+        std::unique_ptr<llvm::LLVMContext> _context;
 
         /**
          * LLVM IR module
          */
-        UniquePtr<llvm::Module> _module;
+        std::unique_ptr<llvm::Module> _module;
     };
 
     /**
      * LLVM code generation context ptr type
      */
-    using GSLLVMCGContextPtr = SharedPtr<GS_LLVMCGContext>;
+    using GSLLVMCGContextPtr = std::shared_ptr<GS_LLVMCGContext>;
 
 }
 

@@ -26,14 +26,14 @@ namespace GSLanguageCompiler::AST {
          * @param nodes Nodes
          * @return Translation unit declaration ptr
          */
-        static SharedPtr<GS_TranslationUnitDeclaration> Create(UString name, GSNodePtrArray nodes);
+        static std::shared_ptr<GS_TranslationUnitDeclaration> Create(UString name, GSNodePtrArray nodes);
 
         /**
          * Creating translation unit declaration ptr
          * @param name Name
          * @return Translation unit declaration ptr
          */
-        static SharedPtr<GS_TranslationUnitDeclaration> Create(UString name);
+        static std::shared_ptr<GS_TranslationUnitDeclaration> Create(UString name);
 
     public:
 
@@ -100,12 +100,12 @@ namespace GSLanguageCompiler::AST {
     /**
      * Translation unit ptr type
      */
-    using GSTranslationUnitDeclarationPtr = SharedPtr<GS_TranslationUnitDeclaration>;
+    using GSTranslationUnitDeclarationPtr = std::shared_ptr<GS_TranslationUnitDeclaration>;
 
     /**
      * Translation unit ptr array type
      */
-    using GSTranslationUnitDeclarationPtrArray = Vector<GSTranslationUnitDeclarationPtr>;
+    using GSTranslationUnitDeclarationPtrArray = std::vector<GSTranslationUnitDeclarationPtr>;
 
 }
 

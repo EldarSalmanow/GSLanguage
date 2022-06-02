@@ -37,13 +37,13 @@ namespace GSLanguageCompiler::AST {
          * @param context AST context
          * @return AST builder ptr
          */
-        static SharedPtr<GS_ASTBuilder> Create(GSASTContextPtr context);
+        static std::shared_ptr<GS_ASTBuilder> Create(GSASTContextPtr context);
 
         /**
          * Creating AST builder
          * @return AST builder ptr
          */
-        static SharedPtr<GS_ASTBuilder> Create();
+        static std::shared_ptr<GS_ASTBuilder> Create();
 
     public:
 
@@ -58,19 +58,19 @@ namespace GSLanguageCompiler::AST {
          * Create Void type
          * @return Void type
          */
-        SharedPtr<Semantic::GS_VoidType> CreateVoidType();
+        std::shared_ptr<Semantic::GS_VoidType> CreateVoidType();
 
         /**
          * Create I32 type
          * @return I32 type
          */
-        SharedPtr<Semantic::GS_I32Type> CreateI32Type();
+        std::shared_ptr<Semantic::GS_I32Type> CreateI32Type();
 
         /**
          * Create String type
          * @return String type
          */
-        SharedPtr<Semantic::GS_StringType> CreateStringType();
+        std::shared_ptr<Semantic::GS_StringType> CreateStringType();
 
     public:
 
@@ -86,14 +86,14 @@ namespace GSLanguageCompiler::AST {
          * @param number Number
          * @return I32 value
          */
-        SharedPtr<GS_I32Value> CreateI32Value(I32 number);
+        std::shared_ptr<GS_I32Value> CreateI32Value(I32 number);
 
         /**
          * Create String value
          * @param string String
          * @return String value
          */
-        SharedPtr<GS_StringValue> CreateStringValue(UString string);
+        std::shared_ptr<GS_StringValue> CreateStringValue(UString string);
 
     public:
 
@@ -147,7 +147,7 @@ namespace GSLanguageCompiler::AST {
          * @param body Body
          * @return Function declaration
          */
-        SharedPtr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name, GS_FunctionSignature signature, GSStatementPtrArray body);
+        std::shared_ptr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name, GS_FunctionSignature signature, GSStatementPtrArray body);
 
         /**
          * Create function declaration
@@ -155,7 +155,7 @@ namespace GSLanguageCompiler::AST {
          * @param signature Signature
          * @return Function declaration
          */
-        SharedPtr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name, GS_FunctionSignature signature);
+        std::shared_ptr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name, GS_FunctionSignature signature);
 
         /**
          * Create function declaration
@@ -163,14 +163,14 @@ namespace GSLanguageCompiler::AST {
          * @param statements Statements
          * @return Function declaration
          */
-        SharedPtr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name, GSStatementPtrArray statements);
+        std::shared_ptr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name, GSStatementPtrArray statements);
 
         /**
          * Create function declaration
          * @param name Name
          * @return Function declaration
          */
-        SharedPtr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name);
+        std::shared_ptr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name);
 
     public:
 
@@ -181,7 +181,7 @@ namespace GSLanguageCompiler::AST {
          * @param expression Expression
          * @return Variable declaration statement
          */
-        SharedPtr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name, Semantic::GSTypePtr type, GSExpressionPtr expression);
+        std::shared_ptr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name, Semantic::GSTypePtr type, GSExpressionPtr expression);
 
         /**
          * Create variable declaration statement
@@ -189,7 +189,7 @@ namespace GSLanguageCompiler::AST {
          * @param type Type
          * @return Variable declaration statement
          */
-        SharedPtr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name, Semantic::GSTypePtr type);
+        std::shared_ptr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name, Semantic::GSTypePtr type);
 
         /**
          * Create variable declaration statement
@@ -197,7 +197,7 @@ namespace GSLanguageCompiler::AST {
          * @param expression Expression
          * @return Variable declaration statement
          */
-        SharedPtr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name, GSExpressionPtr expression);
+        std::shared_ptr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name, GSExpressionPtr expression);
 
         /**
          * Create assignment statement
@@ -205,14 +205,14 @@ namespace GSLanguageCompiler::AST {
          * @param rvalueExpression Right value expression
          * @return Assignment statement
          */
-        SharedPtr<GS_AssignmentStatement> CreateAssignmentStatement(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression);
+        std::shared_ptr<GS_AssignmentStatement> CreateAssignmentStatement(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression);
 
         /**
          * Create expression statement
          * @param expression Expression
          * @return Expression statement
          */
-        SharedPtr<GS_ExpressionStatement> CreateExpressionStatement(GSExpressionPtr expression);
+        std::shared_ptr<GS_ExpressionStatement> CreateExpressionStatement(GSExpressionPtr expression);
 
     public:
 
@@ -221,21 +221,21 @@ namespace GSLanguageCompiler::AST {
          * @param value Value
          * @return Constant expression
          */
-        SharedPtr<GS_ConstantExpression> CreateConstantExpression(GSValuePtr value);
+        std::shared_ptr<GS_ConstantExpression> CreateConstantExpression(GSValuePtr value);
 
         /**
          * Create constant expression
          * @param number Number
          * @return Constant expression
          */
-        SharedPtr<GS_ConstantExpression> CreateConstantExpression(I32 number);
+        std::shared_ptr<GS_ConstantExpression> CreateConstantExpression(I32 number);
 
         /**
          * Create constant expression
          * @param string String
          * @return Constant expression
          */
-        SharedPtr<GS_ConstantExpression> CreateConstantExpression(UString string);
+        std::shared_ptr<GS_ConstantExpression> CreateConstantExpression(UString string);
 
         /**
          * Create unary expression
@@ -243,7 +243,7 @@ namespace GSLanguageCompiler::AST {
          * @param expression Expression
          * @return Unary expression
          */
-        SharedPtr<GS_UnaryExpression> CreateUnaryExpression(UnaryOperation operation, GSExpressionPtr expression);
+        std::shared_ptr<GS_UnaryExpression> CreateUnaryExpression(UnaryOperation operation, GSExpressionPtr expression);
 
         /**
          * Create binary expression
@@ -252,14 +252,14 @@ namespace GSLanguageCompiler::AST {
          * @param secondExpression Second expression
          * @return Binary expression
          */
-        SharedPtr<GS_BinaryExpression> CreateBinaryExpression(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression);
+        std::shared_ptr<GS_BinaryExpression> CreateBinaryExpression(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression);
 
         /**
          * Create variable using expression
          * @param name Name
          * @return Variable using expression
          */
-        SharedPtr<GS_VariableUsingExpression> CreateVariableUsingExpression(UString name);
+        std::shared_ptr<GS_VariableUsingExpression> CreateVariableUsingExpression(UString name);
 
         /**
          * Create function calling expression
@@ -267,7 +267,7 @@ namespace GSLanguageCompiler::AST {
          * @param params Params
          * @return Function calling expression
          */
-        SharedPtr<GS_FunctionCallingExpression> CreateFunctionCallingExpression(UString name, GSExpressionPtrArray params);
+        std::shared_ptr<GS_FunctionCallingExpression> CreateFunctionCallingExpression(UString name, GSExpressionPtrArray params);
 
     public:
 
@@ -288,7 +288,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * AST builder ptr type
      */
-    using GSASTBuilderPtr = SharedPtr<GS_ASTBuilder>;
+    using GSASTBuilderPtr = std::shared_ptr<GS_ASTBuilder>;
 
 }
 

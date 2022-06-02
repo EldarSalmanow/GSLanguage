@@ -5,11 +5,11 @@ namespace GSLanguageCompiler::AST {
     GS_TranslationUnitDeclaration::GS_TranslationUnitDeclaration(UString name, GSNodePtrArray nodes)
             : _name(std::move(name)), _nodes(std::move(nodes)) {}
 
-    SharedPtr<GS_TranslationUnitDeclaration> GS_TranslationUnitDeclaration::Create(UString name, GSNodePtrArray nodes) {
+    std::shared_ptr<GS_TranslationUnitDeclaration> GS_TranslationUnitDeclaration::Create(UString name, GSNodePtrArray nodes) {
         return std::make_shared<GS_TranslationUnitDeclaration>(std::move(name), std::move(nodes));
     }
 
-    SharedPtr<GS_TranslationUnitDeclaration> GS_TranslationUnitDeclaration::Create(UString name) {
+    std::shared_ptr<GS_TranslationUnitDeclaration> GS_TranslationUnitDeclaration::Create(UString name) {
         return GS_TranslationUnitDeclaration::Create(std::move(name), GSNodePtrArray());
     }
 

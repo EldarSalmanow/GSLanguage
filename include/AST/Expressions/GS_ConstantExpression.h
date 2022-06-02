@@ -33,7 +33,7 @@ namespace GSLanguageCompiler::AST {
          * @param type Type ptr
          * @return Value ptr
          */
-        static SharedPtr<GS_Value> Create(Semantic::GSTypePtr type);
+        static std::shared_ptr<GS_Value> Create(Semantic::GSTypePtr type);
 
     public:
 
@@ -62,7 +62,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * Value ptr type
      */
-    using GSValuePtr = SharedPtr<GS_Value>;
+    using GSValuePtr = std::shared_ptr<GS_Value>;
 
     /**
      * Class for literal values
@@ -90,7 +90,7 @@ namespace GSLanguageCompiler::AST {
          * @return Value ptr
          */
         template<typename T>
-        static SharedPtr<GS_Value> Create(T value, Semantic::GSTypePtr type) {
+        static std::shared_ptr<GS_Value> Create(T value, Semantic::GSTypePtr type) {
             return std::make_shared<GS_Value>(std::move(value), std::move(type));
         }
 
@@ -149,7 +149,7 @@ namespace GSLanguageCompiler::AST {
          * @param value Value
          * @return I32 value ptr
          */
-        static SharedPtr<GS_I32Value> Create(I32 value);
+        static std::shared_ptr<GS_I32Value> Create(I32 value);
 
     public:
 
@@ -179,7 +179,7 @@ namespace GSLanguageCompiler::AST {
          * @param value Value
          * @return String value ptr
          */
-        static SharedPtr<GS_StringValue> Create(UString value);
+        static std::shared_ptr<GS_StringValue> Create(UString value);
 
     public:
 
@@ -197,7 +197,7 @@ namespace GSLanguageCompiler::AST {
      * @return Concrete value ptr or nullptr
      */
     template<typename T>
-    inline SharedPtr<T> GSValueCast(GSValuePtr value) {
+    inline std::shared_ptr<T> GSValueCast(GSValuePtr value) {
         static_assert(std::is_base_of_v<GS_Value, T>, "Type for casting must be inherited from GS_Value!");
 
         auto type = value->GetType();
@@ -241,7 +241,7 @@ namespace GSLanguageCompiler::AST {
          * @param value Value ptr
          * @return Constant expression ptr
          */
-        static SharedPtr<GS_ConstantExpression> Create(GSValuePtr value);
+        static std::shared_ptr<GS_ConstantExpression> Create(GSValuePtr value);
 
     public:
 

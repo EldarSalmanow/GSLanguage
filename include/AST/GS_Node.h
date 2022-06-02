@@ -47,12 +47,12 @@ namespace GSLanguageCompiler::AST {
     /**
      * Node ptr type
      */
-    using GSNodePtr = SharedPtr<GS_Node>;
+    using GSNodePtr = std::shared_ptr<GS_Node>;
 
     /**
      * Container with nodes type
      */
-    using GSNodePtrArray = Vector<GSNodePtr>;
+    using GSNodePtrArray = std::vector<GSNodePtr>;
 
 }
 

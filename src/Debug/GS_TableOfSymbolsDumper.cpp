@@ -5,7 +5,7 @@ namespace GSLanguageCompiler::Debug {
     GS_TableOfSymbolsDumper::GS_TableOfSymbolsDumper(Semantic::GSTableOfSymbolsPtr tableOfSymbols)
             : _tableOfSymbols(std::move(tableOfSymbols)) {}
 
-    SharedPtr<GS_TableOfSymbolsDumper> GS_TableOfSymbolsDumper::Create(Semantic::GSTableOfSymbolsPtr tableOfSymbols) {
+    std::shared_ptr<GS_TableOfSymbolsDumper> GS_TableOfSymbolsDumper::Create(Semantic::GSTableOfSymbolsPtr tableOfSymbols) {
         return std::make_shared<GS_TableOfSymbolsDumper>(std::move(tableOfSymbols));
     }
 

@@ -27,7 +27,7 @@ namespace GSLanguageCompiler::AST {
          * @param rvalueExpression Right value expression ptr
          * @return Assignment statement ptr
          */
-        static SharedPtr<GS_AssignmentStatement> Create(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression);
+        static std::shared_ptr<GS_AssignmentStatement> Create(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression);
 
     public:
 

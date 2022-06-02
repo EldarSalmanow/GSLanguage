@@ -55,70 +55,70 @@ namespace GSLanguageCompiler::AST {
          * @param translationUnitDeclaration Translation unit declaration
          * @return
          */
-        virtual Void VisitTranslationUnitDeclaration(LRef<SharedPtr<GS_TranslationUnitDeclaration>> translationUnitDeclaration);
+        virtual Void VisitTranslationUnitDeclaration(LRef<std::shared_ptr<GS_TranslationUnitDeclaration>> translationUnitDeclaration);
 
         /**
          * Visit function declaration
          * @param functionDeclaration Function declaration
          * @return
          */
-        virtual Void VisitFunctionDeclaration(LRef<SharedPtr<GS_FunctionDeclaration>> functionDeclaration);
+        virtual Void VisitFunctionDeclaration(LRef<std::shared_ptr<GS_FunctionDeclaration>> functionDeclaration);
 
         /**
          * Visit variable declaration statement
          * @param variableDeclarationStatement Variable declaration statement
          * @return
          */
-        virtual Void VisitVariableDeclarationStatement(LRef<SharedPtr<GS_VariableDeclarationStatement>> variableDeclarationStatement);
+        virtual Void VisitVariableDeclarationStatement(LRef<std::shared_ptr<GS_VariableDeclarationStatement>> variableDeclarationStatement);
 
         /**
          * Visit assignment statement
          * @param assignmentStatement Assignment statement
          * @return
          */
-        virtual Void VisitAssignmentStatement(LRef<SharedPtr<GS_AssignmentStatement>> assignmentStatement);
+        virtual Void VisitAssignmentStatement(LRef<std::shared_ptr<GS_AssignmentStatement>> assignmentStatement);
 
         /**
          * Visit expression statement
          * @param expressionStatement Expression statement
          * @return
          */
-        virtual Void VisitExpressionStatement(LRef<SharedPtr<GS_ExpressionStatement>> expressionStatement);
+        virtual Void VisitExpressionStatement(LRef<std::shared_ptr<GS_ExpressionStatement>> expressionStatement);
 
         /**
          * Visit constant expression
          * @param constantExpression Constant expression
          * @return
          */
-        virtual Void VisitConstantExpression(LRef<SharedPtr<GS_ConstantExpression>> constantExpression);
+        virtual Void VisitConstantExpression(LRef<std::shared_ptr<GS_ConstantExpression>> constantExpression);
 
         /**
          * Visit unary expression
          * @param unaryExpression Unary expression
          * @return
          */
-        virtual Void VisitUnaryExpression(LRef<SharedPtr<GS_UnaryExpression>> unaryExpression);
+        virtual Void VisitUnaryExpression(LRef<std::shared_ptr<GS_UnaryExpression>> unaryExpression);
 
         /**
          * Visit binary expression
          * @param binaryExpression Binary expression
          * @return
          */
-        virtual Void VisitBinaryExpression(LRef<SharedPtr<GS_BinaryExpression>> binaryExpression);
+        virtual Void VisitBinaryExpression(LRef<std::shared_ptr<GS_BinaryExpression>> binaryExpression);
 
         /**
          * Visit variable using expression
          * @param variableUsingExpression Variable using expression
          * @return
          */
-        virtual Void VisitVariableUsingExpression(LRef<SharedPtr<GS_VariableUsingExpression>> variableUsingExpression);
+        virtual Void VisitVariableUsingExpression(LRef<std::shared_ptr<GS_VariableUsingExpression>> variableUsingExpression);
 
         /**
          * Visit function calling expression
          * @param functionCallingExpression Function calling expression
          * @return
          */
-        virtual Void VisitFunctionCallingExpression(LRef<SharedPtr<GS_FunctionCallingExpression>> functionCallingExpression);
+        virtual Void VisitFunctionCallingExpression(LRef<std::shared_ptr<GS_FunctionCallingExpression>> functionCallingExpression);
     };
 
     /**
@@ -160,70 +160,70 @@ namespace GSLanguageCompiler::AST {
          * @param translationUnitDeclaration Translation unit declaration
          * @return Transformed translation unit declaration
          */
-        virtual GSNodePtr TransformTranslationUnitDeclaration(LRef<SharedPtr<GS_TranslationUnitDeclaration>> translationUnitDeclaration);
+        virtual GSNodePtr TransformTranslationUnitDeclaration(LRef<std::shared_ptr<GS_TranslationUnitDeclaration>> translationUnitDeclaration);
 
         /**
          * Transform function declaration
          * @param functionDeclaration Function declaration
          * @return Transformed function declaration
          */
-        virtual GSNodePtr TransformFunctionDeclaration(LRef<SharedPtr<GS_FunctionDeclaration>> functionDeclaration);
+        virtual GSNodePtr TransformFunctionDeclaration(LRef<std::shared_ptr<GS_FunctionDeclaration>> functionDeclaration);
 
         /**
          * Transform variable declaration statement
          * @param variableDeclarationStatement Variable declaration statement
          * @return Transformed variable declaration statement
          */
-        virtual GSNodePtr TransformVariableDeclarationStatement(LRef<SharedPtr<GS_VariableDeclarationStatement>> variableDeclarationStatement);
+        virtual GSNodePtr TransformVariableDeclarationStatement(LRef<std::shared_ptr<GS_VariableDeclarationStatement>> variableDeclarationStatement);
 
         /**
          * Transform assignment statement
          * @param assignmentStatement Assignment statement
          * @return Transformed assignment statement
          */
-        virtual GSNodePtr TransformAssignmentStatement(LRef<SharedPtr<GS_AssignmentStatement>> assignmentStatement);
+        virtual GSNodePtr TransformAssignmentStatement(LRef<std::shared_ptr<GS_AssignmentStatement>> assignmentStatement);
 
         /**
          * Transform expression statement
          * @param expressionStatement Expression statement
          * @return Transformed expression statement
          */
-        virtual GSNodePtr TransformExpressionStatement(LRef<SharedPtr<GS_ExpressionStatement>> expressionStatement);
+        virtual GSNodePtr TransformExpressionStatement(LRef<std::shared_ptr<GS_ExpressionStatement>> expressionStatement);
 
         /**
          * Transform constant expression
          * @param constantExpression Constant expression
          * @return Transformed constant expression
          */
-        virtual GSNodePtr TransformConstantExpression(LRef<SharedPtr<GS_ConstantExpression>> constantExpression);
+        virtual GSNodePtr TransformConstantExpression(LRef<std::shared_ptr<GS_ConstantExpression>> constantExpression);
 
         /**
          * Transform unary expression
          * @param unaryExpression Unary expression
          * @return Transformed unary expression
          */
-        virtual GSNodePtr TransformUnaryExpression(LRef<SharedPtr<GS_UnaryExpression>> unaryExpression);
+        virtual GSNodePtr TransformUnaryExpression(LRef<std::shared_ptr<GS_UnaryExpression>> unaryExpression);
 
         /**
          * Transform binary expression
          * @param binaryExpression Binary expression
          * @return Transformed binary expression
          */
-        virtual GSNodePtr TransformBinaryExpression(LRef<SharedPtr<GS_BinaryExpression>> binaryExpression);
+        virtual GSNodePtr TransformBinaryExpression(LRef<std::shared_ptr<GS_BinaryExpression>> binaryExpression);
 
         /**
          * Transform variable using expression
          * @param variableUsingExpression Variable using expression
          * @return Transformed variable using expression
          */
-        virtual GSNodePtr TransformVariableUsingExpression(LRef<SharedPtr<GS_VariableUsingExpression>> variableUsingExpression);
+        virtual GSNodePtr TransformVariableUsingExpression(LRef<std::shared_ptr<GS_VariableUsingExpression>> variableUsingExpression);
 
         /**
          * Transform function calling expression
          * @param functionCallingExpression Function calling expression
          * @return Transformed function calling expression
          */
-        virtual GSNodePtr TransformFunctionCallingExpression(LRef<SharedPtr<GS_FunctionCallingExpression>> functionCallingExpression);
+        virtual GSNodePtr TransformFunctionCallingExpression(LRef<std::shared_ptr<GS_FunctionCallingExpression>> functionCallingExpression);
     };
 
 }

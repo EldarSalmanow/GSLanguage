@@ -5,7 +5,7 @@ namespace GSLanguageCompiler::AST {
     GS_BinaryExpression::GS_BinaryExpression(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression)
             : _operation(operation), _firstExpression(std::move(firstExpression)), _secondExpression(std::move(secondExpression)) {}
 
-    SharedPtr<GS_BinaryExpression> GS_BinaryExpression::Create(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression) {
+    std::shared_ptr<GS_BinaryExpression> GS_BinaryExpression::Create(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression) {
         return std::make_shared<GS_BinaryExpression>(operation, std::move(firstExpression), std::move(secondExpression));
     }
 

@@ -12,7 +12,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        static SharedPtr<GS_ErrorHandler> Create() {
+        static std::shared_ptr<GS_ErrorHandler> Create() {
             return std::make_shared<GS_ErrorHandler>();
         }
 
@@ -59,16 +59,16 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        Vector<GS_Error> GetErrors() const {
+        std::vector<GS_Error> GetErrors() const {
             return _errors;
         }
 
     private:
 
-        Vector<GS_Error> _errors;
+        std::vector<GS_Error> _errors;
     };
 
-    using GSErrorHandlerPtr = SharedPtr<GS_ErrorHandler>;
+    using GSErrorHandlerPtr = std::shared_ptr<GS_ErrorHandler>;
 
 }
 

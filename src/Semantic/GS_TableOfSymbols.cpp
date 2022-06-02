@@ -15,7 +15,7 @@ namespace GSLanguageCompiler::Semantic {
     GS_FunctionSymbol::GS_FunctionSymbol(UString name, AST::GSStatementPtrArray body)
             : _name(std::move(name)), _body(std::move(body)) {}
 
-    SharedPtr<GS_FunctionSymbol> GS_FunctionSymbol::Create(UString name, AST::GSStatementPtrArray body) {
+    std::shared_ptr<GS_FunctionSymbol> GS_FunctionSymbol::Create(UString name, AST::GSStatementPtrArray body) {
         return std::make_shared<GS_FunctionSymbol>(std::move(name), std::move(body));
     }
 
@@ -34,7 +34,7 @@ namespace GSLanguageCompiler::Semantic {
     GS_VariableSymbol::GS_VariableSymbol(UString name, GSTypePtr type, AST::GSExpressionPtr expression)
             : _name(std::move(name)), _type(std::move(type)), _expression(std::move(expression)) {}
 
-    SharedPtr<GS_VariableSymbol> GS_VariableSymbol::Create(UString name, GSTypePtr type, AST::GSExpressionPtr expression) {
+    std::shared_ptr<GS_VariableSymbol> GS_VariableSymbol::Create(UString name, GSTypePtr type, AST::GSExpressionPtr expression) {
         return std::make_shared<GS_VariableSymbol>(std::move(name), std::move(type), std::move(expression));
     }
 
@@ -56,7 +56,7 @@ namespace GSLanguageCompiler::Semantic {
     
     GS_TableOfSymbols::GS_TableOfSymbols() = default;
 
-    SharedPtr<GS_TableOfSymbols> GS_TableOfSymbols::Create() {
+    std::shared_ptr<GS_TableOfSymbols> GS_TableOfSymbols::Create() {
         return std::make_shared<GS_TableOfSymbols>();
     }
 
@@ -72,7 +72,7 @@ namespace GSLanguageCompiler::Semantic {
         _variables.emplace_back(variable);
     }
 
-    SharedPtr<GS_FunctionSymbol> GS_TableOfSymbols::FindFunction(UString name) {
+    std::shared_ptr<GS_FunctionSymbol> GS_TableOfSymbols::FindFunction(UString name) {
         for (auto &function : _functions) {
             if (function->GetName() == name) {
                 return function;
@@ -82,7 +82,7 @@ namespace GSLanguageCompiler::Semantic {
         return nullptr;
     }
 
-    SharedPtr<GS_VariableSymbol> GS_TableOfSymbols::FindVariable(UString name) {
+    std::shared_ptr<GS_VariableSymbol> GS_TableOfSymbols::FindVariable(UString name) {
         for (auto &variable : _variables) {
             if (variable->GetName() == name) {
                 return variable;
@@ -92,11 +92,11 @@ namespace GSLanguageCompiler::Semantic {
         return nullptr;
     }
 
-    Vector<SharedPtr<GS_FunctionSymbol>> GS_TableOfSymbols::GetFunctions() const {
+    Vector<std::shared_ptr<GS_FunctionSymbol>> GS_TableOfSymbols::GetFunctions() const {
         return _functions;
     }
 
-    Vector<SharedPtr<GS_VariableSymbol>> GS_TableOfSymbols::GetVariables() const {
+    Vector<std::shared_ptr<GS_VariableSymbol>> GS_TableOfSymbols::GetVariables() const {
         return _variables;
     }
 

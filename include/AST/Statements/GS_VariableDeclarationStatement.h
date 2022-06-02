@@ -31,7 +31,7 @@ namespace GSLanguageCompiler::AST {
          * @param expression Expression
          * @return Variable declaration statement ptr
          */
-        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, Semantic::GSTypePtr type, GSExpressionPtr expression);
+        static std::shared_ptr<GS_VariableDeclarationStatement> Create(UString name, Semantic::GSTypePtr type, GSExpressionPtr expression);
 
         /**
          * Creating variable declaration statement ptr
@@ -39,7 +39,7 @@ namespace GSLanguageCompiler::AST {
          * @param type Type
          * @return Variable declaration statement ptr
          */
-        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, Semantic::GSTypePtr type);
+        static std::shared_ptr<GS_VariableDeclarationStatement> Create(UString name, Semantic::GSTypePtr type);
 
         /**
          * Creating variable declaration statement ptr
@@ -47,7 +47,7 @@ namespace GSLanguageCompiler::AST {
          * @param expression Expression
          * @return Variable declaration statement ptr
          */
-        static SharedPtr<GS_VariableDeclarationStatement> Create(UString name, GSExpressionPtr expression);
+        static std::shared_ptr<GS_VariableDeclarationStatement> Create(UString name, GSExpressionPtr expression);
 
     public:
 

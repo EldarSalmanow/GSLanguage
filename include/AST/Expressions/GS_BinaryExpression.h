@@ -38,7 +38,7 @@ namespace GSLanguageCompiler::AST {
          * @param secondExpression Second expression ptr
          * @return Binary expression ptr
          */
-        static SharedPtr<GS_BinaryExpression> Create(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression);
+        static std::shared_ptr<GS_BinaryExpression> Create(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression);
 
     public:
 

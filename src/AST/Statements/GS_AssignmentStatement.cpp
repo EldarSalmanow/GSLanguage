@@ -5,7 +5,7 @@ namespace GSLanguageCompiler::AST {
     GS_AssignmentStatement::GS_AssignmentStatement(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression)
             : _lvalueExpression(std::move(lvalueExpression)), _rvalueExpression(std::move(rvalueExpression)) {}
 
-    SharedPtr<GS_AssignmentStatement> GS_AssignmentStatement::Create(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression) {
+    std::shared_ptr<GS_AssignmentStatement> GS_AssignmentStatement::Create(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression) {
         return std::make_shared<GS_AssignmentStatement>(std::move(lvalueExpression), std::move(rvalueExpression));
     }
 

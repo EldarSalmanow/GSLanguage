@@ -87,7 +87,7 @@ namespace GSLanguageCompiler::AST {
         }
     }
 
-    Void GS_Visitor::VisitTranslationUnitDeclaration(LRef<SharedPtr<GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
+    Void GS_Visitor::VisitTranslationUnitDeclaration(LRef<std::shared_ptr<GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
         auto nodes = translationUnitDeclaration->GetNodes();
 
         for (auto &node: nodes) {
@@ -95,7 +95,7 @@ namespace GSLanguageCompiler::AST {
         }
     }
 
-    Void GS_Visitor::VisitFunctionDeclaration(LRef<SharedPtr<GS_FunctionDeclaration>> functionDeclaration) {
+    Void GS_Visitor::VisitFunctionDeclaration(LRef<std::shared_ptr<GS_FunctionDeclaration>> functionDeclaration) {
         auto statements = functionDeclaration->GetBody();
 
         for (auto &statement: statements) {
@@ -103,13 +103,13 @@ namespace GSLanguageCompiler::AST {
         }
     }
 
-    Void GS_Visitor::VisitVariableDeclarationStatement(LRef<SharedPtr<GS_VariableDeclarationStatement>> variableDeclarationStatement) {
+    Void GS_Visitor::VisitVariableDeclarationStatement(LRef<std::shared_ptr<GS_VariableDeclarationStatement>> variableDeclarationStatement) {
         auto expression = variableDeclarationStatement->GetExpression();
 
         VisitExpression(expression);
     }
 
-    Void GS_Visitor::VisitAssignmentStatement(LRef<SharedPtr<GS_AssignmentStatement>> assignmentStatement) {
+    Void GS_Visitor::VisitAssignmentStatement(LRef<std::shared_ptr<GS_AssignmentStatement>> assignmentStatement) {
         auto lvalueExpression = assignmentStatement->GetLValueExpression();
         auto rvalueExpression = assignmentStatement->GetRValueExpression();
 
@@ -117,23 +117,23 @@ namespace GSLanguageCompiler::AST {
         VisitExpression(rvalueExpression);
     }
 
-    Void GS_Visitor::VisitExpressionStatement(LRef<SharedPtr<GS_ExpressionStatement>> expressionStatement) {
+    Void GS_Visitor::VisitExpressionStatement(LRef<std::shared_ptr<GS_ExpressionStatement>> expressionStatement) {
         auto expression = expressionStatement->GetExpression();
 
         VisitExpression(expression);
     }
 
-    Void GS_Visitor::VisitConstantExpression(LRef<SharedPtr<GS_ConstantExpression>> constantExpression) {
+    Void GS_Visitor::VisitConstantExpression(LRef<std::shared_ptr<GS_ConstantExpression>> constantExpression) {
 
     }
 
-    Void GS_Visitor::VisitUnaryExpression(LRef<SharedPtr<GS_UnaryExpression>> unaryExpression) {
+    Void GS_Visitor::VisitUnaryExpression(LRef<std::shared_ptr<GS_UnaryExpression>> unaryExpression) {
         auto expression = unaryExpression->GetExpression();
 
         VisitExpression(expression);
     }
 
-    Void GS_Visitor::VisitBinaryExpression(LRef<SharedPtr<GS_BinaryExpression>> binaryExpression) {
+    Void GS_Visitor::VisitBinaryExpression(LRef<std::shared_ptr<GS_BinaryExpression>> binaryExpression) {
         auto firstExpression = binaryExpression->GetFirstExpression();
         auto secondExpression = binaryExpression->GetSecondExpression();
 
@@ -141,11 +141,11 @@ namespace GSLanguageCompiler::AST {
         VisitExpression(secondExpression);
     }
 
-    Void GS_Visitor::VisitVariableUsingExpression(LRef<SharedPtr<GS_VariableUsingExpression>> variableUsingExpression) {
+    Void GS_Visitor::VisitVariableUsingExpression(LRef<std::shared_ptr<GS_VariableUsingExpression>> variableUsingExpression) {
 
     }
 
-    Void GS_Visitor::VisitFunctionCallingExpression(LRef<SharedPtr<GS_FunctionCallingExpression>> functionCallingExpression) {
+    Void GS_Visitor::VisitFunctionCallingExpression(LRef<std::shared_ptr<GS_FunctionCallingExpression>> functionCallingExpression) {
 
     }
 
@@ -242,7 +242,7 @@ namespace GSLanguageCompiler::AST {
         return nullptr;
     }
 
-    GSNodePtr GS_Transformer::TransformTranslationUnitDeclaration(LRef<SharedPtr<GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
+    GSNodePtr GS_Transformer::TransformTranslationUnitDeclaration(LRef<std::shared_ptr<GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
         auto &nodes = translationUnitDeclaration->GetNodes();
 
         for (auto &node: nodes) {
@@ -254,7 +254,7 @@ namespace GSLanguageCompiler::AST {
         return translationUnitDeclaration;
     }
 
-    GSNodePtr GS_Transformer::TransformFunctionDeclaration(LRef<SharedPtr<GS_FunctionDeclaration>> functionDeclaration) {
+    GSNodePtr GS_Transformer::TransformFunctionDeclaration(LRef<std::shared_ptr<GS_FunctionDeclaration>> functionDeclaration) {
         auto &statements = functionDeclaration->GetBody();
 
         for (auto &statement: statements) {
@@ -266,7 +266,7 @@ namespace GSLanguageCompiler::AST {
         return functionDeclaration;
     }
 
-    GSNodePtr GS_Transformer::TransformVariableDeclarationStatement(LRef<SharedPtr<GS_VariableDeclarationStatement>> variableDeclarationStatement) {
+    GSNodePtr GS_Transformer::TransformVariableDeclarationStatement(LRef<std::shared_ptr<GS_VariableDeclarationStatement>> variableDeclarationStatement) {
         auto &expression = variableDeclarationStatement->GetExpression();
 
         auto transformedExpression = ToExpression(TransformExpression(expression));
@@ -276,7 +276,7 @@ namespace GSLanguageCompiler::AST {
         return variableDeclarationStatement;
     }
 
-    GSNodePtr GS_Transformer::TransformAssignmentStatement(LRef<SharedPtr<GS_AssignmentStatement>> assignmentStatement) {
+    GSNodePtr GS_Transformer::TransformAssignmentStatement(LRef<std::shared_ptr<GS_AssignmentStatement>> assignmentStatement) {
         auto &lvalueExpression = assignmentStatement->GetLValueExpression();
         auto &rvalueExpression = assignmentStatement->GetRValueExpression();
 
@@ -289,7 +289,7 @@ namespace GSLanguageCompiler::AST {
         return assignmentStatement;
     }
 
-    GSNodePtr GS_Transformer::TransformExpressionStatement(LRef<SharedPtr<GS_ExpressionStatement>> expressionStatement) {
+    GSNodePtr GS_Transformer::TransformExpressionStatement(LRef<std::shared_ptr<GS_ExpressionStatement>> expressionStatement) {
         auto &expression = expressionStatement->GetExpression();
 
         auto transformedExpression = ToExpression(TransformExpression(expression));
@@ -299,11 +299,11 @@ namespace GSLanguageCompiler::AST {
         return expressionStatement;
     }
 
-    GSNodePtr GS_Transformer::TransformConstantExpression(LRef<SharedPtr<GS_ConstantExpression>> constantExpression) {
+    GSNodePtr GS_Transformer::TransformConstantExpression(LRef<std::shared_ptr<GS_ConstantExpression>> constantExpression) {
         return constantExpression;
     }
 
-    GSNodePtr GS_Transformer::TransformUnaryExpression(LRef<SharedPtr<GS_UnaryExpression>> unaryExpression) {
+    GSNodePtr GS_Transformer::TransformUnaryExpression(LRef<std::shared_ptr<GS_UnaryExpression>> unaryExpression) {
         auto &expression = unaryExpression->GetExpression();
 
         auto transformedExpression = ToExpression(TransformExpression(expression));
@@ -313,7 +313,7 @@ namespace GSLanguageCompiler::AST {
         return unaryExpression;
     }
 
-    GSNodePtr GS_Transformer::TransformBinaryExpression(LRef<SharedPtr<GS_BinaryExpression>> binaryExpression) {
+    GSNodePtr GS_Transformer::TransformBinaryExpression(LRef<std::shared_ptr<GS_BinaryExpression>> binaryExpression) {
         auto &firstExpression = binaryExpression->GetFirstExpression();
         auto &secondExpression = binaryExpression->GetSecondExpression();
 
@@ -326,11 +326,11 @@ namespace GSLanguageCompiler::AST {
         return binaryExpression;
     }
 
-    GSNodePtr GS_Transformer::TransformVariableUsingExpression(LRef<SharedPtr<GS_VariableUsingExpression>> variableUsingExpression) {
+    GSNodePtr GS_Transformer::TransformVariableUsingExpression(LRef<std::shared_ptr<GS_VariableUsingExpression>> variableUsingExpression) {
         return variableUsingExpression;
     }
 
-    GSNodePtr GS_Transformer::TransformFunctionCallingExpression(LRef<SharedPtr<GS_FunctionCallingExpression>> functionCallingExpression) {
+    GSNodePtr GS_Transformer::TransformFunctionCallingExpression(LRef<std::shared_ptr<GS_FunctionCallingExpression>> functionCallingExpression) {
         return functionCallingExpression;
     }
 

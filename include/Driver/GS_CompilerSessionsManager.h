@@ -24,13 +24,13 @@ namespace GSLanguageCompiler::Driver {
          * @param sessions Compiler sessions
          * @return Compiler sessions manager ptr
          */
-        static SharedPtr<GS_CompilerSessionsManager> Create(GSCompilerSessionPtrArray sessions);
+        static std::shared_ptr<GS_CompilerSessionsManager> Create(GSCompilerSessionPtrArray sessions);
 
         /**
          * Creating compiler sessions manager
          * @return Compiler sessions manager ptr
          */
-        static SharedPtr<GS_CompilerSessionsManager> Create();
+        static std::shared_ptr<GS_CompilerSessionsManager> Create();
 
     public:
 
@@ -38,7 +38,7 @@ namespace GSLanguageCompiler::Driver {
          * Running compiler sessions
          * @return Compiling results
          */
-        Vector<CompilingResult> RunSessions();
+        std::vector<CompilingResult> RunSessions();
 
         /**
          * Adding compiler session

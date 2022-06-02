@@ -29,7 +29,7 @@ namespace GSLanguageCompiler::Driver {
 
     public:
 
-        Void VisitVariableDeclarationStatement(LRef<SharedPtr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement) override {
+        Void VisitVariableDeclarationStatement(LRef<std::shared_ptr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement) override {
             auto type = variableDeclarationStatement->GetType();
             auto expression = variableDeclarationStatement->GetExpression();
 
@@ -69,7 +69,7 @@ namespace GSLanguageCompiler::Driver {
             return nullptr;
         }
 
-        Semantic::GSTypePtr CalculateType(SharedPtr<AST::GS_ConstantExpression> constantExpression) {
+        Semantic::GSTypePtr CalculateType(std::shared_ptr<AST::GS_ConstantExpression> constantExpression) {
             auto value = constantExpression->GetValue();
 
             auto valueType = value->GetType();
@@ -77,13 +77,13 @@ namespace GSLanguageCompiler::Driver {
             return valueType;
         }
 
-        Semantic::GSTypePtr CalculateType(SharedPtr<AST::GS_UnaryExpression> unaryExpression) {
+        Semantic::GSTypePtr CalculateType(std::shared_ptr<AST::GS_UnaryExpression> unaryExpression) {
             auto expression = unaryExpression->GetExpression();
 
             return CalculateType(expression);
         }
 
-        Semantic::GSTypePtr CalculateType(SharedPtr<AST::GS_BinaryExpression> binaryExpression) {
+        Semantic::GSTypePtr CalculateType(std::shared_ptr<AST::GS_BinaryExpression> binaryExpression) {
             auto firstExpression = binaryExpression->GetFirstExpression();
             auto secondExpression = binaryExpression->GetSecondExpression();
 
@@ -97,7 +97,7 @@ namespace GSLanguageCompiler::Driver {
             return nullptr;
         }
 
-        Semantic::GSTypePtr CalculateType(SharedPtr<AST::GS_VariableUsingExpression> variableUsingExpression) {
+        Semantic::GSTypePtr CalculateType(std::shared_ptr<AST::GS_VariableUsingExpression> variableUsingExpression) {
             auto name = variableUsingExpression->GetName();
 
             if (auto variable = _tableOfSymbols->FindVariable(name)) {
@@ -109,7 +109,7 @@ namespace GSLanguageCompiler::Driver {
             return nullptr;
         }
 
-        Semantic::GSTypePtr CalculateType(SharedPtr<AST::GS_FunctionCallingExpression> functionCallingExpression) {
+        Semantic::GSTypePtr CalculateType(std::shared_ptr<AST::GS_FunctionCallingExpression> functionCallingExpression) {
             return nullptr;
         }
 
@@ -160,13 +160,13 @@ namespace GSLanguageCompiler::Driver {
 
     public:
 
-        virtual SharedPtr<Mangler> GetMangler() = 0;
+        virtual std::shared_ptr<Mangler> GetMangler() = 0;
     };
 
     class GS_Mangler : public Mangler {
     public:
 
-        static SharedPtr<GS_Mangler> Create() {
+        static std::shared_ptr<GS_Mangler> Create() {
             return std::make_shared<GS_Mangler>();
         }
 
@@ -192,13 +192,13 @@ namespace GSLanguageCompiler::Driver {
     class GS_ABI : public ABI {
     public:
 
-        static SharedPtr<GS_ABI> Create() {
+        static std::shared_ptr<GS_ABI> Create() {
             return std::make_shared<GS_ABI>();
         }
 
     public:
 
-        SharedPtr<Mangler> GetMangler() override {
+        std::shared_ptr<Mangler> GetMangler() override {
             return GS_Mangler::Create();
         }
     };
@@ -206,12 +206,12 @@ namespace GSLanguageCompiler::Driver {
     class MangleVisitor : public AST::GS_Visitor {
     public:
 
-        explicit MangleVisitor(SharedPtr<Mangler> mangler)
+        explicit MangleVisitor(std::shared_ptr<Mangler> mangler)
                 : _mangler(std::move(mangler)) {}
 
     public:
 
-        Void VisitTranslationUnitDeclaration(LRef<SharedPtr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) override {
+        Void VisitTranslationUnitDeclaration(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) override {
             AST::GS_Visitor::VisitTranslationUnitDeclaration(translationUnitDeclaration);
 
             auto &name = translationUnitDeclaration->GetName();
@@ -219,7 +219,7 @@ namespace GSLanguageCompiler::Driver {
             name = _mangler->MangleUnitName(name);
         }
 
-        Void VisitFunctionDeclaration(LRef<SharedPtr<AST::GS_FunctionDeclaration>> functionDeclaration) override {
+        Void VisitFunctionDeclaration(LRef<std::shared_ptr<AST::GS_FunctionDeclaration>> functionDeclaration) override {
             AST::GS_Visitor::VisitFunctionDeclaration(functionDeclaration);
 
             auto &name = functionDeclaration->GetName();
@@ -229,13 +229,13 @@ namespace GSLanguageCompiler::Driver {
 
     private:
 
-        SharedPtr<Mangler> _mangler;
+        std::shared_ptr<Mangler> _mangler;
     };
 
     class ManglePass : public AST::GS_Pass {
     public:
 
-        explicit ManglePass(SharedPtr<Mangler> mangler)
+        explicit ManglePass(std::shared_ptr<Mangler> mangler)
                 : _mangler(std::move(mangler)) {}
 
     public:
@@ -248,17 +248,17 @@ namespace GSLanguageCompiler::Driver {
 
     private:
 
-        SharedPtr<Mangler> _mangler;
+        std::shared_ptr<Mangler> _mangler;
     };
 
-    AST::GSPassPtr CreateManglePass(SharedPtr<Mangler> mangler) {
+    AST::GSPassPtr CreateManglePass(std::shared_ptr<Mangler> mangler) {
         return std::make_shared<ManglePass>(mangler);
     }
 
     GS_TranslationUnit::GS_TranslationUnit(GSTranslationUnitConfigPtr config)
             : _config(std::move(config)) {}
 
-    SharedPtr<GS_TranslationUnit> GS_TranslationUnit::Create(GSTranslationUnitConfigPtr config) {
+    std::shared_ptr<GS_TranslationUnit> GS_TranslationUnit::Create(GSTranslationUnitConfigPtr config) {
         return std::make_shared<GS_TranslationUnit>(std::move(config));
     }
 
@@ -284,7 +284,7 @@ namespace GSLanguageCompiler::Driver {
         return CompilingResult::Success;
     }
 
-    SharedPtr<AST::GS_TranslationUnitDeclaration> GS_TranslationUnit::RunFrontEnd(LRef<std::istream> stream) {
+    std::shared_ptr<AST::GS_TranslationUnitDeclaration> GS_TranslationUnit::RunFrontEnd(LRef<std::istream> stream) {
         auto textStream = IO::GS_Reader::Create(stream).CreateStream();
 
         auto tokenStream = Lexer::GS_Lexer::Create(textStream).CreateStream();
@@ -294,7 +294,7 @@ namespace GSLanguageCompiler::Driver {
         return unit;
     }
 
-    Bool GS_TranslationUnit::RunMiddleEnd(LRef<SharedPtr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
+    Bool GS_TranslationUnit::RunMiddleEnd(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
         // TODO update
 
         auto Optimizer = Optimizer::GS_Optimizer::Create();
@@ -368,7 +368,7 @@ namespace GSLanguageCompiler::Driver {
         return false;
     }
 
-    Bool GS_TranslationUnit::RunBackEnd(LRef<SharedPtr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
+    Bool GS_TranslationUnit::RunBackEnd(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
         // TODO update and add Writer for writing code to file
 
         auto codeGenerator = CodeGenerator::GS_CodeGenerator::CreateLLVMCG();

@@ -4,7 +4,7 @@
 
 namespace GSLanguageCompiler::Optimizer {
 
-    AST::GSNodePtr GS_ConstantFoldingTransformer::TransformUnaryExpression(LRef<SharedPtr<AST::GS_UnaryExpression>> unaryExpression) {
+    AST::GSNodePtr GS_ConstantFoldingTransformer::TransformUnaryExpression(LRef<std::shared_ptr<AST::GS_UnaryExpression>> unaryExpression) {
         unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(GS_Transformer::TransformUnaryExpression(unaryExpression));
 
         auto expression = unaryExpression->GetExpression();
@@ -32,7 +32,7 @@ namespace GSLanguageCompiler::Optimizer {
         return unaryExpression;
     }
 
-    AST::GSNodePtr GS_ConstantFoldingTransformer::TransformBinaryExpression(LRef<SharedPtr<AST::GS_BinaryExpression>> binaryExpression) {
+    AST::GSNodePtr GS_ConstantFoldingTransformer::TransformBinaryExpression(LRef<std::shared_ptr<AST::GS_BinaryExpression>> binaryExpression) {
         binaryExpression = AST::ToExpression<AST::GS_BinaryExpression>(GS_Transformer::TransformBinaryExpression(binaryExpression));
 
         auto firstExpression = binaryExpression->GetFirstExpression();

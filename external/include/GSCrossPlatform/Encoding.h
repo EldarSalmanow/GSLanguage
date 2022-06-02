@@ -3,9 +3,9 @@
 
 #include <GSCrossPlatform/Vector.h>
 
-inline constexpr std::uint32_t InvalidCodePoint = 0x10FFFF + 1;
+inline constexpr U32 InvalidCodePoint = 0x10FFFF + 1;
 
-inline constexpr std::uint8_t utf8_size(const std::uint32_t &codePoint) {
+inline constexpr U8 UTF8Size(const U32 &codePoint) {
     auto size = 0;
 
     if (codePoint <= 0x7F) {
@@ -21,7 +21,7 @@ inline constexpr std::uint8_t utf8_size(const std::uint32_t &codePoint) {
     return size;
 }
 
-inline constexpr std::uint8_t utf8_size(const std::uint8_t &byte) {
+inline constexpr U8 UTF8Size(const U8 &byte) {
     auto size = 0;
 
     if (byte <= 0x7F) {
@@ -37,13 +37,13 @@ inline constexpr std::uint8_t utf8_size(const std::uint8_t &byte) {
     return size;
 }
 
-inline constexpr Vector<std::uint8_t> to_utf8(const std::uint32_t &codePoint) {
-    Vector<std::uint8_t> bytes;
+inline constexpr Vector<U8> ToUTF8(const U32 &codePoint) {
+    Vector<U8> bytes;
 
-    auto size = utf8_size(codePoint);
+    auto size = UTF8Size(codePoint);
 
     if (size == 1) {
-        bytes.Append(static_cast<std::uint8_t>(codePoint));
+        bytes.Append(static_cast<U8>(codePoint));
     } else if (size == 2) {
         bytes.Append(0xC0 + (codePoint >> 6));
         bytes.Append(0x80 + (codePoint & 0x3F));
@@ -61,10 +61,10 @@ inline constexpr Vector<std::uint8_t> to_utf8(const std::uint32_t &codePoint) {
     return bytes;
 }
 
-inline constexpr std::uint32_t from_utf8(const Vector<std::uint8_t> &bytes) {
+inline constexpr U32 FromUTF8(const Vector<U8> &bytes) {
     auto codePoint = InvalidCodePoint;
 
-    auto size = utf8_size(bytes[0]);
+    auto size = UTF8Size(bytes[0]);
 
     if (size == 1) {
         codePoint = bytes[0];
@@ -87,8 +87,8 @@ inline constexpr std::uint32_t from_utf8(const Vector<std::uint8_t> &bytes) {
 
 // TODO add supporting UTF-16
 
-inline constexpr Vector<std::uint8_t> to_utf16(const std::uint32_t &codePoint) {
-    Vector<std::uint8_t> bytes;
+inline constexpr Vector<U8> ToUTF16(const U32 &codePoint) {
+    Vector<U8> bytes;
 
 //        if (codePoint <= 0xD7FF || (codePoint >= 0xE000 && codePoint <= 0xFFFF)) {
 //            bytes.emplace_back(codePoint >> 8);
@@ -105,16 +105,16 @@ inline constexpr Vector<std::uint8_t> to_utf16(const std::uint32_t &codePoint) {
     return bytes;
 }
 
-inline constexpr std::uint32_t from_utf16(const Vector<std::uint8_t> &bytes) {
+inline constexpr U32 FromUTF16(const Vector<U8> &bytes) {
     auto codePoint = InvalidCodePoint;
 
-//        auto size = utf16_size();
+//        auto Size = utf16_size();
 //
-//        if (size == 2) {
+//        if (Size == 2) {
 //            codePoint = (bytes[0] << 8)
 //                       + bytes[1];
 //        }
-//        if (size == 4) {
+//        if (Size == 4) {
 //            codePoint = 0x10000 + ((((bytes[0] << 8) + bytes[1]) - 0xD800) << 10)
 //                    + (((bytes[2] << 8) + bytes[3]) - 0xDC00);
 //        }
@@ -122,8 +122,8 @@ inline constexpr std::uint32_t from_utf16(const Vector<std::uint8_t> &bytes) {
     return codePoint;
 }
 
-inline constexpr Vector<std::uint8_t> to_utf32(const std::uint32_t &codePoint) {
-    Vector<std::uint8_t> bytes;
+inline constexpr Vector<U8> ToUTF32(const U32 &codePoint) {
+    Vector<U8> bytes;
 
     bytes.Append(codePoint >> 24);
     bytes.Append((codePoint >> 16) & 0xFF);
@@ -133,7 +133,7 @@ inline constexpr Vector<std::uint8_t> to_utf32(const std::uint32_t &codePoint) {
     return bytes;
 }
 
-inline constexpr std::uint32_t from_utf32(const Vector<std::uint8_t> &bytes) {
+inline constexpr U32 FromUTF32(const Vector<U8> &bytes) {
     auto codePoint = InvalidCodePoint;
 
     codePoint = (bytes[0] << 24)
@@ -144,33 +144,33 @@ inline constexpr std::uint32_t from_utf32(const Vector<std::uint8_t> &bytes) {
     return codePoint;
 }
 
-inline std::u16string utf8_to_utf16(const std::string &string) {
+inline std::u16string UTF8ToUTF16(const std::string &string) {
     std::u16string u16string;
 
     return u16string;
 }
 
-inline std::u32string utf8_to_utf32(const std::string &string) {
+inline std::u32string UTF8ToUTF32(const std::string &string) {
     std::u32string u32string;
 
-    for (std::uint64_t index = 0; index < string.size(); ++index) {
-        auto byte = static_cast<std::uint8_t>(string[index]);
+    for (U64 index = 0; index < string.size(); ++index) {
+        auto byte = static_cast<U8>(string[index]);
 
-        auto symbolSize = utf8_size(byte);
+        auto symbolSize = UTF8Size(byte);
 
-        Vector<std::uint8_t> bytes;
+        Vector<U8> bytes;
 
         bytes.Append(byte);
 
-        for (std::uint64_t i = 1; i < symbolSize; ++i) {
+        for (U64 i = 1; i < symbolSize; ++i) {
             ++index;
 
-            byte = static_cast<std::uint8_t>(string[index]);
+            byte = static_cast<U8>(string[index]);
 
             bytes.Append(byte);
         }
 
-        auto codePoint = from_utf8(bytes);
+        auto codePoint = FromUTF8(bytes);
 
         u32string += static_cast<char32_t>(codePoint);
     }
@@ -180,13 +180,13 @@ inline std::u32string utf8_to_utf32(const std::string &string) {
 
 #if defined(__cpp_lib_char8_t)
 
-inline std::u16string utf8_to_utf16(const std::u8string &string) {
+inline std::u16string UTF8ToUTF16(const std::u8string &string) {
     std::u16string u16string;
 
     return u16string;
 }
 
-inline std::u32string utf8_to_utf32(const std::u8string &string) {
+inline std::u32string UTF8ToUTF32(const std::u8string &string) {
     std::u32string u32string;
 
     return u32string;
@@ -194,25 +194,25 @@ inline std::u32string utf8_to_utf32(const std::u8string &string) {
 
 #endif
 
-inline std::string utf16_to_utf8(const std::u16string &u16string) {
+inline std::string UTF16ToUTF8(const std::u16string &u16string) {
     std::string string;
 
     return string;
 }
 
-inline std::u32string utf16_to_utf32(const std::u16string &u16string) {
+inline std::u32string UTF16ToUTF32(const std::u16string &u16string) {
     std::u32string u32string;
 
     return u32string;
 }
 
-inline std::string utf32_to_utf8(const std::u32string &u32string) {
+inline std::string UTF32ToUTF8(const std::u32string &u32string) {
     std::string string;
 
     return string;
 }
 
-inline std::u16string utf32_to_utf16(const std::u32string &u32string) {
+inline std::u16string UTF32ToUTF16(const std::u32string &u32string) {
     std::u16string u16string;
 
     return u16string;

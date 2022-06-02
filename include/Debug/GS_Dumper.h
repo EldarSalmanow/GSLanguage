@@ -28,7 +28,7 @@ namespace GSLanguageCompiler::Debug {
     /**
      * Dumper ptr
      */
-    using GSDumperPtr = SharedPtr<GS_Dumper>;
+    using GSDumperPtr = std::shared_ptr<GS_Dumper>;
 
 }
 

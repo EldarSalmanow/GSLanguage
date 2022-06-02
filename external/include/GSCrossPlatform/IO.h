@@ -13,27 +13,27 @@
 
 inline std::istream &operator>>(std::istream &stream, UString &string) {
     while (true) {
-        auto byte = static_cast<std::uint8_t>(stream.get());
+        auto byte = static_cast<U8>(stream.get());
 
         if (byte == '\n' || stream.eof()) {
             break;
         }
 
-        auto symbolSize = utf8_size(byte);
+        auto symbolSize = UTF8Size(byte);
 
-        Vector<std::uint8_t> bytes;
+        Vector<U8> bytes;
 
         bytes.Append(byte);
 
-        for (std::uint64_t i = 1; i < symbolSize; ++i) {
-            byte = static_cast<std::uint8_t>(stream.get());
+        for (U64 i = 1; i < symbolSize; ++i) {
+            byte = static_cast<U8>(stream.get());
 
             bytes.Append(byte);
         }
 
-        auto codePoint = from_utf8(bytes);
+        auto codePoint = FromUTF8(bytes);
 
-        string.append(USymbol(codePoint));
+        string.Append(USymbol(codePoint));
     }
 
     return stream;
@@ -41,7 +41,7 @@ inline std::istream &operator>>(std::istream &stream, UString &string) {
 
 inline std::ostream &operator<<(std::ostream &stream, const UString &string) {
     for (auto &symbol: string) {
-        auto bytes = symbol.as_utf8();
+        auto bytes = symbol.AsUTF8();
 
         for (auto &byte: bytes) {
             stream << byte;
@@ -51,7 +51,7 @@ inline std::ostream &operator<<(std::ostream &stream, const UString &string) {
     return stream;
 }
 
-inline bool EnableUnicodeConsole() {
+inline Bool EnableUnicodeConsole() {
 #if defined(WIN32)
 
     if (SetConsoleCP(CP_UTF8) == TRUE && SetConsoleOutputCP(CP_UTF8) == TRUE) {
@@ -63,6 +63,6 @@ inline bool EnableUnicodeConsole() {
     return false;
 }
 
-static bool IsEnabledUnicodeConsole = EnableUnicodeConsole();
+static Bool IsEnabledUnicodeConsole = EnableUnicodeConsole();
 
 #endif //GSCROSSPLATFORM_IO_H

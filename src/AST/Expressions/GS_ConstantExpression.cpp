@@ -7,7 +7,7 @@ namespace GSLanguageCompiler::AST {
 
     GS_Value::~GS_Value() = default;
 
-    SharedPtr<GS_Value> GS_Value::Create(Semantic::GSTypePtr type) {
+    std::shared_ptr<GS_Value> GS_Value::Create(Semantic::GSTypePtr type) {
         return std::make_shared<GS_Value>(std::move(type));
     }
 
@@ -30,7 +30,7 @@ namespace GSLanguageCompiler::AST {
     GS_I32Value::GS_I32Value(I32 value)
             : GS_LiteralValue(value, Semantic::GS_I32Type::Create()) {}
 
-    SharedPtr<GS_I32Value> GS_I32Value::Create(I32 value) {
+    std::shared_ptr<GS_I32Value> GS_I32Value::Create(I32 value) {
         return std::make_shared<GS_I32Value>(value);
     }
 
@@ -41,7 +41,7 @@ namespace GSLanguageCompiler::AST {
     GS_StringValue::GS_StringValue(UString value)
             : GS_LiteralValue(std::move(value), Semantic::GS_StringType::Create()) {}
 
-    SharedPtr<GS_StringValue> GS_StringValue::Create(UString value) {
+    std::shared_ptr<GS_StringValue> GS_StringValue::Create(UString value) {
         return std::make_shared<GS_StringValue>(std::move(value));
     }
 
@@ -52,7 +52,7 @@ namespace GSLanguageCompiler::AST {
     GS_ConstantExpression::GS_ConstantExpression(GSValuePtr value)
             : _value(std::move(value)) {}
 
-    SharedPtr<GS_ConstantExpression> GS_ConstantExpression::Create(GSValuePtr value) {
+    std::shared_ptr<GS_ConstantExpression> GS_ConstantExpression::Create(GSValuePtr value) {
         return std::make_shared<GS_ConstantExpression>(std::move(value));
     }
 

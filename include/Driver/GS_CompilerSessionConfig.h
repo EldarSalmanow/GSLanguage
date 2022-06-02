@@ -26,7 +26,7 @@ namespace GSLanguageCompiler::Driver {
          * @param outputName Output name
          * @return Compiler config ptr
          */
-        static SharedPtr<GS_CompilerSessionConfig> Create(GSTranslationUnitConfigPtrArray unitConfigs, UString outputName);
+        static std::shared_ptr<GS_CompilerSessionConfig> Create(GSTranslationUnitConfigPtrArray unitConfigs, UString outputName);
 
         /**
          * Creating compiler config with parsing command line arguments
@@ -34,7 +34,7 @@ namespace GSLanguageCompiler::Driver {
          * @param argv Arguments value
          * @return Compiler config ptr
          */
-        static SharedPtr<GS_CompilerSessionConfig> Create(I32 argc, Ptr<Ptr<C8>> argv);
+        static std::shared_ptr<GS_CompilerSessionConfig> Create(I32 argc, Ptr<Ptr<C8>> argv);
 
     public:
 
@@ -66,12 +66,12 @@ namespace GSLanguageCompiler::Driver {
     /**
      * Compiler session config ptr type
      */
-    using GSCompilerSessionConfigPtr = SharedPtr<GS_CompilerSessionConfig>;
+    using GSCompilerSessionConfigPtr = std::shared_ptr<GS_CompilerSessionConfig>;
 
     /**
      * Compiler session config ptr array type
      */
-    using GSCompilerSessionConfigPtrArray = Vector<GSCompilerSessionConfigPtr>;
+    using GSCompilerSessionConfigPtrArray = std::vector<GSCompilerSessionConfigPtr>;
 
 }
 

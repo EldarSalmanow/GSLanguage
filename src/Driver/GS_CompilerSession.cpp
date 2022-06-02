@@ -5,7 +5,7 @@ namespace GSLanguageCompiler::Driver {
     GS_CompilerSession::GS_CompilerSession(GSCompilerSessionConfigPtr compilerSessionConfig)
             : _config(std::move(compilerSessionConfig)) {}
 
-    SharedPtr<GS_CompilerSession> GS_CompilerSession::Create(GSCompilerSessionConfigPtr compilerSessionConfig) {
+    std::shared_ptr<GS_CompilerSession> GS_CompilerSession::Create(GSCompilerSessionConfigPtr compilerSessionConfig) {
         return std::make_shared<GS_CompilerSession>(std::move(compilerSessionConfig));
     }
 

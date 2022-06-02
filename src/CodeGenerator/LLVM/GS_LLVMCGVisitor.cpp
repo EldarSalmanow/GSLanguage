@@ -136,7 +136,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         return nullptr;
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateTranslationUnitDeclaration(LRef<SharedPtr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
+    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateTranslationUnitDeclaration(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
         auto name = translationUnitDeclaration->GetName();
         auto nodes = translationUnitDeclaration->GetNodes();
 
@@ -149,7 +149,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         return nullptr;
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateFunctionDeclaration(LRef<SharedPtr<AST::GS_FunctionDeclaration>> functionDeclaration) {
+    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateFunctionDeclaration(LRef<std::shared_ptr<AST::GS_FunctionDeclaration>> functionDeclaration) {
         auto name = functionDeclaration->GetName();
         auto signature = functionDeclaration->GetSignature();
         auto body = functionDeclaration->GetBody();
@@ -184,7 +184,7 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     Vector<std::pair<UString, Ptr<llvm::AllocaInst>>> Variables;
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateVariableDeclarationStatement(LRef<SharedPtr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement) {
+    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateVariableDeclarationStatement(LRef<std::shared_ptr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement) {
         auto name = variableDeclarationStatement->GetName();
         auto type = variableDeclarationStatement->GetType();
         auto expression = variableDeclarationStatement->GetExpression();
@@ -206,26 +206,26 @@ namespace GSLanguageCompiler::CodeGenerator {
         return _builder.CreateStore(GenerateExpression(expression), llvmAllocaInstruction);
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateAssignmentStatement(LRef<SharedPtr<AST::GS_AssignmentStatement>> assignmentStatement) {
+    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateAssignmentStatement(LRef<std::shared_ptr<AST::GS_AssignmentStatement>> assignmentStatement) {
         auto lvalueExpression = assignmentStatement->GetLValueExpression();
         auto rvalueExpression = assignmentStatement->GetRValueExpression();
 
         return _builder.CreateStore(GenerateExpression(lvalueExpression), GenerateExpression(rvalueExpression));
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateExpressionStatement(LRef<SharedPtr<AST::GS_ExpressionStatement>> expressionStatement) {
+    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateExpressionStatement(LRef<std::shared_ptr<AST::GS_ExpressionStatement>> expressionStatement) {
         auto expression = expressionStatement->GetExpression();
 
         return GenerateExpression(expression);
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateConstantExpression(LRef<SharedPtr<AST::GS_ConstantExpression>> constantExpression) {
+    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateConstantExpression(LRef<std::shared_ptr<AST::GS_ConstantExpression>> constantExpression) {
         auto value = constantExpression->GetValue();
 
         return ToLLVMConstant(value, GetLLVMContext(), _builder);
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateUnaryExpression(LRef<SharedPtr<AST::GS_UnaryExpression>> unaryExpression) {
+    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateUnaryExpression(LRef<std::shared_ptr<AST::GS_UnaryExpression>> unaryExpression) {
         auto operation = unaryExpression->GetUnaryOperation();
         auto expression = unaryExpression->GetExpression();
 
@@ -237,7 +237,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         return nullptr;
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateBinaryExpression(LRef<SharedPtr<AST::GS_BinaryExpression>> binaryExpression) {
+    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateBinaryExpression(LRef<std::shared_ptr<AST::GS_BinaryExpression>> binaryExpression) {
         auto operation = binaryExpression->GetBinaryOperation();
         auto firstExpression = binaryExpression->GetFirstExpression();
         auto secondExpression = binaryExpression->GetSecondExpression();
@@ -256,7 +256,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         return nullptr;
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateVariableUsingExpression(LRef<SharedPtr<AST::GS_VariableUsingExpression>> variableUsingExpression) {
+    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateVariableUsingExpression(LRef<std::shared_ptr<AST::GS_VariableUsingExpression>> variableUsingExpression) {
         auto name = variableUsingExpression->GetName();
 
         Ptr<llvm::AllocaInst> llvmAllocaInstruction;
@@ -272,7 +272,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         return _builder.CreateLoad(llvmAllocaInstruction->getAllocatedType(), llvmAllocaInstruction, name.AsUTF8String());
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateFunctionCallingExpression(LRef<SharedPtr<AST::GS_FunctionCallingExpression>> functionCallingExpression) {
+    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateFunctionCallingExpression(LRef<std::shared_ptr<AST::GS_FunctionCallingExpression>> functionCallingExpression) {
         auto name = functionCallingExpression->GetName();
 
         auto llvmFunction = GetLLVMModule().getFunction(name.AsUTF8String());

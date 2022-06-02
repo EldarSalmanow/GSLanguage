@@ -13,7 +13,7 @@ namespace GSLanguageCompiler::CodeGenerator {
     /**
      * Code generation pass ptr
      */
-    using GSCGPassPtr = SharedPtr<GS_CGPass>;
+    using GSCGPassPtr = std::shared_ptr<GS_CGPass>;
 
 }
 

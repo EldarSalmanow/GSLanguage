@@ -17,13 +17,13 @@ namespace GSLanguageCompiler::Driver {
          * @param outputName Output file name
          * @return Is successfully linking
          */
-        virtual Bool Link(Vector<GSTranslationUnitPtr> units, UString outputName) = 0;
+        virtual Bool Link(std::vector<GSTranslationUnitPtr> units, UString outputName) = 0;
     };
 
     /**
      * Linker ptr type
      */
-    using GSLinkerPtr = SharedPtr<GS_Linker>;
+    using GSLinkerPtr = std::shared_ptr<GS_Linker>;
 
     /**
      * Class for getting any group tools
@@ -41,7 +41,7 @@ namespace GSLanguageCompiler::Driver {
     /**
      * Toolchain ptr type
      */
-    using GSToolchainPtr = SharedPtr<GS_Toolchain>;
+    using GSToolchainPtr = std::shared_ptr<GS_Toolchain>;
 
     /**
      * Class for getting MSVC group tools

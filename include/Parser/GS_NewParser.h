@@ -48,7 +48,7 @@ namespace GSLanguageCompiler::Parser::New {
 //                return nullptr;
 //            }
 //
-//            SharedPtr<AST::GS_FunctionDeclaration> ParseFunctionDeclaration(ConstLRef<AST::GSScopePtr> scope) {
+//            std::shared_ptr<AST::GS_FunctionDeclaration> ParseFunctionDeclaration(ConstLRef<AST::GSScopePtr> scope) {
 //                if (!IsTokenType(Lexer::TokenType::KeywordFunc)) {
 //                    return nullptr;
 //                }
@@ -110,7 +110,7 @@ namespace GSLanguageCompiler::Parser::New {
 //                return ParseExpressionStatement(scope);
 //            }
 //
-//            SharedPtr<AST::GS_AssignmentStatement> ParseAssignmentStatement(ConstLRef<AST::GSScopePtr> scope) {
+//            std::shared_ptr<AST::GS_AssignmentStatement> ParseAssignmentStatement(ConstLRef<AST::GSScopePtr> scope) {
 //                auto lvalueExpression = ParseLValueExpression(scope);
 //
 //                if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
@@ -128,7 +128,7 @@ namespace GSLanguageCompiler::Parser::New {
 //                return assignmentStatement;
 //            }
 //
-//            SharedPtr<AST::GS_AssignmentStatement> ParseAssignmentStatement(ConstLRef<AST::GSExpressionPtr> lvalueExpression, ConstLRef<AST::GSScopePtr> scope) {
+//            std::shared_ptr<AST::GS_AssignmentStatement> ParseAssignmentStatement(ConstLRef<AST::GSExpressionPtr> lvalueExpression, ConstLRef<AST::GSScopePtr> scope) {
 //                if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
 //                    return nullptr;
 //                }
@@ -144,7 +144,7 @@ namespace GSLanguageCompiler::Parser::New {
 //                return assignmentStatement;
 //            }
 //
-//            SharedPtr<AST::GS_VariableDeclarationStatement> ParseVariableDeclarationStatement(ConstLRef<AST::GSScopePtr> scope) {
+//            std::shared_ptr<AST::GS_VariableDeclarationStatement> ParseVariableDeclarationStatement(ConstLRef<AST::GSScopePtr> scope) {
 //                if (!IsTokenType(Lexer::TokenType::KeywordVar)) {
 //                    return nullptr;
 //                }
@@ -200,7 +200,7 @@ namespace GSLanguageCompiler::Parser::New {
 //                return nullptr;
 //            }
 //
-//            SharedPtr<AST::GS_ExpressionStatement> ParseExpressionStatement(ConstLRef<AST::GSScopePtr> scope) {
+//            std::shared_ptr<AST::GS_ExpressionStatement> ParseExpressionStatement(ConstLRef<AST::GSScopePtr> scope) {
 //                auto expression = ParseExpression(scope);
 //
 //                auto expressionStatement = std::make_shared<AST::GS_ExpressionStatement>(expression, scope);
@@ -210,7 +210,7 @@ namespace GSLanguageCompiler::Parser::New {
 //                return expressionStatement;
 //            }
 //
-//            SharedPtr<AST::GS_ExpressionStatement> ParseExpressionStatement(ConstLRef<AST::GSExpressionPtr> expression, ConstLRef<AST::GSScopePtr> scope) {
+//            std::shared_ptr<AST::GS_ExpressionStatement> ParseExpressionStatement(ConstLRef<AST::GSExpressionPtr> expression, ConstLRef<AST::GSScopePtr> scope) {
 //                auto expressionStatement = std::make_shared<AST::GS_ExpressionStatement>(expression, scope);
 //
 //                scope->addNode(expressionStatement);
@@ -516,7 +516,7 @@ namespace GSLanguageCompiler::Parser::New {
 
         AST::GSScopePtr scope;
 
-        Vector<GS_Error> errors;
+        std::vector<GS_Error> errors;
     };
 
 }

@@ -24,13 +24,13 @@ namespace GSLanguageCompiler::Driver {
          * @param sessionConfigs Compiler session configs
          * @return Compiler ptr
          */
-        static SharedPtr<GS_Compiler> Create(GSCompilerSessionConfigPtrArray sessionConfigs);
+        static std::shared_ptr<GS_Compiler> Create(GSCompilerSessionConfigPtrArray sessionConfigs);
 
         /**
          * Creating compiler
          * @return Compiler ptr
          */
-        static SharedPtr<GS_Compiler> Create();
+        static std::shared_ptr<GS_Compiler> Create();
 
     public:
 

@@ -35,7 +35,7 @@ namespace GSLanguageCompiler::CodeGenerator {
     /**
      * Code generation context ptr type
      */
-    using GSCGContextPtr = SharedPtr<GS_CGContext>;
+    using GSCGContextPtr = std::shared_ptr<GS_CGContext>;
 
 }
 

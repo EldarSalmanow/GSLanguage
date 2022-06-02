@@ -82,7 +82,7 @@ public:
         return *this;
     }
 
-    inline constexpr bool operator==(const Pair<KeyType, ValueType> &pair) const {
+    inline constexpr Bool operator==(const Pair<KeyType, ValueType> &pair) const {
         if (_key != pair.Key() || _value != pair.Value()) {
             return false;
         }
@@ -90,7 +90,7 @@ public:
         return true;
     }
 
-    inline constexpr bool operator!=(const Pair<KeyType, ValueType> &pair) const {
+    inline constexpr Bool operator!=(const Pair<KeyType, ValueType> &pair) const {
         return !(*this == pair);
     }
 
@@ -163,7 +163,7 @@ public:
         return _pairs.Data();
     }
 
-    inline constexpr std::uint64_t Size() const {
+    inline constexpr U64 Size() const {
         return _pairs.Size();
     }
 
@@ -207,12 +207,12 @@ public:
         return *this;
     }
 
-    inline constexpr bool operator==(const Map<KeyType, ValueType> &map) const {
+    inline constexpr Bool operator==(const Map<KeyType, ValueType> &map) const {
         if (_pairs.Size() != map.Size()) {
             return false;
         }
 
-        for (std::uint64_t index = 0; auto &pair : map) {
+        for (U64 index = 0; auto &pair : map) {
             if (_pairs[index] != pair) {
                 return false;
             }
@@ -221,7 +221,7 @@ public:
         return true;
     }
 
-    inline constexpr bool operator!=(const Map<KeyType, ValueType> &map) const {
+    inline constexpr Bool operator!=(const Map<KeyType, ValueType> &map) const {
         return !(*this == map);
     }
 

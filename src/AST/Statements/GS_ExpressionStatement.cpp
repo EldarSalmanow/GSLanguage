@@ -5,7 +5,7 @@ namespace GSLanguageCompiler::AST {
     GS_ExpressionStatement::GS_ExpressionStatement(GSExpressionPtr expression)
             : _expression(std::move(expression)) {}
 
-    SharedPtr<GS_ExpressionStatement> GS_ExpressionStatement::Create(GSExpressionPtr expression) {
+    std::shared_ptr<GS_ExpressionStatement> GS_ExpressionStatement::Create(GSExpressionPtr expression) {
         return std::make_shared<GS_ExpressionStatement>(std::move(expression));
     }
 

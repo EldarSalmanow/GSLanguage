@@ -31,7 +31,7 @@ namespace GSLanguageCompiler::Semantic {
          * @param name Name
          * @return Type ptr
          */
-        static SharedPtr<GS_Type> Create(UString name);
+        static std::shared_ptr<GS_Type> Create(UString name);
 
     public:
 
@@ -60,12 +60,12 @@ namespace GSLanguageCompiler::Semantic {
     /**
      * Type ptr type
      */
-    using GSTypePtr = SharedPtr<GS_Type>;
+    using GSTypePtr = std::shared_ptr<GS_Type>;
 
     /**
      * Type ptr array type
      */
-    using GSTypePtrArray = Vector<GSTypePtr>;
+    using GSTypePtrArray = std::vector<GSTypePtr>;
 
     /**
      * Class for literal types
@@ -86,7 +86,7 @@ namespace GSLanguageCompiler::Semantic {
          * @param name Name
          * @return Literal type ptr
          */
-        static SharedPtr<GS_LiteralType> Create(UString name);
+        static std::shared_ptr<GS_LiteralType> Create(UString name);
 
     public:
 
@@ -114,7 +114,7 @@ namespace GSLanguageCompiler::Semantic {
          * Creating Void type ptr
          * @return Void type ptr
          */
-        static SharedPtr<GS_VoidType> Create();
+        static std::shared_ptr<GS_VoidType> Create();
     };
 
     /**
@@ -134,7 +134,7 @@ namespace GSLanguageCompiler::Semantic {
          * Creating I32 type ptr
          * @return I32 type ptr
          */
-        static SharedPtr<GS_I32Type> Create();
+        static std::shared_ptr<GS_I32Type> Create();
     };
 
     /**
@@ -154,7 +154,7 @@ namespace GSLanguageCompiler::Semantic {
          * Creating String type ptr
          * @return String type ptr
          */
-        static SharedPtr<GS_StringType> Create();
+        static std::shared_ptr<GS_StringType> Create();
     };
 
     /**
@@ -174,7 +174,7 @@ namespace GSLanguageCompiler::Semantic {
          * Creating type context
          * @return Ttype context ptr
          */
-        static SharedPtr<GS_TypeContext> Create();
+        static std::shared_ptr<GS_TypeContext> Create();
 
     public:
 
@@ -182,42 +182,42 @@ namespace GSLanguageCompiler::Semantic {
          * Getter for default Void type
          * @return Void type
          */
-        SharedPtr<Semantic::GS_VoidType> GetVoidType() const;
+        std::shared_ptr<Semantic::GS_VoidType> GetVoidType() const;
 
         /**
          * Getter for default I32 type
          * @return I32 type
          */
-        SharedPtr<Semantic::GS_I32Type> GetI32Type() const;
+        std::shared_ptr<Semantic::GS_I32Type> GetI32Type() const;
 
         /**
          * Getter for default String type
          * @return String type
          */
-        SharedPtr<Semantic::GS_StringType> GetStringType() const;
+        std::shared_ptr<Semantic::GS_StringType> GetStringType() const;
 
     private:
 
         /**
          * Void type
          */
-        SharedPtr<Semantic::GS_VoidType> _voidType;
+        std::shared_ptr<Semantic::GS_VoidType> _voidType;
 
         /**
          * I32 type
          */
-        SharedPtr<Semantic::GS_I32Type> _i32Type;
+        std::shared_ptr<Semantic::GS_I32Type> _i32Type;
 
         /**
          * String type
          */
-        SharedPtr<Semantic::GS_StringType> _stringType;
+        std::shared_ptr<Semantic::GS_StringType> _stringType;
     };
 
     /**
      * Type context ptr type
      */
-    using GSTypeContextPtr = SharedPtr<GS_TypeContext>;
+    using GSTypeContextPtr = std::shared_ptr<GS_TypeContext>;
 
 }
 

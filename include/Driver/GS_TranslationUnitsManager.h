@@ -24,13 +24,13 @@ namespace GSLanguageCompiler::Driver {
          * @param units Translation unit ptrs
          * @return Translation units manager ptr
          */
-        static SharedPtr<GS_TranslationUnitsManager> Create(GSTranslationUnitPtrArray units);
+        static std::shared_ptr<GS_TranslationUnitsManager> Create(GSTranslationUnitPtrArray units);
 
         /**
          * Creating translation units manager
          * @return Translation units manager ptr
          */
-        static SharedPtr<GS_TranslationUnitsManager> Create();
+        static std::shared_ptr<GS_TranslationUnitsManager> Create();
 
     public:
 
@@ -38,7 +38,7 @@ namespace GSLanguageCompiler::Driver {
          * Compile all units
          * @return Compiling result
          */
-        Vector<CompilingResult> CompileUnits();
+        std::vector<CompilingResult> CompileUnits();
 
         /**
          * Adding translation unit

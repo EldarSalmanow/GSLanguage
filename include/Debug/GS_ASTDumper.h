@@ -26,7 +26,7 @@ namespace GSLanguageCompiler::Debug {
          * @param node Node
          * @return AST dumper ptr
          */
-        static SharedPtr<GS_ASTDumper> Create(AST::GSNodePtr node);
+        static std::shared_ptr<GS_ASTDumper> Create(AST::GSNodePtr node);
 
     public:
 

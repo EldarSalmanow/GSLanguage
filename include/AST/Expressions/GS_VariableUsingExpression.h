@@ -24,7 +24,7 @@ namespace GSLanguageCompiler::AST {
          * @param name Variable name
          * @return Variable using expression ptr
          */
-        static SharedPtr<GS_VariableUsingExpression> Create(UString name);
+        static std::shared_ptr<GS_VariableUsingExpression> Create(UString name);
 
     public:
 

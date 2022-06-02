@@ -24,13 +24,13 @@ namespace GSLanguageCompiler::CodeGenerator {
          * @param backend Code generation backend
          * @return Code generator ptr
          */
-        static SharedPtr<GS_CodeGenerator> Create(CGBackend backend);
+        static std::shared_ptr<GS_CodeGenerator> Create(CGBackend backend);
 
         /**
          * Creating LLVM code generator
          * @return LLVM code generator
          */
-        static SharedPtr<GS_CodeGenerator> CreateLLVMCG();
+        static std::shared_ptr<GS_CodeGenerator> CreateLLVMCG();
 
     public:
 
