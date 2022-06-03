@@ -40,7 +40,7 @@ namespace GSLanguageCompiler::Driver {
          * @param argv Arguments value
          * @return Compiler result. 0 - success, any results - failure
          */
-        static I32 Start(I32 argc, Ptr<Ptr<C8>> argv);
+        static I32 Start(I32 argc, Ptr<Ptr<C>> argv);
 
     public:
 

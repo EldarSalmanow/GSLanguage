@@ -11,7 +11,7 @@ namespace GSLanguageCompiler::Driver {
         return std::make_shared<GS_CompilerSessionConfig>(std::move(unitConfigs), std::move(outputName));
     }
 
-    std::shared_ptr<GS_CompilerSessionConfig> GS_CompilerSessionConfig::Create(I32 argc, Ptr<Ptr<C8>> argv) {
+    std::shared_ptr<GS_CompilerSessionConfig> GS_CompilerSessionConfig::Create(I32 argc, Ptr<Ptr<C>> argv) {
         args::ArgumentParser parser("GSLanguageCompiler - Compiler for GSLanguage");
         args::HelpFlag helpFlag(parser, "help", "Display help description about GSLanguageCompiler", {'h', "help"});
         args::ValueFlag<String> inputFile(parser, "file", "File for compiling", {'f', "file"}, args::Options::Required);

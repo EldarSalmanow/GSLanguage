@@ -87,7 +87,7 @@ namespace GSLanguageCompiler::Driver {
          * @return Is successfully linking
          */
         Bool Link(Vector<GSTranslationUnitPtr> units, UString outputName) override {
-            Vector<ConstPtr<C8>> command;
+            Vector<ConstPtr<C>> command;
 
             auto stringCommand = MakeCommand(units, outputName);
 

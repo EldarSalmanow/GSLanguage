@@ -34,7 +34,7 @@ namespace GSLanguageCompiler::Driver {
          * @param argv Arguments value
          * @return Compiler config ptr
          */
-        static std::shared_ptr<GS_CompilerSessionConfig> Create(I32 argc, Ptr<Ptr<C8>> argv);
+        static std::shared_ptr<GS_CompilerSessionConfig> Create(I32 argc, Ptr<Ptr<C>> argv);
 
     public:
 

@@ -13,8 +13,8 @@ namespace GSLanguageCompiler::Driver {
         return GS_TranslationUnitsManager::Create(GSTranslationUnitPtrArray());
     }
 
-    Vector<CompilingResult> GS_TranslationUnitsManager::CompileUnits() {
-        Vector<CompilingResult> compilingResults;
+    std::vector<CompilingResult> GS_TranslationUnitsManager::CompileUnits() {
+        std::vector<CompilingResult> compilingResults;
 
         for (auto &unit : _units) {
             auto result = unit->Compile();

@@ -36,7 +36,7 @@ AST::GSTranslationUnitDeclarationPtr CreateUnit() {
     return Unit;
 }
 
-I32 main(I32 argc, Ptr<Ptr<C8>> argv) {
+I32 main(I32 argc, Ptr<Ptr<C>> argv) {
     // create translation unit
     auto unit = CreateUnit();
 

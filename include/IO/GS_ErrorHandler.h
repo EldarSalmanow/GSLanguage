@@ -5,6 +5,7 @@
 
 namespace GSLanguageCompiler::IO {
 
+    // TODO update
     class GS_ErrorHandler {
     public:
 

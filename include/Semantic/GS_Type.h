@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_TYPE_H
 #define GSLANGUAGE_GS_TYPE_H
 
+#include <vector>
+
 #include <GSCrossPlatform/CrossPlatform.h>
 
 namespace GSLanguageCompiler::Semantic {

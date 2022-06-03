@@ -13,7 +13,7 @@ namespace GSLanguageCompiler::Driver {
         return GS_Compiler::Create(GSCompilerSessionConfigPtrArray());
     }
 
-    I32 GS_Compiler::Start(I32 argc, Ptr<Ptr<C8>> argv) {
+    I32 GS_Compiler::Start(I32 argc, Ptr<Ptr<C>> argv) {
         auto sessionConfig = GS_CompilerSessionConfig::Create(argc, argv);
 
         if (!sessionConfig) {

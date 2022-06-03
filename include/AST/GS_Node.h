@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_NODE_H
 #define GSLANGUAGE_GS_NODE_H
 
+#include <vector>
+
 #include <GSCrossPlatform/CrossPlatform.h>
 
 namespace GSLanguageCompiler::AST {
