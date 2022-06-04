@@ -36,31 +36,31 @@ namespace GSLanguageCompiler::AST {
     }
 
     Void GS_PassManager::Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration) {
-        for (auto &pass: _passes) {
+        for (auto &pass : _passes) {
             pass->Run(translationUnitDeclaration);
         }
     }
 
     Void GS_PassManager::Run(LRef<GSNodePtrArray> nodes) {
-        for (auto &pass: _passes) {
+        for (auto &pass : _passes) {
             pass->Run(nodes);
         }
     }
 
     Void GS_PassManager::Run(LRef<GSDeclarationPtrArray> declarations) {
-        for (auto &pass: _passes) {
+        for (auto &pass : _passes) {
             pass->Run(declarations);
         }
     }
 
     Void GS_PassManager::Run(LRef<GSStatementPtrArray> statements) {
-        for (auto &pass: _passes) {
+        for (auto &pass : _passes) {
             pass->Run(statements);
         }
     }
 
     Void GS_PassManager::Run(LRef<GSExpressionPtrArray> expressions) {
-        for (auto &pass: _passes) {
+        for (auto &pass : _passes) {
             pass->Run(expressions);
         }
     }

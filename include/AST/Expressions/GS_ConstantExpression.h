@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_CONSTANTEXPRESSION_H
 #define GSLANGUAGE_GS_CONSTANTEXPRESSION_H
 
+#include <any>
+
 #include <Semantic/GS_Type.h>
 
 #include <AST/GS_Expression.h>
@@ -112,7 +114,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for value
          * @return Value
          */
-        Any GetValue() const;
+        std::any GetValue() const;
 
     public:
 
@@ -127,7 +129,7 @@ namespace GSLanguageCompiler::AST {
         /**
          * Container for value
          */
-        Any _value;
+        std::any _value;
     };
 
     /**

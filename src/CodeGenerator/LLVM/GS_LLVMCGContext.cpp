@@ -14,7 +14,7 @@ namespace GSLanguageCompiler::CodeGenerator {
     Void GS_LLVMCGContext::CreateModule(UString name) {
         DestroyModule();
 
-        _module = std::make_unique<llvm::Module>(name.AsUTF8String(), *_context);
+        _module = std::make_unique<llvm::Module>(name.AsUTF8(), *_context);
     }
 
     Void GS_LLVMCGContext::DestroyModule() {

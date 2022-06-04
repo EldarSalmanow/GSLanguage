@@ -1,8 +1,10 @@
+#include <map>
+
 #include <GS_Parser.h>
 
 namespace GSLanguageCompiler::Parser {
 
-    Map<Lexer::TokenType, I32> OperatorsPrecedence = {
+    std::map<Lexer::TokenType, I32> OperatorsPrecedence = {
             {Lexer::TokenType::SymbolStar,  2},
             {Lexer::TokenType::SymbolSlash, 2},
             {Lexer::TokenType::SymbolPlus,  1},
@@ -316,7 +318,7 @@ namespace GSLanguageCompiler::Parser {
 
     AST::GSValuePtr GS_Parser::ParseValue() {
         if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
-            auto number = std::stoi(TokenValue().AsUTF8String());
+            auto number = std::stoi(TokenValue().AsUTF8());
 
             NextToken(); // skip number
 

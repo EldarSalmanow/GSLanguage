@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_ERRORHANDLER_H
 #define GSLANGUAGE_GS_ERRORHANDLER_H
 
+#include <vector>
+
 #include <IO/GS_Error.h>
 
 namespace GSLanguageCompiler::IO {

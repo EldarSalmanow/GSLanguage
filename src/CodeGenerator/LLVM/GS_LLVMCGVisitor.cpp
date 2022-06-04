@@ -34,7 +34,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         } else if (typeName == "String"_us) {
             auto string = literalValue->GetValueWithCast<UString>();
 
-            return builder.CreateGlobalStringPtr(string.AsUTF8String());
+            return builder.CreateGlobalStringPtr(string.AsUTF8());
         }
 
         return nullptr;
@@ -157,7 +157,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         auto paramTypes = signature.GetParamTypes();
         auto returnType = signature.GetReturnType();
 
-        Vector<Ptr<llvm::Type>> llvmParamTypes;
+        std::vector<Ptr<llvm::Type>> llvmParamTypes;
 
         for (auto &paramType : paramTypes) {
             llvmParamTypes.emplace_back(ToLLVMType(paramType, GetLLVMContext()));
@@ -167,7 +167,7 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         auto llvmFunctionType = llvm::FunctionType::get(llvmReturnType, llvmParamTypes, false);
 
-        auto llvmFunction = llvm::Function::Create(llvmFunctionType, llvm::Function::LinkageTypes::ExternalLinkage, name.AsUTF8String(), GetLLVMModule());
+        auto llvmFunction = llvm::Function::Create(llvmFunctionType, llvm::Function::LinkageTypes::ExternalLinkage, name.AsUTF8(), GetLLVMModule());
 
         auto block = llvm::BasicBlock::Create(GetLLVMContext(), "entry", llvmFunction);
 
@@ -182,7 +182,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         return llvmFunction;
     }
 
-    Vector<std::pair<UString, Ptr<llvm::AllocaInst>>> Variables;
+    std::vector<std::pair<UString, Ptr<llvm::AllocaInst>>> Variables;
 
     Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateVariableDeclarationStatement(LRef<std::shared_ptr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement) {
         auto name = variableDeclarationStatement->GetName();
@@ -269,13 +269,13 @@ namespace GSLanguageCompiler::CodeGenerator {
             }
         }
 
-        return _builder.CreateLoad(llvmAllocaInstruction->getAllocatedType(), llvmAllocaInstruction, name.AsUTF8String());
+        return _builder.CreateLoad(llvmAllocaInstruction->getAllocatedType(), llvmAllocaInstruction, name.AsUTF8());
     }
 
     Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateFunctionCallingExpression(LRef<std::shared_ptr<AST::GS_FunctionCallingExpression>> functionCallingExpression) {
         auto name = functionCallingExpression->GetName();
 
-        auto llvmFunction = GetLLVMModule().getFunction(name.AsUTF8String());
+        auto llvmFunction = GetLLVMModule().getFunction(name.AsUTF8());
 
         if (llvmFunction != nullptr) {
             return _builder.CreateCall(llvmFunction);

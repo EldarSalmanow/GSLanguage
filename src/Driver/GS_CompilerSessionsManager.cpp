@@ -13,8 +13,8 @@ namespace GSLanguageCompiler::Driver {
         return GS_CompilerSessionsManager::Create(GSCompilerSessionPtrArray());
     }
 
-    Vector<CompilingResult> GS_CompilerSessionsManager::RunSessions() {
-        Vector<CompilingResult> compilingResults;
+    std::vector<CompilingResult> GS_CompilerSessionsManager::RunSessions() {
+        std::vector<CompilingResult> compilingResults;
 
         for (auto &session : _sessions) {
             auto result = session->Run();

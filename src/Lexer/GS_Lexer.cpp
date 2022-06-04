@@ -4,12 +4,12 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    Vector<std::pair<UString, TokenType>> ReservedWords = {
+    std::vector<std::pair<UString, TokenType>> ReservedWords = {
             {"var"_us, TokenType::KeywordVar},
             {"func"_us, TokenType::KeywordFunc}
     };
 
-    Vector<std::pair<USymbol, TokenType>> ReservedSymbols = {
+    std::vector<std::pair<USymbol, TokenType>> ReservedSymbols = {
             {U'(', TokenType::SymbolLeftParen},
             {U')', TokenType::SymbolRightParen},
             {U'{', TokenType::SymbolLeftBrace},

@@ -14,8 +14,8 @@ namespace GSLanguageCompiler::Driver {
     std::shared_ptr<GS_CompilerSessionConfig> GS_CompilerSessionConfig::Create(I32 argc, Ptr<Ptr<C>> argv) {
         args::ArgumentParser parser("GSLanguageCompiler - Compiler for GSLanguage");
         args::HelpFlag helpFlag(parser, "help", "Display help description about GSLanguageCompiler", {'h', "help"});
-        args::ValueFlag<String> inputFile(parser, "file", "File for compiling", {'f', "file"}, args::Options::Required);
-        args::ValueFlag<String> outputFile(parser, "output", "Output file", {'o', "out"}, args::Options::Required);
+        args::ValueFlag<std::string> inputFile(parser, "file", "File for compiling", {'f', "file"}, args::Options::Required);
+        args::ValueFlag<std::string> outputFile(parser, "output", "Output file", {'o', "out"}, args::Options::Required);
 
         try {
             parser.ParseCLI(argc, argv);

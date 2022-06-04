@@ -13,7 +13,7 @@ namespace GSLanguageCompiler::Driver {
 
     public:
 
-        virtual Vector<String> Build() = 0;
+        virtual std::vector<std::string> Build() = 0;
 
     public:
 
@@ -27,21 +27,21 @@ namespace GSLanguageCompiler::Driver {
     class MSVCLinkerCommandBuilder : public LinkerCommandBuilder {
     public:
 
-        Vector<String> Build() override {
-            Vector<String> command;
+        std::vector<std::string> Build() override {
+            std::vector<std::string> command;
 
             command.emplace_back("GSLanguage.exe");
 
             for (auto &input : _inputs) {
-                command.emplace_back(input.AsUTF8String());
+                command.emplace_back(input.AsUTF8());
             }
 
             if (!_entry.Empty()) {
-                command.emplace_back("/entry:" + _entry.AsUTF8String());
+                command.emplace_back("/entry:" + _entry.AsUTF8());
             }
 
             if (!_output.Empty()) {
-                command.emplace_back("/out:" + _output.AsUTF8String());
+                command.emplace_back("/out:" + _output.AsUTF8());
             }
 
             _inputs.clear();
@@ -67,7 +67,7 @@ namespace GSLanguageCompiler::Driver {
 
     private:
 
-        Vector<UString> _inputs;
+        std::vector<UString> _inputs;
 
         UString _output;
 
@@ -86,8 +86,8 @@ namespace GSLanguageCompiler::Driver {
          * @param outputName Output file name
          * @return Is successfully linking
          */
-        Bool Link(Vector<GSTranslationUnitPtr> units, UString outputName) override {
-            Vector<ConstPtr<C>> command;
+        Bool Link(std::vector<GSTranslationUnitPtr> units, UString outputName) override {
+            std::vector<ConstPtr<C>> command;
 
             auto stringCommand = MakeCommand(units, outputName);
 
@@ -108,11 +108,11 @@ namespace GSLanguageCompiler::Driver {
          * @param outputName Output file name
          * @return String command
          */
-        Vector<String> MakeCommand(Vector<GSTranslationUnitPtr> units, UString outputName) {
+        std::vector<std::string> MakeCommand(std::vector<GSTranslationUnitPtr> units, UString outputName) {
             auto LCB = std::make_shared<MSVCLinkerCommandBuilder>();
 
             for (auto &unit : units) {
-                LCB->AddInput(unit->GetConfig()->GetInputName().AsUTF8String() + ".o");
+                LCB->AddInput(unit->GetConfig()->GetInputName().AsUTF8() + ".o");
             }
 
             LCB->AddEntry("main");
@@ -121,7 +121,7 @@ namespace GSLanguageCompiler::Driver {
 
             return LCB->Build();
 
-//            Vector<String> command;
+//            std::vector<String> command;
 //
 //            for (auto &unit : units) {
 //                command.emplace_back(unit->GetConfig()->GetInputName().AsUTF8String() + ".o");

@@ -19,7 +19,7 @@ namespace GSLanguageCompiler::AST {
         return false;
     }
 
-    Any GS_LiteralValue::GetValue() const {
+    std::any GS_LiteralValue::GetValue() const {
         return _value;
     }
 

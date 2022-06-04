@@ -8,6 +8,8 @@
 #include <llvm/Support/TargetSelect.h>
 #include <llvm/Support/raw_ostream.h>
 
+#include <fstream>
+
 #include <IO/IO.h>
 #include <Lexer/Lexer.h>
 #include <Parser/Parser.h>
@@ -177,7 +179,7 @@ namespace GSLanguageCompiler::Driver {
          * ex: main -> _GS_U4main
          */
         UString MangleUnitName(UString name) override {
-            return UString("_GS_U" + std::to_string(name.Size()) + name.AsUTF8String());
+            return UString("_GS_U" + std::to_string(name.Size()) + name.AsUTF8());
         }
 
         /**
@@ -185,7 +187,7 @@ namespace GSLanguageCompiler::Driver {
          * ex: main -> _GS_F4main
          */
         UString MangleFunctionName(UString name) override {
-            return UString("_GS_F" + std::to_string(name.Size()) + name.AsUTF8String());
+            return UString("_GS_F" + std::to_string(name.Size()) + name.AsUTF8());
         }
     };
 
@@ -263,7 +265,7 @@ namespace GSLanguageCompiler::Driver {
     }
 
     CompilingResult GS_TranslationUnit::Compile() {
-        std::ifstream stream(_config->GetInputName().AsUTF8String());
+        std::ifstream stream(_config->GetInputName().AsUTF8());
 
         auto unit = RunFrontEnd(stream);
 
@@ -319,7 +321,7 @@ namespace GSLanguageCompiler::Driver {
                 llvm::InitializeNativeTargetAsmParser();
                 llvm::InitializeNativeTargetAsmPrinter();
 
-                String error;
+                std::string error;
 
                 auto target = llvm::TargetRegistry::lookupTarget(targetTriple, error);
 
@@ -343,7 +345,7 @@ namespace GSLanguageCompiler::Driver {
 
                 std::error_code errorCode;
 
-                llvm::raw_fd_ostream stream(outputName.AsUTF8String(), errorCode);
+                llvm::raw_fd_ostream stream(outputName.AsUTF8(), errorCode);
 
                 if (errorCode) {
                     llvm::errs() << errorCode.message();
