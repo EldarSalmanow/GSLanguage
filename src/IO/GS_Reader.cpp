@@ -4,11 +4,11 @@
 
 namespace GSLanguageCompiler::IO {
 
-    GS_Reader::GS_Reader(LRef<std::istream> stream)
-            : _stream(stream) {}
+    GS_Reader::GS_Reader(std::unique_ptr<GS_InStream> stream)
+            : _stream(std::move(stream)) {}
 
-    GS_Reader GS_Reader::Create(LRef<std::istream> stream) {
-        return GS_Reader(stream);
+    GS_Reader GS_Reader::Create(std::unique_ptr<GS_InStream> stream) {
+        return GS_Reader(std::move(stream));
     }
 
     UString GS_Reader::ReadText() {
@@ -17,9 +17,9 @@ namespace GSLanguageCompiler::IO {
         while (true) {
             UString string;
 
-            _stream >> string;
+            _stream->GetInStream() >> string;
 
-            if (_stream.eof()) {
+            if (_stream->GetInStream().eof()) {
                 break;
             }
 
