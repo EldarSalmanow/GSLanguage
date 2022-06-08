@@ -13,18 +13,18 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Constructor for text stream
-         * @param text Text
+         * @param symbols Symbols
          */
-        explicit GS_TextStream(UString text);
+        explicit GS_TextStream(GSSymbolArray symbols);
 
     public:
 
         /**
          * Creating text stream
-         * @param text Text
+         * @param symbols Symbols
          * @return Text stream
          */
-        static GS_TextStream Create(UString text);
+        static GS_TextStream Create(GSSymbolArray symbols);
 
         /**
          * Creating text stream
@@ -33,13 +33,20 @@ namespace GSLanguageCompiler::IO {
          */
         static GS_TextStream Create(LRef<GS_Reader> reader);
 
+        /**
+         * Creating text stream
+         * @param text Text
+         * @return Text stream
+         */
+        static GS_TextStream Create(UString text);
+
     public:
 
         /**
          * Getting symbol from stream
          * @return Current symbol
          */
-        USymbol CurrentSymbol();
+        GS_Symbol CurrentSymbol();
 
         /**
          * Setting cursor to next symbol in stream
@@ -56,14 +63,14 @@ namespace GSLanguageCompiler::IO {
     private:
 
         /**
-         * Source code string
+         * Source code symbols
          */
-        UString _string;
+        GSSymbolArray _symbols;
 
         /**
-         * Source code string iterator
+         * Source code symbols iterator
          */
-        UString::Iterator _stringIterator;
+        GSSymbolArray::iterator _symbolsIterator;
     };
 
 }

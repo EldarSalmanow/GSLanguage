@@ -1,9 +1,7 @@
 #ifndef GSLANGUAGE_GS_TOKEN_H
 #define GSLANGUAGE_GS_TOKEN_H
 
-#include <vector>
-
-#include <GSCrossPlatform/CrossPlatform.h>
+#include <IO/GS_Symbol.h>
 
 #include <Lexer/GS_Keywords.h>
 
@@ -17,31 +15,28 @@ namespace GSLanguageCompiler::Lexer {
 
         /**
          * Constructor for token location
-         * @param sourceName Source name
-         * @param line Line
-         * @param column Column
+         * @param startLocation Start location
+         * @param endLocation End location
          * @return Token location
          */
-        GS_TokenLocation(UString sourceName, U64 line, U64 column);
+        GS_TokenLocation(IO::GS_SymbolLocation startLocation, IO::GS_SymbolLocation endLocation);
 
     public:
 
         /**
          * Creating token location
-         * @param sourceName Source name
-         * @param line Line
-         * @param column Column
+         * @param startLocation Start location
+         * @param endLocation End location
          * @return Token location
          */
-        static GS_TokenLocation Create(UString sourceName, U64 line, U64 column);
+        static GS_TokenLocation Create(IO::GS_SymbolLocation startLocation, IO::GS_SymbolLocation endLocation);
 
         /**
          * Creating token location
-         * @param line Line
-         * @param column Column
+         * @param location Location
          * @return Token location
          */
-        static GS_TokenLocation Create(U64 line, U64 column);
+        static GS_TokenLocation Create(IO::GS_SymbolLocation location);
 
         /**
          * Creating token location
@@ -52,39 +47,28 @@ namespace GSLanguageCompiler::Lexer {
     public:
 
         /**
-         * Getter for source name
-         * @return Source name
+         * Getter for start location
+         * @return Start location
          */
-        UString GetSourceName() const;
+        IO::GS_SymbolLocation GetStartLocation() const;
 
         /**
-         * Getter for line
-         * @return Line
+         * Getter for end location
+         * @return End location
          */
-        U64 GetLine() const;
-
-        /**
-         * Getter for column
-         * @return Column
-         */
-        U64 GetColumn() const;
+        IO::GS_SymbolLocation GetEndLocation() const;
 
     private:
 
         /**
-         * Source name
+         * Start location
          */
-        UString _sourceName;
+        IO::GS_SymbolLocation _startLocation;
 
         /**
-         * Line
+         * End location
          */
-        U64 _line;
-
-        /**
-         * Column
-         */
-        U64 _column;
+        IO::GS_SymbolLocation _endLocation;
     };
 
     /**

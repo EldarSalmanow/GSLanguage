@@ -3,6 +3,8 @@
 
 #include <IO/GS_Stream.h>
 
+#include <IO/GS_Symbol.h>
+
 namespace GSLanguageCompiler::IO {
 
     /**
@@ -34,10 +36,10 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
-         * Reading text from source
-         * @return Text
+         * Reading symbols from source
+         * @return Symbols
          */
-        UString ReadText();
+        GSSymbolArray ReadSymbols();
 
     public:
 

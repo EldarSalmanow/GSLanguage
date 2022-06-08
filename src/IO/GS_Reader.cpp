@@ -11,24 +11,39 @@ namespace GSLanguageCompiler::IO {
         return GS_Reader(std::move(stream));
     }
 
-    UString GS_Reader::ReadText() {
-        UString text;
+    GSSymbolArray GS_Reader::ReadSymbols() {
+        GSSymbolArray symbols;
+
+        auto &stream = _stream->GetInStream();
+        auto streamInfo = _stream->GetStreamInfo();
+
+        auto sourceName = streamInfo->GetFileName();
+        U64 line = 1;
+        U64 column = 1;
 
         while (true) {
-            UString string;
+            USymbol symbol;
 
-            _stream->GetInStream() >> string;
+            stream >> symbol;
 
-            if (_stream->GetInStream().eof()) {
+            if (stream.eof()) {
                 break;
             }
 
-            string += "\n"_us;
+            auto location = GS_SymbolLocation::Create(sourceName, line, column);
 
-            text += string;
+            symbols.emplace_back(GS_Symbol::Create(symbol, location));
+
+            if (symbol == '\n') {
+                ++line;
+
+                column = 1;
+            } else {
+                ++column;
+            }
         }
 
-        return text;
+        return symbols;
     }
 
     GS_TextStream GS_Reader::CreateStream() {

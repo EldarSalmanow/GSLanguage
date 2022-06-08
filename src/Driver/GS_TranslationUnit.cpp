@@ -8,8 +8,6 @@
 #include <llvm/Support/TargetSelect.h>
 #include <llvm/Support/raw_ostream.h>
 
-#include <fstream>
-
 #include <IO/IO.h>
 #include <Lexer/Lexer.h>
 #include <Parser/Parser.h>
@@ -264,48 +262,6 @@ namespace GSLanguageCompiler::Driver {
         return std::make_shared<GS_TranslationUnit>(std::move(config));
     }
 
-    CompilingResult GS_TranslationUnit::Compile() {
-        auto fileStream = IO::GS_InFileStream::CreateInFile(_config->GetInputName());
-
-        auto unit = RunFrontEnd(std::move(fileStream));
-
-        if (!unit) {
-            return CompilingResult::Failure;
-        }
-
-        Debug::DumpAST(unit);
-
-//        if (!RunMiddleEnd(unit)) {
-//            return CompilingResult::Failure;
-//        }
-//
-//        if (!RunBackEnd(unit)) {
-//            return CompilingResult::Failure;
-//        }
-
-        return CompilingResult::Success;
-    }
-
-    std::shared_ptr<AST::GS_TranslationUnitDeclaration> GS_TranslationUnit::RunFrontEnd(IO::GSInStreamPtr stream) {
-        auto textStream = IO::GS_Reader::Create(std::move(stream)).CreateStream();
-
-        auto tokenStream = Lexer::GS_Lexer::Create(textStream).CreateStream();
-
-        auto unit = Parser::GS_Parser::Create(tokenStream).Parse();
-
-        return unit;
-    }
-
-    Bool GS_TranslationUnit::RunMiddleEnd(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
-        // TODO update
-
-        auto Optimizer = Optimizer::GS_Optimizer::Create();
-
-        Optimizer->Optimize(translationUnitDeclaration);
-
-        return true;
-    }
-
     Bool Write(UString outputName, CodeGenerator::GSCGContextPtr context) {
         switch (context->GetBackend()) {
             case CodeGenerator::CGBackend::LLVM: {
@@ -370,18 +326,36 @@ namespace GSLanguageCompiler::Driver {
         return false;
     }
 
-    Bool GS_TranslationUnit::RunBackEnd(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) {
-        // TODO update and add Writer for writing code to file
+    CompilingResult GS_TranslationUnit::Compile() {
+        auto fileStream = IO::GS_InFileStream::CreateInFile(_config->GetInputName());
 
-        auto codeGenerator = CodeGenerator::GS_CodeGenerator::CreateLLVMCG();
+        auto textStream = IO::GS_Reader::Create(std::move(fileStream)).CreateStream();
 
-        codeGenerator->Generate(translationUnitDeclaration);
+        auto tokenStream = Lexer::GS_Lexer::Create(textStream).CreateStream();
 
-        auto codeGenerationContext = codeGenerator->GetContext();
+        auto unit = Parser::GS_Parser::Create(tokenStream).Parse();
 
-        auto result = Write(_config->GetInputName() + ".o"_us, codeGenerationContext);
+        if (!unit) {
+            return CompilingResult::Failure;
+        }
 
-        return result;
+//        auto Optimizer = Optimizer::GS_Optimizer::Create();
+//
+//        Optimizer->Optimize(unit);
+
+        Debug::DumpAST(unit);
+
+//        auto codeGenerator = CodeGenerator::GS_CodeGenerator::CreateLLVMCG();
+//
+//        codeGenerator->Generate(unit);
+//
+//        auto codeGenerationContext = codeGenerator->GetContext();
+//
+//        if (!Write(_config->GetInputName() + ".o"_us, codeGenerationContext)) {
+//            return CompilingResult::Failure;
+//        }
+
+        return CompilingResult::Success;
     }
 
     GSTranslationUnitConfigPtr GS_TranslationUnit::GetConfig() const {

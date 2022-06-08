@@ -63,7 +63,7 @@ namespace GSLanguageCompiler::Lexer {
          * Getting current symbol from stream
          * @return Current symbol
          */
-        USymbol CurrentSymbol();
+        IO::GS_Symbol CurrentSymbol();
 
         /**
          * Setting cursor to next symbol in stream

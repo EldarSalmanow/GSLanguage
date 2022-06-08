@@ -2,31 +2,27 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    GS_TokenLocation::GS_TokenLocation(UString sourceName, U64 line, U64 column)
-            : _sourceName(std::move(sourceName)), _line(line), _column(column) {}
+    GS_TokenLocation::GS_TokenLocation(IO::GS_SymbolLocation startLocation, IO::GS_SymbolLocation endLocation)
+            : _startLocation(std::move(startLocation)), _endLocation(std::move(endLocation)) {}
 
-    GS_TokenLocation GS_TokenLocation::Create(UString sourceName, U64 line, U64 column) {
-        return GS_TokenLocation(std::move(sourceName), line, column);
+    GS_TokenLocation GS_TokenLocation::Create(IO::GS_SymbolLocation startLocation, IO::GS_SymbolLocation endLocation) {
+        return GS_TokenLocation(std::move(startLocation), std::move(endLocation));
     }
 
-    GS_TokenLocation GS_TokenLocation::Create(U64 line, U64 column) {
-        return GS_TokenLocation::Create("<unknown>"_us, line, column);
+    GS_TokenLocation GS_TokenLocation::Create(IO::GS_SymbolLocation location) {
+        return GS_TokenLocation::Create(location, location);
     }
 
     GS_TokenLocation GS_TokenLocation::Create() {
-        return GS_TokenLocation::Create(0, 0);
+        return GS_TokenLocation::Create(IO::GS_SymbolLocation::Create(), IO::GS_SymbolLocation::Create());
     }
 
-    UString GS_TokenLocation::GetSourceName() const {
-        return _sourceName;
+    IO::GS_SymbolLocation GS_TokenLocation::GetStartLocation() const {
+        return _startLocation;
     }
 
-    U64 GS_TokenLocation::GetLine() const {
-        return _line;
-    }
-
-    U64 GS_TokenLocation::GetColumn() const {
-        return _column;
+    IO::GS_SymbolLocation GS_TokenLocation::GetEndLocation() const {
+        return _endLocation;
     }
 
     GS_Token::GS_Token(TokenType type, UString value, GS_TokenLocation location)

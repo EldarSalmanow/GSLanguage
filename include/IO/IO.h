@@ -7,6 +7,8 @@
 
 #include <IO/GS_Stream.h>
 
+#include <IO/GS_Symbol.h>
+
 #include <IO/GS_Reader.h>
 
 #include <IO/GS_TextStream.h>

@@ -74,11 +74,11 @@ namespace GSLanguageCompiler::Lexer {
     }
 
     GS_Token GS_Lexer::GetToken() {
-        while (CurrentSymbol().IsWhitespace()) {
+        while (CurrentSymbol().GetSymbol().IsWhitespace()) {
             NextSymbol();
         }
 
-        auto type = ReservedSymbolsType(CurrentSymbol());
+        auto type = ReservedSymbolsType(CurrentSymbol().GetSymbol());
 
         if (type != TokenType::Unknown) {
             NextSymbol();
@@ -86,15 +86,15 @@ namespace GSLanguageCompiler::Lexer {
             return GS_Token::Create(type);
         }
 
-        if (CurrentSymbol().IsIDStart()) {
+        if (CurrentSymbol().GetSymbol().IsIDStart()) {
             UString string;
 
-            string += CurrentSymbol();
+            string += CurrentSymbol().GetSymbol();
 
             NextSymbol();
 
-            while (CurrentSymbol().IsIDContinue()) {
-                string += CurrentSymbol();
+            while (CurrentSymbol().GetSymbol().IsIDContinue()) {
+                string += CurrentSymbol().GetSymbol();
 
                 NextSymbol();
             }
@@ -106,15 +106,15 @@ namespace GSLanguageCompiler::Lexer {
             return GS_Token::Create(TokenType::Identifier, string);
         }
 
-        if (CurrentSymbol().IsDigit()) {
+        if (CurrentSymbol().GetSymbol().IsDigit()) {
             UString string;
 
-            string += CurrentSymbol();
+            string += CurrentSymbol().GetSymbol();
 
             NextSymbol();
 
-            while (CurrentSymbol().IsDigit()) {
-                string += CurrentSymbol();
+            while (CurrentSymbol().GetSymbol().IsDigit()) {
+                string += CurrentSymbol().GetSymbol();
 
                 NextSymbol();
             }
@@ -125,7 +125,7 @@ namespace GSLanguageCompiler::Lexer {
         return GS_Token::Create(TokenType::EndOfFile);
     }
 
-    USymbol GS_Lexer::CurrentSymbol() {
+    IO::GS_Symbol GS_Lexer::CurrentSymbol() {
         return _stream.CurrentSymbol();
     }
 

@@ -3,106 +3,70 @@
 
 #include <Driver/GS_TranslationUnitConfig.h>
 
-namespace GSLanguageCompiler {
+namespace GSLanguageCompiler::Driver {
 
-    namespace AST {
+    /**
+     * Compiling result
+     */
+    enum class CompilingResult {
+        Success,
+        Failure
+    };
 
-        /**
-         * Declaring translation unit declaration node
-         */
-        class GS_TranslationUnitDeclaration;
-
-    }
-
-    namespace Driver {
-
-        /**
-         * Compiling result
-         */
-        enum class CompilingResult {
-            Success,
-            Failure
-        };
+    /**
+     * Class for representation translation unit
+     */
+    class GS_TranslationUnit {
+    public:
 
         /**
-         * Class for representation translation unit
+         * Constructor for translation unit
+         * @param config Unit config
          */
-        class GS_TranslationUnit {
-        public:
+        explicit GS_TranslationUnit(GSTranslationUnitConfigPtr config);
 
-            /**
-             * Constructor for translation unit
-             * @param config Unit config
-             */
-            explicit GS_TranslationUnit(GSTranslationUnitConfigPtr config);
-
-        public:
-
-            /**
-             * Creating translation unit
-             * @param config Unit config
-             * @return Translation unit ptr
-             */
-            static std::shared_ptr<GS_TranslationUnit> Create(GSTranslationUnitConfigPtr config);
-
-        public:
-
-            /**
-             * Compile translation unit
-             * @return Compiling result
-             */
-            CompilingResult Compile();
-
-        public:
-
-            /**
-             * Getter for config
-             * @return Config
-             */
-            GSTranslationUnitConfigPtr GetConfig() const;
-
-        private:
-
-            /**
-             * Run front compiling process for translation unit
-             * @param stream Input stream
-             * @return AST translation unit declaration node ptr
-             */
-            std::shared_ptr<AST::GS_TranslationUnitDeclaration> RunFrontEnd(IO::GSInStreamPtr stream);
-
-            /**
-             * Run middle compilation process for translation unit
-             * @param translationUnitDeclaration Translation unit declaration
-             * @return
-             */
-            Bool RunMiddleEnd(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration);
-
-            /**
-             * Run back compilation process for translation unit
-             * @param translationUnitDeclaration Translation unit declaration
-             * @return
-             */
-            Bool RunBackEnd(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration);
-
-        private:
-
-            /**
-             * Unit config
-             */
-            GSTranslationUnitConfigPtr _config;
-        };
+    public:
 
         /**
-         * Translation unit ptr type
+         * Creating translation unit
+         * @param config Unit config
+         * @return Translation unit ptr
          */
-        using GSTranslationUnitPtr = std::shared_ptr<GS_TranslationUnit>;
+        static std::shared_ptr<GS_TranslationUnit> Create(GSTranslationUnitConfigPtr config);
+
+    public:
 
         /**
-         * Translation unit ptr array type
+         * Compile translation unit
+         * @return Compiling result
          */
-        using GSTranslationUnitPtrArray = std::vector<GSTranslationUnitPtr>;
+        CompilingResult Compile();
 
-    }
+    public:
+
+        /**
+         * Getter for config
+         * @return Config
+         */
+        GSTranslationUnitConfigPtr GetConfig() const;
+
+    private:
+
+        /**
+         * Unit config
+         */
+        GSTranslationUnitConfigPtr _config;
+    };
+
+    /**
+     * Translation unit ptr type
+     */
+    using GSTranslationUnitPtr = std::shared_ptr<GS_TranslationUnit>;
+
+    /**
+     * Translation unit ptr array type
+     */
+    using GSTranslationUnitPtrArray = std::vector<GSTranslationUnitPtr>;
 
 }
 
