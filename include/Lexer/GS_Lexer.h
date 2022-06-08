@@ -66,6 +66,18 @@ namespace GSLanguageCompiler::Lexer {
         IO::GS_Symbol CurrentSymbol();
 
         /**
+         * Getting current unicode symbol from stream
+         * @return Current unicode symbol
+         */
+        USymbol CurrentUSymbol();
+
+        /**
+         * Getting current symbol location from stream
+         * @return Current symbol location
+         */
+        IO::GS_SymbolLocation CurrentSymbolLocation();
+
+        /**
          * Setting cursor to next symbol in stream
          * @return
          */
