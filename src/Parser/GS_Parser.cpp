@@ -30,7 +30,7 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseTranslationUnitDeclaration() {
-        auto unit = _builder->CreateTranslationUnitDeclaration(TokenLocation().GetSourceName());
+        auto unit = _builder->CreateTranslationUnitDeclaration(TokenLocation().GetStartLocation().GetSourceName());
 
         while (!IsTokenType(Lexer::TokenType::EndOfFile)) {
             auto declaration = ParseDeclaration();
