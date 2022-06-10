@@ -51,7 +51,69 @@ int main(int argc, char *argv[]) {
         ++i;
     }
 
-    // -f test.gs -o test.exe
-
     return 0;
+}
+
+class InStream {
+public:
+
+    std::istream &Stream;
+};
+
+class Location {
+public:
+
+    UString SourceName;
+
+    U64 Line;
+
+    U64 Column;
+};
+
+class Symbol {
+public:
+
+    USymbol UniSymbol;
+
+    Location SymLocation;
+};
+
+class Reader {
+public:
+
+    std::vector<Symbol> Read() {
+        std::vector<Symbol> symbols;
+
+        return symbols;
+    }
+
+public:
+
+    InStream Stream;
+};
+
+class TextStream {
+public:
+
+    Symbol CurrSym() {
+        return *SymbolsIter;
+    }
+
+    Void NextSym() {
+        ++SymbolsIter;
+    }
+
+    Void PrevSym() {
+        --SymbolsIter;
+    }
+
+public:
+
+    std::vector<Symbol> Symbols;
+
+    std::vector<Symbol>::iterator SymbolsIter;
+};
+
+void f() {
+
 }
