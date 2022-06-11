@@ -6,8 +6,6 @@ GS_TOKENTYPE(Unknown),
 
 GS_TOKENTYPE(EndOfFile),
 
-GS_TOKENTYPE(NewLine),
-
 GS_TOKENTYPE(Identifier),
 
 GS_TOKENTYPE(LiteralNumber),
@@ -21,7 +19,6 @@ GS_TOKENTYPE(SymbolRightParen),
 GS_TOKENTYPE(SymbolLeftBrace),
 GS_TOKENTYPE(SymbolRightBrace),
 
-GS_TOKENTYPE(SymbolDoubleQuotes),
 GS_TOKENTYPE(SymbolColon),
 GS_TOKENTYPE(SymbolComma),
 

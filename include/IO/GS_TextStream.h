@@ -70,7 +70,7 @@ namespace GSLanguageCompiler::IO {
         /**
          * Source code symbols iterator
          */
-        GSSymbolArray::iterator _symbolsIterator;
+        GSSymbolArrayIterator _symbolsIterator;
     };
 
 }

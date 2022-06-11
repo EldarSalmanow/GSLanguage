@@ -29,26 +29,30 @@ int main(int argc, char *argv[]) {
     auto textStream = IO::GS_Reader::Create(IO::GS_InFileStream::CreateInFile(argv[1])).CreateStream();
     auto tokenStream = Lexer::GS_Lexer::Create(textStream).CreateStream();
 
-    auto token = tokenStream.CurrentToken();
+    auto streamToken = tokenStream.CurrentToken();
 
-    int i = 1;
+    Lexer::GSTokenArray tokens;
 
-    while (token.GetType() != Lexer::TokenType::EndOfFile) {
+    while (streamToken.GetType() != Lexer::TokenType::EndOfFile) {
+        tokens.emplace_back(streamToken);
+
+        tokenStream.NextToken();
+
+        streamToken = tokenStream.CurrentToken();
+    }
+
+    for (U64 i = 0; i < tokens.size(); ++i) {
+        auto token = tokens[i];
+
         auto type = token.GetType();
         auto value = token.GetValue();
         auto location = token.GetLocation();
 
-        std::cout << "№" << i << std::endl <<
-        "\tType: " << TTypeToString(type) << std::endl <<
-        "\tValue: " << value << std::endl <<
-        "\tLocation: " << location.GetStartLocation().GetSourceName() << " " << location.GetStartLocation().GetLine() << " " << location.GetStartLocation().GetColumn() <<
-        location.GetEndLocation().GetSourceName() << " " << location.GetEndLocation().GetLine() << " " << location.GetEndLocation().GetColumn();
-
-        tokenStream.NextToken();
-
-        token = tokenStream.CurrentToken();
-
-        ++i;
+        std::cout << "№" << i + 1 << std::endl <<
+                  "\tType: " << TTypeToString(type) << std::endl <<
+                  "\tValue: " << value << std::endl <<
+                  "\tLocation: " << location.GetStartLocation().GetSourceName() << " " << location.GetStartLocation().GetLine() << " " << location.GetStartLocation().GetColumn() << " " <<
+                  location.GetEndLocation().GetSourceName() << " " << location.GetEndLocation().GetLine() << " " << location.GetEndLocation().GetColumn() << std::endl;
     }
 
     return 0;

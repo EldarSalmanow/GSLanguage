@@ -119,6 +119,12 @@ namespace GSLanguageCompiler::Lexer {
          */
         static GS_Token Create(TokenType type);
 
+        /**
+         * Creating token
+         * @return Token
+         */
+        static GS_Token Create();
+
     public:
 
         /**

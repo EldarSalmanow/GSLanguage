@@ -4,7 +4,7 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    inline TokenType ReservedWordsType(ConstLRef<UString> string) {
+    inline TokenType ReservedWordType(ConstLRef<UString> string) {
         if (string == "var"_us) {
             return TokenType::KeywordVar;
         } else if (string == "func"_us) {
@@ -14,7 +14,7 @@ namespace GSLanguageCompiler::Lexer {
         return TokenType::Unknown;
     }
 
-    inline TokenType ReservedSymbolsType(ConstLRef<USymbol> symbol) {
+    inline TokenType ReservedSymbolType(ConstLRef<USymbol> symbol) {
         if (symbol == '(') {
             return TokenType::SymbolLeftParen;
         } else if (symbol == ')') {
@@ -78,15 +78,82 @@ namespace GSLanguageCompiler::Lexer {
             NextSymbol();
 
             return GS_Token::Create(TokenType::SymbolSpace, GS_TokenLocation::Create(location));
-        }
+        } else if (CurrentSymbolValue().IsIDStart()) {
+            UString string;
 
-//        while (CurrentUSymbol().IsWhitespace()) {
-//            NextSymbol();
-//        }
+            auto startLocation = CurrentSymbolLocation();
 
-        auto type = ReservedSymbolsType(CurrentSymbolValue());
+            auto endLocation = IO::GS_SymbolLocation::Create();
 
-        if (type != TokenType::Unknown) {
+            while (true) {
+                string += CurrentSymbolValue();
+
+                NextSymbol();
+
+                if (!CurrentSymbolValue().IsIDContinue()) {
+                    PrevSymbol();
+
+                    endLocation = CurrentSymbolLocation();
+
+                    NextSymbol();
+
+                    break;
+                }
+            }
+
+            if (ReservedWordType(string) != TokenType::Unknown) {
+                return GS_Token::Create(ReservedWordType(string), GS_TokenLocation::Create(startLocation, endLocation));
+            }
+
+            return GS_Token::Create(TokenType::Identifier, string, GS_TokenLocation::Create(startLocation, endLocation));
+        } else if (CurrentSymbolValue().IsDigit()) {
+            UString string;
+
+            auto startLocation = CurrentSymbolLocation();
+
+            auto endLocation = IO::GS_SymbolLocation::Create();
+
+            while (true) {
+                string += CurrentSymbolValue();
+
+                NextSymbol();
+
+                if (!CurrentSymbolValue().IsDigit()) {
+                    PrevSymbol();
+
+                    endLocation = CurrentSymbolLocation();
+
+                    NextSymbol();
+
+                    break;
+                }
+            }
+
+            return GS_Token::Create(TokenType::LiteralNumber, string, GS_TokenLocation::Create(startLocation, endLocation));
+        } else if (CurrentSymbolValue() == '\"') {
+            UString string;
+
+            auto startLocation = CurrentSymbolLocation();
+
+            auto endLocation = IO::GS_SymbolLocation::Create();
+
+            while (true) {
+                string += CurrentSymbolValue();
+
+                NextSymbol();
+
+                if (CurrentSymbolValue() == '\"') {
+                    endLocation = CurrentSymbolLocation();
+
+                    NextSymbol();
+
+                    break;
+                }
+            }
+
+            return GS_Token::Create(TokenType::LiteralNumber, string, GS_TokenLocation::Create(startLocation, endLocation));
+        } else if (ReservedSymbolType(CurrentSymbolValue()) != TokenType::Unknown) {
+            auto type = ReservedSymbolType(CurrentSymbolValue());
             auto location = CurrentSymbolLocation();
 
             NextSymbol();
@@ -94,63 +161,15 @@ namespace GSLanguageCompiler::Lexer {
             return GS_Token::Create(type, GS_TokenLocation::Create(location));
         }
 
-        if (CurrentSymbolValue().IsIDStart()) {
-            UString string;
+        return GS_Token::Create(TokenType::EndOfFile); // Unknown?
 
-            auto startLocation = CurrentSymbolLocation();
+        // TODO update or remove
 
-            string += CurrentSymbolValue();
+        //    GS_TOKENTYPE(NewLine),
 
-            NextSymbol();
-
-            auto endLocation = IO::GS_SymbolLocation::Create();
-
-            while (true) {
-                if (!CurrentSymbolValue().IsIDContinue()) {
-                    endLocation = CurrentSymbolLocation();
-
-                    break;
-                }
-
-                string += CurrentSymbolValue();
-
-                NextSymbol();
-            }
-
-            if (ReservedWordsType(string) != TokenType::Unknown) {
-                return GS_Token::Create(ReservedWordsType(string), GS_TokenLocation::Create(startLocation, endLocation));
-            }
-
-            return GS_Token::Create(TokenType::Identifier, string, GS_TokenLocation::Create(startLocation, endLocation));
-        }
-
-        if (CurrentSymbolValue().IsDigit()) {
-            UString string;
-
-            auto startLocation = CurrentSymbolLocation();
-
-            string += CurrentSymbolValue();
-
-            NextSymbol();
-
-            auto endLocation = IO::GS_SymbolLocation::Create();
-
-            while (true) {
-                if (!CurrentSymbolValue().IsDigit()) {
-                    endLocation = CurrentSymbolLocation();
-
-                    break;
-                }
-
-                string += CurrentSymbolValue();
-
-                NextSymbol();
-            }
-
-            return GS_Token::Create(TokenType::LiteralNumber, string, GS_TokenLocation::Create(startLocation, endLocation));
-        }
-
-        return GS_Token::Create(TokenType::EndOfFile);
+//        while (CurrentUSymbol().IsWhitespace()) {
+//            NextSymbol();
+//        }
     }
 
     IO::GS_Symbol GS_Lexer::CurrentSymbol() {
@@ -167,6 +186,10 @@ namespace GSLanguageCompiler::Lexer {
 
     Void GS_Lexer::NextSymbol() {
         _stream.NextSymbol();
+    }
+
+    Void GS_Lexer::PrevSymbol() {
+        _stream.PrevSymbol();
     }
 
 }

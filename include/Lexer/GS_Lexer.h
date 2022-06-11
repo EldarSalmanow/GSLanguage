@@ -83,6 +83,12 @@ namespace GSLanguageCompiler::Lexer {
          */
         Void NextSymbol();
 
+        /**
+         * Setting cursor to previous symbol in stream
+         * @return
+         */
+        Void PrevSymbol();
+
     private:
 
         /**

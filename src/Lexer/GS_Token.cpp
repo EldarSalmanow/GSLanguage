@@ -41,7 +41,11 @@ namespace GSLanguageCompiler::Lexer {
     }
 
     GS_Token GS_Token::Create(TokenType type) {
-        return GS_Token::Create(type, GS_TokenLocation::Create());
+        return GS_Token::Create(type, UString(), GS_TokenLocation::Create());
+    }
+
+    GS_Token GS_Token::Create() {
+        return GS_Token::Create(TokenType::Unknown, UString(), GS_TokenLocation::Create());
     }
 
     TokenType GS_Token::GetType() const {

@@ -48,7 +48,7 @@ namespace GSLanguageCompiler::Lexer {
         Void NextToken();
 
         /**
-         * Setting cursor to prev token in stream
+         * Setting cursor to previous token in stream
          * @return
          */
         Void PrevToken();
