@@ -29,23 +29,23 @@ namespace GSLanguageCompiler::IO {
         return _column;
     }
 
-    GS_Symbol::GS_Symbol(USymbol symbol, GS_SymbolLocation location)
-            : _symbol(std::move(symbol)), _location(std::move(location)) {}
+    GS_Symbol::GS_Symbol(USymbol value, GS_SymbolLocation location)
+            : _value(std::move(value)), _location(std::move(location)) {}
 
-    GS_Symbol GS_Symbol::Create(USymbol symbol, GS_SymbolLocation location) {
-        return GS_Symbol(std::move(symbol), std::move(location));
+    GS_Symbol GS_Symbol::Create(USymbol value, GS_SymbolLocation location) {
+        return GS_Symbol(std::move(value), std::move(location));
     }
 
-    GS_Symbol GS_Symbol::Create(USymbol symbol) {
-        return GS_Symbol::Create(std::move(symbol), GS_SymbolLocation::Create());
+    GS_Symbol GS_Symbol::Create(USymbol value) {
+        return GS_Symbol::Create(std::move(value), GS_SymbolLocation::Create());
     }
 
     GS_Symbol GS_Symbol::Create() {
         return GS_Symbol::Create(USymbol(), GS_SymbolLocation::Create());
     }
 
-    USymbol GS_Symbol::GetSymbol() const {
-        return _symbol;
+    USymbol GS_Symbol::GetValue() const {
+        return _value;
     }
 
     GS_SymbolLocation GS_Symbol::GetLocation() const {

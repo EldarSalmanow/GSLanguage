@@ -54,13 +54,15 @@ namespace GSLanguageCompiler::Lexer {
 
         auto token = GetToken();
 
-        while (token.GetType() != TokenType::EndOfFile) {
+        while (true) {
             tokens.emplace_back(token);
+
+            if (token.GetType() == TokenType::EndOfFile) {
+                break;
+            }
 
             token = GetToken();
         }
-
-        tokens.emplace_back(GS_Token::Create(TokenType::EndOfFile));
 
         return tokens;
     }
@@ -70,7 +72,7 @@ namespace GSLanguageCompiler::Lexer {
     }
 
     GS_Token GS_Lexer::GetToken() {
-        if (CurrentUSymbol().IsWhitespace()) {
+        if (CurrentSymbolValue().IsWhitespace()) {
             auto location = CurrentSymbolLocation();
 
             NextSymbol();
@@ -82,7 +84,7 @@ namespace GSLanguageCompiler::Lexer {
 //            NextSymbol();
 //        }
 
-        auto type = ReservedSymbolsType(CurrentUSymbol());
+        auto type = ReservedSymbolsType(CurrentSymbolValue());
 
         if (type != TokenType::Unknown) {
             auto location = CurrentSymbolLocation();
@@ -92,25 +94,25 @@ namespace GSLanguageCompiler::Lexer {
             return GS_Token::Create(type, GS_TokenLocation::Create(location));
         }
 
-        if (CurrentUSymbol().IsIDStart()) {
+        if (CurrentSymbolValue().IsIDStart()) {
             UString string;
 
             auto startLocation = CurrentSymbolLocation();
 
-            string += CurrentUSymbol();
+            string += CurrentSymbolValue();
 
             NextSymbol();
 
             auto endLocation = IO::GS_SymbolLocation::Create();
 
             while (true) {
-                if (!CurrentUSymbol().IsIDContinue()) {
+                if (!CurrentSymbolValue().IsIDContinue()) {
                     endLocation = CurrentSymbolLocation();
 
                     break;
                 }
 
-                string += CurrentUSymbol();
+                string += CurrentSymbolValue();
 
                 NextSymbol();
             }
@@ -122,25 +124,25 @@ namespace GSLanguageCompiler::Lexer {
             return GS_Token::Create(TokenType::Identifier, string, GS_TokenLocation::Create(startLocation, endLocation));
         }
 
-        if (CurrentSymbol().GetSymbol().IsDigit()) {
+        if (CurrentSymbolValue().IsDigit()) {
             UString string;
 
             auto startLocation = CurrentSymbolLocation();
 
-            string += CurrentUSymbol();
+            string += CurrentSymbolValue();
 
             NextSymbol();
 
             auto endLocation = IO::GS_SymbolLocation::Create();
 
             while (true) {
-                if (!CurrentUSymbol().IsDigit()) {
+                if (!CurrentSymbolValue().IsDigit()) {
                     endLocation = CurrentSymbolLocation();
 
                     break;
                 }
 
-                string += CurrentUSymbol();
+                string += CurrentSymbolValue();
 
                 NextSymbol();
             }
@@ -155,8 +157,8 @@ namespace GSLanguageCompiler::Lexer {
         return _stream.CurrentSymbol();
     }
 
-    USymbol GS_Lexer::CurrentUSymbol() {
-        return CurrentSymbol().GetSymbol();
+    USymbol GS_Lexer::CurrentSymbolValue() {
+        return CurrentSymbol().GetValue();
     }
 
     IO::GS_SymbolLocation GS_Lexer::CurrentSymbolLocation() {

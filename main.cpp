@@ -114,6 +114,140 @@ public:
     std::vector<Symbol>::iterator SymbolsIter;
 };
 
-void f() {
+enum class TType {
+    Identifier,
+    Number,
 
+    Plus,
+    Minus,
+    Star,
+    Slash,
+
+    Space
+};
+
+class TokenLocation {
+public:
+
+    Location SLoc;
+
+    Location ELoc;
+};
+
+class Token {
+public:
+
+    TType Type;
+
+    UString Value;
+
+    TokenLocation Location;
+};
+
+class Lexer_ {
+public:
+
+    std::vector<Token> Tokenize() {
+        std::vector<Token> tokens;
+
+        return tokens;
+    }
+
+public:
+
+    TextStream Stream;
+};
+
+class TokenStream {
+public:
+
+    Token CurrToken() {
+        return *TokensIter;
+    }
+
+    Void NextToken() {
+        ++TokensIter;
+    }
+
+    Void PrevToken() {
+        --TokensIter;
+    }
+
+public:
+
+    std::vector<Token> Tokens;
+
+    std::vector<Token>::iterator TokensIter;
+};
+
+class NodeLocation {
+public:
+
+    TokenLocation SLoc;
+
+    TokenLocation ELoc;
+};
+
+class Node {
+public:
+
+    Node(NodeLocation location)
+            : Location(location) {}
+
+public:
+
+    NodeLocation GetLocation() {
+        return Location;
+    }
+
+public:
+
+    NodeLocation Location;
+};
+
+class NumNode : public Node {
+public:
+
+    NumNode(I32 num, NodeLocation location)
+            : Num(num), Node(location) {}
+
+public:
+
+    I32 Num;
+};
+
+Location CreateLocation(UString sourceName, U64 line, U64 column) {
+    return { sourceName, line, column };
+}
+
+TokenLocation CreateTokenLocation(Location sloc, Location eloc) {
+    return { sloc, eloc };
+}
+
+TokenLocation CreateTokenLocation(Location location) {
+    return CreateTokenLocation(location, location);
+}
+
+NodeLocation CreateNodeLocation(TokenLocation sloc, TokenLocation eloc) {
+    return { sloc, eloc };
+}
+
+NodeLocation CreateNodeLocation(TokenLocation location) {
+    return CreateNodeLocation(location);
+}
+
+void f() {
+    std::ifstream file("main.gs");
+
+    InStream stream = {file};
+
+    Reader reader = {stream};
+
+    TextStream textStream = {reader.Read()};
+
+    Lexer_ lexer = {textStream};
+
+    TokenStream tokenStream = {lexer.Tokenize()};
+
+    Node *node = new NumNode(12, CreateNodeLocation(CreateTokenLocation(CreateLocation("main.gs", 1, 1), CreateLocation("main.gs", 1, 2))));
 }

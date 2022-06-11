@@ -7,8 +7,6 @@
 
 namespace GSLanguageCompiler::IO {
 
-    // TODO rename or update
-
     /**
      * Class for containing information about symbol location
      */
@@ -95,27 +93,27 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Constructor for symbol
-         * @param symbol Unicode symbol
+         * @param value Symbol value
          * @param location Symbol location
          */
-        GS_Symbol(USymbol symbol, GS_SymbolLocation location);
+        GS_Symbol(USymbol value, GS_SymbolLocation location);
 
     public:
 
         /**
          * Creating symbol
-         * @param symbol Unicode symbol
+         * @param value Symbol value
          * @param location Symbol location
          * @return Symbol
          */
-        static GS_Symbol Create(USymbol symbol, GS_SymbolLocation location);
+        static GS_Symbol Create(USymbol value, GS_SymbolLocation location);
 
         /**
          * Creating symbol
-         * @param symbol Unicode symbol
+         * @param value Symbol value
          * @return Symbol
          */
-        static GS_Symbol Create(USymbol symbol);
+        static GS_Symbol Create(USymbol value);
 
         /**
          * Creating symbol
@@ -129,7 +127,7 @@ namespace GSLanguageCompiler::IO {
          * Getter for unicode symbol
          * @return Unicode symbol
          */
-        USymbol GetSymbol() const;
+        USymbol GetValue() const;
 
         /**
          * Getter for symbol location
@@ -140,9 +138,9 @@ namespace GSLanguageCompiler::IO {
     private:
 
         /**
-         * Unicode symbol
+         * Symbol value
          */
-        USymbol _symbol;
+        USymbol _value;
 
         /**
          * Symbol location
@@ -154,6 +152,11 @@ namespace GSLanguageCompiler::IO {
      * Symbol array type
      */
     using GSSymbolArray = std::vector<GS_Symbol>;
+
+    /**
+     * Symbol array iterator type
+     */
+    using GSSymbolArrayIterator = GSSymbolArray::iterator;
 
 }
 
