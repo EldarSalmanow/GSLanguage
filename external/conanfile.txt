@@ -2,6 +2,7 @@
 GSCrossPlatform/1.0
 taywee-args/6.3.0
 rapidjson/cci.20211112
+rang/3.2
 gtest/cci.20210126
 
 [generators]

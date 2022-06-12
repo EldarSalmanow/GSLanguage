@@ -43,7 +43,7 @@ namespace GSLanguageCompiler::IO {
             }
         }
 
-        symbols.emplace_back(GS_Symbol::Create(USymbol()));
+        symbols.emplace_back(GS_Symbol::Create());
 
         return symbols;
     }
