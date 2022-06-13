@@ -125,6 +125,10 @@ namespace GSLanguageCompiler::AST {
         return GS_VariableUsingExpression::Create(std::move(name));
     }
 
+    std::shared_ptr<GS_VariableUsingExpression> GS_ASTBuilder::CreateVariableUsingExpression(UString name, Lexer::GS_TokenLocation nameLocation) {
+        return GS_VariableUsingExpression::Create(std::move(name), std::move(nameLocation));
+    }
+
     std::shared_ptr<GS_FunctionCallingExpression> GS_ASTBuilder::CreateFunctionCallingExpression(UString name, GSExpressionPtrArray params) {
         return GS_FunctionCallingExpression::Create(std::move(name), std::move(params));
     }

@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_VARIABLEUSINGEXPRESSION_H
 #define GSLANGUAGE_GS_VARIABLEUSINGEXPRESSION_H
 
+#include <Lexer/GS_Token.h>
+
 #include <AST/GS_Expression.h>
 
 namespace GSLanguageCompiler::AST {
@@ -14,10 +16,19 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for variable using expression
          * @param name Variable name
+         * @param nameLocation Variable name location
          */
-        explicit GS_VariableUsingExpression(UString name);
+        GS_VariableUsingExpression(UString name, Lexer::GS_TokenLocation nameLocation);
 
     public:
+
+        /**
+         * Creating variable using expression ptr
+         * @param name Variable name
+         * @param nameLocation Variable name location
+         * @return Variable using expression ptr
+         */
+        static std::shared_ptr<GS_VariableUsingExpression> Create(UString name, Lexer::GS_TokenLocation nameLocation);
 
         /**
          * Creating variable using expression ptr
@@ -34,6 +45,12 @@ namespace GSLanguageCompiler::AST {
          */
         LRef<UString> GetName();
 
+        /**
+         * Getter for variable name location
+         * @return Variable name location
+         */
+        Lexer::GS_TokenLocation GetNameLocation() const;
+
     public:
 
         /**
@@ -48,6 +65,11 @@ namespace GSLanguageCompiler::AST {
          * Variable name
          */
         UString _name;
+
+        /**
+         * Variable name location
+         */
+        Lexer::GS_TokenLocation _nameLocation;
     };
 
 }

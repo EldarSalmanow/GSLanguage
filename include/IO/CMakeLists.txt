@@ -9,7 +9,9 @@ set(GS_IO_SOURCE
 
         ${IO_DIR}/GS_Reader.cpp
 
-        ${IO_DIR}/GS_TextStream.cpp)
+        ${IO_DIR}/GS_TextStream.cpp
+
+        ${IO_DIR}/GS_ErrorHandler.cpp)
 
 add_library(
 #       Library name

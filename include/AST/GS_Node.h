@@ -1,72 +1,11 @@
 #ifndef GSLANGUAGE_GS_NODE_H
 #define GSLANGUAGE_GS_NODE_H
 
-#include <Lexer/GS_Token.h>
+#include <vector>
+
+#include <GSCrossPlatform/CrossPlatform.h>
 
 namespace GSLanguageCompiler::AST {
-
-    /**
-     * Class for containing information about node location
-     */
-    class GS_NodeLocation {
-    public:
-
-        /**
-         * Constructor for node location
-         * @param startLocation Start token location
-         * @param endLocation End token location
-         */
-        GS_NodeLocation(Lexer::GS_TokenLocation startLocation, Lexer::GS_TokenLocation endLocation);
-
-    public:
-
-        /**
-         * Creating node location
-         * @param startLocation Start token location
-         * @param endLocation End token location
-         * @return Node location
-         */
-        static GS_NodeLocation Create(Lexer::GS_TokenLocation startLocation, Lexer::GS_TokenLocation endLocation);
-
-        /**
-         * Creating node location
-         * @param location Token location
-         * @return Node location
-         */
-        static GS_NodeLocation Create(Lexer::GS_TokenLocation location);
-
-        /**
-         * Creating node location
-         * @return Node location
-         */
-        static GS_NodeLocation Create();
-
-    public:
-
-        /**
-         * Getter for start token location
-         * @return Start token location
-         */
-        Lexer::GS_TokenLocation GetStartLocation() const;
-
-        /**
-         * Getter for end token location
-         * @return End token location
-         */
-        Lexer::GS_TokenLocation GetEndLocation() const;
-
-    private:
-
-        /**
-         * Start token location
-         */
-        Lexer::GS_TokenLocation _startLocation;
-
-        /**
-         * End token location
-         */
-        Lexer::GS_TokenLocation _endLocation;
-    };
 
     /**
      * Base class for all AST nodes
@@ -75,30 +14,9 @@ namespace GSLanguageCompiler::AST {
     public:
 
         /**
-         * Constructor for node
-         */
-        GS_Node();
-
-        /**
-         * Constructor for node
-         * @param location Node location
-         */
-        explicit GS_Node(GS_NodeLocation location);
-
-    public:
-
-        /**
          * Virtual destructor for supporting inheritance
          */
         virtual ~GS_Node();
-
-    public:
-
-        /**
-         * Getter for node location
-         * @return Node location
-         */
-        GS_NodeLocation GetLocation() const;
 
     public:
 
@@ -119,13 +37,6 @@ namespace GSLanguageCompiler::AST {
          * @return Is expression
          */
         virtual Bool IsExpression() const;
-
-    private:
-
-        /**
-         * Node location
-         */
-        GS_NodeLocation _location;
     };
 
     /**

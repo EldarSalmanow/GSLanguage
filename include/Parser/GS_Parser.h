@@ -186,13 +186,13 @@ namespace GSLanguageCompiler::Parser {
 
         Bool IsTokenType(Lexer::TokenType type);
 
-        Lexer::GS_TokenLocation TokenLocation();
-
-        UString TokenValue();
+        Lexer::GS_Token CurrentToken();
 
         Lexer::TokenType TokenType();
 
-        Lexer::GS_Token CurrentToken();
+        UString TokenValue();
+
+        Lexer::GS_TokenLocation TokenLocation();
 
         Void NextToken();
 

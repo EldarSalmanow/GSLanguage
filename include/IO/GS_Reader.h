@@ -22,7 +22,7 @@ namespace GSLanguageCompiler::IO {
          * Constructor for reader
          * @param stream Input stream
          */
-        explicit GS_Reader(std::unique_ptr<GS_InStream> stream);
+        explicit GS_Reader(GSInStreamPtr stream);
 
     public:
 
@@ -31,7 +31,7 @@ namespace GSLanguageCompiler::IO {
          * @param stream Stream
          * @return Reader
          */
-        static GS_Reader Create(std::unique_ptr<GS_InStream> stream);
+        static GS_Reader Create(GSInStreamPtr stream);
 
     public:
 
@@ -54,7 +54,7 @@ namespace GSLanguageCompiler::IO {
         /**
          * Stream for reading text
          */
-        std::unique_ptr<GS_InStream> _stream;
+        GSInStreamPtr _stream;
     };
 
 }

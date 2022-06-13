@@ -4,10 +4,10 @@
 
 namespace GSLanguageCompiler::IO {
 
-    GS_Reader::GS_Reader(std::unique_ptr<GS_InStream> stream)
+    GS_Reader::GS_Reader(GSInStreamPtr stream)
             : _stream(std::move(stream)) {}
 
-    GS_Reader GS_Reader::Create(std::unique_ptr<GS_InStream> stream) {
+    GS_Reader GS_Reader::Create(GSInStreamPtr stream) {
         return GS_Reader(std::move(stream));
     }
 

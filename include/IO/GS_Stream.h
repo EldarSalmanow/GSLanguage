@@ -128,7 +128,7 @@ namespace GSLanguageCompiler::IO {
     /**
      * Input stream ptr type
      */
-    using GSInStreamPtr = std::unique_ptr<GS_InStream>;
+    using GSInStreamPtr = std::shared_ptr<GS_InStream>;
 
     /**
      * Input file stream
@@ -151,14 +151,14 @@ namespace GSLanguageCompiler::IO {
          * @param streamInfo Stream info
          * @return Input file stream ptr
          */
-        static std::unique_ptr<GS_InFileStream> Create(std::ifstream stream, GSStreamInfoPtr streamInfo);
+        static std::shared_ptr<GS_InFileStream> Create(std::ifstream stream, GSStreamInfoPtr streamInfo);
 
         /**
          * Creating input file stream
          * @param name File name
          * @return Input file stream ptr
          */
-        static std::unique_ptr<GS_InFileStream> CreateInFile(UString name);
+        static std::shared_ptr<GS_InFileStream> CreateInFile(UString name);
 
     public:
 
@@ -197,13 +197,13 @@ namespace GSLanguageCompiler::IO {
          * @param streamInfo Stream info
          * @return Input console stream ptr
          */
-        static std::unique_ptr<GS_InConsoleStream> Create(LRef<std::istream> stream, GSStreamInfoPtr streamInfo);
+        static std::shared_ptr<GS_InConsoleStream> Create(LRef<std::istream> stream, GSStreamInfoPtr streamInfo);
 
         /**
          * Creating input console stream (std::cin standard stream)
          * @return Input console stream ptr
          */
-        static std::unique_ptr<GS_InConsoleStream> CreateCIn();
+        static std::shared_ptr<GS_InConsoleStream> CreateCIn();
 
     public:
 
@@ -245,7 +245,7 @@ namespace GSLanguageCompiler::IO {
     /**
      * Output stream ptr type
      */
-    using GSOutStreamPtr = std::unique_ptr<GS_OutStream>;
+    using GSOutStreamPtr = std::shared_ptr<GS_OutStream>;
 
     /**
      * Output file stream
@@ -268,14 +268,14 @@ namespace GSLanguageCompiler::IO {
          * @param streamInfo Stream info
          * @return Output file stream ptr
          */
-        static std::unique_ptr<GS_OutFileStream> Create(std::ofstream stream, GSStreamInfoPtr streamInfo);
+        static std::shared_ptr<GS_OutFileStream> Create(std::ofstream stream, GSStreamInfoPtr streamInfo);
 
         /**
          * Creating output file stream
          * @param name File name
          * @return Output file stream ptr
          */
-        static std::unique_ptr<GS_OutFileStream> CreateOutFile(UString name);
+        static std::shared_ptr<GS_OutFileStream> CreateOutFile(UString name);
 
     public:
 
@@ -314,25 +314,25 @@ namespace GSLanguageCompiler::IO {
          * @param streamInfo Stream info
          * @return Output console stream
          */
-        static std::unique_ptr<GS_OutConsoleStream> Create(LRef<std::ostream> stream, GSStreamInfoPtr streamInfo);
+        static std::shared_ptr<GS_OutConsoleStream> Create(LRef<std::ostream> stream, GSStreamInfoPtr streamInfo);
 
         /**
          * Creating output console stream (std::cout standard stream)
          * @return Output console stream ptr
          */
-        static std::unique_ptr<GS_OutConsoleStream> CreateCOut();
+        static std::shared_ptr<GS_OutConsoleStream> CreateCOut();
 
         /**
          * Creating output console stream (std::cerr standard stream)
          * @return Output console stream ptr
          */
-        static std::unique_ptr<GS_OutConsoleStream> CreateCErr();
+        static std::shared_ptr<GS_OutConsoleStream> CreateCErr();
 
         /**
          * Creating output console stream (std::clog standard stream)
          * @return Output console stream ptr
          */
-        static std::unique_ptr<GS_OutConsoleStream> CreateCLog();
+        static std::shared_ptr<GS_OutConsoleStream> CreateCLog();
 
     public:
 

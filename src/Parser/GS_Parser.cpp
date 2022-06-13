@@ -211,10 +211,11 @@ namespace GSLanguageCompiler::Parser {
         }
 
         auto variableName = TokenValue();
+        auto variableNameLocation = TokenLocation();
 
         NextToken(); // skip variable name
 
-        return _builder->CreateVariableUsingExpression(variableName);
+        return _builder->CreateVariableUsingExpression(variableName, variableNameLocation);
     }
 
     AST::GSExpressionPtr GS_Parser::ParseRValueExpression() {
@@ -372,20 +373,20 @@ namespace GSLanguageCompiler::Parser {
         return TokenType() == type;
     }
 
-    Lexer::GS_TokenLocation GS_Parser::TokenLocation() {
-        return CurrentToken().GetLocation();
-    }
-
-    UString GS_Parser::TokenValue() {
-        return CurrentToken().GetValue();
+    Lexer::GS_Token GS_Parser::CurrentToken() {
+        return _stream.CurrentToken();
     }
 
     Lexer::TokenType GS_Parser::TokenType() {
         return CurrentToken().GetType();
     }
 
-    Lexer::GS_Token GS_Parser::CurrentToken() {
-        return _stream.CurrentToken();
+    UString GS_Parser::TokenValue() {
+        return CurrentToken().GetValue();
+    }
+
+    Lexer::GS_TokenLocation GS_Parser::TokenLocation() {
+        return CurrentToken().GetLocation();
     }
 
     Void GS_Parser::NextToken() {
