@@ -36,8 +36,20 @@ namespace GSLanguageCompiler::IO {
         return _streamInfo;
     }
 
+    Bool GS_Stream::IsInStream() const {
+        return false;
+    }
+
+    Bool GS_Stream::IsOutStream() const {
+        return false;
+    }
+
     GS_InStream::GS_InStream(GSStreamInfoPtr streamInfo)
             : GS_Stream(std::move(streamInfo)) {}
+
+    Bool GS_InStream::IsInStream() const {
+        return true;
+    }
 
     GS_InFileStream::GS_InFileStream(std::ifstream stream, GSStreamInfoPtr streamInfo)
             : _stream(std::move(stream)), GS_InStream(std::move(streamInfo)) {}
@@ -71,6 +83,10 @@ namespace GSLanguageCompiler::IO {
 
     GS_OutStream::GS_OutStream(GSStreamInfoPtr streamInfo)
             : GS_Stream(std::move(streamInfo)) {}
+
+    Bool GS_OutStream::IsOutStream() const {
+        return true;
+    }
 
     GS_OutFileStream::GS_OutFileStream(std::ofstream stream, GSStreamInfoPtr streamInfo)
             : _stream(std::move(stream)), GS_OutStream(std::move(streamInfo)) {}

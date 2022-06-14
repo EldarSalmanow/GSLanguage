@@ -96,6 +96,20 @@ namespace GSLanguageCompiler::IO {
          */
         GSStreamInfoPtr GetStreamInfo() const;
 
+    public:
+
+        /**
+         * Getter for is input stream
+         * @return Is input stream
+         */
+        virtual Bool IsInStream() const;
+
+        /**
+         * Getter for is output stream
+         * @return Is output stream
+         */
+        virtual Bool IsOutStream() const;
+
     private:
 
         /**
@@ -103,6 +117,11 @@ namespace GSLanguageCompiler::IO {
          */
         GSStreamInfoPtr _streamInfo;
     };
+
+    /**
+     * Stream ptr type
+     */
+    using GSStreamPtr = std::shared_ptr<GS_Stream>;
 
     /**
      * Input stream
@@ -115,6 +134,14 @@ namespace GSLanguageCompiler::IO {
          * @param streamInfo Stream info
          */
         explicit GS_InStream(GSStreamInfoPtr streamInfo);
+
+    public:
+
+        /**
+         * Getter for is input stream
+         * @return Is input stream
+         */
+        Bool IsInStream() const override;
 
     public:
 
@@ -232,6 +259,14 @@ namespace GSLanguageCompiler::IO {
          * @param streamInfo Stream info
          */
         explicit GS_OutStream(GSStreamInfoPtr streamInfo);
+
+    public:
+
+        /**
+         * Getter for is output stream
+         * @return Is output stream
+         */
+        Bool IsOutStream() const override;
 
     public:
 

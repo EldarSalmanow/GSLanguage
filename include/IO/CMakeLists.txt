@@ -7,11 +7,13 @@ set(GS_IO_SOURCE
 
         ${IO_DIR}/GS_Symbol.cpp
 
+        ${IO_DIR}/GS_SourceManager.cpp
+
         ${IO_DIR}/GS_Reader.cpp
 
         ${IO_DIR}/GS_TextStream.cpp
 
-        ${IO_DIR}/GS_ErrorHandler.cpp)
+        ${IO_DIR}/GS_MessageHandler.cpp)
 
 add_library(
 #       Library name
