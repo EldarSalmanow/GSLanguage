@@ -16,132 +16,170 @@
 
 namespace GSLanguageCompiler::IO {
 
-    GS_MessageHandler::GS_MessageHandler(IO::GSSourceManagerPtr sourceManager)
-            : _sourceManager(std::move(sourceManager)) {}
+    inline rang::fg MessageLevelToFGColor(MessageLevel messageLevel) {
+        switch (messageLevel) {
+            case MessageLevel::Note:
+                return rang::fg::blue;
+            case MessageLevel::Warning:
+                return rang::fg::yellow;
+            case MessageLevel::Error:
+                return rang::fg::red;
+            case MessageLevel::Fatal:
+                return rang::fg::gray;
+        }
 
-    std::shared_ptr<GS_MessageHandler> GS_MessageHandler::Create(IO::GSSourceManagerPtr sourceManager) {
-        return std::make_shared<GS_MessageHandler>(std::move(sourceManager));
+        return rang::fg::reset;
+    }
+
+    GS_MessageHandler::GS_MessageHandler(IO::GSOutStreamPtr stream)
+            : _stream(std::move(stream)) {}
+
+    std::shared_ptr<GS_MessageHandler> GS_MessageHandler::Create(IO::GSOutStreamPtr stream) {
+        return std::make_shared<GS_MessageHandler>(std::move(stream));
     }
 
     std::shared_ptr<GS_MessageHandler> GS_MessageHandler::Create() {
-        return GS_MessageHandler::Create(IO::GS_SourceManager::Create());
+        return GS_MessageHandler::Create(IO::GS_OutConsoleStream::CreateCErr());
     }
 
-    Void Print(UString message, IO::GSOutStreamPtr stream, rang::style style, rang::fg color) {
-        auto BeginPrintLine = [style] (LRef<IO::GSOutStreamPtr> stream) {
-            stream->GetOutStream() << rang::style::reset << rang::fg::reset << style << "|> "_us;
-        };
+    Void GS_MessageHandler::Print(UString message, MessageLevel messageLevel) {
+        auto color = MessageLevelToFGColor(messageLevel);
 
-        auto EndPrintLine = [] (LRef<IO::GSOutStreamPtr> stream) {
-            stream->GetOutStream() << rang::style::reset << rang::fg::reset << std::endl;
-        };
+        UString messagePrefix;
 
-        BeginPrintLine(stream);
+        switch (messageLevel) {
+            case MessageLevel::Note:
+                messagePrefix = "Note: ";
 
-        stream->GetOutStream() << color << message;
+                break;
+            case MessageLevel::Warning:
+                messagePrefix = "Warning: ";
 
-        EndPrintLine(stream);
+                break;
+            case MessageLevel::Error:
+                messagePrefix = "Error: ";
 
-        BeginPrintLine(stream);
+                break;
+            case MessageLevel::Fatal:
+                messagePrefix = "Fatal: ";
 
-        EndPrintLine(stream);
-    }
-
-    Void GS_MessageHandler::Note(UString note, IO::GSOutStreamPtr stream) {
-        Print("Note: "_us + note, std::move(stream), rang::style::bold, rang::fg::blue);
-    }
-
-    Void GS_MessageHandler::Warning(UString warning, IO::GSOutStreamPtr stream) {
-        Print("Warning: "_us + warning, std::move(stream), rang::style::bold, rang::fg::yellow);
-    }
-
-    Void GS_MessageHandler::Error(UString error, IO::GSOutStreamPtr stream) {
-        Print("Error: "_us + error, std::move(stream), rang::style::bold, rang::fg::red);
-    }
-
-    Void GS_MessageHandler::StdNote(UString note) {
-        Note(std::move(note), IO::GS_OutConsoleStream::CreateCErr());
-    }
-
-    Void GS_MessageHandler::StdWarning(UString warning) {
-        Warning(std::move(warning), IO::GS_OutConsoleStream::CreateCErr());
-    }
-
-    Void GS_MessageHandler::StdError(UString error) {
-        Error(std::move(error), IO::GS_OutConsoleStream::CreateCErr());
-    }
-
-    Void Print(UString message, Lexer::GS_TokenLocation tokenLocation, IO::GSOutStreamPtr stream, rang::style style, rang::fg color, IO::GSSourceManagerPtr sourceManager) {
-        auto BeginPrintLine = [style] (LRef<IO::GSOutStreamPtr> stream) {
-            stream->GetOutStream() << rang::style::reset << rang::fg::reset << style << "|> "_us;
-        };
-
-        auto EndPrintLine = [] (LRef<IO::GSOutStreamPtr> stream) {
-            stream->GetOutStream() << rang::style::reset << rang::fg::reset << std::endl;
-        };
-
-        auto startSymbolLocation = tokenLocation.GetStartLocation();
-        auto endSymbolLocation = tokenLocation.GetEndLocation();
-
-        BeginPrintLine(stream);
-
-        auto file = sourceManager->FindFile(startSymbolLocation.GetSourceName());
-
-        auto code = file->FindLine(startSymbolLocation.GetLine());
-
-        stream->GetOutStream() << color << startSymbolLocation.GetSourceName() << " " << startSymbolLocation.GetLine() << ": >> " << code;
-
-        EndPrintLine(stream);
-
-        BeginPrintLine(stream);
-
-        stream->GetOutStream() << color;
-
-        auto aligning = startSymbolLocation.GetSourceName().Size() + std::to_string(startSymbolLocation.GetLine()).size() + 6;
-
-        for (U64 i = 1; i < startSymbolLocation.GetColumn() + aligning; ++i) {
-            stream->GetOutStream() << " ";
+                break;
         }
 
-        for (U64 i = startSymbolLocation.GetColumn() + aligning; i <= endSymbolLocation.GetColumn() + aligning; ++i) {
-            stream->GetOutStream() << "^";
+        BeginPrintLine();
+
+        _stream->GetOutStream() << color << messagePrefix + message;
+
+        EndPrintLine();
+
+        BeginPrintLine();
+
+        EndPrintLine();
+    }
+
+    Void GS_MessageHandler::Print(UString message, MessageLevel messageLevel, SourceRange sourceRange, UString text) {
+        auto color = MessageLevelToFGColor(messageLevel);
+
+        BeginPrintLine();
+
+        _stream->GetOutStream() << color << sourceRange.GetSourceName() << " " << sourceRange.GetStartLine() << ": >> " << text;
+
+        EndPrintLine();
+
+        BeginPrintLine();
+
+        _stream->GetOutStream() << color;
+
+        auto aligning = sourceRange.GetSourceName().Size() + std::to_string(sourceRange.GetStartLine()).size() + 6;
+
+        for (U64 i = 1; i < sourceRange.GetStartColumn() + aligning; ++i) {
+            _stream->GetOutStream() << " ";
         }
 
-        EndPrintLine(stream);
+        for (U64 i = sourceRange.GetStartColumn() + aligning; i <= sourceRange.GetEndColumn() + aligning; ++i) {
+            _stream->GetOutStream() << "^";
+        }
 
-        BeginPrintLine(stream);
+        EndPrintLine();
 
-        stream->GetOutStream() << color << message;
+        UString messagePrefix;
 
-        EndPrintLine(stream);
+        switch (messageLevel) {
+            case MessageLevel::Note:
+                messagePrefix = "Note: ";
 
-        BeginPrintLine(stream);
+                break;
+            case MessageLevel::Warning:
+                messagePrefix = "Warning: ";
 
-        EndPrintLine(stream);
+                break;
+            case MessageLevel::Error:
+                messagePrefix = "Error: ";
+
+                break;
+            case MessageLevel::Fatal:
+                messagePrefix = "Fatal: ";
+
+                break;
+        }
+
+        BeginPrintLine();
+
+        _stream->GetOutStream() << color << messagePrefix + message;
+
+        EndPrintLine();
+
+        BeginPrintLine();
+
+        EndPrintLine();
     }
 
-    Void GS_MessageHandler::Note(UString note, Lexer::GS_TokenLocation tokenLocation, IO::GSOutStreamPtr stream) {
-        Print("Note: "_us + note, std::move(tokenLocation), std::move(stream), rang::style::bold, rang::fg::blue, _sourceManager);
+    Void GS_MessageHandler::Print(UString message, MessageLevel messageLevel, std::vector<SourceRange> sourceRanges, std::vector<UString> texts) {
+        if (sourceRanges.size() != texts.size()) {
+            Print("MessageHandler::Print(UString, MessageLevel, std::vector<SourceRange>, std::vector<UString>): \nCan`t call GSLanguageCompiler internal function with different size of source ranges and texts!",
+                  MessageLevel::Fatal);
+
+            return;
+        }
+
+        auto color = MessageLevelToFGColor(messageLevel);
+
+        for (U64 index = 0; index < sourceRanges.size(); ++index) {
+            auto sourceRange = sourceRanges[index];
+            auto text = texts[index];
+
+            BeginPrintLine();
+
+            _stream->GetOutStream() << color << sourceRange.GetSourceName() << " " << sourceRange.GetStartLine() << ": >> " << text;
+
+            EndPrintLine();
+
+            BeginPrintLine();
+
+            _stream->GetOutStream() << color;
+
+            auto aligning = sourceRange.GetSourceName().Size() + std::to_string(sourceRange.GetStartLine()).size() + 6;
+
+            for (U64 i = 1; i < sourceRange.GetStartColumn() + aligning; ++i) {
+                _stream->GetOutStream() << " ";
+            }
+
+            for (U64 i = sourceRange.GetStartColumn() + aligning; i <= sourceRange.GetEndColumn() + aligning; ++i) {
+                _stream->GetOutStream() << "^";
+            }
+
+            EndPrintLine();
+        }
+
+        Print(message, messageLevel);
     }
 
-    Void GS_MessageHandler::Warning(UString warning, Lexer::GS_TokenLocation tokenLocation, IO::GSOutStreamPtr stream) {
-        Print("Warning: "_us + warning, std::move(tokenLocation), std::move(stream), rang::style::bold, rang::fg::yellow, _sourceManager);
+    Void GS_MessageHandler::BeginPrintLine() {
+        _stream->GetOutStream() << rang::style::reset << rang::fg::reset << rang::style::bold << "|> "_us;
     }
 
-    Void GS_MessageHandler::Error(UString error, Lexer::GS_TokenLocation tokenLocation, IO::GSOutStreamPtr stream) {
-        Print("Error: "_us + error, std::move(tokenLocation), std::move(stream), rang::style::bold, rang::fg::red, _sourceManager);
-    }
-
-    Void GS_MessageHandler::StdNote(UString note, Lexer::GS_TokenLocation tokenLocation) {
-        Note(std::move(note), std::move(tokenLocation), _sourceManager->GetConsoleErr());
-    }
-
-    Void GS_MessageHandler::StdWarning(UString warning, Lexer::GS_TokenLocation tokenLocation) {
-        Warning(std::move(warning), std::move(tokenLocation), _sourceManager->GetConsoleErr());
-    }
-
-    Void GS_MessageHandler::StdError(UString error, Lexer::GS_TokenLocation tokenLocation) {
-        Error(std::move(error), std::move(tokenLocation), _sourceManager->GetConsoleErr());
+    Void GS_MessageHandler::EndPrintLine() {
+        _stream->GetOutStream() << rang::style::reset << rang::fg::reset << std::endl;
     }
 
 }

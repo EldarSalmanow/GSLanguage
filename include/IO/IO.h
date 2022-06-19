@@ -9,8 +9,6 @@
 
 #include <IO/GS_Symbol.h>
 
-#include <IO/GS_SourceManager.h>
-
 #include <IO/GS_Reader.h>
 
 #include <IO/GS_TextStream.h>
