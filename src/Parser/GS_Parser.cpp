@@ -1,6 +1,7 @@
 #include <map>
 
 #include <GS_Parser.h>
+#include <functional>
 
 namespace GSLanguageCompiler::Parser {
 
@@ -11,18 +12,22 @@ namespace GSLanguageCompiler::Parser {
             {Lexer::TokenType::SymbolMinus, 1}
     };
 
-    GS_Parser::GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream, AST::GSASTContextPtr context)
+    GS_Parser::GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream, AST::GSASTContextPtr context, IO::GSMessageHandlerPtr messageHandler)
             : _stream(tokenStream),
               _context(std::move(context)),
               _builder(AST::GS_ASTBuilder::Create(_context)),
-              _errorHandler(GS_ErrorHandler::Create()) {}
+              _messageHandler(std::move(messageHandler)) {}
 
-    GS_Parser GS_Parser::Create(LRef<Lexer::GS_TokenStream> tokenStream, AST::GSASTContextPtr context) {
-        return GS_Parser(tokenStream, std::move(context));
+    GS_Parser GS_Parser::Create(LRef<Lexer::GS_TokenStream> tokenStream, AST::GSASTContextPtr context, IO::GSMessageHandlerPtr messageHandler) {
+        return GS_Parser(tokenStream, std::move(context), std::move(messageHandler));
+    }
+
+    GS_Parser GS_Parser::Create(LRef<Lexer::GS_TokenStream> tokenStream, IO::GSMessageHandlerPtr messageHandler) {
+        return GS_Parser::Create(tokenStream, AST::GS_ASTContext::Create(), std::move(messageHandler));
     }
 
     GS_Parser GS_Parser::Create(LRef<Lexer::GS_TokenStream> tokenStream) {
-        return GS_Parser::Create(tokenStream, AST::GS_ASTContext::Create());
+        return GS_Parser::Create(tokenStream, AST::GS_ASTContext::Create(), IO::GS_MessageHandler::Create());
     }
 
     AST::GSTranslationUnitDeclarationPtr GS_Parser::Parse() {
@@ -179,6 +184,133 @@ namespace GSLanguageCompiler::Parser {
         return expressionStatement;
     }
 
+    template<typename T>
+    class Result {
+    public:
+
+        Result()
+                : _hasValue(false) {}
+
+        explicit Result(T value)
+                : _value(value), _hasValue(true) {}
+
+    public:
+
+        static Result<T> Create(T value) {
+            return Result<T>(value);
+        }
+
+        static Result<T> Create() {
+            return Result<T>();
+        }
+
+    public:
+
+        Result<T> Then(std::function<T()> function) const {
+            if (!HasValue()) {
+                return *this;
+            }
+
+            auto result = function();
+
+            return Result<T>::Create(result);
+        }
+
+    public:
+
+        inline T Value() const {
+            return _value;
+        }
+
+        inline Bool HasValue() const {
+            return _hasValue;
+        }
+
+    public:
+
+        inline operator Bool() const {
+            return HasValue();
+        }
+
+    private:
+
+        T _value;
+
+        Bool _hasValue;
+    };
+
+    template<>
+    class Result<void> {
+    public:
+
+        Result()
+                : _hasValue(true) {}
+
+    public:
+
+        static Result<void> Create() {
+            return Result<void>();
+        }
+
+    public:
+
+        Result<void> Then(std::function<void()> function) const {
+            if (!HasValue()) {
+                return *this;
+            }
+
+            function();
+
+            return Result<void>::Create();
+        }
+
+    public:
+
+        inline Bool HasValue() const {
+            return _hasValue;
+        }
+
+    public:
+
+        inline operator Bool() const {
+            return _hasValue;
+        }
+
+    private:
+
+        Bool _hasValue;
+    };
+
+    template<typename T>
+    Result<T> Run(std::function<T()> function) {
+        auto result = function();
+
+        return Result<T>::Create(result);
+    }
+
+    template<>
+    Result<void> Run<void>(std::function<void()> function) {
+        function();
+
+        return Result<void>::Create();
+    }
+
+    void f() {
+        auto result = Run(std::function([] () {
+            if (1 > 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        })).Then(std::function([] () {
+            if (2 > 0) {
+                return 2;
+            } else {
+                return 1;
+            }
+        }));
+    }
+
     AST::GSExpressionPtr GS_Parser::ParseExpression() {
         AST::GSExpressionPtr expression;
 
@@ -218,6 +350,18 @@ namespace GSLanguageCompiler::Parser {
         return _builder->CreateVariableUsingExpression(variableName, variableNameLocation);
     }
 
+    /*
+     *
+     * unary_expr
+     *
+     * binary_expr
+     *
+     * primary_expr
+     *
+     * -(f() + -(f() + f()))
+     *
+     */
+
     AST::GSExpressionPtr GS_Parser::ParseRValueExpression() {
         auto expression = ParseUnaryExpression();
 
@@ -238,12 +382,12 @@ namespace GSLanguageCompiler::Parser {
         if (IsTokenType(Lexer::TokenType::SymbolMinus)) {
             NextToken(); // skip '-'
 
-            auto constantExpression = ParseConstantExpression();
+            auto expression = ParseExpression();
 
-            return _builder->CreateUnaryExpression(AST::UnaryOperation::Minus, constantExpression);
+            return _builder->CreateUnaryExpression(AST::UnaryOperation::Minus, expression);
         }
 
-        return ParseConstantExpression();
+        return ParseExpression();
     }
 
     AST::GSExpressionPtr GS_Parser::ParseBinaryExpression(I32 expressionPrecedence, LRef<AST::GSExpressionPtr> expression) {
@@ -274,14 +418,14 @@ namespace GSLanguageCompiler::Parser {
 
                     break;
                 default:
-                    AddError("Unknown binary operator!"_us);
+//                    AddError("Unknown binary operator!"_us);
 
                     return nullptr;
             }
 
             NextToken(); // skip binary operator
 
-            auto secondExpression = ParseUnaryExpression();
+            auto secondExpression = ParseExpression();
 
             auto nextTokenPrecedence = TokenPrecedence();
 
@@ -315,6 +459,10 @@ namespace GSLanguageCompiler::Parser {
         }
 
         return _builder->CreateFunctionCallingExpression(name, params);
+    }
+
+    AST::GSExpressionPtr GS_Parser::ParsePrimaryExpression() {
+        AST::GSExpressionPtr expression;
     }
 
     AST::GSValuePtr GS_Parser::ParseValue() {
@@ -353,7 +501,7 @@ namespace GSLanguageCompiler::Parser {
         } else if (stringVariableType == "String"_us) {
             variableType = _builder->CreateStringType();
         } else {
-            return _builder->CreateType(stringVariableType);
+            variableType = _builder->CreateType(stringVariableType);
         }
 
         return variableType;
@@ -394,7 +542,7 @@ namespace GSLanguageCompiler::Parser {
     }
 
     Void GS_Parser::AddError(UString error) {
-        _errorHandler->AddError(std::move(error));
+        _messageHandler->Print(std::move(error), IO::MessageLevel::Error);
     }
 
 }

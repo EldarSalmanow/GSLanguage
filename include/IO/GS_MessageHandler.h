@@ -95,7 +95,7 @@ namespace GSLanguageCompiler::IO {
     class GS_MessageHandler {
     public:
 
-        explicit GS_MessageHandler(IO::GSOutStreamPtr stream);
+        explicit GS_MessageHandler(GSOutStreamPtr stream);
 
     public:
 
@@ -104,7 +104,7 @@ namespace GSLanguageCompiler::IO {
          * @param stream Stream for writing messages
          * @return Message handler ptr
          */
-        static std::shared_ptr<GS_MessageHandler> Create(IO::GSOutStreamPtr stream);
+        static std::shared_ptr<GS_MessageHandler> Create(GSOutStreamPtr stream);
 
         /**
          * Creating message handler with writing message to standard console error stream
@@ -195,7 +195,7 @@ namespace GSLanguageCompiler::IO {
         /**
          * Output stream for messages
          */
-        IO::GSOutStreamPtr _stream;
+        GSOutStreamPtr _stream;
     };
 
     /**

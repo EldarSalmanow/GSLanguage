@@ -31,15 +31,15 @@ namespace GSLanguageCompiler::IO {
         return rang::fg::reset;
     }
 
-    GS_MessageHandler::GS_MessageHandler(IO::GSOutStreamPtr stream)
+    GS_MessageHandler::GS_MessageHandler(GSOutStreamPtr stream)
             : _stream(std::move(stream)) {}
 
-    std::shared_ptr<GS_MessageHandler> GS_MessageHandler::Create(IO::GSOutStreamPtr stream) {
+    std::shared_ptr<GS_MessageHandler> GS_MessageHandler::Create(GSOutStreamPtr stream) {
         return std::make_shared<GS_MessageHandler>(std::move(stream));
     }
 
     std::shared_ptr<GS_MessageHandler> GS_MessageHandler::Create() {
-        return GS_MessageHandler::Create(IO::GS_OutConsoleStream::CreateCErr());
+        return GS_MessageHandler::Create(GS_OutConsoleStream::CreateCErr());
     }
 
     Void GS_MessageHandler::Print(UString message, MessageLevel messageLevel) {

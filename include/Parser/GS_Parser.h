@@ -107,11 +107,13 @@ namespace GSLanguageCompiler::Parser {
     class GS_Parser {
     public:
 
-        GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream, AST::GSASTContextPtr context);
+        GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream, AST::GSASTContextPtr context, IO::GSMessageHandlerPtr messageHandler);
 
     public:
 
-        static GS_Parser Create(LRef<Lexer::GS_TokenStream> tokenStream, AST::GSASTContextPtr context);
+        static GS_Parser Create(LRef<Lexer::GS_TokenStream> tokenStream, AST::GSASTContextPtr context, IO::GSMessageHandlerPtr messageHandler);
+
+        static GS_Parser Create(LRef<Lexer::GS_TokenStream> tokenStream, IO::GSMessageHandlerPtr messageHandler);
 
         static GS_Parser Create(LRef<Lexer::GS_TokenStream> tokenStream);
 
@@ -151,6 +153,8 @@ namespace GSLanguageCompiler::Parser {
 
         AST::GSExpressionPtr ParseFunctionCallingExpression();
 
+        AST::GSExpressionPtr ParsePrimaryExpression();
+
     public:
 
         AST::GSValuePtr ParseValue();
@@ -159,12 +163,13 @@ namespace GSLanguageCompiler::Parser {
 
     public:
 
+        // check
         template<typename T>
         inline T TryParse(T (GS_Parser:: *method) ()) {
             auto stream = _stream;
             auto context = _context;
             auto builder = _builder;
-            auto errorHandler = _errorHandler;
+            auto errorHandler = _messageHandler;
 
             auto result = (this->*method)();
 
@@ -172,7 +177,7 @@ namespace GSLanguageCompiler::Parser {
                 _stream = stream;
                 _context = context;
                 _builder = builder;
-                _errorHandler = errorHandler;
+                _messageHandler = errorHandler;
 
                 return nullptr;
             }
@@ -196,6 +201,7 @@ namespace GSLanguageCompiler::Parser {
 
         Void NextToken();
 
+        // TODO update
         Void AddError(UString error);
 
     private:
@@ -206,7 +212,7 @@ namespace GSLanguageCompiler::Parser {
 
         AST::GSASTBuilderPtr _builder;
 
-        GSErrorHandlerPtr _errorHandler;
+        IO::GSMessageHandlerPtr _messageHandler;
     };
 
 }
