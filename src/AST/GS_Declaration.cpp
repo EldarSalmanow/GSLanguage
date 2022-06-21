@@ -8,7 +8,7 @@ namespace GSLanguageCompiler::AST {
         return true;
     }
 
-    GSDeclarationPtr ToDeclaration(GSNodePtr node) {
+    GSDeclarationPtr ToDeclaration(ConstLRef<GSNodePtr> node) {
         if (node->IsDeclaration()) {
             return std::reinterpret_pointer_cast<GS_Declaration>(node);
         }

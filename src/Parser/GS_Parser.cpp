@@ -1,7 +1,6 @@
 #include <map>
 
 #include <GS_Parser.h>
-#include <functional>
 
 namespace GSLanguageCompiler::Parser {
 
@@ -169,7 +168,7 @@ namespace GSLanguageCompiler::Parser {
 
         NextToken(); // skip '='
 
-        variableExpression = ParseRValueExpression();
+        variableExpression = ParseExpression();
 
         auto variable = _builder->CreateVariableDeclarationStatement(variableName, variableType, variableExpression);
 
@@ -184,149 +183,10 @@ namespace GSLanguageCompiler::Parser {
         return expressionStatement;
     }
 
-    template<typename T>
-    class Result {
-    public:
-
-        Result()
-                : _hasValue(false) {}
-
-        explicit Result(T value)
-                : _value(value), _hasValue(true) {}
-
-    public:
-
-        static Result<T> Create(T value) {
-            return Result<T>(value);
-        }
-
-        static Result<T> Create() {
-            return Result<T>();
-        }
-
-    public:
-
-        Result<T> Then(std::function<T()> function) const {
-            if (!HasValue()) {
-                return *this;
-            }
-
-            auto result = function();
-
-            return Result<T>::Create(result);
-        }
-
-    public:
-
-        inline T Value() const {
-            return _value;
-        }
-
-        inline Bool HasValue() const {
-            return _hasValue;
-        }
-
-    public:
-
-        inline operator Bool() const {
-            return HasValue();
-        }
-
-    private:
-
-        T _value;
-
-        Bool _hasValue;
-    };
-
-    template<>
-    class Result<void> {
-    public:
-
-        Result()
-                : _hasValue(true) {}
-
-    public:
-
-        static Result<void> Create() {
-            return Result<void>();
-        }
-
-    public:
-
-        Result<void> Then(std::function<void()> function) const {
-            if (!HasValue()) {
-                return *this;
-            }
-
-            function();
-
-            return Result<void>::Create();
-        }
-
-    public:
-
-        inline Bool HasValue() const {
-            return _hasValue;
-        }
-
-    public:
-
-        inline operator Bool() const {
-            return _hasValue;
-        }
-
-    private:
-
-        Bool _hasValue;
-    };
-
-    template<typename T>
-    Result<T> Run(std::function<T()> function) {
-        auto result = function();
-
-        return Result<T>::Create(result);
-    }
-
-    template<>
-    Result<void> Run<void>(std::function<void()> function) {
-        function();
-
-        return Result<void>::Create();
-    }
-
-    void f() {
-        auto result = Run(std::function([] () {
-            if (1 > 0) {
-                return 1;
-            } else {
-                return 0;
-            }
-        })).Then(std::function([] () {
-            if (2 > 0) {
-                return 2;
-            } else {
-                return 1;
-            }
-        }));
-    }
-
     AST::GSExpressionPtr GS_Parser::ParseExpression() {
-        AST::GSExpressionPtr expression;
+        auto expression = ParseUnaryExpression();
 
-        expression = TryParse(&GS_Parser::ParseRValueExpression);
-
-        if (expression) {
-            return expression;
-        }
-
-        expression = TryParse(&GS_Parser::ParseLValueExpression);
-
-        if (expression) {
-            return expression;
-        }
-
-        return nullptr;
+        return ParseBinaryExpression(0, expression);
     }
 
     AST::GSExpressionPtr GS_Parser::ParseLValueExpression() {
@@ -336,31 +196,6 @@ namespace GSLanguageCompiler::Parser {
 
         return nullptr;
     }
-
-    AST::GSExpressionPtr GS_Parser::ParseVariableUsingExpression() {
-        if (!IsTokenType(Lexer::TokenType::Identifier)) {
-            return nullptr;
-        }
-
-        auto variableName = TokenValue();
-        auto variableNameLocation = TokenLocation();
-
-        NextToken(); // skip variable name
-
-        return _builder->CreateVariableUsingExpression(variableName, variableNameLocation);
-    }
-
-    /*
-     *
-     * unary_expr
-     *
-     * binary_expr
-     *
-     * primary_expr
-     *
-     * -(f() + -(f() + f()))
-     *
-     */
 
     AST::GSExpressionPtr GS_Parser::ParseRValueExpression() {
         auto expression = ParseUnaryExpression();
@@ -382,12 +217,12 @@ namespace GSLanguageCompiler::Parser {
         if (IsTokenType(Lexer::TokenType::SymbolMinus)) {
             NextToken(); // skip '-'
 
-            auto expression = ParseExpression();
+            auto expression = ParsePrimaryExpression();
 
             return _builder->CreateUnaryExpression(AST::UnaryOperation::Minus, expression);
         }
 
-        return ParseExpression();
+        return ParsePrimaryExpression();
     }
 
     AST::GSExpressionPtr GS_Parser::ParseBinaryExpression(I32 expressionPrecedence, LRef<AST::GSExpressionPtr> expression) {
@@ -425,7 +260,7 @@ namespace GSLanguageCompiler::Parser {
 
             NextToken(); // skip binary operator
 
-            auto secondExpression = ParseExpression();
+            auto secondExpression = ParseUnaryExpression();
 
             auto nextTokenPrecedence = TokenPrecedence();
 
@@ -435,6 +270,19 @@ namespace GSLanguageCompiler::Parser {
 
             expression = _builder->CreateBinaryExpression(binaryOperator, expression, secondExpression);
         }
+    }
+
+    AST::GSExpressionPtr GS_Parser::ParseVariableUsingExpression() {
+        if (!IsTokenType(Lexer::TokenType::Identifier)) {
+            return nullptr;
+        }
+
+        auto variableName = TokenValue();
+        auto variableNameLocation = TokenLocation();
+
+        NextToken(); // skip variable name
+
+        return _builder->CreateVariableUsingExpression(variableName, variableNameLocation);
     }
 
     AST::GSExpressionPtr GS_Parser::ParseFunctionCallingExpression() {
@@ -450,6 +298,8 @@ namespace GSLanguageCompiler::Parser {
             return nullptr;
         }
 
+        NextToken(); // skip '('
+
         AST::GSExpressionPtrArray params;
 
         while (!IsTokenType(Lexer::TokenType::SymbolRightParen)) {
@@ -458,11 +308,47 @@ namespace GSLanguageCompiler::Parser {
             params.emplace_back(param);
         }
 
+        NextToken(); // skip ')'
+
         return _builder->CreateFunctionCallingExpression(name, params);
     }
 
     AST::GSExpressionPtr GS_Parser::ParsePrimaryExpression() {
         AST::GSExpressionPtr expression;
+
+        expression = TryParse(&GS_Parser::ParseFunctionCallingExpression);
+
+        if (expression) {
+            return expression;
+        }
+
+        expression = TryParse(&GS_Parser::ParseVariableUsingExpression);
+
+        if (expression) {
+            return expression;
+        }
+
+        expression = TryParse(&GS_Parser::ParseConstantExpression);
+
+        if (expression) {
+            return expression;
+        }
+
+        if (IsTokenType(Lexer::TokenType::SymbolLeftParen)) {
+            NextToken(); // skip '('
+
+            expression = ParseExpression();
+
+            if (!IsTokenType(Lexer::TokenType::SymbolRightParen)) {
+                return nullptr;
+            }
+
+            NextToken(); // skip ')'
+
+            return expression;
+        }
+
+        return nullptr;
     }
 
     AST::GSValuePtr GS_Parser::ParseValue() {

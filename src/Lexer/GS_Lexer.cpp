@@ -72,13 +72,14 @@ namespace GSLanguageCompiler::Lexer {
     }
 
     GS_Token GS_Lexer::GetToken() {
-        if (CurrentSymbolValue().IsWhitespace()) {
-            auto location = CurrentSymbolLocation();
+        // TODO update or remove
+        while (CurrentSymbolValue().IsWhitespace()) {
+//            auto location = CurrentSymbolLocation();
 
             NextSymbol();
 
-            return GS_Token::Create(TokenType::SymbolSpace, GS_TokenLocation::Create(location));
-        } else if (CurrentSymbolValue().IsIDStart()) {
+//            return GS_Token::Create(TokenType::SymbolSpace, GS_TokenLocation::Create(location));
+        } if (CurrentSymbolValue().IsIDStart()) {
             UString string;
 
             auto startLocation = CurrentSymbolLocation();

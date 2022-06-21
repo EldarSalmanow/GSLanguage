@@ -7,86 +7,47 @@
 
 namespace GSLanguageCompiler::Parser {
 
-    // TODO update error handler
-
-    class GS_Error {
-    public:
-
-        explicit GS_Error(UString message)
-                : _message(std::move(message)) {}
-
-    public:
-
-        static GS_Error Create(UString message) {
-            return GS_Error(std::move(message));
-        }
-
-    public:
-
-        UString GetMessage() const {
-            return _message;
-        }
-
-    private:
-
-        UString _message;
-    };
-
-    class GS_ErrorHandler {
-    public:
-
-        GS_ErrorHandler() = default;
-
-    public:
-
-        static std::shared_ptr<GS_ErrorHandler> Create() {
-            return std::make_shared<GS_ErrorHandler>();
-        }
-
-    public:
-
-        Void AddError(UString message) {
-            _errors.emplace_back(GS_Error::Create(std::move(message)));
-        }
-
-    public:
-
-        std::vector<GS_Error> GetErrors() const {
-            return _errors;
-        }
-
-    private:
-
-        std::vector<GS_Error> _errors;
-    };
-
-    using GSErrorHandlerPtr = std::shared_ptr<GS_ErrorHandler>;
-
     /**
      *
-     * Parser Grammar
+     * Program
+     *
+     * program -> translation_unit_decl
      *
      * translation_unit_decl -> decl...
      *
-     * decl -> func_decl (, translation_unit_decl)
+     */
+
+    /**
+     * Declaration
+     *
+     * decl -> func_decl (, translation_unit_decl (only in AST, not in real programs!))
      *
      * func_decl -> 'func' id '(' ')' '{' stmt... '}'
      *
+     */
+
+    /**
+     * Statement
+     *
      * stmt -> var_decl_stmt, assignment_stmt, expr_stmt
      *
-     * var_decl_stmt -> 'var' id (':' id) '=' rvalue_expr
+     * var_decl_stmt -> 'var' id (':' id) '=' rvalue_expr (?)
      *
-     * assignment_stmt -> lvalue_expr '=' rvalue_expr
+     * assignment_stmt -> lvalue_expr '=' rvalue_expr (?)
      *
      * expr_stmt -> expr
      *
-     * expr -> lvalue_expr, rvalue_expr
+     */
+
+    /**
+     *
+     * Expression
+     *
+     * expr -> const_expr, unary_expr, binary_expr, var_using_expr, func_call_expr
      *
      * lvalue_expr -> var_using_expr
      *
-     * var_using_expr -> id
-     *
-     * rvalue_expr -> const_expr, unary_expr, binary_expr, func_call_expr
+     * rvalue_expr -> const_expr, unary_expr, binary_expr, var_using_expr, func_call_expr
      *
      * const_expr -> num, str
      *
@@ -98,12 +59,12 @@ namespace GSLanguageCompiler::Parser {
      *
      * binary_op -> '+', '-', '*', '/'
      *
+     * var_using_expr -> id
+     *
      * func_call_expr -> id '(' (expr...) ')'
      *
      */
 
-    // TODO reorganise parsing process
-    // UPD: in progress
     class GS_Parser {
     public:
 
@@ -141,8 +102,6 @@ namespace GSLanguageCompiler::Parser {
 
         AST::GSExpressionPtr ParseLValueExpression();
 
-        AST::GSExpressionPtr ParseVariableUsingExpression();
-
         AST::GSExpressionPtr ParseRValueExpression();
 
         AST::GSExpressionPtr ParseConstantExpression();
@@ -150,6 +109,8 @@ namespace GSLanguageCompiler::Parser {
         AST::GSExpressionPtr ParseUnaryExpression();
 
         AST::GSExpressionPtr ParseBinaryExpression(I32 precedence, LRef<AST::GSExpressionPtr> expression);
+
+        AST::GSExpressionPtr ParseVariableUsingExpression();
 
         AST::GSExpressionPtr ParseFunctionCallingExpression();
 

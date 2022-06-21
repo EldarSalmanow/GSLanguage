@@ -57,7 +57,7 @@ namespace GSLanguageCompiler::AST {
      * @param node Node
      * @return Statement or nullptr
      */
-    GSStatementPtr ToStatement(GSNodePtr node);
+    GSStatementPtr ToStatement(ConstLRef<GSNodePtr> node);
 
     /**
      * Declaring for cast function
@@ -73,7 +73,7 @@ namespace GSLanguageCompiler::AST {
      * @return Statement or nullptr
      */
     template<typename T>
-    inline std::shared_ptr<T> ToStatement(GSNodePtr node) {
+    inline std::shared_ptr<T> ToStatement(ConstLRef<GSNodePtr> node) {
         static_assert(std::is_base_of_v<GS_Statement, T>, "Type for casting must be inherited from GS_Statement!");
 
         auto statement = ToStatement(node);

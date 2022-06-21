@@ -59,7 +59,7 @@ namespace GSLanguageCompiler::AST {
      * @param node Node
      * @return Expression or nullptr
      */
-    GSExpressionPtr ToExpression(GSNodePtr node);
+    GSExpressionPtr ToExpression(ConstLRef<GSNodePtr> node);
 
     /**
      * Declaring for cast function
@@ -77,7 +77,7 @@ namespace GSLanguageCompiler::AST {
      * @return Expression or nullptr
      */
     template<typename T>
-    inline std::shared_ptr<T> ToExpression(GSNodePtr node) {
+    inline std::shared_ptr<T> ToExpression(ConstLRef<GSNodePtr> node) {
         static_assert(std::is_base_of_v<GS_Expression, T>, "Type for casting must be inherited from GS_Expression!");
 
         auto expression = ToExpression(node);
@@ -120,6 +120,38 @@ namespace GSLanguageCompiler::AST {
         }
 
         return std::reinterpret_pointer_cast<T>(expression);
+    }
+
+    /**
+     * Checking is left value expression
+     * @param expression Expression
+     * @return Is left value expression
+     */
+    inline Bool IsLValueExpression(ConstLRef<GSExpressionPtr> expression) {
+        switch (expression->GetExpressionType()) {
+            case ExpressionType::VariableUsingExpression:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Checking is right value expression
+     * @param expression Expression
+     * @return Is right value expression
+     */
+    inline Bool IsRValueExpression(ConstLRef<GSExpressionPtr> expression) {
+        switch (expression->GetExpressionType()) {
+            case ExpressionType::ConstantExpression:
+            case ExpressionType::UnaryExpression:
+            case ExpressionType::BinaryExpression:
+            case ExpressionType::VariableUsingExpression:
+            case ExpressionType::FunctionCallingExpression:
+                return true;
+            default:
+                return false;
+        }
     }
 
 }

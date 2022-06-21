@@ -1,5 +1,7 @@
 func main() {
-    var a: I32 = 10
+    var string: String = input()
 
-    a = 23
+    var iterator: Iterator = Iterate(string)
+
+    print(iterator)
 }
