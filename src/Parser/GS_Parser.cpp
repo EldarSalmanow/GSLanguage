@@ -1,5 +1,7 @@
 #include <map>
 
+#include <Driver/GS_CompilerSessionConfig.h>
+
 #include <GS_Parser.h>
 
 namespace GSLanguageCompiler::Parser {
@@ -11,30 +13,20 @@ namespace GSLanguageCompiler::Parser {
             {Lexer::TokenType::SymbolMinus, 1}
     };
 
-    GS_Parser::GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream, AST::GSASTContextPtr context, IO::GSMessageHandlerPtr messageHandler)
+    GS_Parser::GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream, std::shared_ptr<Driver::GS_TranslationUnitConfig> translationUnitConfig)
             : _stream(tokenStream),
-              _context(std::move(context)),
-              _builder(AST::GS_ASTBuilder::Create(_context)),
-              _messageHandler(std::move(messageHandler)) {}
+              _builder(AST::GS_ASTBuilder::Create(translationUnitConfig->GetSessionConfig()->GetASTContext())) {}
 
-    GS_Parser GS_Parser::Create(LRef<Lexer::GS_TokenStream> tokenStream, AST::GSASTContextPtr context, IO::GSMessageHandlerPtr messageHandler) {
-        return GS_Parser(tokenStream, std::move(context), std::move(messageHandler));
+    GS_Parser GS_Parser::Create(LRef<Lexer::GS_TokenStream> tokenStream, std::shared_ptr<Driver::GS_TranslationUnitConfig> translationUnitConfig) {
+        return GS_Parser(tokenStream, std::move(translationUnitConfig));
     }
 
-    GS_Parser GS_Parser::Create(LRef<Lexer::GS_TokenStream> tokenStream, IO::GSMessageHandlerPtr messageHandler) {
-        return GS_Parser::Create(tokenStream, AST::GS_ASTContext::Create(), std::move(messageHandler));
-    }
-
-    GS_Parser GS_Parser::Create(LRef<Lexer::GS_TokenStream> tokenStream) {
-        return GS_Parser::Create(tokenStream, AST::GS_ASTContext::Create(), IO::GS_MessageHandler::Create());
-    }
-
-    AST::GSTranslationUnitDeclarationPtr GS_Parser::Parse() {
+    AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseProgram() {
         return ParseTranslationUnitDeclaration();
     }
 
-    AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseTranslationUnitDeclaration() {
-        auto unit = _builder->CreateTranslationUnitDeclaration(TokenLocation().GetStartLocation().GetSourceName());
+    AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseTranslationUnitDeclaration(UString translationUnitName) {
+        auto unit = _builder->CreateTranslationUnitDeclaration(std::move(translationUnitName));
 
         while (!IsTokenType(Lexer::TokenType::EndOfFile)) {
             auto declaration = ParseDeclaration();
@@ -47,6 +39,11 @@ namespace GSLanguageCompiler::Parser {
         }
 
         return unit;
+    }
+
+    AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseTranslationUnitDeclaration() {
+        // TODO update
+        return ParseTranslationUnitDeclaration(TokenLocation().GetStartLocation().GetSourceName());
     }
 
     AST::GSDeclarationPtr GS_Parser::ParseDeclaration() {

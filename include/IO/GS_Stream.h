@@ -1,6 +1,7 @@
 #ifndef GSLANGUAGE_GS_STREAM_H
 #define GSLANGUAGE_GS_STREAM_H
 
+#include <sstream>
 #include <fstream>
 
 #include <GSCrossPlatform/CrossPlatform.h>
@@ -41,6 +42,12 @@ namespace GSLanguageCompiler::IO {
          */
         static std::shared_ptr<GS_StreamInfo> CreateConsoleInfo();
 
+        /**
+         * Creating string stream info
+         * @return Stream info ptr
+         */
+        static std::shared_ptr<GS_StreamInfo> CreateStringInfo();
+
     public:
 
         /**
@@ -54,6 +61,12 @@ namespace GSLanguageCompiler::IO {
          * @return Is console stream info
          */
         Bool IsConsole() const;
+
+        /**
+         * Is string stream info
+         * @return Is string stream info
+         */
+        Bool IsString() const;
 
     public:
 
@@ -168,7 +181,7 @@ namespace GSLanguageCompiler::IO {
          * @param stream Standard input file stream
          * @param streamInfo Stream info
          */
-        explicit GS_InFileStream(std::ifstream stream, GSStreamInfoPtr streamInfo);
+        GS_InFileStream(std::ifstream stream, GSStreamInfoPtr streamInfo);
 
     public:
 
@@ -214,7 +227,7 @@ namespace GSLanguageCompiler::IO {
          * @param stream Standard input console stream
          * @param streamInfo Stream info
          */
-        explicit GS_InConsoleStream(LRef<std::istream> stream, GSStreamInfoPtr streamInfo);
+        GS_InConsoleStream(LRef<std::istream> stream, GSStreamInfoPtr streamInfo);
 
     public:
 
@@ -246,6 +259,51 @@ namespace GSLanguageCompiler::IO {
          * Standard input console stream
          */
         LRef<std::istream> _stream;
+    };
+
+    /**
+     * Input string stream
+     */
+    class GS_InStringStream : public GS_InStream {
+    public:
+
+        /**
+         * Constructor for input string stream
+         * @param stream Standard input string stream
+         * @param streamInfo Stream info
+         */
+        GS_InStringStream(std::istringstream stream, GSStreamInfoPtr streamInfo);
+
+    public:
+
+        /**
+         * Creating input string stream
+         * @param stream Standard input string stream
+         * @return Input string stream ptr
+         */
+        static std::shared_ptr<GS_InStringStream> Create(std::istringstream stream);
+
+        /**
+         * Creating input string stream
+         * @param string String
+         * @return Input string stream ptr
+         */
+        static std::shared_ptr<GS_InStringStream> Create(UString string);
+
+    public:
+
+        /**
+         * Getter for standard input stream
+         * @return Standard input stream
+         */
+        LRef<std::istream> GetInStream();
+
+    private:
+
+        /**
+         * Standard input string stream
+         */
+        std::istringstream _stream;
     };
 
     /**
@@ -293,7 +351,7 @@ namespace GSLanguageCompiler::IO {
          * @param stream Standard output file stream
          * @param streamInfo Stream info
          */
-        explicit GS_OutFileStream(std::ofstream stream, GSStreamInfoPtr streamInfo);
+        GS_OutFileStream(std::ofstream stream, GSStreamInfoPtr streamInfo);
 
     public:
 
@@ -339,7 +397,7 @@ namespace GSLanguageCompiler::IO {
          * @param stream Standard output console stream
          * @param streamInfo Stream info
          */
-        explicit GS_OutConsoleStream(LRef<std::ostream> stream, GSStreamInfoPtr streamInfo);
+        GS_OutConsoleStream(LRef<std::ostream> stream, GSStreamInfoPtr streamInfo);
 
     public:
 
@@ -383,6 +441,57 @@ namespace GSLanguageCompiler::IO {
          * Standard output console stream
          */
         LRef<std::ostream> _stream;
+    };
+
+    /**
+     * Output string stream
+     */
+    class GS_OutStringStream : public GS_OutStream {
+    public:
+
+        /**
+         * Constructor for output string stream
+         * @param stream Standard output string stream
+         * @param streamInfo Stream info
+         */
+        GS_OutStringStream(std::ostringstream stream, GSStreamInfoPtr streamInfo);
+
+    public:
+
+        /**
+         * Creating output string stream
+         * @param stream Standard output string stream
+         * @return Output string stream ptr
+         */
+        static std::shared_ptr<GS_OutStringStream> Create(std::ostringstream stream);
+
+        /**
+         * Creating output string stream
+         * @param string String
+         * @return Output string stream ptr
+         */
+        static std::shared_ptr<GS_OutStringStream> Create(UString string);
+
+        /**
+         * Creating output string stream
+         * @return Output string stream ptr
+         */
+        static std::shared_ptr<GS_OutStringStream> Create();
+
+    public:
+
+        /**
+         * Getter for standard output stream
+         * @return Standard output stream
+         */
+        LRef<std::ostream> GetOutStream();
+
+    private:
+
+        /**
+         * Standard output string stream
+         */
+        std::ostringstream _stream;
     };
 
 }

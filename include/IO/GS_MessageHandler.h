@@ -95,6 +95,10 @@ namespace GSLanguageCompiler::IO {
     class GS_MessageHandler {
     public:
 
+        /**
+         * Constructor for message handler
+         * @param stream Output stream
+         */
         explicit GS_MessageHandler(GSOutStreamPtr stream);
 
     public:

@@ -35,7 +35,7 @@ namespace GSLanguageCompiler::Driver {
     public:
 
         /**
-         * Compiler entry point for create and startup compiler
+         * Compiler entry point for create and startup one compiler session
          * @param argc Arguments counter
          * @param argv Arguments value
          * @return Compiler result. 0 - success, any results - failure

@@ -17,12 +17,20 @@ namespace GSLanguageCompiler::IO {
         return GS_StreamInfo::Create("<console>");
     }
 
+    std::shared_ptr<GS_StreamInfo> GS_StreamInfo::CreateStringInfo() {
+        return GS_StreamInfo::Create("<string>");
+    }
+
     Bool GS_StreamInfo::IsFile() const {
-        return !IsConsole();
+        return !IsConsole() && !IsString();
     }
 
     Bool GS_StreamInfo::IsConsole() const {
         return _fileName == "<console>";
+    }
+
+    Bool GS_StreamInfo::IsString() const {
+        return _fileName == "<string>";
     }
 
     UString GS_StreamInfo::GetFileName() const {
@@ -81,6 +89,21 @@ namespace GSLanguageCompiler::IO {
         return _stream;
     }
 
+    GS_InStringStream::GS_InStringStream(std::istringstream stream, GSStreamInfoPtr streamInfo)
+            : _stream(std::move(stream)), GS_InStream(std::move(streamInfo)) {}
+
+    std::shared_ptr<GS_InStringStream> GS_InStringStream::Create(std::istringstream stream) {
+        return std::make_shared<GS_InStringStream>(std::move(stream), GS_StreamInfo::CreateStringInfo());
+    }
+
+    std::shared_ptr<GS_InStringStream> GS_InStringStream::Create(UString string) {
+        return GS_InStringStream::Create(std::istringstream(string.AsUTF8()));
+    }
+
+    LRef<std::istream> GS_InStringStream::GetInStream() {
+        return _stream;
+    }
+
     GS_OutStream::GS_OutStream(GSStreamInfoPtr streamInfo)
             : GS_Stream(std::move(streamInfo)) {}
 
@@ -123,6 +146,25 @@ namespace GSLanguageCompiler::IO {
     }
 
     LRef<std::ostream> GS_OutConsoleStream::GetOutStream() {
+        return _stream;
+    }
+
+    GS_OutStringStream::GS_OutStringStream(std::ostringstream stream, GSStreamInfoPtr streamInfo)
+            : _stream(std::move(stream)), GS_OutStream(std::move(streamInfo)) {}
+
+    std::shared_ptr<GS_OutStringStream> GS_OutStringStream::Create(std::ostringstream stream) {
+        return std::make_shared<GS_OutStringStream>(std::move(stream), GS_StreamInfo::CreateStringInfo());
+    }
+
+    std::shared_ptr<GS_OutStringStream> GS_OutStringStream::Create(UString string) {
+        return GS_OutStringStream::Create(std::ostringstream(string.AsUTF8()));
+    }
+
+    std::shared_ptr<GS_OutStringStream> GS_OutStringStream::Create() {
+        return GS_OutStringStream::Create(std::ostringstream());
+    }
+
+    LRef<std::ostream> GS_OutStringStream::GetOutStream() {
         return _stream;
     }
 

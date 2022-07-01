@@ -1,14 +1,25 @@
 #include <args.hxx>
 
+#include <IO/GS_MessageHandler.h>
+
+#include <AST/GS_ASTContext.h>
+
 #include <GS_CompilerSessionConfig.h>
 
 namespace GSLanguageCompiler::Driver {
 
-    GS_CompilerSessionConfig::GS_CompilerSessionConfig(GSTranslationUnitConfigPtrArray unitConfigs, UString outputName)
-            : _unitConfigs(std::move(unitConfigs)), _outputName(std::move(outputName)) {}
+    GS_CompilerSessionConfig::GS_CompilerSessionConfig(GSTranslationUnitConfigPtrArray unitConfigs, UString outputName, std::shared_ptr<IO::GS_MessageHandler> messageHandler, std::shared_ptr<AST::GS_ASTContext> astContext)
+            : _unitConfigs(std::move(unitConfigs)),
+              _outputName(std::move(outputName)),
+              _messageHandler(std::move(messageHandler)),
+              _astContext(std::move(astContext)) {}
+
+    std::shared_ptr<GS_CompilerSessionConfig> GS_CompilerSessionConfig::Create(GSTranslationUnitConfigPtrArray unitConfigs, UString outputName, std::shared_ptr<IO::GS_MessageHandler> messageHandler, std::shared_ptr<AST::GS_ASTContext> astContext) {
+        return std::make_shared<GS_CompilerSessionConfig>(std::move(unitConfigs), std::move(outputName), std::move(messageHandler), std::move(astContext));
+    }
 
     std::shared_ptr<GS_CompilerSessionConfig> GS_CompilerSessionConfig::Create(GSTranslationUnitConfigPtrArray unitConfigs, UString outputName) {
-        return std::make_shared<GS_CompilerSessionConfig>(std::move(unitConfigs), std::move(outputName));
+        return GS_CompilerSessionConfig::Create(std::move(unitConfigs), std::move(outputName), IO::GS_MessageHandler::Create(), AST::GS_ASTContext::Create());
     }
 
     std::shared_ptr<GS_CompilerSessionConfig> GS_CompilerSessionConfig::Create(I32 argc, Ptr<Ptr<C>> argv) {
@@ -56,4 +67,39 @@ namespace GSLanguageCompiler::Driver {
         return _outputName;
     }
 
+    std::shared_ptr<IO::GS_MessageHandler> GS_CompilerSessionConfig::GetMessageHandler() const {
+        return _messageHandler;
+    }
+
+    std::shared_ptr<AST::GS_ASTContext> GS_CompilerSessionConfig::GetASTContext() const {
+        return _astContext;
+    }
+
+    void f() {
+        auto tuconf = GS_TranslationUnitConfig::Create("main.gs"_us);
+
+        auto mh = IO::GS_MessageHandler::Create(IO::GS_OutFileStream::CreateOutFile("complogs.txt"));
+
+        auto astctx = AST::GS_ASTContext::Create();
+
+        auto sessconf = GS_CompilerSessionConfig::Create({ tuconf }, "main.exe"_us, mh, astctx);
+    }
+
+    // GSLanguage -f main.gs lib.gs -o main.exe
+
+    /* main.gs
+     *
+     * import say_hello_module
+     *
+     * func main() {
+     *     say_hello()
+     * }
+     *
+     */
+
+    /* lib.gs
+     *
+     *
+     *
+     */
 }
