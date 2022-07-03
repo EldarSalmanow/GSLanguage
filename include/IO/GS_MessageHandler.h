@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_MESSAGEHANDLER_H
 #define GSLANGUAGE_GS_MESSAGEHANDLER_H
 
-#include <Lexer/GS_Token.h>
+#include <vector>
 
 #include <IO/GS_Stream.h>
 
@@ -35,13 +35,6 @@ namespace GSLanguageCompiler::IO {
 
         static SourceRange Create() {
             return SourceRange::Create("<unknown>"_us, 0, 0, 0, 0);
-        }
-
-        static SourceRange CreateFromTokenLocation(Lexer::GS_TokenLocation tokenLocation) {
-            auto startSymbolLocation = tokenLocation.GetStartLocation();
-            auto endSymbolLocation = tokenLocation.GetEndLocation();
-
-            return SourceRange::Create(startSymbolLocation.GetSourceName(), startSymbolLocation.GetLine(), startSymbolLocation.GetColumn(), endSymbolLocation.GetLine(), endSymbolLocation.GetColumn());
         }
 
     public:

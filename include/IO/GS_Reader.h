@@ -3,14 +3,7 @@
 
 #include <IO/GS_Stream.h>
 
-#include <IO/GS_Symbol.h>
-
 namespace GSLanguageCompiler::IO {
-
-    /**
-     * Declaring text stream
-     */
-    class GS_TextStream;
 
     /**
      * Reader for read files
@@ -39,15 +32,7 @@ namespace GSLanguageCompiler::IO {
          * Reading symbols from source
          * @return Symbols
          */
-        GSSymbolArray ReadSymbols();
-
-    public:
-
-        /**
-         * Creating text stream for reading text
-         * @return Text stream
-         */
-        GS_TextStream CreateStream();
+        UString Read();
 
     private:
 

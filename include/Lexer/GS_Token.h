@@ -1,12 +1,15 @@
 #ifndef GSLANGUAGE_GS_TOKEN_H
 #define GSLANGUAGE_GS_TOKEN_H
 
-#include <IO/GS_Symbol.h>
+#include <vector>
+
+#include <GSCrossPlatform/CrossPlatform.h>
 
 #include <Lexer/GS_Keywords.h>
 
 namespace GSLanguageCompiler::Lexer {
 
+    // TODO update location system
     /**
      * Class for containing token information about location
      */
@@ -15,60 +18,17 @@ namespace GSLanguageCompiler::Lexer {
 
         /**
          * Constructor for token location
-         * @param startLocation Start location
-         * @param endLocation End location
          * @return Token location
          */
-        GS_TokenLocation(IO::GS_SymbolLocation startLocation, IO::GS_SymbolLocation endLocation);
+        GS_TokenLocation();
 
     public:
-
-        /**
-         * Creating token location
-         * @param startLocation Start location
-         * @param endLocation End location
-         * @return Token location
-         */
-        static GS_TokenLocation Create(IO::GS_SymbolLocation startLocation, IO::GS_SymbolLocation endLocation);
-
-        /**
-         * Creating token location
-         * @param location Location
-         * @return Token location
-         */
-        static GS_TokenLocation Create(IO::GS_SymbolLocation location);
 
         /**
          * Creating token location
          * @return Token location
          */
         static GS_TokenLocation Create();
-
-    public:
-
-        /**
-         * Getter for start location
-         * @return Start location
-         */
-        IO::GS_SymbolLocation GetStartLocation() const;
-
-        /**
-         * Getter for end location
-         * @return End location
-         */
-        IO::GS_SymbolLocation GetEndLocation() const;
-
-    private:
-
-        /**
-         * Start location
-         */
-        IO::GS_SymbolLocation _startLocation;
-
-        /**
-         * End location
-         */
-        IO::GS_SymbolLocation _endLocation;
     };
 
     /**

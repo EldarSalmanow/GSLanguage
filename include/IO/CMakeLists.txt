@@ -5,11 +5,7 @@ set(IO_DIR ${SOURCE_DIR}/IO)
 set(GS_IO_SOURCE
         ${IO_DIR}/GS_Stream.cpp
 
-        ${IO_DIR}/GS_Symbol.cpp
-
         ${IO_DIR}/GS_Reader.cpp
-
-        ${IO_DIR}/GS_TextStream.cpp
 
         ${IO_DIR}/GS_MessageHandler.cpp)
 

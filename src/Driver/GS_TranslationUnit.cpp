@@ -18,7 +18,6 @@
 #include <Debug/Debug.h>
 
 #include <GS_TranslationUnit.h>
-#include "GS_CompilerSessionConfig.h"
 
 namespace GSLanguageCompiler::Driver {
 
@@ -330,11 +329,11 @@ namespace GSLanguageCompiler::Driver {
     CompilingResult GS_TranslationUnit::Compile() {
         auto fileStream = IO::GS_InFileStream::CreateInFile(_config->GetInputName());
 
-        auto textStream = IO::GS_Reader::Create(std::move(fileStream)).CreateStream();
+        auto content = IO::GS_Reader::Create(std::move(fileStream)).Read();
 
-        auto tokenStream = Lexer::GS_Lexer::Create(textStream).CreateStream();
+        auto tokens = Lexer::GS_Lexer::Create(content).Tokenize();
 
-        auto unit = Parser::GS_Parser::Create(tokenStream).ParseProgram();
+        auto unit = Parser::GS_Parser::Create(tokens, IO::GS_MessageHandler::Create(), AST::GS_ASTContext::Create()).ParseProgram();
 
         if (!unit) {
             return CompilingResult::Failure;

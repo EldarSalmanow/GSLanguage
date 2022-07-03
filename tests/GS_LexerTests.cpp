@@ -8,45 +8,35 @@ class LexerTest : public ::testing::Test {
 public:
 
     LexerTest()
-            : _textStream(nullptr), _tokenStream(nullptr) {}
+            : _inputContent("var a = 10"), _validTokens({
+                Lexer::GS_Token::Create(Lexer::TokenType::KeywordVar),
+                Lexer::GS_Token::Create(Lexer::TokenType::Identifier, "a"_us),
+                Lexer::GS_Token::Create(Lexer::TokenType::SymbolEq),
+                Lexer::GS_Token::Create(Lexer::TokenType::LiteralNumber, "10"_us),
+                Lexer::GS_Token::Create(Lexer::TokenType::EndOfFile)
+            }) {}
 
 protected:
 
     Void SetUp() override {
-        _textStream = new IO::GS_TextStream(IO::GS_TextStream::Create("var a = 10"));
-
-        _tokenStream = new Lexer::GS_TokenStream(Lexer::GS_Lexer::Create(*_textStream).CreateStream());
-    }
-
-    Void TearDown() override {
-        delete _textStream;
-
-        delete _tokenStream;
+        _tokens = Lexer::GS_Lexer::Create(_inputContent).Tokenize();
     }
 
 protected:
 
-    Lexer::GSTokenArray _validTokens = {
-            Lexer::GS_Token::Create(Lexer::TokenType::KeywordVar),
-            Lexer::GS_Token::Create(Lexer::TokenType::Identifier, "a"_us),
-            Lexer::GS_Token::Create(Lexer::TokenType::SymbolEq),
-            Lexer::GS_Token::Create(Lexer::TokenType::LiteralNumber, "10"_us),
-            Lexer::GS_Token::Create(Lexer::TokenType::EndOfFile)
-    };
+    UString _inputContent;
 
-    Ptr<IO::GS_TextStream> _textStream;
+    Lexer::GSTokenArray _validTokens;
 
-    Ptr<Lexer::GS_TokenStream> _tokenStream;
+    Lexer::GSTokenArray _tokens;
 };
 
 TEST_F(LexerTest, Tokenizing) {
-    for (auto &inputToken : _validTokens) {
-        auto streamToken = _tokenStream->CurrentToken();
+    ASSERT_EQ(_tokens.size(), _validTokens.size());
 
-        ASSERT_EQ(inputToken.GetType(), streamToken.GetType());
-        ASSERT_EQ(inputToken.GetValue(), streamToken.GetValue());
-
-        _tokenStream->NextToken();
+    for (U64 index = 0; index < _tokens.size(); ++index) {
+        ASSERT_EQ(_tokens[index].GetType(), _validTokens[index].GetType());
+        ASSERT_EQ(_tokens[index].GetValue(), _validTokens[index].GetValue());
     }
 }
 

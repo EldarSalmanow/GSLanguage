@@ -1,8 +1,8 @@
 #ifndef GSLANGUAGE_GS_STREAM_H
 #define GSLANGUAGE_GS_STREAM_H
 
-#include <sstream>
 #include <fstream>
+#include <sstream>
 
 #include <GSCrossPlatform/CrossPlatform.h>
 

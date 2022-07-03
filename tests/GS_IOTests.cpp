@@ -8,32 +8,26 @@ class IOTest : public ::testing::Test {
 public:
 
     IOTest()
-            : _textStream(nullptr) {}
+            : _validString("func main() {\n\tvar a = 10\n}"_us) {}
 
 protected:
 
     Void SetUp() override {
-        _textStream = new IO::GS_TextStream(IO::GS_Reader(IO::GS_InStringStream::Create(_validString)).CreateStream());
-    }
-
-    Void TearDown() override {
-        delete _textStream;
+        _string = IO::GS_Reader(IO::GS_InStringStream::Create(_validString)).Read();
     }
 
 protected:
 
-    UString _validString = "func main() {\n\tvar a = 10\n}"_us;
+    UString _validString;
 
-    Ptr<IO::GS_TextStream> _textStream;
+    UString _string;
 };
 
 TEST_F(IOTest, Reading) {
-    for (auto &inputSymbol : _validString) {
-        auto streamSymbol = _textStream->CurrentSymbol();
+    ASSERT_EQ(_string.Size(), _validString.Size());
 
-        ASSERT_EQ(inputSymbol, streamSymbol);
-
-        _textStream->NextSymbol();
+    for (U64 index = 0; index < _string.Size(); ++index) {
+        ASSERT_EQ(_string[index], _validString[index]);
     }
 }
 

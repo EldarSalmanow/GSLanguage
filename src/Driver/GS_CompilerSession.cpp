@@ -43,7 +43,7 @@ namespace GSLanguageCompiler::Driver {
 
     GSToolchainPtr GS_CompilerSession::GetDefaultToolchain() {
 #if defined(GS_OS_WINDOWS)
-      
+
         return std::make_shared<GS_MSVCToolchain>();
       
 #else

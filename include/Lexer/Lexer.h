@@ -11,6 +11,4 @@
 
 #include <Lexer/GS_Lexer.h>
 
-#include <Lexer/GS_TokenStream.h>
-
 #endif //GSLANGUAGE_LEXER_H

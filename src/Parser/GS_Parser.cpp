@@ -1,7 +1,5 @@
 #include <map>
 
-#include <Driver/GS_CompilerSessionConfig.h>
-
 #include <GS_Parser.h>
 
 namespace GSLanguageCompiler::Parser {
@@ -13,12 +11,14 @@ namespace GSLanguageCompiler::Parser {
             {Lexer::TokenType::SymbolMinus, 1}
     };
 
-    GS_Parser::GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream, std::shared_ptr<Driver::GS_TranslationUnitConfig> translationUnitConfig)
-            : _stream(tokenStream),
-              _builder(AST::GS_ASTBuilder::Create(translationUnitConfig->GetSessionConfig()->GetASTContext())) {}
+    GS_Parser::GS_Parser(Lexer::GSTokenArray tokens, AST::GSASTContextPtr context)
+            : _tokens(std::move(tokens)),
+              _tokensIterator(_tokens.begin()),
+              _context(std::move(context)),
+              _builder(AST::GS_ASTBuilder::Create(_context)) {}
 
-    GS_Parser GS_Parser::Create(LRef<Lexer::GS_TokenStream> tokenStream, std::shared_ptr<Driver::GS_TranslationUnitConfig> translationUnitConfig) {
-        return GS_Parser(tokenStream, std::move(translationUnitConfig));
+    GS_Parser GS_Parser::Create(Lexer::GSTokenArray tokens, AST::GSASTContextPtr context) {
+        return GS_Parser(std::move(tokens), std::move(context));
     }
 
     AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseProgram() {
@@ -43,7 +43,7 @@ namespace GSLanguageCompiler::Parser {
 
     AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseTranslationUnitDeclaration() {
         // TODO update
-        return ParseTranslationUnitDeclaration(TokenLocation().GetStartLocation().GetSourceName());
+        return ParseTranslationUnitDeclaration("<unknown TU name>");
     }
 
     AST::GSDeclarationPtr GS_Parser::ParseDeclaration() {
@@ -250,8 +250,6 @@ namespace GSLanguageCompiler::Parser {
 
                     break;
                 default:
-//                    AddError("Unknown binary operator!"_us);
-
                     return nullptr;
             }
 
@@ -275,11 +273,10 @@ namespace GSLanguageCompiler::Parser {
         }
 
         auto variableName = TokenValue();
-        auto variableNameLocation = TokenLocation();
 
         NextToken(); // skip variable name
 
-        return _builder->CreateVariableUsingExpression(variableName, variableNameLocation);
+        return _builder->CreateVariableUsingExpression(variableName);
     }
 
     AST::GSExpressionPtr GS_Parser::ParseFunctionCallingExpression() {
@@ -405,7 +402,7 @@ namespace GSLanguageCompiler::Parser {
     }
 
     Lexer::GS_Token GS_Parser::CurrentToken() {
-        return _stream.CurrentToken();
+        return *_tokensIterator;
     }
 
     Lexer::TokenType GS_Parser::TokenType() {
@@ -416,16 +413,8 @@ namespace GSLanguageCompiler::Parser {
         return CurrentToken().GetValue();
     }
 
-    Lexer::GS_TokenLocation GS_Parser::TokenLocation() {
-        return CurrentToken().GetLocation();
-    }
-
     Void GS_Parser::NextToken() {
-        _stream.NextToken();
-    }
-
-    Void GS_Parser::AddError(UString error) {
-        _messageHandler->Print(std::move(error), IO::MessageLevel::Error);
+        ++_tokensIterator;
     }
 
 }

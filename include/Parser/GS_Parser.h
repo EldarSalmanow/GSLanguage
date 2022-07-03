@@ -5,182 +5,163 @@
 
 #include <AST/AST.h>
 
-namespace GSLanguageCompiler {
+namespace GSLanguageCompiler::Parser {
 
-    namespace Driver {
+    /**
+     *
+     * Program
+     *
+     * program -> translation_unit_decl
+     *
+     * translation_unit_decl -> decl...
+     *
+     */
 
-        class GS_TranslationUnitConfig;
+    /**
+     * Declaration
+     *
+     * decl -> func_decl (, translation_unit_decl (only in AST, not in real programs!))
+     *
+     * func_decl -> 'func' id '(' ')' '{' stmt... '}'
+     *
+     */
 
-    }
+    /**
+     * Statement
+     *
+     * stmt -> var_decl_stmt, assignment_stmt, expr_stmt
+     *
+     * var_decl_stmt -> 'var' id (':' id) '=' rvalue_expr (?)
+     *
+     * assignment_stmt -> lvalue_expr '=' rvalue_expr (?)
+     *
+     * expr_stmt -> expr
+     *
+     */
 
-    namespace Parser {
+    /**
+     *
+     * Expression
+     *
+     * expr -> const_expr, unary_expr, binary_expr, var_using_expr, func_call_expr
+     *
+     * lvalue_expr -> var_using_expr
+     *
+     * rvalue_expr -> const_expr, unary_expr, binary_expr, var_using_expr, func_call_expr
+     *
+     * const_expr -> num, str
+     *
+     * unary_expr -> unary_op expr
+     *
+     * unary_op -> '-'
+     *
+     * binary_expr -> expr binary_op expr
+     *
+     * binary_op -> '+', '-', '*', '/'
+     *
+     * var_using_expr -> id
+     *
+     * func_call_expr -> id '(' (expr...) ')'
+     *
+     */
 
-        /**
-         *
-         * Program
-         *
-         * program -> translation_unit_decl
-         *
-         * translation_unit_decl -> decl...
-         *
-         */
+    class GS_Parser {
+    public:
 
-        /**
-         * Declaration
-         *
-         * decl -> func_decl (, translation_unit_decl (only in AST, not in real programs!))
-         *
-         * func_decl -> 'func' id '(' ')' '{' stmt... '}'
-         *
-         */
+        GS_Parser(Lexer::GSTokenArray tokens, AST::GSASTContextPtr context);
 
-        /**
-         * Statement
-         *
-         * stmt -> var_decl_stmt, assignment_stmt, expr_stmt
-         *
-         * var_decl_stmt -> 'var' id (':' id) '=' rvalue_expr (?)
-         *
-         * assignment_stmt -> lvalue_expr '=' rvalue_expr (?)
-         *
-         * expr_stmt -> expr
-         *
-         */
+    public:
 
-        /**
-         *
-         * Expression
-         *
-         * expr -> const_expr, unary_expr, binary_expr, var_using_expr, func_call_expr
-         *
-         * lvalue_expr -> var_using_expr
-         *
-         * rvalue_expr -> const_expr, unary_expr, binary_expr, var_using_expr, func_call_expr
-         *
-         * const_expr -> num, str
-         *
-         * unary_expr -> unary_op expr
-         *
-         * unary_op -> '-'
-         *
-         * binary_expr -> expr binary_op expr
-         *
-         * binary_op -> '+', '-', '*', '/'
-         *
-         * var_using_expr -> id
-         *
-         * func_call_expr -> id '(' (expr...) ')'
-         *
-         */
+        static GS_Parser Create(Lexer::GSTokenArray tokens, AST::GSASTContextPtr context);
 
-        class GS_Parser {
-        public:
+    public:
 
-            GS_Parser(LRef<Lexer::GS_TokenStream> tokenStream, std::shared_ptr<Driver::GS_TranslationUnitConfig> translationUnitConfig);
+        AST::GSTranslationUnitDeclarationPtr ParseProgram();
 
-        public:
+    public:
 
-            static GS_Parser Create(LRef<Lexer::GS_TokenStream> tokenStream, std::shared_ptr<Driver::GS_TranslationUnitConfig> translationUnitConfig);
+        AST::GSTranslationUnitDeclarationPtr ParseTranslationUnitDeclaration(UString translationUnitName);
 
-        public:
+        AST::GSTranslationUnitDeclarationPtr ParseTranslationUnitDeclaration();
 
-            AST::GSTranslationUnitDeclarationPtr ParseProgram();
+        AST::GSDeclarationPtr ParseDeclaration();
 
-        public:
+        std::shared_ptr<AST::GS_FunctionDeclaration> ParseFunctionDeclaration();
 
-            AST::GSTranslationUnitDeclarationPtr ParseTranslationUnitDeclaration(UString translationUnitName);
+        AST::GSStatementPtr ParseStatement();
 
-            AST::GSTranslationUnitDeclarationPtr ParseTranslationUnitDeclaration();
+        std::shared_ptr<AST::GS_VariableDeclarationStatement> ParseVariableDeclarationStatement();
 
-            AST::GSDeclarationPtr ParseDeclaration();
+        std::shared_ptr<AST::GS_AssignmentStatement> ParseAssignmentStatement();
 
-            std::shared_ptr<AST::GS_FunctionDeclaration> ParseFunctionDeclaration();
+        std::shared_ptr<AST::GS_ExpressionStatement> ParseExpressionStatement();
 
-            AST::GSStatementPtr ParseStatement();
+        AST::GSExpressionPtr ParseExpression();
 
-            std::shared_ptr<AST::GS_VariableDeclarationStatement> ParseVariableDeclarationStatement();
+        AST::GSExpressionPtr ParseLValueExpression();
 
-            std::shared_ptr<AST::GS_AssignmentStatement> ParseAssignmentStatement();
+        AST::GSExpressionPtr ParseRValueExpression();
 
-            std::shared_ptr<AST::GS_ExpressionStatement> ParseExpressionStatement();
+        AST::GSExpressionPtr ParseConstantExpression();
 
-            AST::GSExpressionPtr ParseExpression();
+        AST::GSExpressionPtr ParseUnaryExpression();
 
-            AST::GSExpressionPtr ParseLValueExpression();
+        AST::GSExpressionPtr ParseBinaryExpression(I32 precedence, LRef<AST::GSExpressionPtr> expression);
 
-            AST::GSExpressionPtr ParseRValueExpression();
+        AST::GSExpressionPtr ParseVariableUsingExpression();
 
-            AST::GSExpressionPtr ParseConstantExpression();
+        AST::GSExpressionPtr ParseFunctionCallingExpression();
 
-            AST::GSExpressionPtr ParseUnaryExpression();
+        AST::GSExpressionPtr ParsePrimaryExpression();
 
-            AST::GSExpressionPtr ParseBinaryExpression(I32 precedence, LRef<AST::GSExpressionPtr> expression);
+    public:
 
-            AST::GSExpressionPtr ParseVariableUsingExpression();
+        AST::GSValuePtr ParseValue();
 
-            AST::GSExpressionPtr ParseFunctionCallingExpression();
+        Semantic::GSTypePtr ParseType();
 
-            AST::GSExpressionPtr ParsePrimaryExpression();
+    public:
 
-        public:
+        // check
+        template<typename T>
+        inline T TryParse(T (GS_Parser::*method)()) {
+            auto tokensIterator = _tokensIterator;
 
-            AST::GSValuePtr ParseValue();
+            auto result = (this->*method)();
 
-            Semantic::GSTypePtr ParseType();
+            if (!result) {
+                _tokensIterator = tokensIterator;
 
-        public:
-
-            // check
-            template<typename T>
-            inline T TryParse(T (GS_Parser::*method)()) {
-                auto stream = _stream;
-                auto context = _context;
-                auto builder = _builder;
-                auto errorHandler = _messageHandler;
-
-                auto result = (this->*method)();
-
-                if (!result) {
-                    _stream = stream;
-                    _context = context;
-                    _builder = builder;
-                    _messageHandler = errorHandler;
-
-                    return nullptr;
-                }
-
-                return result;
+                return nullptr;
             }
 
-        public:
+            return result;
+        }
 
-            I32 TokenPrecedence();
+    public:
 
-            Bool IsTokenType(Lexer::TokenType type);
+        I32 TokenPrecedence();
 
-            Lexer::GS_Token CurrentToken();
+        Bool IsTokenType(Lexer::TokenType type);
 
-            Lexer::TokenType TokenType();
+        Lexer::GS_Token CurrentToken();
 
-            UString TokenValue();
+        Lexer::TokenType TokenType();
 
-            Lexer::GS_TokenLocation TokenLocation();
+        UString TokenValue();
 
-            Void NextToken();
+        Void NextToken();
 
-            // TODO update
-            Void AddError(UString error);
+    private:
 
-        private:
+        Lexer::GSTokenArray _tokens;
 
-            Lexer::GS_TokenStream _stream;
+        Lexer::GSTokenArrayIterator _tokensIterator;
 
-            std::shared_ptr<Driver::GS_TranslationUnitConfig> _translationUnitConfig;
+        AST::GSASTContextPtr _context;
 
-            AST::GSASTBuilderPtr _builder;
-        };
-
-    }
+        AST::GSASTBuilderPtr _builder;
+    };
 
 }
 

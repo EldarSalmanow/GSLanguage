@@ -8,11 +8,6 @@
 namespace GSLanguageCompiler::Lexer {
 
     /**
-     * Declaring token stream
-     */
-    class GS_TokenStream;
-
-    /**
      * Class for tokenizing source code
      */
     class GS_Lexer {
@@ -20,18 +15,18 @@ namespace GSLanguageCompiler::Lexer {
 
         /**
          * Constructor for lexer
-         * @param textStream Text stream
+         * @param content Content
          */
-        explicit GS_Lexer(LRef<IO::GS_TextStream> textStream);
+        explicit GS_Lexer(UString content);
 
     public:
 
         /**
          * Creating lexer
-         * @param textStream Text stream
+         * @param content Content
          * @return Lexer
          */
-        static GS_Lexer Create(LRef<IO::GS_TextStream> textStream);
+        static GS_Lexer Create(UString content);
 
     public:
 
@@ -40,14 +35,6 @@ namespace GSLanguageCompiler::Lexer {
          * @return Tokens
          */
         GSTokenArray Tokenize();
-
-    public:
-
-        /**
-         * Create token stream for reading tokens
-         * @return Token stream
-         */
-        GS_TokenStream CreateStream();
 
     private:
 
@@ -60,31 +47,19 @@ namespace GSLanguageCompiler::Lexer {
     private:
 
         /**
-         * Getting current symbol from stream
-         * @return Current symbol
-         */
-        IO::GS_Symbol CurrentSymbol();
-
-        /**
-         * Getting current symbol value from stream
+         * Getting current symbol from cursor
          * @return Current symbol value
          */
-        USymbol CurrentSymbolValue();
+        USymbol CurrentSymbol();
 
         /**
-         * Getting current symbol location from stream
-         * @return Current symbol location
-         */
-        IO::GS_SymbolLocation CurrentSymbolLocation();
-
-        /**
-         * Setting cursor to next symbol in stream
+         * Setting cursor to next symbol in content
          * @return
          */
         Void NextSymbol();
 
         /**
-         * Setting cursor to previous symbol in stream
+         * Setting cursor to previous symbol in content
          * @return
          */
         Void PrevSymbol();
@@ -92,9 +67,14 @@ namespace GSLanguageCompiler::Lexer {
     private:
 
         /**
-         * Text stream
+         * Content
          */
-        IO::GS_TextStream _stream;
+        UString _content;
+
+        /**
+         * Content iterator
+         */
+        UString::Iterator _contentIterator;
     };
 
 }
