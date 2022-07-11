@@ -74,4 +74,5 @@ namespace GSLanguageCompiler::Driver {
     std::shared_ptr<AST::GS_ASTContext> GS_CompilerSessionConfig::GetASTContext() const {
         return _astContext;
     }
+
 }

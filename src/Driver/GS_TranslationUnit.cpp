@@ -326,6 +326,189 @@ namespace GSLanguageCompiler::Driver {
         return false;
     }
 
+    enum class SourceNameType {
+        File,
+        String
+    };
+
+    class SourceName {
+    public:
+
+        SourceName(UString name, SourceNameType type)
+                : _name(std::move(name)), _type(type), _hash(0) {
+            std::hash<std::string> hasher;
+
+            _hash = hasher(_name.AsUTF8());
+        }
+
+    public:
+
+        static SourceName Create(UString name, SourceNameType type) {
+            return SourceName(std::move(name), type);
+        }
+
+        static SourceName CreateFile(UString name) {
+            return SourceName::Create(std::move(name), SourceNameType::File);
+        }
+
+        static SourceName CreateString() {
+            return SourceName::Create("<string>", SourceNameType::String);
+        }
+
+    public:
+
+        UString GetName() const {
+            return _name;
+        }
+
+        SourceNameType GetType() const {
+            return _type;
+        }
+
+        U64 GetHash() const {
+            return _hash;
+        }
+
+    public:
+
+        Bool operator==(ConstLRef<SourceName> name) const {
+            return _hash == name.GetHash();
+        }
+
+        Bool operator!=(ConstLRef<SourceName> name) const {
+            return !(*this == name);
+        }
+
+    private:
+
+        UString _name;
+
+        SourceNameType _type;
+
+        U64 _hash;
+    };
+
+    class Source {
+    public:
+
+        Source(UString source, SourceName name)
+                : _source(std::move(source)), _name(std::move(name)), _hash(0) {
+            std::hash<std::string> hasher;
+
+            _hash = hasher(_source.AsUTF8());
+
+            _hash ^= _name.GetHash();
+        }
+
+    public:
+
+        static std::shared_ptr<Source> Create(UString source, SourceName name) {
+            return std::make_shared<Source>(std::move(source), std::move(name));
+        }
+
+        static std::shared_ptr<Source> CreateFile(SourceName name) {
+            return Source::Create(IO::GS_Reader::Create(IO::GS_InFileStream::CreateInFile(name.GetName())).Read(), std::move(name));
+        }
+
+        static std::shared_ptr<Source> CreateString(UString source) {
+            return Source::Create(std::move(source), SourceName::CreateString());
+        }
+
+    public:
+
+        UString GetSource() const {
+            return _source;
+        }
+
+        SourceName GetName() const {
+            return _name;
+        }
+
+        U64 GetHash() const {
+            return _hash;
+        }
+
+    public:
+
+        Bool operator==(ConstLRef<Source> source) const {
+            return _hash == source.GetHash();
+        }
+
+        Bool operator!=(ConstLRef<Source> source) const {
+            return !(*this == source);
+        }
+
+    private:
+
+        UString _source;
+
+        SourceName _name;
+
+        U64 _hash;
+    };
+
+    using SourcePtr = std::shared_ptr<Source>;
+
+    using SourcePtrArray = std::vector<SourcePtr>;
+
+    class SourceManager {
+    public:
+
+        explicit SourceManager(SourcePtrArray sources)
+                : _sources(std::move(sources)) {}
+
+    public:
+
+        static std::shared_ptr<SourceManager> Create(SourcePtrArray sources) {
+            return std::make_shared<SourceManager>(std::move(sources));
+        }
+
+        static std::shared_ptr<SourceManager> Create() {
+            return SourceManager::Create(SourcePtrArray());
+        }
+
+    public:
+
+        Bool AddSource(SourcePtr source) {
+            for (auto &source_ : _sources) {
+                if (source_ == source) {
+                    return false;
+                }
+            }
+
+            _sources.emplace_back(std::move(source));
+
+            return true;
+        }
+
+        // TODO
+        SourcePtr GetSource(U64 hash) const {
+            for (auto &source : _sources) {
+                if (source->GetHash() == hash) {
+                    return source;
+                }
+            }
+
+            return nullptr;
+        }
+
+    public:
+
+        SourcePtrArray GetSources() const {
+            return _sources;
+        }
+
+    private:
+
+        SourcePtrArray _sources;
+    };
+
+    void f() {
+        auto SM = SourceManager::Create();
+
+        SM->AddSource(Source::CreateString("func main() { println(\"Hello, World!\") }"));
+    }
+
     CompilingResult GS_TranslationUnit::Compile() {
         auto fileStream = IO::GS_InFileStream::CreateInFile(_config->GetInputName());
 
@@ -333,7 +516,7 @@ namespace GSLanguageCompiler::Driver {
 
         auto tokens = Lexer::GS_Lexer::Create(content).Tokenize();
 
-        auto unit = Parser::GS_Parser::Create(tokens, IO::GS_MessageHandler::Create(), AST::GS_ASTContext::Create()).ParseProgram();
+        auto unit = Parser::GS_Parser::Create(tokens, AST::GS_ASTContext::Create()).ParseProgram();
 
         if (!unit) {
             return CompilingResult::Failure;
