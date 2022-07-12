@@ -326,6 +326,57 @@ namespace GSLanguageCompiler::Driver {
         return false;
     }
 
+    class SourceLocation {
+    public:
+
+        SourceLocation(U64 sourceHash, U64 startPosition, U64 endPosition)
+                : _sourceHash(sourceHash), _startPosition(startPosition), _endPosition(endPosition) {}
+
+    public:
+
+        static SourceLocation Create(U64 sourceHash, U64 startPosition, U64 endPosition) {
+            return SourceLocation(sourceHash, startPosition, endPosition);
+        }
+
+        static SourceLocation Create(U64 sourceHash, U64 endPosition) {
+            return SourceLocation::Create(sourceHash, 1, endPosition);
+        }
+
+        static SourceLocation CreateWithoutHash(U64 startPosition, U64 endPosition) {
+            return SourceLocation::Create(0, startPosition, endPosition);
+        }
+
+        static SourceLocation CreateWithoutHash(U64 endPosition) {
+            return SourceLocation::CreateWithoutHash(1, endPosition);
+        }
+
+        static SourceLocation Create() {
+            return SourceLocation::Create(0, 0, 0);
+        }
+
+    public:
+
+        U64 GetSourceHash() const {
+            return _sourceHash;
+        }
+
+        U64 GetStartPosition() const {
+            return _startPosition;
+        }
+
+        U64 GetEndPosition() const {
+            return _endPosition;
+        }
+
+    private:
+
+        U64 _sourceHash;
+
+        U64 _startPosition;
+
+        U64 _endPosition;
+    };
+
     enum class SourceNameType {
         File,
         String
@@ -392,7 +443,24 @@ namespace GSLanguageCompiler::Driver {
     public:
 
         Source(UString source, SourceName name)
-                : _source(std::move(source)), _name(std::move(name)), _hash(0) {
+                : _source(std::move(source)), _linesPositions(), _name(std::move(name)), _hash(0) {
+            // TODO check
+            U64 startLinePosition = 1, endLinePosition = 0;
+
+            for (U64 index = 0; index < _source.Size(); ++index) {
+                if (_source[index] == '\n') {
+                    endLinePosition = index;
+
+                    _linesPositions.emplace_back(std::make_pair(startLinePosition, endLinePosition));
+
+                    startLinePosition = index + 1;
+
+                    endLinePosition = 0;
+                }
+            }
+
+            _linesPositions.emplace_back(std::make_pair(startLinePosition, _source.Size()));
+
             std::hash<std::string> hasher;
 
             _hash = hasher(_source.AsUTF8());
@@ -407,11 +475,51 @@ namespace GSLanguageCompiler::Driver {
         }
 
         static std::shared_ptr<Source> CreateFile(SourceName name) {
-            return Source::Create(IO::GS_Reader::Create(IO::GS_InFileStream::CreateInFile(name.GetName())).Read(), std::move(name));
+            auto fileStream = IO::GS_InFileStream::CreateInFile(name.GetName());
+
+            auto reader = IO::GS_Reader::Create(fileStream);
+
+            return Source::Create(reader.Read(), std::move(name));
         }
 
         static std::shared_ptr<Source> CreateString(UString source) {
             return Source::Create(std::move(source), SourceName::CreateString());
+        }
+
+    public:
+
+        UString GetCodeByLocation(SourceLocation location) {
+            UString code;
+
+            for (U64 index = location.GetStartPosition() - 1; index < location.GetEndPosition(); ++index) {
+                code += _source[index];
+            }
+
+            return code;
+        }
+
+        std::pair<U64, U64> GetLineAndColumnPosition(U64 bytePosition) {
+            U64 line = 0, column = 0;
+
+            for (U64 index = 0; index < _linesPositions.size(); ++index) {
+                auto [startLinePosition, endLinePosition] = _linesPositions[index];
+
+                if (startLinePosition <= bytePosition && bytePosition <= endLinePosition) {
+                    line = index + 1;
+
+                    column = bytePosition - (startLinePosition - 1);
+
+                    return std::make_pair(line, column);
+                }
+            }
+
+            return std::make_pair(0, 0);
+        }
+
+        UString GetLine(U64 line) {
+            auto [startLinePosition, endLinePosition] = _linesPositions[line - 1];
+
+            return GetCodeByLocation(SourceLocation::Create(_hash, startLinePosition, endLinePosition));
         }
 
     public:
@@ -441,6 +549,8 @@ namespace GSLanguageCompiler::Driver {
     private:
 
         UString _source;
+
+        std::vector<std::pair<U64, U64>> _linesPositions;
 
         SourceName _name;
 
@@ -481,10 +591,19 @@ namespace GSLanguageCompiler::Driver {
             return true;
         }
 
-        // TODO
         SourcePtr GetSource(U64 hash) const {
             for (auto &source : _sources) {
                 if (source->GetHash() == hash) {
+                    return source;
+                }
+            }
+
+            return nullptr;
+        }
+
+        SourcePtr GetSource(SourceName name) const {
+            for (auto &source : _sources) {
+                if (source->GetName() == name) {
                     return source;
                 }
             }
@@ -503,13 +622,31 @@ namespace GSLanguageCompiler::Driver {
         SourcePtrArray _sources;
     };
 
-    void f() {
-        auto SM = SourceManager::Create();
+    using SourceManagerPtr = std::shared_ptr<SourceManager>;
 
-        SM->AddSource(Source::CreateString("func main() { println(\"Hello, World!\") }"));
+    Void Error(UString message, SourceLocation location, SourceManagerPtr SM, IO::GSMessageHandlerPtr MH) {
+        auto source = SM->GetSource(location.GetSourceHash());
+
+        auto [startLine, startColumn] = source->GetLineAndColumnPosition(location.GetStartPosition());
+        auto [endLine, endColumn] = source->GetLineAndColumnPosition(location.GetEndPosition());
+
+        MH->Print(std::move(message),
+                  IO::MessageLevel::Error,
+                  IO::SourceRange::Create(source->GetName().GetName(), startLine, startColumn, endLine, endColumn),
+                  source->GetLine(startLine));
     }
 
     CompilingResult GS_TranslationUnit::Compile() {
+        auto SM = SourceManager::Create();
+        auto MH = IO::GS_MessageHandler::Create();
+
+        auto source = Source::CreateString("func main() {\n\tprintl(\"Hello, World!\")\n}");
+        auto sourceHash = source->GetHash();
+
+        SM->AddSource(source);
+
+        Error("Can`t found function 'printl'!"_us, SourceLocation::Create(sourceHash, 16, 21), SM, MH);
+
         auto fileStream = IO::GS_InFileStream::CreateInFile(_config->GetInputName());
 
         auto content = IO::GS_Reader::Create(std::move(fileStream)).Read();
@@ -526,7 +663,7 @@ namespace GSLanguageCompiler::Driver {
 //
 //        Optimizer->Optimize(unit);
 
-        Debug::DumpAST(unit);
+//        Debug::DumpAST(unit);
 
 //        auto codeGenerator = CodeGenerator::GS_CodeGenerator::CreateLLVMCG();
 //
