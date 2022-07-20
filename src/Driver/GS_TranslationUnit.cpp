@@ -403,7 +403,13 @@ namespace GSLanguageCompiler::Driver {
         }
 
         static SourceName CreateString() {
-            return SourceName::Create("<string>", SourceNameType::String);
+            static U64 id = 1;
+
+            auto name = UString(std::string("<string>") + std::to_string(id));
+
+            ++id;
+
+            return SourceName::Create(name, SourceNameType::String);
         }
 
     public:
@@ -550,6 +556,8 @@ namespace GSLanguageCompiler::Driver {
 
         UString _source;
 
+        std::vector<UString> _sourceLines;
+
         std::vector<std::pair<U64, U64>> _linesPositions;
 
         SourceName _name;
@@ -601,6 +609,7 @@ namespace GSLanguageCompiler::Driver {
             return nullptr;
         }
 
+        // TODO
         SourcePtr GetSource(SourceName name) const {
             for (auto &source : _sources) {
                 if (source->GetName() == name) {
@@ -630,30 +639,58 @@ namespace GSLanguageCompiler::Driver {
         auto [startLine, startColumn] = source->GetLineAndColumnPosition(location.GetStartPosition());
         auto [endLine, endColumn] = source->GetLineAndColumnPosition(location.GetEndPosition());
 
+        auto line = source->GetLine(startLine);
+
+        if (line[0] == '\n') {
+            startColumn -= 1;
+            endColumn -= 1;
+
+            line = UString(line.AsUTF8().substr(1));
+        }
+
         MH->Print(std::move(message),
                   IO::MessageLevel::Error,
                   IO::SourceRange::Create(source->GetName().GetName(), startLine, startColumn, endLine, endColumn),
-                  source->GetLine(startLine));
+                  line);
     }
 
+    class SessionConfig {
+    private:
+
+        IO::GSMessageHandlerPtr _messageHandler;
+
+        SourceManagerPtr _sourceManager;
+
+        AST::GSASTContextPtr _astContext;
+    };
+
     CompilingResult GS_TranslationUnit::Compile() {
-        auto SM = SourceManager::Create();
-        auto MH = IO::GS_MessageHandler::Create();
+//        auto SM = SourceManager::Create();
+//        auto MH = IO::GS_MessageHandler::Create();
 
-        auto source = Source::CreateString("func main() {\n\tprintl(\"Hello, World!\")\n}");
-        auto sourceHash = source->GetHash();
+//        auto source = Source::CreateString("func main() {\nprintl(\"Hello, World!\")\n}");
+//        auto source = Source::CreateFile(SourceName::CreateFile(_config->GetInputName()));
+//        auto sourceHash = source->GetHash();
+//
+//        SM->AddSource(source);
 
-        SM->AddSource(source);
+//        Error("Can`t found function 'printl'!"_us, SourceLocation::Create(sourceHash, 15, 20), SM, MH);
 
-        Error("Can`t found function 'printl'!"_us, SourceLocation::Create(sourceHash, 16, 21), SM, MH);
+//        auto fileStream = IO::GS_InFileStream::CreateInFile(_config->GetInputName());
+//
+//        auto content = IO::GS_Reader::Create(std::move(fileStream)).Read();
 
-        auto fileStream = IO::GS_InFileStream::CreateInFile(_config->GetInputName());
+        auto sourceHash = _config->GetSourceHash();
+        auto sessionConfig = _config->GetSessionConfig();
 
-        auto content = IO::GS_Reader::Create(std::move(fileStream)).Read();
+        auto sourceManager = sessionConfig->GetSourceManager();
+        auto astContext = sessionConfig->GetASTContext();
 
-        auto tokens = Lexer::GS_Lexer::Create(content).Tokenize();
+        auto source = sourceManager->GetSource(sourceHash);
 
-        auto unit = Parser::GS_Parser::Create(tokens, AST::GS_ASTContext::Create()).ParseProgram();
+        auto tokens = Lexer::GS_Lexer::Create(source->GetSource(), sessionConfig).Tokenize();
+
+        auto unit = Parser::GS_Parser::Create(tokens, sessionConfig).ParseProgram();
 
         if (!unit) {
             return CompilingResult::Failure;
@@ -663,7 +700,7 @@ namespace GSLanguageCompiler::Driver {
 //
 //        Optimizer->Optimize(unit);
 
-//        Debug::DumpAST(unit);
+        Debug::DumpAST(unit);
 
 //        auto codeGenerator = CodeGenerator::GS_CodeGenerator::CreateLLVMCG();
 //

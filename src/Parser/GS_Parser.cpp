@@ -11,14 +11,14 @@ namespace GSLanguageCompiler::Parser {
             {Lexer::TokenType::SymbolMinus, 1}
     };
 
-    GS_Parser::GS_Parser(Lexer::GSTokenArray tokens, AST::GSASTContextPtr context)
+    GS_Parser::GS_Parser(Lexer::GSTokenArray tokens, Driver::GSCompilerSessionConfigPtr sessionConfig)
             : _tokens(std::move(tokens)),
               _tokensIterator(_tokens.begin()),
-              _context(std::move(context)),
-              _builder(AST::GS_ASTBuilder::Create(_context)) {}
+              _sessionConfig(std::move(sessionConfig)),
+              _builder(AST::GS_ASTBuilder::Create(_sessionConfig->GetASTContext())) {}
 
-    GS_Parser GS_Parser::Create(Lexer::GSTokenArray tokens, AST::GSASTContextPtr context) {
-        return GS_Parser(std::move(tokens), std::move(context));
+    GS_Parser GS_Parser::Create(Lexer::GSTokenArray tokens, Driver::GSCompilerSessionConfigPtr sessionConfig) {
+        return GS_Parser(std::move(tokens), std::move(sessionConfig));
     }
 
     AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseProgram() {
@@ -415,6 +415,10 @@ namespace GSLanguageCompiler::Parser {
 
     Void GS_Parser::NextToken() {
         ++_tokensIterator;
+    }
+
+    Void GS_Parser::Message(UString message, IO::MessageLevel messageLevel) {
+        _sessionConfig->GetMessageHandler()->Print(std::move(message), messageLevel);
     }
 
 }

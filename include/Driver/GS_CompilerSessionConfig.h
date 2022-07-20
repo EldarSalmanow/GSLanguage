@@ -1,15 +1,17 @@
 #ifndef GSLANGUAGE_GS_COMPILERSESSIONCONFIG_H
 #define GSLANGUAGE_GS_COMPILERSESSIONCONFIG_H
 
-#include <filesystem>
+#include <vector>
 
-#include <Driver/GS_TranslationUnitConfig.h>
+#include <GSCrossPlatform/CrossPlatform.h>
 
 namespace GSLanguageCompiler {
 
     namespace IO {
 
         class GS_MessageHandler;
+
+        class GS_SourceManager;
 
     }
 
@@ -21,53 +23,7 @@ namespace GSLanguageCompiler {
 
     namespace Driver {
 
-//        class FileName {
-//        public:
-//
-//            FileName(UString name, UString extension)
-//                    : _name(std::move(name)), _extension(std::move(extension)) {}
-//
-//        public:
-//
-//            static FileName Create(UString name, UString extension) {
-//                return FileName(std::move(name), std::move(extension));
-//            }
-//
-//            static FileName Create(UString fileName) {
-//                UString name, extension;
-//
-//                std::filesystem::path path(fileName.AsUTF8());
-//
-//                name = path.stem().string();
-//
-//                if (path.extension().empty()) {
-//                    // remove '.' from extension name
-//                    extension = path.extension().string().substr(1);
-//                }
-//
-//                return FileName::Create(name, extension);
-//            }
-//
-//        public:
-//
-//            UString GetFileName() const {
-//                return _name + "." + _extension;
-//            }
-//
-//            UString GetName() const {
-//                return _name;
-//            }
-//
-//            UString GetExtension() const {
-//                return _extension;
-//            }
-//
-//        private:
-//
-//            UString _name;
-//
-//            UString _extension;
-//        };
+        // TODO refactor writing compiling result system
 
         /**
          * Class for representation all session configs of compiler
@@ -77,32 +33,32 @@ namespace GSLanguageCompiler {
 
             /**
              * Constructor for compiler session config
-             * @param unitConfigs Unit configs
-             * @param outputName Output name
-             * @param messageHandler Message handler
-             * @param astContext AST context
+             * @param outputFileName Output file name for write compiling result
+             * @param messageHandler Message handler for writing compiling process messages
+             * @param sourceManager Source manager for containing sources for compiling
+             * @param astContext AST context for parsing and analyzing source code
              */
-            GS_CompilerSessionConfig(GSTranslationUnitConfigPtrArray unitConfigs, UString outputName, std::shared_ptr<IO::GS_MessageHandler> messageHandler, std::shared_ptr<AST::GS_ASTContext> astContext);
+            GS_CompilerSessionConfig(UString outputFileName, std::shared_ptr<IO::GS_MessageHandler> messageHandler, std::shared_ptr<IO::GS_SourceManager> sourceManager, std::shared_ptr<AST::GS_ASTContext> astContext);
 
         public:
 
             /**
-             * Creating compiler config
-             * @param unitConfigs Unit configs
-             * @param outputName Output name
+             * Creating compiler session config
+             * @param outputFileName Output file name
              * @param messageHandler Message handler
+             * @param sourceManager Source manager
              * @param astContext AST context
-             * @return Compiler config ptr
+             * @return Compiler session config ptr
              */
-            static std::shared_ptr<GS_CompilerSessionConfig> Create(GSTranslationUnitConfigPtrArray unitConfigs, UString outputName, std::shared_ptr<IO::GS_MessageHandler> messageHandler, std::shared_ptr<AST::GS_ASTContext> astContext);
+            static std::shared_ptr<GS_CompilerSessionConfig> Create(UString outputFileName, std::shared_ptr<IO::GS_MessageHandler> messageHandler, std::shared_ptr<IO::GS_SourceManager> sourceManager, std::shared_ptr<AST::GS_ASTContext> astContext);
 
             /**
-             * Creating compiler config
-             * @param unitConfigs Unit configs
-             * @param outputName Output name
-             * @return Compiler config ptr
+             * Creating compiler session config
+             * @param outputFileName Output file name
+             * @param sourceManager Source manager
+             * @return Compiler session config ptr
              */
-            static std::shared_ptr<GS_CompilerSessionConfig> Create(GSTranslationUnitConfigPtrArray unitConfigs, UString outputName);
+            static std::shared_ptr<GS_CompilerSessionConfig> Create(UString outputFileName, std::shared_ptr<IO::GS_SourceManager> sourceManager);
 
             /**
              * Creating compiler config with parsing command line arguments
@@ -115,22 +71,22 @@ namespace GSLanguageCompiler {
         public:
 
             /**
-             * Getter for unit configs
-             * @return Unit configs
+             * Getter for output file name
+             * @return Output file name
              */
-            GSTranslationUnitConfigPtrArray GetUnitConfigs() const;
-
-            /**
-             * Getter for output name
-             * @return Output name
-             */
-            UString GetOutputName() const;
+            UString GetOutputFileName() const;
 
             /**
              * Getter for message handler
              * @return Message handler
              */
             std::shared_ptr<IO::GS_MessageHandler> GetMessageHandler() const;
+
+            /**
+             * Getter for source manager
+             * @return Source manager
+             */
+            std::shared_ptr<IO::GS_SourceManager> GetSourceManager() const;
 
             /**
              * Getter for AST context
@@ -141,19 +97,19 @@ namespace GSLanguageCompiler {
         private:
 
             /**
-             * Unit configs
+             * Output file name
              */
-            GSTranslationUnitConfigPtrArray _unitConfigs;
-
-            /**
-             * Output name
-             */
-            UString _outputName;
+            UString _outputFileName;
 
             /**
              * Message handler
              */
             std::shared_ptr<IO::GS_MessageHandler> _messageHandler;
+
+            /**
+             * Source manager
+             */
+            std::shared_ptr<IO::GS_SourceManager> _sourceManager;
 
             /**
              * AST context
@@ -170,41 +126,6 @@ namespace GSLanguageCompiler {
          * Compiler session config ptr array type
          */
         using GSCompilerSessionConfigPtrArray = std::vector<GSCompilerSessionConfigPtr>;
-
-//        class SessionConfig {
-//        public:
-//
-//            SessionConfig(std::vector<FileName> inputFiles, FileName outputFile, std::shared_ptr<IO::GS_MessageHandler> messageHandler, std::shared_ptr<AST::GS_ASTContext> astContext)
-//                    : _inputFiles(std::move(inputFiles)), _outputFile(std::move(outputFile)), _messageHandler(std::move(messageHandler)), _astContext(std::move(astContext)) {}
-//
-//        public:
-//
-//            static std::shared_ptr<SessionConfig> Create(std::vector<FileName> inputFiles, FileName outputFile, std::shared_ptr<IO::GS_MessageHandler> messageHandler, std::shared_ptr<AST::GS_ASTContext> astContext) {
-//                return std::make_shared<SessionConfig>(std::move(inputFiles), std::move(outputFile), std::move(messageHandler), std::move(astContext));
-//            }
-//
-//            static std::shared_ptr<SessionConfig> Create(std::vector<FileName> inputFiles, FileName outputFile, std::shared_ptr<IO::GS_MessageHandler> messageHandler) {
-//                return SessionConfig::Create(std::move(inputFiles), std::move(outputFile), std::move(messageHandler), AST::GS_ASTContext::Create());
-//            }
-//
-//            static std::shared_ptr<SessionConfig> Create(std::vector<FileName> inputFiles, FileName outputFile, std::shared_ptr<AST::GS_ASTContext> astContext) {
-//                return SessionConfig::Create(std::move(inputFiles), std::move(outputFile), IO::GS_MessageHandler::Create(), std::move(astContext));
-//            }
-//
-//            static std::shared_ptr<SessionConfig> Create(std::vector<FileName> inputFiles, FileName outputFile) {
-//                return SessionConfig::Create(std::move(inputFiles), std::move(outputFile), IO::GS_MessageHandler::Create(), AST::GS_ASTContext::Create());
-//            }
-//
-//        private:
-//
-//            std::vector<FileName> _inputFiles;
-//
-//            FileName _outputFile;
-//
-//            std::shared_ptr<IO::GS_MessageHandler> _messageHandler;
-//
-//            std::shared_ptr<AST::GS_ASTContext> _astContext;
-//        };
 
     }
 

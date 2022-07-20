@@ -16,17 +16,19 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Constructor for lexer
          * @param content Content
+         * @param sessionConfig Session config
          */
-        explicit GS_Lexer(UString content);
+        GS_Lexer(UString content, Driver::GSCompilerSessionConfigPtr sessionConfig);
 
     public:
 
         /**
          * Creating lexer
          * @param content Content
+         * @param sessionConfig Session config
          * @return Lexer
          */
-        static GS_Lexer Create(UString content);
+        static GS_Lexer Create(UString content, Driver::GSCompilerSessionConfigPtr sessionConfig);
 
     public:
 
@@ -75,6 +77,11 @@ namespace GSLanguageCompiler::Lexer {
          * Content iterator
          */
         UString::Iterator _contentIterator;
+
+        /**
+         * Session config
+         */
+        Driver::GSCompilerSessionConfigPtr _sessionConfig;
     };
 
 }

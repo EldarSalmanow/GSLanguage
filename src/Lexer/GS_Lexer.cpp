@@ -40,11 +40,11 @@ namespace GSLanguageCompiler::Lexer {
         return TokenType::Unknown;
     }
 
-    GS_Lexer::GS_Lexer(UString content)
-            : _content(std::move(content)), _contentIterator(_content.begin()) {}
+    GS_Lexer::GS_Lexer(UString content, Driver::GSCompilerSessionConfigPtr sessionConfig)
+            : _content(std::move(content)), _contentIterator(_content.begin()), _sessionConfig(std::move(sessionConfig)) {}
 
-    GS_Lexer GS_Lexer::Create(UString content) {
-        return GS_Lexer(std::move(content));
+    GS_Lexer GS_Lexer::Create(UString content, Driver::GSCompilerSessionConfigPtr sessionConfig) {
+        return GS_Lexer(std::move(content), std::move(sessionConfig));
     }
 
     GSTokenArray GS_Lexer::Tokenize() {

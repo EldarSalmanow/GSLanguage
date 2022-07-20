@@ -1,3 +1,5 @@
+#include <IO/GS_SourceManager.h>
+
 #include <GS_CompilerSession.h>
 
 namespace GSLanguageCompiler::Driver {
@@ -10,11 +12,15 @@ namespace GSLanguageCompiler::Driver {
     }
 
     CompilingResult GS_CompilerSession::Run() {
-        auto unitConfigs = _config->GetUnitConfigs();
-
         auto unitsManager = GS_TranslationUnitsManager::Create();
 
-        for (auto &unitConfig : unitConfigs) {
+        auto SM = _config->GetSourceManager();
+
+        for (auto &source : SM->GetSources()) {
+            auto sourceHash = source->GetHash();
+
+            auto unitConfig = GS_TranslationUnitConfig::Create(sourceHash, _config);
+
             auto unit = GS_TranslationUnit::Create(unitConfig);
 
             unitsManager->AddUnit(unit);
@@ -28,15 +34,17 @@ namespace GSLanguageCompiler::Driver {
             }
         }
 
-        auto toolchain = GetDefaultToolchain();
+        // TODO enable in future
 
-        auto linker = toolchain->GetLinker();
-
-        auto linkerResult = linker->Link(unitsManager->GetUnits(), _config->GetOutputName());
-
-        if (!linkerResult) {
-            return CompilingResult::Failure;
-        }
+//        auto toolchain = GetDefaultToolchain();
+//
+//        auto linker = toolchain->GetLinker();
+//
+//        auto linkerResult = linker->Link(unitsManager->GetUnits(), _config->GetOutputFileName());
+//
+//        if (!linkerResult) {
+//            return CompilingResult::Failure;
+//        }
 
         return CompilingResult::Success;
     }

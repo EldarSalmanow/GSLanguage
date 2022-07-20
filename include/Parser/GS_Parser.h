@@ -68,11 +68,11 @@ namespace GSLanguageCompiler::Parser {
     class GS_Parser {
     public:
 
-        GS_Parser(Lexer::GSTokenArray tokens, AST::GSASTContextPtr context);
+        GS_Parser(Lexer::GSTokenArray tokens, Driver::GSCompilerSessionConfigPtr sessionConfig);
 
     public:
 
-        static GS_Parser Create(Lexer::GSTokenArray tokens, AST::GSASTContextPtr context);
+        static GS_Parser Create(Lexer::GSTokenArray tokens, Driver::GSCompilerSessionConfigPtr sessionConfig);
 
     public:
 
@@ -152,13 +152,15 @@ namespace GSLanguageCompiler::Parser {
 
         Void NextToken();
 
+        Void Message(UString message, IO::MessageLevel messageLevel);
+
     private:
 
         Lexer::GSTokenArray _tokens;
 
         Lexer::GSTokenArrayIterator _tokensIterator;
 
-        AST::GSASTContextPtr _context;
+        Driver::GSCompilerSessionConfigPtr _sessionConfig;
 
         AST::GSASTBuilderPtr _builder;
     };

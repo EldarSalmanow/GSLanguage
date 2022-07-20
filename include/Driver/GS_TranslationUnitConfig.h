@@ -1,11 +1,11 @@
 #ifndef GSLANGUAGE_GS_TRANSLATIONUNITCONFIG_H
 #define GSLANGUAGE_GS_TRANSLATIONUNITCONFIG_H
 
-#include <vector>
-
-#include <GSCrossPlatform/CrossPlatform.h>
+#include <Driver/GS_CompilerSessionConfig.h>
 
 namespace GSLanguageCompiler::Driver {
+
+    // TODO replace source hash to source ?
 
     /**
      * Class for representation translation unit configs
@@ -15,34 +15,46 @@ namespace GSLanguageCompiler::Driver {
 
         /**
          * Constructor for translation unit config
-         * @param inputName Input name
+         * @param sourceHash Source hash for getting source for compiling from source manager
+         * @param sessionConfig Session config
          */
-        explicit GS_TranslationUnitConfig(UString inputName);
+        GS_TranslationUnitConfig(U64 sourceHash, GSCompilerSessionConfigPtr sessionConfig);
 
     public:
 
         /**
          * Creating translation unit config
-         * Output name is an input name with a different extension
-         * @param inputName Input name
+         * @param sourceHash Source hash
+         * @param sessionConfig Session config
          * @return Translation unit config ptr
          */
-        static std::shared_ptr<GS_TranslationUnitConfig> Create(UString inputName);
+        static std::shared_ptr<GS_TranslationUnitConfig> Create(U64 sourceHash, GSCompilerSessionConfigPtr sessionConfig);
 
     public:
 
         /**
-         * Getter for input name
-         * @return Input name
+         * Getter for source hash
+         * @return Source hash
          */
-        UString GetInputName() const;
+        U64 GetSourceHash() const;
+
+        /**
+         * Getter for session config
+         * @return Session config
+         */
+        GSCompilerSessionConfigPtr GetSessionConfig() const;
 
     private:
 
         /**
-         * Input file name
+         * Source hash
          */
-        UString _inputName;
+        U64 _sourceHash;
+
+        /**
+         * Session config
+         */
+        GSCompilerSessionConfigPtr _sessionConfig;
     };
 
     /**
