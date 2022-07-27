@@ -19,7 +19,9 @@ public:
 protected:
 
     Void SetUp() override {
-        _tokens = Lexer::GS_Lexer::Create(_inputContent).Tokenize();
+        // TODO remove nullptr
+
+        _tokens = Lexer::GS_Lexer::Create(_inputContent, nullptr).Tokenize();
     }
 
 protected:
