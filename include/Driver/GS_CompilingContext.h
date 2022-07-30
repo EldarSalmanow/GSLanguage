@@ -22,24 +22,17 @@ namespace GSLanguageCompiler {
         class GS_CompilingContext {
         public:
 
-            GS_CompilingContext(std::shared_ptr<IO::GS_IOContext> ioContext, std::shared_ptr<AST::GS_ASTContext> astContext)
-                    : _ioContext(std::move(ioContext)), _astContext(std::move(astContext)) {}
+            GS_CompilingContext(std::shared_ptr<IO::GS_IOContext> ioContext, std::shared_ptr<AST::GS_ASTContext> astContext);
 
         public:
 
-            static std::shared_ptr<GS_CompilingContext> Create(std::shared_ptr<IO::GS_IOContext> ioContext, std::shared_ptr<AST::GS_ASTContext> astContext) {
-                return std::make_shared<GS_CompilingContext>(std::move(ioContext), std::move(astContext));
-            }
+            static std::shared_ptr<GS_CompilingContext> Create(std::shared_ptr<IO::GS_IOContext> ioContext, std::shared_ptr<AST::GS_ASTContext> astContext);
 
         public:
 
-            std::shared_ptr<IO::GS_IOContext> GetIOContext() const {
-                return _ioContext;
-            }
+            std::shared_ptr<IO::GS_IOContext> GetIOContext() const;
 
-            std::shared_ptr<AST::GS_ASTContext> GetASTContext() const {
-                return _astContext;
-            }
+            std::shared_ptr<AST::GS_ASTContext> GetASTContext() const;
 
         private:
 

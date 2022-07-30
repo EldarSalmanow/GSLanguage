@@ -240,6 +240,8 @@ namespace GSLanguageCompiler::IO {
         Fatal
     };
 
+    // TODO update output stream to container for code ?
+
     class GS_IOContext {
     public:
 

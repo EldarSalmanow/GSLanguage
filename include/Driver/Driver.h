@@ -13,6 +13,8 @@
 
 #include <Driver/GS_CompilerSessionConfig.h>
 
+#include <Driver/GS_CompilingContext.h>
+
 #include <Driver/GS_CompilerSession.h>
 
 #include <Driver/GS_Toolchains.h>

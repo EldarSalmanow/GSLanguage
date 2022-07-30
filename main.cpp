@@ -13,42 +13,21 @@ using namespace GSLanguageCompiler;
 #include <IO/IO.h>
 #include <AST/AST.h>
 
-class GS_CompilingContext {
+class SessionConfig {
 public:
 
-    GS_CompilingContext(IO::GSIOContextPtr ioContext, AST::GSASTContextPtr astContext)
-            : _ioContext(std::move(ioContext)), _astContext(std::move(astContext)) {}
 
-public:
-
-    static std::shared_ptr<GS_CompilingContext> Create(IO::GSIOContextPtr ioContext, AST::GSASTContextPtr astContext) {
-        return std::make_shared<GS_CompilingContext>(std::move(ioContext), std::move(astContext));
-    }
-
-public:
-
-    IO::GSIOContextPtr GetIOContext() const {
-        return _ioContext;
-    }
-
-    AST::GSASTContextPtr GetASTContext() const {
-        return _astContext;
-    }
-
-private:
-
-    IO::GSIOContextPtr _ioContext;
-
-    AST::GSASTContextPtr _astContext;
 };
 
-using GSCompilingContextPtr = std::shared_ptr<GS_CompilingContext>;
+class Session {
+public:
+
+    Session();
+};
 
 void f() {
-    IO::SourcePtrArray InSources = {
-//            IO::Source::CreateFile(IO::SourceName::CreateFile("main.gs"_us)),
-//            IO::Source::CreateFile(IO::SourceName::CreateFile("std.gs"_us)),
-            IO::Source::CreateString("func say_hello(name: String) { println(\"Hello, ${name}!\") }"_us)
+    IO::GSSourcePtrArray InSources = {
+            IO::GS_Source::CreateCustom("func main() { var name = \"Eldar\"\n println(\"Hello, ${name}!\") }"_us, "main.gs"_us)
     };
 
     IO::GSOutStreamPtr OutSource = IO::GS_OutFileStream::CreateOutFile("main.exe"_us);
@@ -57,15 +36,15 @@ void f() {
 
     auto ASTC = AST::GS_ASTContext::Create();
 
-    auto CC = GS_CompilingContext::Create(IOC, ASTC);
+    auto CC = Driver::GS_CompilingContext::Create(IOC, ASTC);
 
     auto IOC_ = CC->GetIOContext();
 
     IOC_->Log("Starting GSLanguageCompiler...\n"_us);
 
-    auto Source = IOC_->GetInputSource(IO::SourceName::CreateFile("<string>_1"));
+    auto Source = IOC_->GetInputSource(IO::GS_SourceName::CreateFile("<string>_1"));
 
-    IOC_->Out(Source->GetCodeByLocation(IO::SourceLocation::CreateWithoutHash(1, 28)) + '\n');
+    IOC_->Out(Source->GetCodeByLocation(IO::GS_SourceLocation::CreateWithoutHash(1, 11)) + '\n');
 }
 
 I32 main(I32 argc, Ptr<Ptr<C>> argv) {
@@ -85,112 +64,3 @@ I32 main(I32 argc, Ptr<Ptr<C>> argv) {
  * ASTTypeContext -> VoidType, I32Type, StringType
  *
  */
-
-/*
-#include <IO/IO.h>
-
-using namespace GSLanguageCompiler;
-
-class SourceManager {
-public:
-
-    explicit SourceManager(std::vector<IO::GSStreamPtr> streams)
-            : _streams(std::move(streams)),
-              _consoleIn(IO::GS_InConsoleStream::CreateCIn()),
-              _consoleOut(IO::GS_OutConsoleStream::CreateCOut()),
-              _consoleErr(IO::GS_OutConsoleStream::CreateCErr()),
-              _consoleLog(IO::GS_OutConsoleStream::CreateCLog()) {}
-
-public:
-
-    static std::shared_ptr<SourceManager> Create(std::vector<IO::GSStreamPtr> streams) {
-        return std::make_shared<SourceManager>(std::move(streams));
-    }
-
-    static std::shared_ptr<SourceManager> Create() {
-        return SourceManager::Create(std::vector<IO::GSStreamPtr>());
-    }
-
-public:
-
-    IO::GSInStreamPtr CreateInFile(UString name) {
-        auto file = IO::GS_InFileStream::CreateInFile(std::move(name));
-
-        AddStream(file);
-
-        return file;
-    }
-
-    IO::GSOutStreamPtr CreateOutFile(UString name) {
-        auto file = IO::GS_OutFileStream::CreateOutFile(std::move(name));
-
-        AddStream(file);
-
-        return file;
-    }
-
-    Void AddStream(IO::GSStreamPtr stream) {
-        _streams.emplace_back(std::move(stream));
-    }
-
-public:
-
-    IO::GSInStreamPtr GetConsoleIn() const {
-        return _consoleIn;
-    }
-
-    IO::GSOutStreamPtr GetConsoleOut() const {
-        return _consoleOut;
-    }
-
-    IO::GSOutStreamPtr GetConsoleErr() const {
-        return _consoleErr;
-    }
-
-    IO::GSOutStreamPtr GetConsoleLog() const {
-        return _consoleLog;
-    }
-
-private:
-
-    std::vector<IO::GSStreamPtr> _streams;
-
-    IO::GSInStreamPtr _consoleIn;
-
-    IO::GSOutStreamPtr _consoleOut;
-
-    IO::GSOutStreamPtr _consoleErr;
-
-    IO::GSOutStreamPtr _consoleLog;
-};
-
-int main(int argc, char *argv[]) {
-    auto SM = SourceManager::Create();
-
-    auto file = SM->CreateOutFile("GSLanguageCompilerLogs.txt");
-
-    auto MH = IO::GS_MessageHandler::Create(file);
-
-    MH->Print("Невозможно найти функцию 'say_hello' с нулевыми аргументами!",
-              IO::MessageLevel::Error,
-              IO::SourceRange::Create("main.gs", 1, 9, 19),
-              "var a = say_hello()");
-
-    MH->Print("Найдено 2 функции 'say_hello' для вызова.",
-              IO::MessageLevel::Note,
-              { IO::SourceRange::Create("main.gs", 5, 1, 33), IO::SourceRange::Create("main.gs", 8, 1, 41) },
-              { "func say_hello(String name): Void", "func say_hello(String name, U8 age): Void" });
-
-//    MH->Print("Can`t found 'say_hello' function with void arguments!",
-//              IO::MessageLevel::Error,
-//              IO::SourceRange::Create("main.gs", 1, 9, 19),
-//              "var a = say_hello()");
-//
-//    MH->Print("Found 2 'say_hello' function for calling.",
-//              IO::MessageLevel::Note,
-//              { IO::SourceRange::Create("main.gs", 5, 1, 33), IO::SourceRange::Create("main.gs", 8, 1, 41) },
-//              { "func say_hello(String name): Void", "func say_hello(String name, U8 age): Void" });
-
-    return 0;
-}
-*/
