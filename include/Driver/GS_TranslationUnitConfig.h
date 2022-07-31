@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_TRANSLATIONUNITCONFIG_H
 #define GSLANGUAGE_GS_TRANSLATIONUNITCONFIG_H
 
-#include <Driver/GS_CompilerSessionConfig.h>
+#include <Driver/GS_SessionContext.h>
 
 namespace GSLanguageCompiler::Driver {
 
@@ -16,19 +16,19 @@ namespace GSLanguageCompiler::Driver {
         /**
          * Constructor for translation unit config
          * @param sourceHash Source hash for getting source for compiling from source manager
-         * @param sessionConfig Session config
+         * @param sessionContext Session context
          */
-        GS_TranslationUnitConfig(U64 sourceHash, GSCompilerSessionConfigPtr sessionConfig);
+        GS_TranslationUnitConfig(U64 sourceHash, GSSessionContextPtr sessionContext);
 
     public:
 
         /**
          * Creating translation unit config
          * @param sourceHash Source hash
-         * @param sessionConfig Session config
+         * @param sessionContext Session context
          * @return Translation unit config ptr
          */
-        static std::shared_ptr<GS_TranslationUnitConfig> Create(U64 sourceHash, GSCompilerSessionConfigPtr sessionConfig);
+        static std::shared_ptr<GS_TranslationUnitConfig> Create(U64 sourceHash, GSSessionContextPtr sessionContext);
 
     public:
 
@@ -39,10 +39,10 @@ namespace GSLanguageCompiler::Driver {
         U64 GetSourceHash() const;
 
         /**
-         * Getter for session config
-         * @return Session config
+         * Getter for session context
+         * @return Session context
          */
-        GSCompilerSessionConfigPtr GetSessionConfig() const;
+        GSSessionContextPtr GetSessionContext() const;
 
     private:
 
@@ -52,9 +52,9 @@ namespace GSLanguageCompiler::Driver {
         U64 _sourceHash;
 
         /**
-         * Session config
+         * Session context
          */
-        GSCompilerSessionConfigPtr _sessionConfig;
+        GSSessionContextPtr _sessionContext;
     };
 
     /**

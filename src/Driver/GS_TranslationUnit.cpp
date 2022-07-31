@@ -633,37 +633,6 @@ namespace GSLanguageCompiler::Driver {
 
     using SourceManagerPtr = std::shared_ptr<SourceManager>;
 
-    Void Error(UString message, SourceLocation location, SourceManagerPtr SM, IO::GSMessageHandlerPtr MH) {
-        auto source = SM->GetSource(location.GetSourceHash());
-
-        auto [startLine, startColumn] = source->GetLineAndColumnPosition(location.GetStartPosition());
-        auto [endLine, endColumn] = source->GetLineAndColumnPosition(location.GetEndPosition());
-
-        auto line = source->GetLine(startLine);
-
-        if (line[0] == '\n') {
-            startColumn -= 1;
-            endColumn -= 1;
-
-            line = UString(line.AsUTF8().substr(1));
-        }
-
-        MH->Print(std::move(message),
-                  IO::MessageLevel::Error,
-                  IO::SourceRange::Create(source->GetName().GetName(), startLine, startColumn, endLine, endColumn),
-                  line);
-    }
-
-    class SessionConfig {
-    private:
-
-        IO::GSMessageHandlerPtr _messageHandler;
-
-        SourceManagerPtr _sourceManager;
-
-        AST::GSASTContextPtr _astContext;
-    };
-
     CompilingResult GS_TranslationUnit::Compile() {
 //        auto SM = SourceManager::Create();
 //        auto MH = IO::GS_MessageHandler::Create();
@@ -681,12 +650,12 @@ namespace GSLanguageCompiler::Driver {
 //        auto content = IO::GS_Reader::Create(std::move(fileStream)).Read();
 
         auto sourceHash = _config->GetSourceHash();
-        auto sessionConfig = _config->GetSessionConfig();
+        auto sessionConfig = _config->GetSessionContext();
 
-        auto sourceManager = sessionConfig->GetSourceManager();
+        auto ioContext = sessionConfig->GetIOContext();
         auto astContext = sessionConfig->GetASTContext();
 
-        auto source = sourceManager->GetSource(sourceHash);
+        auto source = ioContext->GetInputSource(sourceHash);
 
         auto tokens = Lexer::GS_Lexer::Create(source->GetSource(), sessionConfig).Tokenize();
 

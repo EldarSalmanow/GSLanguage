@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_COMPILER_H
 #define GSLANGUAGE_GS_COMPILER_H
 
-#include <Driver/GS_CompilerSessionsManager.h>
+#include <Driver/GS_SessionsManager.h>
 
 namespace GSLanguageCompiler::Driver {
 
@@ -13,18 +13,18 @@ namespace GSLanguageCompiler::Driver {
 
         /**
          * Constructor for compiler
-         * @param sessionConfigs Compiler session configs
+         * @param sessionContexts Compiler session contexts
          */
-        explicit GS_Compiler(GSCompilerSessionConfigPtrArray sessionConfigs);
+        explicit GS_Compiler(GSSessionContextPtrArray sessionContexts);
 
     public:
 
         /**
          * Creating compiler
-         * @param sessionConfigs Compiler session configs
+         * @param sessionContexts Compiler session contexts
          * @return Compiler ptr
          */
-        static std::shared_ptr<GS_Compiler> Create(GSCompilerSessionConfigPtrArray sessionConfigs);
+        static std::shared_ptr<GS_Compiler> Create(GSSessionContextPtrArray sessionContexts);
 
         /**
          * Creating compiler
@@ -53,26 +53,26 @@ namespace GSLanguageCompiler::Driver {
     public:
 
         /**
-         * Adding session config
-         * @param sessionConfig Session config
+         * Adding session context
+         * @param sessionContext Session context
          * @return
          */
-        Void AddSessionConfig(GSCompilerSessionConfigPtr sessionConfig);
+        Void AddSessionContext(GSSessionContextPtr sessionContext);
 
     public:
 
         /**
-         * Getter for compiler session configs
-         * @return Compiler session configs
+         * Getter for compiler session contexts
+         * @return Compiler session contexts
          */
-        GSCompilerSessionConfigPtrArray GetSessionConfigs() const;
+        GSSessionContextPtrArray GetSessionContexts() const;
 
     private:
 
         /**
-         * Compiler session configs
+         * Compiler session contexts
          */
-        GSCompilerSessionConfigPtrArray _sessionConfigs;
+        GSSessionContextPtrArray _sessionContexts;
     };
 
 }

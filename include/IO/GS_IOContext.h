@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_IOCONTEXT_H
 #define GSLANGUAGE_GS_IOCONTEXT_H
 
+#include <vector>
+
 #include <IO/GS_Reader.h>
 
 namespace GSLanguageCompiler::IO {

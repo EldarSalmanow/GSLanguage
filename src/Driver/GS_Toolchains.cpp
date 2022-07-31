@@ -1,6 +1,6 @@
 #include <lld/Common/Driver.h>
 
-#include <IO/GS_SourceManager.h>
+#include <IO/GS_IOContext.h>
 
 #include <Driver/GS_Toolchains.h>
 
@@ -114,11 +114,11 @@ namespace GSLanguageCompiler::Driver {
             auto LCB = std::make_shared<MSVCLinkerCommandBuilder>();
 
             for (auto &unit : units) {
-                auto SM = unit->GetConfig()->GetSessionConfig()->GetSourceManager();
+                auto ioContext = unit->GetConfig()->GetSessionContext()->GetIOContext();
 
                 auto sourceHash = unit->GetConfig()->GetSourceHash();
 
-                auto source = SM->GetSource(sourceHash);
+                auto source = ioContext->GetInputSource(sourceHash);
 
                 LCB->AddInput(source->GetName().GetName().AsUTF8() + ".o");
             }

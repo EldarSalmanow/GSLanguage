@@ -2,37 +2,37 @@
 
 namespace GSLanguageCompiler::Driver {
 
-    GS_Compiler::GS_Compiler(GSCompilerSessionConfigPtrArray sessionConfigs)
-            : _sessionConfigs(std::move(sessionConfigs)) {}
+    GS_Compiler::GS_Compiler(GSSessionContextPtrArray sessionContexts)
+            : _sessionContexts(std::move(sessionContexts)) {}
 
-    std::shared_ptr<GS_Compiler> GS_Compiler::Create(GSCompilerSessionConfigPtrArray sessionConfigs) {
-        return std::make_shared<GS_Compiler>(std::move(sessionConfigs));
+    std::shared_ptr<GS_Compiler> GS_Compiler::Create(GSSessionContextPtrArray sessionContexts) {
+        return std::make_shared<GS_Compiler>(std::move(sessionContexts));
     }
 
     std::shared_ptr<GS_Compiler> GS_Compiler::Create() {
-        return GS_Compiler::Create(GSCompilerSessionConfigPtrArray());
+        return GS_Compiler::Create(GSSessionContextPtrArray());
     }
 
     I32 GS_Compiler::Start(I32 argc, Ptr<Ptr<C>> argv) {
-        auto sessionConfig = GS_CompilerSessionConfig::Create(argc, argv);
+        auto sessionContext = GS_SessionContext::Create(argc, argv);
 
-        if (!sessionConfig) {
+        if (!sessionContext) {
             return 1;
         }
 
         auto compiler = GS_Compiler::Create();
 
-        compiler->AddSessionConfig(sessionConfig);
+        compiler->AddSessionContext(sessionContext);
 
         return compiler->Run();
     }
 
     I32 GS_Compiler::Run() {
         try {
-            auto sessionsManager = GS_CompilerSessionsManager::Create();
+            auto sessionsManager = GS_SessionsManager::Create();
 
-            for (auto &sessionConfig : _sessionConfigs) {
-                auto session = GS_CompilerSession::Create(sessionConfig);
+            for (auto &sessionContext : _sessionContexts) {
+                auto session = GS_Session::Create(sessionContext);
 
                 sessionsManager->AddSession(session);
             }
@@ -53,12 +53,12 @@ namespace GSLanguageCompiler::Driver {
         return 0;
     }
 
-    Void GS_Compiler::AddSessionConfig(GSCompilerSessionConfigPtr sessionConfig) {
-        _sessionConfigs.emplace_back(std::move(sessionConfig));
+    Void GS_Compiler::AddSessionContext(GSSessionContextPtr sessionContext) {
+        _sessionContexts.emplace_back(std::move(sessionContext));
     }
 
-    GSCompilerSessionConfigPtrArray GS_Compiler::GetSessionConfigs() const {
-        return _sessionConfigs;
+    GSSessionContextPtrArray GS_Compiler::GetSessionContexts() const {
+        return _sessionContexts;
     }
 
 }

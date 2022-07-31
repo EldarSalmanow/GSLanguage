@@ -1,8 +1,6 @@
 #ifndef GSLANGUAGE_GS_READER_H
 #define GSLANGUAGE_GS_READER_H
 
-#include <Driver/GS_CompilerSessionConfig.h>
-
 #include <IO/GS_Stream.h>
 
 namespace GSLanguageCompiler::IO {

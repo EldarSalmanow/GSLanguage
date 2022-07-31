@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_LEXER_H
 #define GSLANGUAGE_GS_LEXER_H
 
+#include <Driver/GS_SessionContext.h>
+
 #include <IO/IO.h>
 
 #include <Lexer/GS_Token.h>
@@ -16,19 +18,19 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Constructor for lexer
          * @param content Content
-         * @param sessionConfig Session config
+         * @param sessionContext Session context
          */
-        GS_Lexer(UString content, Driver::GSCompilerSessionConfigPtr sessionConfig);
+        GS_Lexer(UString content, Driver::GSSessionContextPtr sessionContext);
 
     public:
 
         /**
          * Creating lexer
          * @param content Content
-         * @param sessionConfig Session config
+         * @param sessionContext Session context
          * @return Lexer
          */
-        static GS_Lexer Create(UString content, Driver::GSCompilerSessionConfigPtr sessionConfig);
+        static GS_Lexer Create(UString content, Driver::GSSessionContextPtr sessionContext);
 
     public:
 
@@ -69,6 +71,11 @@ namespace GSLanguageCompiler::Lexer {
     private:
 
         /**
+         * Session context
+         */
+        Driver::GSSessionContextPtr _sessionContext;
+
+        /**
          * Content
          */
         UString _content;
@@ -77,11 +84,6 @@ namespace GSLanguageCompiler::Lexer {
          * Content iterator
          */
         UString::Iterator _contentIterator;
-
-        /**
-         * Session config
-         */
-        Driver::GSCompilerSessionConfigPtr _sessionConfig;
     };
 
 }
