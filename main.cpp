@@ -1,3 +1,5 @@
+#include <IO/IO.h>
+
 #include <Driver/Driver.h>
 
 using namespace GSLanguageCompiler;
@@ -8,6 +10,162 @@ using namespace GSLanguageCompiler;
  */
 I32 main(I32 argc, Ptr<Ptr<C>> argv) {
     return Driver::GS_Compiler::Start(argc, argv);
+}
+
+static Ptr<std::istream> StandardIn;
+
+static Ptr<std::ostream> StandardOut;
+
+static Ptr<std::ostream> StandardErr;
+
+static Ptr<std::ostream> StandardLog;
+
+I32 InitializeIO(Ptr<std::istream> standardIn,
+                  Ptr<std::ostream> standardOut,
+                  Ptr<std::ostream> standardErr,
+                  Ptr<std::ostream> standardLog) {
+    StandardIn  = standardIn;
+    StandardOut = standardOut;
+    StandardErr = standardErr;
+    StandardLog = standardLog;
+
+    return 0;
+}
+
+I32 InitializeIO() {
+    return InitializeIO(&std::cin,
+                         &std::cout,
+                         &std::cerr,
+                         &std::clog);
+}
+
+enum class CompilingResult : I32 {
+    Success = 0,
+    Failure = 1
+};
+
+class Arguments {
+public:
+
+    Arguments(std::vector<UString> inputFileNames, UString outputFileName);
+
+public:
+
+    static Arguments Create(std::vector<UString> inputFileNames, UString outputFileName);
+
+    static Arguments Create(std::vector<UString> inputFileNames);
+
+    static Arguments Create();
+
+public:
+
+    static Arguments Create(I32 argc, Ptr<Ptr<C>> argv);
+
+public:
+
+    std::vector<UString> GetInputFileNames() const;
+
+    UString GetOutputFileName() const;
+
+public:
+
+    std::vector<UString> _inputFileNames;
+
+    UString _outputFileName;
+};
+
+// TODO ??
+class Context {
+public:
+
+    Context(IO::GSInStreamPtr standardIn,
+            IO::GSOutStreamPtr standardOut,
+            IO::GSOutStreamPtr standardErr,
+            IO::GSOutStreamPtr standardLog);
+
+public:
+
+    static std::shared_ptr<Context> Create();
+
+public:
+
+    static std::shared_ptr<Context> Create(Arguments arguments);
+
+private:
+
+
+};
+
+using ContextPtr = std::shared_ptr<Context>;
+
+class Session {
+public:
+
+    explicit Session(ContextPtr context);
+
+public:
+
+    static std::shared_ptr<Session> Create(ContextPtr context);
+
+    static std::shared_ptr<Session> Create();
+
+public:
+
+    CompilingResult Run();
+
+public:
+
+    ContextPtr GetContext() const;
+
+private:
+
+    ContextPtr _context;
+};
+
+using SessionPtr = std::shared_ptr<Session>;
+
+using SessionPtrArray = std::vector<SessionPtr>;
+
+class Compiler {
+public:
+
+    explicit Compiler(SessionPtrArray sessions);
+
+public:
+
+    static std::shared_ptr<Compiler> Create(SessionPtrArray sessions);
+
+    static std::shared_ptr<Compiler> Create();
+
+public:
+
+    static std::shared_ptr<Compiler> Create(I32 argc, Ptr<Ptr<C>> argv);
+
+public:
+
+    static CompilingResult Start(I32 argc, Ptr<Ptr<C>> argv);
+
+public:
+
+    CompilingResult Run();
+
+public:
+
+    Void AddSession(SessionPtr session);
+
+public:
+
+    SessionPtrArray GetSessions() const;
+
+private:
+
+    SessionPtrArray _sessions;
+};
+
+using CompilerPtr = std::shared_ptr<Compiler>;
+
+I32 Run(I32 argc, Ptr<Ptr<C>> argv) {
+    return StaticCast<I32>(Compiler::Start(argc, argv));
 }
 
 //#include <IO/IO.h>
