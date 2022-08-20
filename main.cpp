@@ -1,4 +1,5 @@
 #include <IO/IO.h>
+#include <AST/AST.h>
 
 #include <Driver/Driver.h>
 
@@ -12,32 +13,23 @@ I32 main(I32 argc, Ptr<Ptr<C>> argv) {
     return Driver::GS_Compiler::Start(argc, argv);
 }
 
-static Ptr<std::istream> StandardIn;
-
-static Ptr<std::ostream> StandardOut;
-
-static Ptr<std::ostream> StandardErr;
-
-static Ptr<std::ostream> StandardLog;
-
+// TODO replace to GSStream`s ?
 I32 InitializeIO(Ptr<std::istream> standardIn,
-                  Ptr<std::ostream> standardOut,
-                  Ptr<std::ostream> standardErr,
-                  Ptr<std::ostream> standardLog) {
-    StandardIn  = standardIn;
-    StandardOut = standardOut;
-    StandardErr = standardErr;
-    StandardLog = standardLog;
+                 Ptr<std::ostream> standardOut,
+                 Ptr<std::ostream> standardErr,
+                 Ptr<std::ostream> standardLog);
 
-    return 0;
-}
+I32 InitializeIO();
 
-I32 InitializeIO() {
-    return InitializeIO(&std::cin,
-                         &std::cout,
-                         &std::cerr,
-                         &std::clog);
-}
+I32 InitializeCompiler();
+
+Void In(UString &string);
+
+Void Out(ConstLRef<UString> string);
+
+Void Err(ConstLRef<UString> string);
+
+Void Log(ConstLRef<UString> string);
 
 enum class CompilingResult : I32 {
     Success = 0,
@@ -81,7 +73,8 @@ public:
     Context(IO::GSInStreamPtr standardIn,
             IO::GSOutStreamPtr standardOut,
             IO::GSOutStreamPtr standardErr,
-            IO::GSOutStreamPtr standardLog);
+            IO::GSOutStreamPtr standardLog,
+            AST::GSASTContextPtr astContext);
 
 public:
 
@@ -91,9 +84,25 @@ public:
 
     static std::shared_ptr<Context> Create(Arguments arguments);
 
+public:
+
+    Void In(UString &string);
+
+    Void Out(ConstLRef<UString> string);
+
+    Void Err(ConstLRef<UString> string);
+
+    Void Log(ConstLRef<UString> string);
+
 private:
 
+    IO::GSInStreamPtr _standardIn;
 
+    IO::GSOutStreamPtr _standardOut;
+
+    IO::GSOutStreamPtr _standardErr;
+
+    IO::GSOutStreamPtr _standardLog;
 };
 
 using ContextPtr = std::shared_ptr<Context>;
@@ -139,7 +148,7 @@ public:
 
 public:
 
-    static std::shared_ptr<Compiler> Create(I32 argc, Ptr<Ptr<C>> argv);
+    static std::shared_ptr<Compiler> Create(Arguments arguments);
 
 public:
 
