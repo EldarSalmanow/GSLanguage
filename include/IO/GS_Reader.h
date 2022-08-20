@@ -6,7 +6,7 @@
 namespace GSLanguageCompiler::IO {
 
     /**
-     * Reader for read files
+     * Reader for read text
      */
     class GS_Reader {
     public:
@@ -29,8 +29,17 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
-         * Reading symbols from source
-         * @return Symbols
+         * Creating reader and reading text from stream
+         * @param stream Stream
+         * @return Text
+         */
+        static UString Run(GSInStreamPtr stream);
+
+    public:
+
+        /**
+         * Reading text from stream
+         * @return Text
          */
         UString Read();
 

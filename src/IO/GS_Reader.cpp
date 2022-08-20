@@ -9,6 +9,14 @@ namespace GSLanguageCompiler::IO {
         return GS_Reader(std::move(stream));
     }
 
+    UString GS_Reader::Run(GSInStreamPtr stream) {
+        auto reader = GS_Reader::Create(std::move(stream));
+
+        auto text = reader.Read();
+
+        return text;
+    }
+
     UString GS_Reader::Read() {
         UString text;
 
