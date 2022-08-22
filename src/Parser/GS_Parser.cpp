@@ -15,7 +15,7 @@ namespace GSLanguageCompiler::Parser {
             : _sessionContext(std::move(sessionContext)),
               _tokens(std::move(tokens)),
               _tokensIterator(_tokens.begin()),
-              _builder(AST::GS_ASTBuilder::Create(_sessionContext->GetASTContext())) {}
+              _builder(AST::GS_ASTBuilder::Create(AST::GS_ASTContext::Create())) {}
 
     GS_Parser GS_Parser::Create(Lexer::GSTokenArray tokens, Driver::GSSessionContextPtr sessionContext) {
         return GS_Parser(std::move(tokens), std::move(sessionContext));
