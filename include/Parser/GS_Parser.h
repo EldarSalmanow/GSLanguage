@@ -68,11 +68,11 @@ namespace GSLanguageCompiler::Parser {
     class GS_Parser {
     public:
 
-        GS_Parser(Lexer::GSTokenArray tokens, Driver::GSSessionContextPtr sessionContext);
+        GS_Parser(Lexer::GSTokenArray tokens, Driver::GSContextPtr context);
 
     public:
 
-        static GS_Parser Create(Lexer::GSTokenArray tokens, Driver::GSSessionContextPtr sessionContext);
+        static GS_Parser Create(Lexer::GSTokenArray tokens, Driver::GSContextPtr context);
 
     public:
 
@@ -125,6 +125,8 @@ namespace GSLanguageCompiler::Parser {
         // check
         template<typename T>
         inline T TryParse(T (GS_Parser::*method)()) {
+            // TODO add error recovering
+
             auto tokensIterator = _tokensIterator;
 
             auto result = (this->*method)();
@@ -152,11 +154,11 @@ namespace GSLanguageCompiler::Parser {
 
         Void NextToken();
 
-        Void Message(UString message, IO::MessageLevel messageLevel);
+        Void Message(UString message, Driver::MessageLevel messageLevel);
 
     private:
 
-        Driver::GSSessionContextPtr _sessionContext;
+        Driver::GSContextPtr _context;
 
         Lexer::GSTokenArray _tokens;
 

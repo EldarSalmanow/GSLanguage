@@ -11,69 +11,40 @@ namespace GSLanguageCompiler::Driver {
     class GS_Compiler {
     public:
 
-        /**
-         * Constructor for compiler
-         * @param sessionContexts Compiler session contexts
-         */
-        explicit GS_Compiler(GSSessionContextPtrArray sessionContexts);
+        explicit GS_Compiler(GSSessionPtrArray sessions);
 
     public:
 
-        /**
-         * Creating compiler
-         * @param sessionContexts Compiler session contexts
-         * @return Compiler ptr
-         */
-        static std::shared_ptr<GS_Compiler> Create(GSSessionContextPtrArray sessionContexts);
+        static std::shared_ptr<GS_Compiler> Create(GSSessionPtrArray sessions);
 
-        /**
-         * Creating compiler
-         * @return Compiler ptr
-         */
         static std::shared_ptr<GS_Compiler> Create();
 
     public:
 
-        /**
-         * Compiler entry point for create and startup one compiler session
-         * @param argc Arguments counter
-         * @param argv Arguments value
-         * @return Compiler result. 0 - success, any results - failure
-         */
-        static I32 Start(I32 argc, Ptr<Ptr<C>> argv);
+        static std::shared_ptr<GS_Compiler> Create(GS_Arguments arguments);
 
     public:
 
-        /**
-         * Run compiling process
-         * @return Compiling result. 0 - success, any results - failure
-         */
-        I32 Run();
+        static CompilingResult Start(I32 argc, Ptr<Ptr<C>> argv);
 
     public:
 
-        /**
-         * Adding session context
-         * @param sessionContext Session context
-         * @return
-         */
-        Void AddSessionContext(GSSessionContextPtr sessionContext);
+        CompilingResult Run();
 
     public:
 
-        /**
-         * Getter for compiler session contexts
-         * @return Compiler session contexts
-         */
-        GSSessionContextPtrArray GetSessionContexts() const;
+        Void AddSession(GSSessionPtr session);
+
+    public:
+
+        GSSessionPtrArray GetSessions() const;
 
     private:
 
-        /**
-         * Compiler session contexts
-         */
-        GSSessionContextPtrArray _sessionContexts;
+        GSSessionPtrArray _sessions;
     };
+
+    using GSCompilerPtr = std::shared_ptr<GS_Compiler>;
 
 }
 

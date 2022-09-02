@@ -9,6 +9,6 @@
 
 #include <IO/GS_Reader.h>
 
-#include <IO/GS_IOContext.h>
+#include <IO/GS_Source.h>
 
 #endif //GSLANGUAGE_IO_H

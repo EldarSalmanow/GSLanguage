@@ -2,63 +2,61 @@
 
 namespace GSLanguageCompiler::Driver {
 
-    GS_Compiler::GS_Compiler(GSSessionContextPtrArray sessionContexts)
-            : _sessionContexts(std::move(sessionContexts)) {}
+    GS_Compiler::GS_Compiler(GSLanguageCompiler::Driver::GSSessionPtrArray sessions)
+            : _sessions(std::move(sessions)) {}
 
-    std::shared_ptr<GS_Compiler> GS_Compiler::Create(GSSessionContextPtrArray sessionContexts) {
-        return std::make_shared<GS_Compiler>(std::move(sessionContexts));
+    std::shared_ptr<GS_Compiler> GS_Compiler::Create(GSSessionPtrArray sessions) {
+        return std::make_shared<GS_Compiler>(std::move(sessions));
     }
 
     std::shared_ptr<GS_Compiler> GS_Compiler::Create() {
-        return GS_Compiler::Create(GSSessionContextPtrArray());
+        return GS_Compiler::Create(GSSessionPtrArray());
     }
 
-    I32 GS_Compiler::Start(I32 argc, Ptr<Ptr<C>> argv) {
-        auto sessionContext = GS_SessionContext::Create(argc, argv);
+    std::shared_ptr<GS_Compiler> GS_Compiler::Create(GS_Arguments arguments) {
+        auto context = GS_Context::Create(std::move(arguments));
 
-        if (!sessionContext) {
-            return 1;
+        auto session = GS_Session::Create(context);
+
+        return GS_Compiler::Create({session});
+    }
+
+    CompilingResult GS_Compiler::Start(I32 argc, Ptr<Ptr<C>> argv) {
+        auto arguments = GS_Arguments::Create(argc, argv);
+
+        if (!arguments) {
+            // TODO success or failure ?
+
+            return CompilingResult::Success;
         }
 
-        auto compiler = GS_Compiler::Create();
+        auto compiler = GS_Compiler::Create(arguments.value());
 
-        compiler->AddSessionContext(sessionContext);
+        auto result = compiler->Run();
 
-        return compiler->Run();
+        return result;
     }
 
-    I32 GS_Compiler::Run() {
-        try {
-            auto sessionsManager = GS_SessionsManager::Create();
+    CompilingResult GS_Compiler::Run() {
+        // TODO ?
 
-            for (auto &sessionContext : _sessionContexts) {
-                auto session = GS_Session::Create(sessionContext);
+        auto result = CompilingResult::Success;
 
-                sessionsManager->AddSession(session);
+        for (auto &session : _sessions) {
+            if (session->Run() != CompilingResult::Success) {
+                result = CompilingResult::Failure;
             }
-
-            auto compilingResults = sessionsManager->RunSessions();
-
-            for (auto &compilingResult : compilingResults) {
-                if (compilingResult == CompilingResult::Failure) {
-                    return 1;
-                }
-            }
-        } catch (LRef<std::exception> exception) {
-            std::cout << exception.what() << std::endl;
-
-            return 1;
         }
 
-        return 0;
+        return result;
     }
 
-    Void GS_Compiler::AddSessionContext(GSSessionContextPtr sessionContext) {
-        _sessionContexts.emplace_back(std::move(sessionContext));
+    Void GS_Compiler::AddSession(GSSessionPtr session) {
+        _sessions.emplace_back(std::move(session));
     }
 
-    GSSessionContextPtrArray GS_Compiler::GetSessionContexts() const {
-        return _sessionContexts;
+    GSSessionPtrArray GS_Compiler::GetSessions() const {
+        return _sessions;
     }
 
 }

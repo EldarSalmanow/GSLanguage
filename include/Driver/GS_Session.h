@@ -1,13 +1,14 @@
 #ifndef GSLANGUAGE_GS_SESSION_H
 #define GSLANGUAGE_GS_SESSION_H
 
-#include <Driver/GS_SessionContext.h>
-
-#include <Driver/GS_TranslationUnitsManager.h>
-
-#include <Driver/GS_Toolchains.h>
+#include <Driver/GS_Context.h>
 
 namespace GSLanguageCompiler::Driver {
+
+    enum class CompilingResult : I32 {
+        Success = 0,
+        Failure = 1
+    };
 
     /**
      * Class for representation compiler sessions
@@ -15,61 +16,29 @@ namespace GSLanguageCompiler::Driver {
     class GS_Session {
     public:
 
-        /**
-         * Constructor for compiler session
-         * @param sessionContext Compiler session context
-         */
-        explicit GS_Session(GSSessionContextPtr sessionContext);
+        explicit GS_Session(GSContextPtr context);
 
     public:
 
-        /**
-         * Creating compiler session
-         * @param sessionContext Compiler session context
-         * @return Compiler session ptr
-         */
-        static std::shared_ptr<GS_Session> Create(GSSessionContextPtr sessionContext);
+        static std::shared_ptr<GS_Session> Create(GSContextPtr context);
+
+        static std::shared_ptr<GS_Session> Create();
 
     public:
 
-        /**
-         * Run compiler session
-         * @return Compiling result
-         */
         CompilingResult Run();
 
     public:
 
-        /**
-         * Getter for default toolchain
-         * @return Default toolchain
-         */
-        GSToolchainPtr GetDefaultToolchain();
-
-    public:
-
-        /**
-         * Getter for compiler session context
-         * @return Compiler session context
-         */
-        GSSessionContextPtr GetSessionContext() const;
+        GSContextPtr GetContext() const;
 
     private:
 
-        /**
-         * Compiler session context
-         */
-        GSSessionContextPtr _sessionContext;
+        GSContextPtr _context;
     };
 
-    /**
-     * Session ptr type
-     */
     using GSSessionPtr = std::shared_ptr<GS_Session>;
 
-    /**
-     * Session ptr array type
-     */
     using GSSessionPtrArray = std::vector<GSSessionPtr>;
 
 }

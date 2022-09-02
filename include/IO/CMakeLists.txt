@@ -7,7 +7,7 @@ set(GS_IO_SOURCE
 
         ${IO_DIR}/GS_Reader.cpp
 
-        ${IO_DIR}/GS_IOContext.cpp)
+        ${IO_DIR}/GS_Source.cpp)
 
 add_library(
 #       Library name

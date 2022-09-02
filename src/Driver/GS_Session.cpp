@@ -1,64 +1,45 @@
-#include <IO/IO.h>
+#include <Lexer/Lexer.h>
+#include <Parser/Parser.h>
+
+#include <Debug/Debug.h>
 
 #include <GS_Session.h>
 
 namespace GSLanguageCompiler::Driver {
 
-    GS_Session::GS_Session(GSSessionContextPtr sessionContext)
-            : _sessionContext(std::move(sessionContext)) {}
+    GS_Session::GS_Session(GSContextPtr context)
+            : _context(std::move(context)) {}
 
-    std::shared_ptr<GS_Session> GS_Session::Create(GSSessionContextPtr sessionContext) {
-        return std::make_shared<GS_Session>(std::move(sessionContext));
+    std::shared_ptr<GS_Session> GS_Session::Create(GSContextPtr context) {
+        return std::make_shared<GS_Session>(std::move(context));
+    }
+
+    std::shared_ptr<GS_Session> GS_Session::Create() {
+        return GS_Session::Create(GS_Context::Create());
     }
 
     CompilingResult GS_Session::Run() {
-        auto unitsManager = Driver::GS_TranslationUnitsManager::Create();
+        // TODO
 
-        for (auto &source : _sessionContext->GetIOContext()->GetInputSources()) {
-            auto unitConfig = Driver::GS_TranslationUnitConfig::Create(source->GetHash(), _sessionContext);
+        AST::GSTranslationUnitDeclarationPtrArray units;
 
-            auto unit = Driver::GS_TranslationUnit::Create(unitConfig);
+        for (auto &inputSource : _context->GetInputSources()) {
+            auto source = inputSource->GetSource();
 
-            unitsManager->AddUnit(unit);
+            auto tokens = Lexer::GS_Lexer::Create(source, _context).Tokenize();
+
+            auto unit = Parser::GS_Parser::Create(tokens, _context).ParseProgram();
+
+            units.emplace_back(unit);
+
+            Debug::DumpAST(unit);
         }
-
-        auto compilingResults = unitsManager->CompileUnits();
-
-        for (auto &compilingResult : compilingResults) {
-            if (compilingResult == CompilingResult::Failure) {
-                return CompilingResult::Failure;
-            }
-        }
-
-        // TODO enable in future
-
-//        auto toolchain = GetDefaultToolchain();
-//
-//        auto linker = toolchain->GetLinker();
-//
-//        auto linkerResult = linker->Link(unitsManager->GetUnits(), _config->GetOutputFileName());
-//
-//        if (!linkerResult) {
-//            return CompilingResult::Failure;
-//        }
 
         return CompilingResult::Success;
     }
 
-    GSToolchainPtr GS_Session::GetDefaultToolchain() {
-#if defined(GS_OS_WINDOWS)
-
-        return std::make_shared<GS_MSVCToolchain>();
-      
-#else
-     
-        return nullptr;
-        
-#endif
-    }
-    
-    GSSessionContextPtr GS_Session::GetSessionContext() const {
-        return _sessionContext;
+    GSContextPtr GS_Session::GetContext() const {
+        return _context;
     }
 
 }
