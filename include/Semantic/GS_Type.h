@@ -174,7 +174,7 @@ namespace GSLanguageCompiler::Semantic {
 
         /**
          * Creating type context
-         * @return Ttype context ptr
+         * @return Type context ptr
          */
         static std::shared_ptr<GS_TypeContext> Create();
 

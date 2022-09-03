@@ -3,233 +3,344 @@
 
 #include <vector>
 
-#include <IO/GS_Reader.h>
+#include <GSCrossPlatform/CrossPlatform.h>
 
 namespace GSLanguageCompiler::IO {
 
+    /**
+     * Class for containing location in source
+     */
+    class GS_SourceLocation {
+    public:
+
+        /**
+         * Constructor for source location
+         * @param sourceHash Source hash
+         * @param startPosition Start position
+         * @param endPosition End position
+         */
+        GS_SourceLocation(U64 sourceHash, U64 startPosition, U64 endPosition);
+
+    public:
+
+        /**
+         * Creating source location
+         * @param sourceHash Source hash
+         * @param startPosition Start position
+         * @param endPosition End position
+         * @return Source location
+         */
+        static GS_SourceLocation Create(U64 sourceHash, U64 startPosition, U64 endPosition);
+
+        /**
+         * Creating source location
+         * @param sourceHash Source hash
+         * @param endPosition End position
+         * @return Source location
+         */
+        static GS_SourceLocation Create(U64 sourceHash, U64 endPosition);
+
+        /**
+         * Creating source location without source hash
+         * @param startPosition Start position
+         * @param endPosition End position
+         * @return Source location
+         */
+        static GS_SourceLocation CreateWithoutHash(U64 startPosition, U64 endPosition);
+
+        /**
+         * Creating source location without source hash
+         * @param endPosition End position
+         * @return Source location
+         */
+        static GS_SourceLocation CreateWithoutHash(U64 endPosition);
+
+        /**
+         * Creating source location
+         * @return Source location
+         */
+        static GS_SourceLocation Create();
+
+    public:
+
+        /**
+         * Getter for source hash
+         * @return Source hash
+         */
+        U64 GetSourceHash() const;
+
+        /**
+         * Getter for start position
+         * @return Start position
+         */
+        U64 GetStartPosition() const;
+
+        /**
+         * Getter for end position
+         * @return End position
+         */
+        U64 GetEndPosition() const;
+
+    private:
+
+        /**
+         * Source hash
+         */
+        U64 _sourceHash;
+
+        /**
+         * Start position
+         */
+        U64 _startPosition;
+
+        /**
+         * End position
+         */
+        U64 _endPosition;
+    };
+
+    /**
+     * Source name type
+     */
     enum class SourceNameType {
         File,
         String,
         Custom
     };
 
-    class GS_SourceLocation {
-    public:
-
-        GS_SourceLocation(U64 sourceHash, U64 startPosition, U64 endPosition)
-                : _sourceHash(sourceHash), _startPosition(startPosition), _endPosition(endPosition) {}
-
-    public:
-
-        static GS_SourceLocation Create(U64 sourceHash, U64 startPosition, U64 endPosition) {
-            return GS_SourceLocation(sourceHash, startPosition, endPosition);
-        }
-
-        static GS_SourceLocation Create(U64 sourceHash, U64 endPosition) {
-            return GS_SourceLocation::Create(sourceHash, 1, endPosition);
-        }
-
-        static GS_SourceLocation CreateWithoutHash(U64 startPosition, U64 endPosition) {
-            return GS_SourceLocation::Create(0, startPosition, endPosition);
-        }
-
-        static GS_SourceLocation CreateWithoutHash(U64 endPosition) {
-            return GS_SourceLocation::CreateWithoutHash(1, endPosition);
-        }
-
-        static GS_SourceLocation Create() {
-            return GS_SourceLocation::Create(0, 0, 0);
-        }
-
-    public:
-
-        U64 GetSourceHash() const {
-            return _sourceHash;
-        }
-
-        U64 GetStartPosition() const {
-            return _startPosition;
-        }
-
-        U64 GetEndPosition() const {
-            return _endPosition;
-        }
-
-    private:
-
-        U64 _sourceHash;
-
-        U64 _startPosition;
-
-        U64 _endPosition;
-    };
-
+    /**
+     * Class for containing source name
+     */
     class GS_SourceName {
     public:
 
-        GS_SourceName(UString name, SourceNameType type)
-                : _name(std::move(name)), _type(type), _hash(0) {
-            std::hash<std::string> nameHasher;
-
-            _hash = nameHasher(_name.AsUTF8());
-
-            std::hash<U8> typeHasher;
-
-            _hash ^= typeHasher(StaticCast<U8>(type));
-        }
+        /**
+         * Constructor for source name
+         * @param name Source name
+         * @param type Source name type
+         */
+        GS_SourceName(UString name, SourceNameType type);
 
     public:
 
-        static GS_SourceName Create(UString name, SourceNameType type) {
-            return GS_SourceName(std::move(name), type);
-        }
+        /**
+         * Creating source name
+         * @param name Source name
+         * @param type Source name type
+         * @return Source name
+         */
+        static GS_SourceName Create(UString name, SourceNameType type);
 
-        static GS_SourceName CreateFile(UString name) {
-            return GS_SourceName::Create(std::move(name), SourceNameType::File);
-        }
+        /**
+         * Creating file source name
+         * @param name File name
+         * @return Source name
+         */
+        static GS_SourceName CreateFile(UString name);
 
-        static GS_SourceName CreateString() {
-            static U64 id = 1;
+        /**
+         * Creating string source name
+         * @return Source name
+         */
+        static GS_SourceName CreateString();
 
-            auto name = UString(std::string("<string>_") + std::to_string(id));
-
-            ++id;
-
-            return GS_SourceName::Create(name, SourceNameType::String);
-        }
-
-        static GS_SourceName CreateCustom(UString name) {
-            return GS_SourceName::Create(std::move(name), SourceNameType::Custom);
-        }
-
-    public:
-
-        Bool IsFile() const {
-            return _type == SourceNameType::File;
-        }
-
-        Bool IsString() const {
-            return _type == SourceNameType::String;
-        }
-
-        Bool IsCustom() const {
-            return _type == SourceNameType::Custom;
-        }
+        /**
+         * Creating custom source name
+         * @param name Custom name
+         * @return Source name
+         */
+        static GS_SourceName CreateCustom(UString name);
 
     public:
 
-        UString GetName() const {
-            return _name;
-        }
+        /**
+         * Is file source name
+         * @return Is file source name
+         */
+        Bool IsFile() const;
 
-        SourceNameType GetType() const {
-            return _type;
-        }
+        /**
+         * Is string source name
+         * @return Is string source name
+         */
+        Bool IsString() const;
 
-        U64 GetHash() const {
-            return _hash;
-        }
+        /**
+         * Is custom source name
+         * @return Is custom source name
+         */
+        Bool IsCustom() const;
 
     public:
 
-        Bool operator==(ConstLRef<GS_SourceName> name) const {
-            return _hash == name.GetHash();
-        }
+        /**
+         * Getter for source name
+         * @return Source name
+         */
+        UString GetName() const;
 
-        Bool operator!=(ConstLRef<GS_SourceName> name) const {
-            return !(*this == name);
-        }
+        /**
+         * Getter for source name type
+         * @return Source name type
+         */
+        SourceNameType GetType() const;
+
+        /**
+         * Getter for source hash
+         * @return Source hash
+         */
+        U64 GetHash() const;
+
+    public:
+
+        /**
+         * Equality operator for source name
+         * @param name Source name
+         * @return Is equal source names
+         */
+        Bool operator==(ConstLRef<GS_SourceName> name) const;
+
+        /**
+         * Not equality operator for source name
+         * @param name Source name
+         * @return Is not equal source names
+         */
+        Bool operator!=(ConstLRef<GS_SourceName> name) const;
 
     private:
 
+        /**
+         * Source name
+         */
         UString _name;
 
+        /**
+         * Source name type
+         */
         SourceNameType _type;
 
+        /**
+         * Source hash
+         */
         U64 _hash;
     };
 
+    /**
+     * Class for containing source code
+     */
     class GS_Source {
     public:
 
-        GS_Source(UString source, GS_SourceName name)
-                : _source(std::move(source)), _name(std::move(name)), _hash(0) {
-            std::hash<std::string> sourceHasher;
-
-            _hash = sourceHasher(_source.AsUTF8());
-
-            _hash ^= _name.GetHash();
-        }
+        /**
+         * Constructor for source
+         * @param source Source code
+         * @param name Source name
+         */
+        GS_Source(UString source, GS_SourceName name);
 
     public:
 
-        static std::shared_ptr<GS_Source> Create(UString source, GS_SourceName name) {
-            return std::make_shared<GS_Source>(std::move(source), std::move(name));
-        }
+        /**
+         * Creating source
+         * @param source Source code
+         * @param name Source name
+         * @return Source ptr
+         */
+        static std::shared_ptr<GS_Source> Create(UString source, GS_SourceName name);
 
-        static std::shared_ptr<GS_Source> CreateFile(UString name) {
-            auto fileStream = IO::GS_InFileStream::CreateInFile(name);
+        /**
+         * Creating file source
+         * @param name File name
+         * @return Source ptr
+         */
+        static std::shared_ptr<GS_Source> CreateFile(UString name);
 
-            auto reader = IO::GS_Reader::Create(fileStream);
+        /**
+         * Creating string source
+         * @param source Source code
+         * @return Source ptr
+         */
+        static std::shared_ptr<GS_Source> CreateString(UString source);
 
-            return GS_Source::Create(reader.Read(), GS_SourceName::CreateFile(name));
-        }
-
-        static std::shared_ptr<GS_Source> CreateString(UString source) {
-            return GS_Source::Create(std::move(source), GS_SourceName::CreateString());
-        }
-
-        static std::shared_ptr<GS_Source> CreateCustom(UString source, UString name) {
-            return GS_Source::Create(std::move(source), GS_SourceName::CreateCustom(std::move(name)));
-        }
-
-    public:
-
-        UString GetCodeByLocation(GS_SourceLocation location) {
-            UString code;
-
-            for (U64 index = location.GetStartPosition() - 1; index < location.GetEndPosition(); ++index) {
-                code += _source[index];
-            }
-
-            return code;
-        }
+        /**
+         * Creating custom source
+         * @param source Source code
+         * @param name Source name
+         * @return Source ptr
+         */
+        static std::shared_ptr<GS_Source> CreateCustom(UString source, UString name);
 
     public:
 
-        UString GetSource() const {
-            return _source;
-        }
-
-        GS_SourceName GetName() const {
-            return _name;
-        }
-
-        U64 GetHash() const {
-            return _hash;
-        }
+        /**
+         * Getting code from source by source location
+         * @param location Source location
+         * @return Code in range [startPosition..endPosition]
+         */
+        UString GetCodeByLocation(GS_SourceLocation location);
 
     public:
 
-        Bool operator==(ConstLRef<GS_Source> source) const {
-            return _hash == source.GetHash();
-        }
+        /**
+         * Getter for source code
+         * @return Source code
+         */
+        UString GetSource() const;
 
-        Bool operator!=(ConstLRef<GS_Source> source) const {
-            return !(*this == source);
-        }
+        /**
+         * Getter for source name
+         * @return Source name
+         */
+        GS_SourceName GetName() const;
+
+        /**
+         * Getter for source hash
+         * @return Source hash
+         */
+        U64 GetHash() const;
+
+    public:
+
+        /**
+         * Equality operator for source
+         * @param source Source
+         * @return Is equal sources
+         */
+        Bool operator==(ConstLRef<GS_Source> source) const;
+
+        /**
+         * Not equality operator for source
+         * @param source Source
+         * @return Is not equal sources
+         */
+        Bool operator!=(ConstLRef<GS_Source> source) const;
 
     private:
 
+        /**
+         * Source code
+         */
         UString _source;
 
+        /**
+         * Source name
+         */
         GS_SourceName _name;
 
+        /**
+         * Source hash
+         */
         U64 _hash;
     };
 
+    /**
+     * Source ptr type
+     */
     using GSSourcePtr = std::shared_ptr<GS_Source>;
 
+    /**
+     * Source ptr array type
+     */
     using GSSourcePtrArray = std::vector<GSSourcePtr>;
 
 }

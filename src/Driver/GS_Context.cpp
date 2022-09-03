@@ -123,7 +123,7 @@ namespace GSLanguageCompiler::Driver {
 
     }
 
-    Void GS_Context::Message(UString message, MessageLevel messageLevel, std::vector<IO::GS_SourceLocation> sourceLocations, std::vector<UString> texts) {
+    Void GS_Context::Message(UString message, MessageLevel messageLevel, std::vector<IO::GS_SourceLocation> sourceLocations, std::vector<UString> texts) const {
 
     }
 

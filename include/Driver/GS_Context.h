@@ -9,6 +9,134 @@
 
 namespace GSLanguageCompiler::Driver {
 
+//    class StandardIOManager {
+//    public:
+//
+//        StandardIOManager(IO::GSInStreamPtr  standardIn,
+//                          IO::GSOutStreamPtr standardOut,
+//                          IO::GSOutStreamPtr standardErr,
+//                          IO::GSOutStreamPtr standardLog);
+//
+//    public:
+//
+//        static std::shared_ptr<StandardIOManager> Create(IO::GSInStreamPtr  standardIn,
+//                                                         IO::GSOutStreamPtr standardOut,
+//                                                         IO::GSOutStreamPtr standardErr,
+//                                                         IO::GSOutStreamPtr standardLog);
+//
+//        static std::shared_ptr<StandardIOManager> Create();
+//
+//    public:
+//
+//        Void In(LRef<UString> string);
+//
+//        Void Out(ConstLRef<UString> string);
+//
+//        Void Err(ConstLRef<UString> string);
+//
+//        Void Log(ConstLRef<UString> string);
+//
+//    private:
+//
+//        IO::GSInStreamPtr  _standardIn;
+//
+//        IO::GSOutStreamPtr _standardOut;
+//
+//        IO::GSOutStreamPtr _standardErr;
+//
+//        IO::GSOutStreamPtr _standardLog;
+//    };
+//
+//    using StandardIOManagerPtr = std::shared_ptr<StandardIOManager>;
+//
+//    class Message {
+//    public:
+//
+//        virtual ~Message() = default;
+//
+//    public:
+//
+//        virtual Void Print(IO::GSOutStreamPtr outputStream) = 0;
+//    };
+//
+//    using MessagePtr = std::shared_ptr<Message>;
+//
+//    class Note : public Message {
+//    public:
+//
+//        explicit Note(UString note, IO::GS_SourceLocation sourceLocation)
+//                : _note(std::move(note)) {}
+//
+//    public:
+//
+//    public:
+//
+//        Void Print(IO::GSOutStreamPtr outputStream) override {
+//
+//        }
+//
+//    private:
+//
+//        UString _note;
+//    };
+//
+//    class Warning : public Message {
+//    public:
+//
+//        explicit Warning(UString warning)
+//                : _warning(std::move(warning)) {}
+//
+//    public:
+//
+//        Void Print(IO::GSOutStreamPtr outputStream) override {
+//
+//        }
+//
+//    private:
+//
+//        UString _warning;
+//    };
+//
+//    class Error : public Message {
+//    public:
+//
+//        explicit Error(UString error)
+//                : _error(std::move(error)) {}
+//
+//    public:
+//
+//        Void Print(IO::GSOutStreamPtr outputStream) override {
+//
+//        }
+//
+//    private:
+//
+//        UString _error;
+//    };
+//
+//    class Fatal : public Message {
+//    public:
+//
+//        explicit Fatal(UString fatal)
+//                : _fatal(std::move(fatal)) {}
+//
+//    public:
+//
+//        Void Print(IO::GSOutStreamPtr outputStream) override {
+//
+//        }
+//
+//    private:
+//
+//        UString _fatal;
+//    };
+//
+//    inline LRef<IO::GSOutStreamPtr> operator<<(LRef<IO::GSOutStreamPtr> outputStream, MessagePtr message) {
+//        message->Print(outputStream);
+//
+//        return outputStream;
+//    }
+
     // TODO create class for message handling ( IO context ? )
     enum class MessageLevel {
         Note,
@@ -112,7 +240,7 @@ namespace GSLanguageCompiler::Driver {
          *               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
          * Note: Found 2 'say_hello' function for calling.
          */
-        Void Message(UString message, MessageLevel messageLevel, std::vector<IO::GS_SourceLocation> sourceLocations, std::vector<UString> texts);
+        Void Message(UString message, MessageLevel messageLevel, std::vector<IO::GS_SourceLocation> sourceLocations, std::vector<UString> texts) const;
 
     public:
 

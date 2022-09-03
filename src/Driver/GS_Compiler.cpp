@@ -1,3 +1,5 @@
+#include <GS_GlobalContext.h>
+
 #include <GS_Compiler.h>
 
 namespace GSLanguageCompiler::Driver {
@@ -25,9 +27,7 @@ namespace GSLanguageCompiler::Driver {
         auto arguments = GS_Arguments::Create(argc, argv);
 
         if (!arguments) {
-            // TODO success or failure ?
-
-            return CompilingResult::Success;
+            return CompilingResult::Failure;
         }
 
         auto compiler = GS_Compiler::Create(arguments.value());
@@ -38,17 +38,25 @@ namespace GSLanguageCompiler::Driver {
     }
 
     CompilingResult GS_Compiler::Run() {
-        // TODO ?
+        try {
+            auto sessionsManager = GS_SessionsManager::Create(_sessions);
 
-        auto result = CompilingResult::Success;
+            auto compilingResults = sessionsManager->RunSessions();
 
-        for (auto &session : _sessions) {
-            if (session->Run() != CompilingResult::Success) {
-                result = CompilingResult::Failure;
+            for (auto &compilingResult : compilingResults) {
+                if (compilingResult != CompilingResult::Success) {
+                    return CompilingResult::Failure;
+                }
             }
-        }
 
-        return result;
+            return CompilingResult::Success;
+        } catch (LRef<std::exception> exception) {
+            GS_GlobalContext::Err(UString("Internal GSLanguageCompiler error: \"")
+                                + UString(exception.what())
+                                + UString("\"\n"));
+
+            return CompilingResult::Failure;
+        }
     }
 
     Void GS_Compiler::AddSession(GSSessionPtr session) {
