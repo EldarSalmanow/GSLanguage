@@ -145,6 +145,49 @@ namespace GSLanguageCompiler::Driver {
         Fatal
     };
 
+    class Message {
+    public:
+
+        Message(UString message, MessageLevel messageLevel);
+
+    public:
+
+        static std::shared_ptr<Message> Create(UString message, MessageLevel messageLevel);
+
+    public:
+
+        Void Print(IO::GSOutStreamPtr outputStream) const;
+    };
+
+    using MessagePtr = std::shared_ptr<Message>;
+
+    class MessageBuilder {
+    public:
+
+        MessageBuilder();
+
+    public:
+
+        static MessageBuilder Create();
+
+    public:
+
+        LRef<MessageBuilder> Message(UString message);
+
+        LRef<MessageBuilder> MessageLevel(MessageLevel messageLevel);
+
+        MessagePtr Build();
+    };
+
+    Void Error(UString error) {
+        auto message = MessageBuilder::Create()
+                .Message(std::move(error))
+                .MessageLevel(MessageLevel::Error)
+                .Build();
+
+        message->Print(IO::GS_OutConsoleStream::CreateCErr());
+    }
+
     // TODO
     class GS_Context {
     public:
