@@ -9,46 +9,6 @@
 
 namespace GSLanguageCompiler::Driver {
 
-//    class StandardIOManager {
-//    public:
-//
-//        StandardIOManager(IO::GSInStreamPtr  standardIn,
-//                          IO::GSOutStreamPtr standardOut,
-//                          IO::GSOutStreamPtr standardErr,
-//                          IO::GSOutStreamPtr standardLog);
-//
-//    public:
-//
-//        static std::shared_ptr<StandardIOManager> Create(IO::GSInStreamPtr  standardIn,
-//                                                         IO::GSOutStreamPtr standardOut,
-//                                                         IO::GSOutStreamPtr standardErr,
-//                                                         IO::GSOutStreamPtr standardLog);
-//
-//        static std::shared_ptr<StandardIOManager> Create();
-//
-//    public:
-//
-//        Void In(LRef<UString> string);
-//
-//        Void Out(ConstLRef<UString> string);
-//
-//        Void Err(ConstLRef<UString> string);
-//
-//        Void Log(ConstLRef<UString> string);
-//
-//    private:
-//
-//        IO::GSInStreamPtr  _standardIn;
-//
-//        IO::GSOutStreamPtr _standardOut;
-//
-//        IO::GSOutStreamPtr _standardErr;
-//
-//        IO::GSOutStreamPtr _standardLog;
-//    };
-//
-//    using StandardIOManagerPtr = std::shared_ptr<StandardIOManager>;
-//
 //    class Message {
 //    public:
 //
@@ -180,12 +140,11 @@ namespace GSLanguageCompiler::Driver {
     };
 
     Void Error(UString error) {
-        auto message = MessageBuilder::Create()
+        MessageBuilder::Create()
                 .Message(std::move(error))
                 .MessageLevel(MessageLevel::Error)
-                .Build();
-
-        message->Print(IO::GS_OutConsoleStream::CreateCErr());
+                .Build()
+                ->Print(IO::GS_OutConsoleStream::CreateCErr());
     }
 
     // TODO

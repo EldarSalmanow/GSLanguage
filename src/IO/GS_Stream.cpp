@@ -168,4 +168,46 @@ namespace GSLanguageCompiler::IO {
         return _stream;
     }
 
+    GS_StdIOStreamsManager::GS_StdIOStreamsManager(GSInStreamPtr  standardIn,
+                                                   GSOutStreamPtr standardOut,
+                                                   GSOutStreamPtr standardErr,
+                                                   GSOutStreamPtr standardLog)
+            : _standardIn(std::move(standardIn)),
+              _standardOut(std::move(standardOut)),
+              _standardErr(std::move(standardErr)),
+              _standardLog(std::move(standardLog)) {}
+
+    std::shared_ptr<GS_StdIOStreamsManager> GS_StdIOStreamsManager::Create(GSInStreamPtr standardIn,
+                                                                           GSOutStreamPtr standardOut,
+                                                                           GSOutStreamPtr standardErr,
+                                                                           GSOutStreamPtr standardLog) {
+        return std::make_shared<GS_StdIOStreamsManager>(std::move(standardIn),
+                                                        std::move(standardOut),
+                                                        std::move(standardErr),
+                                                        std::move(standardLog));
+    }
+
+    std::shared_ptr<GS_StdIOStreamsManager> GS_StdIOStreamsManager::Create() {
+        return GS_StdIOStreamsManager::Create(GS_InConsoleStream::CreateCIn(),
+                                              GS_OutConsoleStream::CreateCOut(),
+                                              GS_OutConsoleStream::CreateCErr(),
+                                              GS_OutConsoleStream::CreateCLog());
+    }
+
+    Void GS_StdIOStreamsManager::In(LRef<UString> string) {
+        _standardIn->GetInStream() >> string;
+    }
+
+    Void GS_StdIOStreamsManager::Out(ConstLRef<UString> string) {
+        _standardOut->GetOutStream() << string;
+    }
+
+    Void GS_StdIOStreamsManager::Err(ConstLRef<UString> string) {
+        _standardErr->GetOutStream() << string;
+    }
+
+    Void GS_StdIOStreamsManager::Log(ConstLRef<UString> string) {
+        _standardLog->GetOutStream() << string;
+    }
+
 }

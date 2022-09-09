@@ -163,4 +163,47 @@ namespace GSLanguageCompiler::IO {
         return !(*this == source);
     }
 
+    GS_SourceManager::GS_SourceManager(GSSourcePtrArray sources)
+            : _sources(std::move(sources)) {}
+
+    std::shared_ptr<GS_SourceManager> GS_SourceManager::Create(GSSourcePtrArray sources) {
+        return std::make_shared<GS_SourceManager>(std::move(sources));
+    }
+
+    std::shared_ptr<GS_SourceManager> GS_SourceManager::Create() {
+        return GS_SourceManager::Create(GSSourcePtrArray());
+    }
+
+    U64 GS_SourceManager::AddSource(GSSourcePtr source) {
+        auto sourceHash = source->GetHash();
+
+        _sources.emplace_back(std::move(source));
+
+        return sourceHash;
+    }
+
+    GSSourcePtr GS_SourceManager::GetSource(U64 sourceHash) const {
+        for (auto &source : _sources) {
+            if (source->GetHash() == sourceHash) {
+                return source;
+            }
+        }
+
+        return nullptr;
+    }
+
+    GSSourcePtr GS_SourceManager::GetSource(GS_SourceName sourceName) const {
+        for (auto &source : _sources) {
+            if (source->GetName() == sourceName) {
+                return source;
+            }
+        }
+
+        return nullptr;
+    }
+
+    GSSourcePtrArray GS_SourceManager::GetSources() const {
+        return _sources;
+    }
+
 }

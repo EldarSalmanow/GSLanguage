@@ -343,6 +343,77 @@ namespace GSLanguageCompiler::IO {
      */
     using GSSourcePtrArray = std::vector<GSSourcePtr>;
 
+    /**
+     * Class for managing sources
+     */
+    class GS_SourceManager {
+    public:
+
+        /**
+         * Constructor for source manager
+         * @param sources Sources
+         */
+        explicit GS_SourceManager(GSSourcePtrArray sources);
+
+    public:
+
+        /**
+         * Creating source manager
+         * @param sources Sources
+         * @return Source manager ptr
+         */
+        static std::shared_ptr<GS_SourceManager> Create(GSSourcePtrArray sources);
+
+        /**
+         * Creating source manager
+         * @return Source manager ptr
+         */
+        static std::shared_ptr<GS_SourceManager> Create();
+
+    public:
+
+        /**
+         * Add source to manager
+         * @param source Source
+         * @return Source hash
+         */
+        U64 AddSource(GSSourcePtr source);
+
+        /**
+         * Get source from manager by source hash
+         * @param sourceHash Source hash
+         * @return Source or nullptr
+         */
+        GSSourcePtr GetSource(U64 sourceHash) const;
+
+        /**
+         * Get source from manager by source name
+         * @param sourceName Source name
+         * @return Source or nullptr
+         */
+        GSSourcePtr GetSource(GS_SourceName sourceName) const;
+
+    public:
+
+        /**
+         * Getter for sources
+         * @return Sources
+         */
+        GSSourcePtrArray GetSources() const;
+
+    public:
+
+        /**
+         * Sources
+         */
+        GSSourcePtrArray _sources;
+    };
+
+    /**
+     * Source manager ptr type
+     */
+    using GSSourceManagerPtr = std::shared_ptr<GS_SourceManager>;
+
 }
 
 #endif //GSLANGUAGE_GS_SOURCE_H

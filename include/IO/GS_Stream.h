@@ -494,6 +494,103 @@ namespace GSLanguageCompiler::IO {
         std::ostringstream _stream;
     };
 
+    /**
+     * Class for setting and managing "standard" IO streams
+     */
+    class GS_StdIOStreamsManager {
+    public:
+
+        /**
+         * Constructor for standard IO streams manager
+         * @param standardIn Standard input stream
+         * @param standardOut Standard output stream
+         * @param standardErr Standard error stream
+         * @param standardLog Standard logging stream
+         */
+        GS_StdIOStreamsManager(IO::GSInStreamPtr  standardIn,
+                               IO::GSOutStreamPtr standardOut,
+                               IO::GSOutStreamPtr standardErr,
+                               IO::GSOutStreamPtr standardLog);
+
+    public:
+
+        /**
+         * Creating standard IO streams manager
+         * @param standardIn Standard input stream
+         * @param standardOut Standard output stream
+         * @param standardErr Standard error stream
+         * @param standardLog Standard logging stream
+         * @return Standard IO streams manager ptr
+         */
+        static std::shared_ptr<GS_StdIOStreamsManager> Create(IO::GSInStreamPtr  standardIn,
+                                                              IO::GSOutStreamPtr standardOut,
+                                                              IO::GSOutStreamPtr standardErr,
+                                                              IO::GSOutStreamPtr standardLog);
+
+        /**
+         * Creating standard IO streams manager with console standard IO streams
+         * @return Standard IO streams manager ptr
+         */
+        static std::shared_ptr<GS_StdIOStreamsManager> Create();
+
+    public:
+
+        /**
+         * Read string from standard input stream
+         * @param string String for reading
+         * @return
+         */
+        Void In(LRef<UString> string);
+
+        /**
+         * Write string to standard output stream
+         * @param string String for writing
+         * @return
+         */
+        Void Out(ConstLRef<UString> string);
+
+        /**
+         * Write string to standard error stream
+         * @param string String for writing
+         * @return
+         */
+        Void Err(ConstLRef<UString> string);
+
+        /**
+         * Write string to standard logging stream
+         * @param string String for writing
+         * @return
+         */
+        Void Log(ConstLRef<UString> string);
+
+    private:
+
+        /**
+         * Standard input stream
+         */
+        IO::GSInStreamPtr  _standardIn;
+
+        /**
+         * Standard output stream
+         */
+        IO::GSOutStreamPtr _standardOut;
+
+        /**
+         * Standard error stream
+         */
+        IO::GSOutStreamPtr _standardErr;
+
+        /**
+         * Standard logging stream
+         */
+        IO::GSOutStreamPtr _standardLog;
+    };
+
+    /**
+     * Standard IO streams manager ptr type
+     */
+    using GSStdIOStreamsManagerPtr = std::shared_ptr<GS_StdIOStreamsManager>;
+
 }
 
 #endif //GSLANGUAGE_GS_STREAM_H

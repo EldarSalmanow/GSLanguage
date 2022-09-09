@@ -5,6 +5,8 @@
 
 namespace GSLanguageCompiler::Driver {
 
+    // TODO replace stream initializing to StdIOStreamsManager ?
+
     class GS_GlobalContext {
     public:
 
