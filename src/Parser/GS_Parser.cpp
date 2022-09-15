@@ -418,7 +418,7 @@ namespace GSLanguageCompiler::Parser {
         ++_tokensIterator;
     }
 
-    Void GS_Parser::Message(UString message, Driver::MessageLevel messageLevel) {
+    Void GS_Parser::Message(UString message, IO::MessageLevel messageLevel) {
 //        _sessionContext->GetIOContext()->Message(std::move(message), messageLevel);
     }
 

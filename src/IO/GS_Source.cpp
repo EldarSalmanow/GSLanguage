@@ -106,6 +106,18 @@ namespace GSLanguageCompiler::IO {
 
     GS_Source::GS_Source(UString source, GS_SourceName name)
             : _source(std::move(source)), _name(std::move(name)), _hash(0) {
+        // TODO delete tabs ?
+
+//        for (auto &symbol : source) {
+//            if (symbol == '\t') {
+//                _source += "    ";
+//
+//                continue;
+//            }
+//
+//            _source += symbol;
+//        }
+
         std::hash<std::string> sourceHasher;
 
         _hash = sourceHasher(_source.AsUTF8());

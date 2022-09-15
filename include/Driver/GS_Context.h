@@ -9,144 +9,6 @@
 
 namespace GSLanguageCompiler::Driver {
 
-//    class Message {
-//    public:
-//
-//        virtual ~Message() = default;
-//
-//    public:
-//
-//        virtual Void Print(IO::GSOutStreamPtr outputStream) = 0;
-//    };
-//
-//    using MessagePtr = std::shared_ptr<Message>;
-//
-//    class Note : public Message {
-//    public:
-//
-//        explicit Note(UString note, IO::GS_SourceLocation sourceLocation)
-//                : _note(std::move(note)) {}
-//
-//    public:
-//
-//    public:
-//
-//        Void Print(IO::GSOutStreamPtr outputStream) override {
-//
-//        }
-//
-//    private:
-//
-//        UString _note;
-//    };
-//
-//    class Warning : public Message {
-//    public:
-//
-//        explicit Warning(UString warning)
-//                : _warning(std::move(warning)) {}
-//
-//    public:
-//
-//        Void Print(IO::GSOutStreamPtr outputStream) override {
-//
-//        }
-//
-//    private:
-//
-//        UString _warning;
-//    };
-//
-//    class Error : public Message {
-//    public:
-//
-//        explicit Error(UString error)
-//                : _error(std::move(error)) {}
-//
-//    public:
-//
-//        Void Print(IO::GSOutStreamPtr outputStream) override {
-//
-//        }
-//
-//    private:
-//
-//        UString _error;
-//    };
-//
-//    class Fatal : public Message {
-//    public:
-//
-//        explicit Fatal(UString fatal)
-//                : _fatal(std::move(fatal)) {}
-//
-//    public:
-//
-//        Void Print(IO::GSOutStreamPtr outputStream) override {
-//
-//        }
-//
-//    private:
-//
-//        UString _fatal;
-//    };
-//
-//    inline LRef<IO::GSOutStreamPtr> operator<<(LRef<IO::GSOutStreamPtr> outputStream, MessagePtr message) {
-//        message->Print(outputStream);
-//
-//        return outputStream;
-//    }
-
-    // TODO create class for message handling ( IO context ? )
-    enum class MessageLevel {
-        Note,
-        Warning,
-        Error,
-        Fatal
-    };
-
-    class Message {
-    public:
-
-        Message(UString message, MessageLevel messageLevel);
-
-    public:
-
-        static std::shared_ptr<Message> Create(UString message, MessageLevel messageLevel);
-
-    public:
-
-        Void Print(IO::GSOutStreamPtr outputStream) const;
-    };
-
-    using MessagePtr = std::shared_ptr<Message>;
-
-    class MessageBuilder {
-    public:
-
-        MessageBuilder();
-
-    public:
-
-        static MessageBuilder Create();
-
-    public:
-
-        LRef<MessageBuilder> Message(UString message);
-
-        LRef<MessageBuilder> MessageLevel(MessageLevel messageLevel);
-
-        MessagePtr Build();
-    };
-
-    Void Error(UString error) {
-        MessageBuilder::Create()
-                .Message(std::move(error))
-                .MessageLevel(MessageLevel::Error)
-                .Build()
-                ->Print(IO::GS_OutConsoleStream::CreateCErr());
-    }
-
     // TODO
     class GS_Context {
     public:
@@ -207,17 +69,17 @@ namespace GSLanguageCompiler::Driver {
         /*
          * Example:
          *
-         * Print("Update GSLanguageCompiler to new 2.10.2 version.",
+         * Write("Update GSLanguageCompiler to new 2.10.2 version.",
          *       MessageLevel::Note);
          *
          * Note: Update GSLanguageCompiler to new 2.10.2 version.
          */
-        Void Message(UString message, MessageLevel messageLevel) const;
+        Void Message(UString message, IO::MessageLevel messageLevel) const;
 
         /*
          * Example:
          *
-         * Print("Unknown type 'I31'!",
+         * Write("Unknown type 'I31'!",
          *       MessageLevel::Error,
          *       SourceRange::Create("main.gs", 1, 8, 10),
          *       "var a: I31 = 10");
@@ -226,12 +88,12 @@ namespace GSLanguageCompiler::Driver {
          *                      ^^^
          * Error: Unknown type 'I31'!
          */
-        Void Message(UString message, MessageLevel messageLevel, IO::GS_SourceLocation sourceLocation, UString text) const;
+        Void Message(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation sourceLocation, UString text) const;
 
         /*
          * Example:
          *
-         * Print("Found 2 'say_hello' function for calling.",
+         * Write("Found 2 'say_hello' function for calling.",
          *       MessageLevel::Note,
          *       { SourceRange::Create("main.gs", 5, 1, 33), SourceRange::Create("main.gs", 8, 1, 41) },
          *       { "func say_hello(String name): Void", "func say_hello(String name, U8 age): Void" });
@@ -242,7 +104,7 @@ namespace GSLanguageCompiler::Driver {
          *               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
          * Note: Found 2 'say_hello' function for calling.
          */
-        Void Message(UString message, MessageLevel messageLevel, std::vector<IO::GS_SourceLocation> sourceLocations, std::vector<UString> texts) const;
+        Void Message(UString message, IO::MessageLevel messageLevel, std::vector<IO::GS_SourceLocation> sourceLocations, std::vector<UString> texts) const;
 
     public:
 

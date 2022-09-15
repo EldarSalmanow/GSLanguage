@@ -11,4 +11,6 @@
 
 #include <IO/GS_Source.h>
 
+#include <IO/GS_Message.h>
+
 #endif //GSLANGUAGE_IO_H

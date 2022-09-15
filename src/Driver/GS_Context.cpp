@@ -115,15 +115,15 @@ namespace GSLanguageCompiler::Driver {
         return nullptr;
     }
 
-    Void GS_Context::Message(UString message, MessageLevel messageLevel) const {
+    Void GS_Context::Message(UString message, IO::MessageLevel messageLevel) const {
 
     }
 
-    Void GS_Context::Message(UString message, MessageLevel messageLevel, IO::GS_SourceLocation sourceLocation, UString text) const {
+    Void GS_Context::Message(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation sourceLocation, UString text) const {
 
     }
 
-    Void GS_Context::Message(UString message, MessageLevel messageLevel, std::vector<IO::GS_SourceLocation> sourceLocations, std::vector<UString> texts) const {
+    Void GS_Context::Message(UString message, IO::MessageLevel messageLevel, std::vector<IO::GS_SourceLocation> sourceLocations, std::vector<UString> texts) const {
 
     }
 

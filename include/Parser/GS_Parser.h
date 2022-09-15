@@ -154,7 +154,7 @@ namespace GSLanguageCompiler::Parser {
 
         Void NextToken();
 
-        Void Message(UString message, Driver::MessageLevel messageLevel);
+        Void Message(UString message, IO::MessageLevel messageLevel);
 
     private:
 
