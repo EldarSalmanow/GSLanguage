@@ -210,4 +210,20 @@ namespace GSLanguageCompiler::IO {
         _standardLog->GetOutStream() << string;
     }
 
+    GSInStreamPtr GS_StdIOStreamsManager::GetStdInStream() const {
+        return _standardIn;
+    }
+
+    GSOutStreamPtr GS_StdIOStreamsManager::GetStdOutStream() const {
+        return _standardOut;
+    }
+
+    GSOutStreamPtr GS_StdIOStreamsManager::GetStdErrStream() const {
+        return _standardErr;
+    }
+
+    GSOutStreamPtr GS_StdIOStreamsManager::GetStdLogStream() const {
+        return _standardLog;
+    }
+
 }

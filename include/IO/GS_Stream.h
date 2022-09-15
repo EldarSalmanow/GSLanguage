@@ -563,6 +563,32 @@ namespace GSLanguageCompiler::IO {
          */
         Void Log(ConstLRef<UString> string);
 
+    public:
+
+        /**
+         * Getter for standard input stream
+         * @return Standard input stream
+         */
+        GSInStreamPtr GetStdInStream() const;
+
+        /**
+         * Getter for standard output stream
+         * @return Standard output stream
+         */
+        GSOutStreamPtr GetStdOutStream() const;
+
+        /**
+         * Getter for standard error stream
+         * @return Standard error stream
+         */
+        GSOutStreamPtr GetStdErrStream() const;
+
+        /**
+         * Getter for standard logging stream
+         * @return Standard logging stream
+         */
+        GSOutStreamPtr GetStdLogStream() const;
+
     private:
 
         /**
