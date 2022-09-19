@@ -13,30 +13,47 @@ namespace GSLanguageCompiler::Driver {
     class GS_Context {
     public:
 
-        GS_Context(IO::GSInStreamPtr    standardIn,
-                   IO::GSOutStreamPtr   standardOut,
-                   IO::GSOutStreamPtr   standardErr,
-                   IO::GSOutStreamPtr   standardLog,
-                   IO::GSSourcePtrArray inputSources,
-                   IO::GSOutStreamPtr   outputStream,
-                   AST::GSASTContextPtr astContext);
+        GS_Context(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+                   IO::GSSourceManagerPtr       sourceManager,
+                   IO::GSOutStreamPtr           outputStream,
+                   AST::GSASTContextPtr         astContext);
+
+//        GS_Context(IO::GSInStreamPtr    standardIn,
+//                   IO::GSOutStreamPtr   standardOut,
+//                   IO::GSOutStreamPtr   standardErr,
+//                   IO::GSOutStreamPtr   standardLog,
+//                   IO::GSSourcePtrArray inputSources,
+//                   IO::GSOutStreamPtr   outputStream,
+//                   AST::GSASTContextPtr astContext);
 
     public:
 
-        static std::shared_ptr<GS_Context> Create(IO::GSInStreamPtr    standardIn,
-                                                  IO::GSOutStreamPtr   standardOut,
-                                                  IO::GSOutStreamPtr   standardErr,
-                                                  IO::GSOutStreamPtr   standardLog,
-                                                  IO::GSSourcePtrArray inputSources,
-                                                  IO::GSOutStreamPtr   outputStream,
-                                                  AST::GSASTContextPtr astContext);
+        static std::shared_ptr<GS_Context> Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+                                                  IO::GSSourceManagerPtr       sourceManager,
+                                                  IO::GSOutStreamPtr           outputStream,
+                                                  AST::GSASTContextPtr         astContext);
 
-        static std::shared_ptr<GS_Context> Create(IO::GSSourcePtrArray inputSources,
-                                                  IO::GSOutStreamPtr   outputStream,
-                                                  AST::GSASTContextPtr astContext);
+        static std::shared_ptr<GS_Context> Create(IO::GSSourceManagerPtr sourceManager,
+                                                  IO::GSOutStreamPtr     outputStream,
+                                                  AST::GSASTContextPtr   astContext);
 
-        static std::shared_ptr<GS_Context> Create(IO::GSSourcePtrArray inputSources,
-                                                  IO::GSOutStreamPtr   outputStream);
+        static std::shared_ptr<GS_Context> Create(IO::GSSourceManagerPtr sourceManager,
+                                                  IO::GSOutStreamPtr     outputStream);
+
+//        static std::shared_ptr<GS_Context> Create(IO::GSInStreamPtr    standardIn,
+//                                                  IO::GSOutStreamPtr   standardOut,
+//                                                  IO::GSOutStreamPtr   standardErr,
+//                                                  IO::GSOutStreamPtr   standardLog,
+//                                                  IO::GSSourcePtrArray inputSources,
+//                                                  IO::GSOutStreamPtr   outputStream,
+//                                                  AST::GSASTContextPtr astContext);
+//
+//        static std::shared_ptr<GS_Context> Create(IO::GSSourcePtrArray inputSources,
+//                                                  IO::GSOutStreamPtr   outputStream,
+//                                                  AST::GSASTContextPtr astContext);
+//
+//        static std::shared_ptr<GS_Context> Create(IO::GSSourcePtrArray inputSources,
+//                                                  IO::GSOutStreamPtr   outputStream);
 
         static std::shared_ptr<GS_Context> Create();
 
@@ -46,17 +63,25 @@ namespace GSLanguageCompiler::Driver {
 
     public:
 
-        Void In(LRef<UString> string);
+        IO::GSInStreamPtr GetStdInStream();
 
-        Void Out(ConstLRef<UString> string);
+        IO::GSOutStreamPtr GetStdOutStream();
 
-        Void Err(ConstLRef<UString> string);
+        IO::GSOutStreamPtr GetStdErrStream();
 
-        Void Log(ConstLRef<UString> string);
+        IO::GSOutStreamPtr GetStdLogStream();
+
+//        Void In(LRef<UString> string);
+//
+//        Void Out(ConstLRef<UString> string);
+//
+//        Void Err(ConstLRef<UString> string);
+//
+//        Void Log(ConstLRef<UString> string);
 
     public:
 
-        Void AddInputSource(IO::GSSourcePtr inputSource);
+        U64 AddInputSource(IO::GSSourcePtr inputSource);
 
         IO::GSSourcePtr GetInputSource(U64 inputSourceHash) const;
 
@@ -74,7 +99,7 @@ namespace GSLanguageCompiler::Driver {
          *
          * Note: Update GSLanguageCompiler to new 2.10.2 version.
          */
-        Void Message(UString message, IO::MessageLevel messageLevel) const;
+//        Void Message(UString message, IO::MessageLevel messageLevel) const;
 
         /*
          * Example:
@@ -88,7 +113,7 @@ namespace GSLanguageCompiler::Driver {
          *                      ^^^
          * Error: Unknown type 'I31'!
          */
-        Void Message(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation sourceLocation, UString text) const;
+//        Void Message(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation sourceLocation, UString text) const;
 
         /*
          * Example:
@@ -104,7 +129,7 @@ namespace GSLanguageCompiler::Driver {
          *               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
          * Note: Found 2 'say_hello' function for calling.
          */
-        Void Message(UString message, IO::MessageLevel messageLevel, std::vector<IO::GS_SourceLocation> sourceLocations, std::vector<UString> texts) const;
+//        Void Message(UString message, IO::MessageLevel messageLevel, std::vector<IO::GS_SourceLocation> sourceLocations, std::vector<UString> texts) const;
 
     public:
 
@@ -116,15 +141,19 @@ namespace GSLanguageCompiler::Driver {
 
     private:
 
-        IO::GSInStreamPtr    _standardIn;
+//        IO::GSInStreamPtr    _standardIn;
+//
+//        IO::GSOutStreamPtr   _standardOut;
+//
+//        IO::GSOutStreamPtr   _standardErr;
+//
+//        IO::GSOutStreamPtr   _standardLog;
+//
+//        IO::GSSourcePtrArray _inputSources;
 
-        IO::GSOutStreamPtr   _standardOut;
+        IO::GSStdIOStreamsManagerPtr _stdIOStreamsManager;
 
-        IO::GSOutStreamPtr   _standardErr;
-
-        IO::GSOutStreamPtr   _standardLog;
-
-        IO::GSSourcePtrArray _inputSources;
+        IO::GSSourceManagerPtr _sourceManager;
 
         IO::GSOutStreamPtr   _outputStream;
 

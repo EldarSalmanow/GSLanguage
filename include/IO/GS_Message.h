@@ -1,9 +1,7 @@
 #ifndef GSLANGUAGE_GS_MESSAGE_H
 #define GSLANGUAGE_GS_MESSAGE_H
 
-#include <IO/GS_Stream.h>
-
-#include <IO/GS_Source.h>
+#include <Driver/GS_Context.h>
 
 namespace GSLanguageCompiler::IO {
 
@@ -31,11 +29,11 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
-         * Writing message to output stream
-         * @param outputStream Output stream
+         * Writing message to standard output stream
+         * @param context Context for getting any info for printing message
          * @return
          */
-        virtual Void Write(IO::GSOutStreamPtr outputStream) const = 0;
+        virtual Void Write(Driver::GSContextPtr context) const = 0;
     };
 
     /**
@@ -83,11 +81,11 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
-         * Writing text message to output stream
-         * @param outputStream Output stream
+         * Writing text message to standard output stream
+         * @param context Context for getting any info for printing message
          * @return
          */
-        Void Write(IO::GSOutStreamPtr outputStream) const override;
+        Void Write(Driver::GSContextPtr context) const override;
 
     private:
 
@@ -101,6 +99,15 @@ namespace GSLanguageCompiler::IO {
          */
         MessageLevel _level;
     };
+
+    /**
+     * Creating and writing text message to standard output stream
+     * @param text Text of message
+     * @param level Level of message
+     * @param context Context for getting any info for printing message
+     * @return
+     */
+    Void WriteTextMessage(UString text, MessageLevel level, Driver::GSContextPtr context);
 
     /**
      * Class for located text messages
@@ -138,16 +145,29 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
-         * Writing located text message to output stream
-         * @param outputStream Output stream
+         * Writing located text message to standard output stream
+         * @param context Context for getting any info for printing message
          * @return
          */
-        Void Write(IO::GSOutStreamPtr outputStream) const override;
+        Void Write(Driver::GSContextPtr context) const override;
 
     public:
 
+        /**
+         * Location of message
+         */
         IO::GS_SourceLocation _location;
     };
+
+    /**
+     * Creating and writing located text message to standard output stream
+     * @param text Text of message
+     * @param level Level of message
+     * @param location Location of message
+     * @param context Context for getting any info for printing message
+     * @return
+     */
+    Void WriteLocatedTextMessage(UString text, MessageLevel level, IO::GS_SourceLocation location, Driver::GSContextPtr context);
 
 }
 

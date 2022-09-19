@@ -33,7 +33,15 @@ namespace GSLanguageCompiler::IO {
         return _level;
     }
 
-    Void GS_TextMessage::Write(IO::GSOutStreamPtr outputStream) const {
+    Void WriteTextMessage(UString text, MessageLevel level, Driver::GSContextPtr context) {
+        auto textMessage = GS_TextMessage::Create(std::move(text), level);
+
+        textMessage->Write(std::move(context));
+    }
+
+    Void GS_TextMessage::Write(Driver::GSContextPtr context) const {
+        auto outputStream = context->GetStdOutStream();
+
         auto &stream = outputStream->GetOutStream();
 
         stream << rang::style::bold;
@@ -73,8 +81,28 @@ namespace GSLanguageCompiler::IO {
         return _location;
     }
 
-    Void GS_LocatedTextMessage::Write(IO::GSOutStreamPtr outputStream) const {
+    Void GS_LocatedTextMessage::Write(Driver::GSContextPtr context) const {
+        auto outputStream = context->GetStdOutStream();
+
         auto &stream = outputStream->GetOutStream();
+
+        auto source = context->GetInputSource(_location.GetSourceHash());
+
+        if (!source) {
+            // TODO create UStringStream class in GSCrossPlatform library
+
+            std::stringstream stringStream;
+
+            stringStream << "Can`t find source in context with source hash '"
+                         << _location.GetSourceHash()
+                         << "' for printing error!";
+
+            WriteTextMessage(UString(stringStream.str()),
+                             MessageLevel::Fatal,
+                             context);
+
+            return;
+        }
 
         stream << rang::style::bold;
 
@@ -97,17 +125,24 @@ namespace GSLanguageCompiler::IO {
                 break;
         }
 
-        // TODO add printing source hash or source name from location
-
-        stream << "["
+        stream << "{"
+               << source->GetName().GetName()
+               << "["
                << _location.GetStartPosition()
                << ":"
                << _location.GetEndPosition()
-               << "] >> "
+               << "]"
+               << "} >> "
                << GetText()
                << std::endl;
 
         stream << rang::style::reset << rang::fg::reset;
+    }
+
+    Void WriteLocatedTextMessage(UString text, MessageLevel level, IO::GS_SourceLocation location, Driver::GSContextPtr context) {
+        auto locatedTextMessage = GS_LocatedTextMessage::Create(std::move(text), level, location);
+
+        locatedTextMessage->Write(std::move(context));
     }
 
 //    inline rang::fg MessageLevelToFGColor(MessageLevel messageLevel) {
