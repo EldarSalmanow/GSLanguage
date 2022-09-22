@@ -40,7 +40,7 @@ namespace GSLanguageCompiler::IO {
     }
 
     Void GS_TextMessage::Write(Driver::GSContextPtr context) const {
-        auto outputStream = context->GetStdOutStream();
+        auto outputStream = context->GetStdIOStreamsManager()->GetStdOutStream();
 
         auto &stream = outputStream->GetOutStream();
 
@@ -82,11 +82,11 @@ namespace GSLanguageCompiler::IO {
     }
 
     Void GS_LocatedTextMessage::Write(Driver::GSContextPtr context) const {
-        auto outputStream = context->GetStdOutStream();
+        auto outputStream = context->GetStdIOStreamsManager()->GetStdOutStream();
 
         auto &stream = outputStream->GetOutStream();
 
-        auto source = context->GetInputSource(_location.GetSourceHash());
+        auto source = context->GetSourceManager()->GetSource(_location.GetSourceHash());
 
         if (!source) {
             // TODO create UStringStream class in GSCrossPlatform library
