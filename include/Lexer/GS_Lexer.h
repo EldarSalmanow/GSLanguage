@@ -30,6 +30,8 @@ namespace GSLanguageCompiler::Lexer {
          */
         static GS_Lexer Create(UString content, Driver::GSContextPtr context);
 
+        static GS_Lexer Create(Driver::GSContextPtr context);
+
     public:
 
         /**
@@ -37,6 +39,8 @@ namespace GSLanguageCompiler::Lexer {
          * @return Tokens
          */
         GSTokenArray Tokenize();
+
+        GSTokenArray Tokenize(IO::GSSourcePtr source);
 
     private:
 
@@ -77,6 +81,11 @@ namespace GSLanguageCompiler::Lexer {
          * Content
          */
         UString _content;
+
+        /**
+         * Source
+         */
+        IO::GSSourcePtr _source;
 
         /**
          * Content iterator

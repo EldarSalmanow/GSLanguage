@@ -1,6 +1,3 @@
-#include <Lexer/Lexer.h>
-#include <Parser/Parser.h>
-
 #include <Debug/Debug.h>
 
 #include <GS_Session.h>
@@ -19,20 +16,20 @@ namespace GSLanguageCompiler::Driver {
     }
 
     CompilingResult GS_Session::Run() {
+        auto sources = _context->GetSourceManager()->GetSources(); // temp
+
         // TODO
 
-        AST::GSTranslationUnitDeclarationPtrArray units;
+        GSCompilationUnitPtrArray compilationUnits;
 
-        for (auto &inputSource : _context->GetInputSources()) {
-            auto source = inputSource->GetSource();
+        for (auto &source : sources) {
+            auto compilationUnit = GS_CompilationUnit::Create(source, _context);
 
-            auto tokens = Lexer::GS_Lexer::Create(source, _context).Tokenize();
+            compilationUnit->Compile();
 
-            auto unit = Parser::GS_Parser::Create(tokens, _context).ParseProgram();
+            Debug::DumpAST(compilationUnit->GetNode());
 
-            units.emplace_back(unit);
-
-            Debug::DumpAST(unit);
+            compilationUnits.emplace_back(compilationUnit);
         }
 
         return CompilingResult::Success;

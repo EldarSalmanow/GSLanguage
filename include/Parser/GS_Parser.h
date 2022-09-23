@@ -74,9 +74,13 @@ namespace GSLanguageCompiler::Parser {
 
         static GS_Parser Create(Lexer::GSTokenArray tokens, Driver::GSContextPtr context);
 
+        static GS_Parser Create(Driver::GSContextPtr context);
+
     public:
 
         AST::GSTranslationUnitDeclarationPtr ParseProgram();
+
+        AST::GSTranslationUnitDeclarationPtr ParseProgram(Lexer::GSTokenArray tokens);
 
     public:
 
