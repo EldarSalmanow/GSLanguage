@@ -89,15 +89,13 @@ namespace GSLanguageCompiler::IO {
         auto source = context->GetInputSource(_location.GetSourceHash());
 
         if (!source) {
-            // TODO create UStringStream class in GSCrossPlatform library
+            UStringStream stringStream;
 
-            std::stringstream stringStream;
-
-            stringStream << "Can`t find source in context with source hash '"
+            stringStream << "Can`t find source in context with source hash '"_us
                          << _location.GetSourceHash()
-                         << "' for printing error!";
+                         << "' for printing error!"_us;
 
-            WriteTextMessage(UString(stringStream.str()),
+            WriteTextMessage(stringStream.String(),
                              MessageLevel::Fatal,
                              context);
 
