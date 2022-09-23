@@ -1,14 +1,9 @@
 #ifndef GSLANGUAGE_GS_SESSION_H
 #define GSLANGUAGE_GS_SESSION_H
 
-#include <Driver/GS_Context.h>
+#include <Driver/GS_CompilationUnit.h>
 
 namespace GSLanguageCompiler::Driver {
-
-    enum class CompilingResult : I32 {
-        Success = 0,
-        Failure = 1
-    };
 
     /**
      * Class for representation compiler sessions

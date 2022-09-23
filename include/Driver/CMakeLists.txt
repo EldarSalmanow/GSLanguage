@@ -10,6 +10,8 @@ set(GS_DRIVER_SOURCE
         ${DRIVER_DIR}/GS_SessionsManager.cpp
         ${DRIVER_DIR}/GS_Session.cpp
 
+        ${DRIVER_DIR}/GS_CompilationUnit.cpp
+
         ${DRIVER_DIR}/GS_Context.cpp
 
 #        ${DRIVER_DIR}/GS_Toolchains.cpp
