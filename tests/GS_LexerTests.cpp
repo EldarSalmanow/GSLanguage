@@ -19,9 +19,11 @@ public:
 protected:
 
     Void SetUp() override {
-        // TODO remove nullptr
+        auto context = Driver::GS_Context::Create();
 
-        _tokens = Lexer::GS_Lexer::Create(_inputContent, nullptr).Tokenize();
+        auto compilationUnit = Driver::GS_CompilationUnit::Create(IO::GS_Source::CreateString(_inputContent), context);
+
+        _tokens = Lexer::GS_Lexer::Create(context).Tokenize(*compilationUnit);
     }
 
 protected:

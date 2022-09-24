@@ -68,25 +68,19 @@ namespace GSLanguageCompiler::Parser {
     class GS_Parser {
     public:
 
-        GS_Parser(Lexer::GSTokenArray tokens, Driver::GSContextPtr context);
+        explicit GS_Parser(Driver::GSContextPtr context);
 
     public:
-
-        static GS_Parser Create(Lexer::GSTokenArray tokens, Driver::GSContextPtr context);
 
         static GS_Parser Create(Driver::GSContextPtr context);
 
     public:
 
-        AST::GSTranslationUnitDeclarationPtr ParseProgram();
+        AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_CompilationUnit> compilationUnit);
 
-        AST::GSTranslationUnitDeclarationPtr ParseProgram(Lexer::GSTokenArray tokens);
-
-    public:
+    private:
 
         AST::GSTranslationUnitDeclarationPtr ParseTranslationUnitDeclaration(UString translationUnitName);
-
-        AST::GSTranslationUnitDeclarationPtr ParseTranslationUnitDeclaration();
 
         AST::GSDeclarationPtr ParseDeclaration();
 
@@ -118,13 +112,13 @@ namespace GSLanguageCompiler::Parser {
 
         AST::GSExpressionPtr ParsePrimaryExpression();
 
-    public:
+    private:
 
         AST::GSValuePtr ParseValue();
 
         Semantic::GSTypePtr ParseType();
 
-    public:
+    private:
 
         // check
         template<typename T>
@@ -144,7 +138,7 @@ namespace GSLanguageCompiler::Parser {
             return result;
         }
 
-    public:
+    private:
 
         I32 TokenPrecedence();
 

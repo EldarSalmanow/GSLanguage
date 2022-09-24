@@ -11,18 +11,26 @@ namespace GSLanguageCompiler::Parser {
             {Lexer::TokenType::SymbolMinus, 1}
     };
 
-    GS_Parser::GS_Parser(Lexer::GSTokenArray tokens, Driver::GSContextPtr context)
+    GS_Parser::GS_Parser(Driver::GSContextPtr context)
             : _context(std::move(context)),
-              _tokens(std::move(tokens)),
-              _tokensIterator(_tokens.begin()),
               _builder(AST::GS_ASTBuilder::Create(_context->GetASTContext())) {}
 
-    GS_Parser GS_Parser::Create(Lexer::GSTokenArray tokens, Driver::GSContextPtr context) {
-        return GS_Parser(std::move(tokens), std::move(context));
+    GS_Parser GS_Parser::Create(Driver::GSContextPtr context) {
+        return GS_Parser(std::move(context));
     }
 
-    AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseProgram() {
-        return ParseTranslationUnitDeclaration();
+    AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseProgram(LRef<Driver::GS_CompilationUnit> compilationUnit) {
+        _tokens = compilationUnit.GetTokens();
+
+        _tokensIterator = _tokens.begin();
+
+        auto translationUnitDeclaration = ParseTranslationUnitDeclaration(compilationUnit.GetSource()->GetName().GetName());
+
+        _tokens = Lexer::GSTokenArray();
+
+        _tokensIterator = Lexer::GSTokenArrayIterator();
+
+        return translationUnitDeclaration;
     }
 
     AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseTranslationUnitDeclaration(UString translationUnitName) {
@@ -39,12 +47,6 @@ namespace GSLanguageCompiler::Parser {
         }
 
         return unit;
-    }
-
-    AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseTranslationUnitDeclaration() {
-        // TODO update
-
-        return ParseTranslationUnitDeclaration("<unknown TU name>");
     }
 
     AST::GSDeclarationPtr GS_Parser::ParseDeclaration() {
@@ -419,7 +421,9 @@ namespace GSLanguageCompiler::Parser {
     }
 
     Void GS_Parser::Message(UString message, IO::MessageLevel messageLevel) {
-//        _sessionContext->GetIOContext()->Message(std::move(message), messageLevel);
+        auto textMessage = IO::GS_TextMessage::Create(std::move(message), messageLevel);
+
+        textMessage->Write(_context);
     }
 
 }

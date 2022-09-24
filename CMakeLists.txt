@@ -75,6 +75,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE lldCommon lldCOFF)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_LIBRARIES})
 
-add_subdirectory(tests)
+#add_subdirectory(tests)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${BINARY_DIR})

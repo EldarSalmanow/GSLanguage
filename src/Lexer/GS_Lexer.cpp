@@ -40,14 +40,18 @@ namespace GSLanguageCompiler::Lexer {
         return TokenType::Unknown;
     }
 
-    GS_Lexer::GS_Lexer(UString content, Driver::GSContextPtr context)
-            : _context(std::move(context)), _content(std::move(content)), _contentIterator(_content.begin()) {}
+    GS_Lexer::GS_Lexer(Driver::GSContextPtr context)
+            : _context(std::move(context)) {}
 
-    GS_Lexer GS_Lexer::Create(UString content, Driver::GSContextPtr context) {
-        return GS_Lexer(std::move(content), std::move(context));
+    GS_Lexer GS_Lexer::Create(Driver::GSContextPtr context) {
+        return GS_Lexer(std::move(context));
     }
 
-    GSTokenArray GS_Lexer::Tokenize() {
+    GSTokenArray GS_Lexer::Tokenize(LRef<Driver::GS_CompilationUnit> compilationUnit) {
+        _content = compilationUnit.GetSource()->GetSource();
+
+        _contentIterator = _content.begin();
+
         GSTokenArray tokens;
 
         auto token = GetToken();
@@ -62,6 +66,10 @@ namespace GSLanguageCompiler::Lexer {
 
             token = GetToken();
         }
+
+        _content = UString();
+
+        _contentIterator = UString::Iterator();
 
         return tokens;
     }

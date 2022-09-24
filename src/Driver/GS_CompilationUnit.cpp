@@ -18,11 +18,11 @@ namespace GSLanguageCompiler::Driver {
     CompilingResult GS_CompilationUnit::Compile() {
         auto lexer = Lexer::GS_Lexer::Create(_context);
 
-        _tokens = lexer.Tokenize(_source);
+        _tokens = lexer.Tokenize(*this);
 
         auto parser = Parser::GS_Parser::Create(_context);
 
-        _node = parser.ParseProgram(_tokens);
+        _node = parser.ParseProgram(*this);
 
         return CompilingResult::Success;
     }
