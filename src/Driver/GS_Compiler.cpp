@@ -51,9 +51,13 @@ namespace GSLanguageCompiler::Driver {
 
             return CompilingResult::Success;
         } catch (LRef<std::exception> exception) {
-            GS_GlobalContext::Err(UString("Internal GSLanguageCompiler error: \"")
-                                + UString(exception.what())
-                                + UString("\"\n"));
+            UStringStream stringStream;
+
+            stringStream << "Internal GSLanguageCompiler error: \""_us
+                         << UString(exception.what())
+                         << "\"\n"_us;
+
+            GS_GlobalContext::Err(stringStream.String());
 
             return CompilingResult::Failure;
         }

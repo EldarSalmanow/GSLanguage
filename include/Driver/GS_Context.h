@@ -14,17 +14,17 @@ namespace GSLanguageCompiler::Driver {
     // optimize class
 
     /**
-     *
+     * Class for containing and manipulating information about compiling process
      */
     class GS_Context {
     public:
 
         /**
-         *
-         * @param stdIOStreamsManager
-         * @param sourceManager
-         * @param outputStream
-         * @param astContext
+         * Creating context
+         * @param stdIOStreamsManager Standard IO streams manager
+         * @param sourceManager Source manager
+         * @param outputStream Output stream
+         * @param astContext AST context
          */
         GS_Context(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
                    IO::GSSourceManagerPtr       sourceManager,
@@ -34,12 +34,12 @@ namespace GSLanguageCompiler::Driver {
     public:
 
         /**
-         *
-         * @param stdIOStreamsManager
-         * @param sourceManager
-         * @param outputStream
-         * @param astContext
-         * @return
+         * Creating context
+         * @param stdIOStreamsManager Standard IO streams manager
+         * @param sourceManager Source manager
+         * @param outputStream Output stream
+         * @param astContext AST context
+         * @return Context ptr
          */
         static std::shared_ptr<GS_Context> Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
                                                   IO::GSSourceManagerPtr       sourceManager,
@@ -47,48 +47,48 @@ namespace GSLanguageCompiler::Driver {
                                                   AST::GSASTContextPtr         astContext);
 
         /**
-         *
-         * @param stdIOStreamsManager
-         * @param sourceManager
-         * @param outputStream
-         * @return
+         * Creating context
+         * @param stdIOStreamsManager Standard IO streams manager
+         * @param sourceManager Source manager
+         * @param outputStream Output stream
+         * @return Context ptr
          */
         static std::shared_ptr<GS_Context> Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
                                                   IO::GSSourceManagerPtr       sourceManager,
                                                   IO::GSOutStreamPtr           outputStream);
 
         /**
-         *
-         * @param sourceManager
-         * @param outputStream
-         * @param astContext
-         * @return
+         * Creating context
+         * @param sourceManager Source manager
+         * @param outputStream Output stream
+         * @param astContext AST context
+         * @return Context ptr
          */
         static std::shared_ptr<GS_Context> Create(IO::GSSourceManagerPtr sourceManager,
                                                   IO::GSOutStreamPtr     outputStream,
                                                   AST::GSASTContextPtr   astContext);
 
         /**
-         *
-         * @param sourceManager
-         * @param outputStream
-         * @return
+         * Creating context
+         * @param sourceManager Source manager
+         * @param outputStream Output stream
+         * @return Context ptr
          */
         static std::shared_ptr<GS_Context> Create(IO::GSSourceManagerPtr sourceManager,
                                                   IO::GSOutStreamPtr     outputStream);
 
         /**
-         *
-         * @return
+         * Creating context
+         * @return Context ptr
          */
         static std::shared_ptr<GS_Context> Create();
 
     public:
 
         /**
-         *
-         * @param arguments
-         * @return
+         * Creating context from arguments
+         * @param arguments Arguments
+         * @return Context ptr
          */
         static std::shared_ptr<GS_Context> Create(GS_Arguments arguments);
 
@@ -208,52 +208,55 @@ namespace GSLanguageCompiler::Driver {
     public:
 
         /**
-         *
-         * @return
+         * Getter for standard IO streams manager
+         * @return Standard IO streams manager
          */
         IO::GSStdIOStreamsManagerPtr GetStdIOStreamsManager() const;
 
         /**
-         *
-         * @return
+         * Getter for source manager
+         * @return Source manager
          */
         IO::GSSourceManagerPtr GetSourceManager() const;
 
         /**
-         *
-         * @return
+         * Getter for output stream
+         * @return Output stream
          */
         IO::GSOutStreamPtr GetOutputStream() const;
 
         /**
-         *
-         * @return
+         * Getter for AST context
+         * @return AST context
          */
         AST::GSASTContextPtr GetASTContext() const;
 
     private:
 
         /**
-         *
+         * Standard IO streams manager
          */
         IO::GSStdIOStreamsManagerPtr _stdIOStreamsManager;
 
         /**
-         *
+         * Source manager
          */
         IO::GSSourceManagerPtr _sourceManager;
 
         /**
-         *
+         * Output stream
          */
         IO::GSOutStreamPtr   _outputStream;
 
         /**
-         *
+         * AST context
          */
         AST::GSASTContextPtr _astContext;
     };
 
+    /**
+     * Context ptr type
+     */
     using GSContextPtr = std::shared_ptr<GS_Context>;
 
 }

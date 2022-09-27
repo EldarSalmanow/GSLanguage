@@ -5,46 +5,101 @@
 
 namespace GSLanguageCompiler::Driver {
 
-    // TODO replace stream initializing to StdIOStreamsManager ?
-
+    /**
+     * Global compiler context for containing and manipulating information and operation system
+     */
     class GS_GlobalContext {
     public:
 
+        /**
+         * Delete constructor for global context. Only static class
+         */
         GS_GlobalContext() = delete;
 
     public:
 
-        static I32 InitializeIO(IO::GSInStreamPtr  standardIn,
-                                IO::GSOutStreamPtr standardOut,
-                                IO::GSOutStreamPtr standardErr,
-                                IO::GSOutStreamPtr standardLog);
+        /**
+         * Initializing global IO streams
+         * @param stdIOStreamsManager Standard IO streams manager
+         * @return Initialization result
+         */
+        static I32 InitializeIO(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager);
 
-        static I32 Initialize(IO::GSInStreamPtr  standardIn,
-                              IO::GSOutStreamPtr standardOut,
-                              IO::GSOutStreamPtr standardErr,
-                              IO::GSOutStreamPtr standardLog);
+        /**
+         * Initializing global context
+         * @param stdIOStreamsManager Standard IO streams manager
+         * @return Initialization result
+         */
+        static I32 Initialize(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager);
 
+        /**
+         * Default initializing global context
+         * @return Initialization result
+         */
         static I32 Initialize();
 
     public:
 
+        /**
+         * Read string from standard input stream from standard IO streams manager
+         * @param string String for reading
+         * @return
+         */
         static Void In(LRef<UString> string);
 
+        /**
+         * Write string to standard output stream from standard IO streams manager
+         * @param string String for writing
+         * @return
+         */
         static Void Out(ConstLRef<UString> string);
 
+        /**
+         * Write string to standard error stream from standard IO streams manager
+         * @param string String for writing
+         * @return
+         */
         static Void Err(ConstLRef<UString> string);
 
+        /**
+         * Write string to standard logging stream from standard IO streams manager
+         * @param string String for writing
+         * @return
+         */
         static Void Log(ConstLRef<UString> string);
+
+    public:
+
+        /**
+         * Getter for standard input stream from standard IO streams manager
+         * @return Standard input stream
+         */
+        IO::GSInStreamPtr GetStdInStream() const;
+
+        /**
+         * Getter for standard output stream from standard IO streams manager
+         * @return Standard output stream
+         */
+        IO::GSOutStreamPtr GetStdOutStream() const;
+
+        /**
+         * Getter for standard error stream from standard IO streams manager
+         * @return Standard error stream
+         */
+        IO::GSOutStreamPtr GetStdErrStream() const;
+
+        /**
+         * Getter for standard logging stream from standard IO streams manager
+         * @return Standard logging stream
+         */
+        IO::GSOutStreamPtr GetStdLogStream() const;
 
     private:
 
-        inline static IO::GSInStreamPtr _standardIn   = nullptr;
-
-        inline static IO::GSOutStreamPtr _standardOut = nullptr;
-
-        inline static IO::GSOutStreamPtr _standardErr = nullptr;
-
-        inline static IO::GSOutStreamPtr _standardLog = nullptr;
+        /**
+         * Standard IO streams manager
+         */
+        inline static IO::GSStdIOStreamsManagerPtr _stdIOStreamsManager = nullptr;
     };
 
 }

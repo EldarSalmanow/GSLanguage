@@ -9,7 +9,7 @@ using namespace GSLanguageCompiler;
 I32 main(I32 argc, Ptr<Ptr<C>> argv) {
     auto globalContextInitializingResult = Driver::GS_GlobalContext::Initialize();
 
-    if (!globalContextInitializingResult) {
+    if (globalContextInitializingResult) {
         return 1;
     }
 
