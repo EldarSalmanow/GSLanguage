@@ -267,7 +267,7 @@ namespace GSLanguageCompiler::AST {
          * @param nameLocation Name location
          * @return Variable using expression
          */
-        std::shared_ptr<GS_VariableUsingExpression> CreateVariableUsingExpression(UString name, Lexer::GS_TokenLocation nameLocation);
+        std::shared_ptr<GS_VariableUsingExpression> CreateVariableUsingExpression(UString name, IO::GS_SourceLocation nameLocation);
 
         /**
          * Create function calling expression

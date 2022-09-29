@@ -5,6 +5,8 @@
 
 #include <AST/AST.h>
 
+#include <deque>
+
 namespace GSLanguageCompiler::Parser {
 
     /**
@@ -31,9 +33,9 @@ namespace GSLanguageCompiler::Parser {
      *
      * stmt -> var_decl_stmt, assignment_stmt, expr_stmt
      *
-     * var_decl_stmt -> 'var' id (':' id) '=' rvalue_expr (?)
+     * var_decl_stmt -> 'var' id (':' id) '=' rvalue_expr
      *
-     * assignment_stmt -> lvalue_expr '=' rvalue_expr (?)
+     * assignment_stmt -> lvalue_expr '=' rvalue_expr
      *
      * expr_stmt -> expr
      *
@@ -125,6 +127,8 @@ namespace GSLanguageCompiler::Parser {
         inline T TryParse(T (GS_Parser::*method)()) {
             // TODO add error recovering
 
+            std::deque<IO::GSMessagePtr> messages;
+
             auto tokensIterator = _tokensIterator;
 
             auto result = (this->*method)();
@@ -150,9 +154,13 @@ namespace GSLanguageCompiler::Parser {
 
         UString TokenValue();
 
+        IO::GS_SourceLocation TokenLocation();
+
         Void NextToken();
 
         Void Message(UString message, IO::MessageLevel messageLevel);
+
+        Void LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation messageLocation);
 
     private:
 

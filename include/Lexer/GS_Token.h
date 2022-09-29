@@ -1,35 +1,11 @@
 #ifndef GSLANGUAGE_GS_TOKEN_H
 #define GSLANGUAGE_GS_TOKEN_H
 
-#include <vector>
-
-#include <GSCrossPlatform/CrossPlatform.h>
+#include <IO/GS_Source.h>
 
 #include <Lexer/GS_Keywords.h>
 
 namespace GSLanguageCompiler::Lexer {
-
-    // TODO update location system
-    /**
-     * Class for containing token information about location
-     */
-    class GS_TokenLocation {
-    public:
-
-        /**
-         * Constructor for token location
-         * @return Token location
-         */
-        GS_TokenLocation();
-
-    public:
-
-        /**
-         * Creating token location
-         * @return Token location
-         */
-        static GS_TokenLocation Create();
-    };
 
     /**
      * Class for representation token in lexer
@@ -43,7 +19,7 @@ namespace GSLanguageCompiler::Lexer {
          * @param value Value
          * @param location Location
          */
-        GS_Token(TokenType type, UString value, GS_TokenLocation location);
+        GS_Token(TokenType type, UString value, IO::GS_SourceLocation location);
 
     public:
 
@@ -54,7 +30,7 @@ namespace GSLanguageCompiler::Lexer {
          * @param location Location
          * @return Token
          */
-        static GS_Token Create(TokenType type, UString value, GS_TokenLocation location);
+        static GS_Token Create(TokenType type, UString value, IO::GS_SourceLocation location);
 
         /**
          * Creating token
@@ -70,7 +46,7 @@ namespace GSLanguageCompiler::Lexer {
          * @param location Location
          * @return Token
          */
-        static GS_Token Create(TokenType type, GS_TokenLocation location);
+        static GS_Token Create(TokenType type, IO::GS_SourceLocation location);
 
         /**
          * Creating token
@@ -103,7 +79,7 @@ namespace GSLanguageCompiler::Lexer {
          * Getter for location
          * @return Location
          */
-        GS_TokenLocation GetLocation() const;
+        IO::GS_SourceLocation GetLocation() const;
 
     private:
 
@@ -120,7 +96,7 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Token location
          */
-        GS_TokenLocation _location;
+        IO::GS_SourceLocation _location;
     };
 
     /**

@@ -18,7 +18,7 @@ namespace GSLanguageCompiler::AST {
          * @param name Variable name
          * @param nameLocation Variable name location
          */
-        GS_VariableUsingExpression(UString name, Lexer::GS_TokenLocation nameLocation);
+        GS_VariableUsingExpression(UString name, IO::GS_SourceLocation nameLocation);
 
     public:
 
@@ -28,7 +28,7 @@ namespace GSLanguageCompiler::AST {
          * @param nameLocation Variable name location
          * @return Variable using expression ptr
          */
-        static std::shared_ptr<GS_VariableUsingExpression> Create(UString name, Lexer::GS_TokenLocation nameLocation);
+        static std::shared_ptr<GS_VariableUsingExpression> Create(UString name, IO::GS_SourceLocation nameLocation);
 
         /**
          * Creating variable using expression ptr
@@ -49,7 +49,7 @@ namespace GSLanguageCompiler::AST {
          * Getter for variable name location
          * @return Variable name location
          */
-        Lexer::GS_TokenLocation GetNameLocation() const;
+        IO::GS_SourceLocation GetNameLocation() const;
 
     public:
 
@@ -69,7 +69,7 @@ namespace GSLanguageCompiler::AST {
         /**
          * Variable name location
          */
-        Lexer::GS_TokenLocation _nameLocation;
+        IO::GS_SourceLocation _nameLocation;
     };
 
 }

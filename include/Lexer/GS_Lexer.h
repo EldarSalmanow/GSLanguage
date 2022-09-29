@@ -81,6 +81,16 @@ namespace GSLanguageCompiler::Lexer {
          * Content iterator
          */
         UString::Iterator _contentIterator;
+
+        /**
+         * Current source hash
+         */
+        U64 _sourceHash;
+
+        /**
+         * Current position in source
+         */
+        I64 _currentPosition;
     };
 
 }
