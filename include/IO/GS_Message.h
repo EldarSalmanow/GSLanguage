@@ -42,6 +42,11 @@ namespace GSLanguageCompiler::IO {
     using GSMessagePtr = std::shared_ptr<GS_Message>;
 
     /**
+     * Message ptr array type
+     */
+    using GSMessagePtrArray = std::vector<GSMessagePtr>;
+
+    /**
      * Class for text messages
      */
     class GS_TextMessage : public GS_Message {

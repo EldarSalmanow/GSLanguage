@@ -279,6 +279,10 @@ namespace GSLanguageCompiler::IO {
          */
         UString GetCodeByLocation(GS_SourceLocation location);
 
+        std::pair<std::pair<U64, U64>, std::pair<U64, U64>> GetLineColumnLocation(GS_SourceLocation location);
+
+        std::pair<U64, U64> GetLineColumnLocation(U64 position);
+
     public:
 
         /**

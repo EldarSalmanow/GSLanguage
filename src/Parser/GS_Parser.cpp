@@ -13,6 +13,9 @@ namespace GSLanguageCompiler::Parser {
 
     GS_Parser::GS_Parser(Driver::GSContextPtr context)
             : _context(std::move(context)),
+              _messages(IO::GSMessagePtrArray()),
+              _tokens(Lexer::GSTokenArray()),
+              _tokensIterator(Lexer::GSTokenArrayIterator()),
               _builder(AST::GS_ASTBuilder::Create(_context->GetASTContext())) {}
 
     GS_Parser GS_Parser::Create(Driver::GSContextPtr context) {
@@ -20,11 +23,19 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseProgram(LRef<Driver::GS_CompilationUnit> compilationUnit) {
+        _messages = IO::GSMessagePtrArray();
+
         _tokens = compilationUnit.GetTokens();
 
         _tokensIterator = _tokens.begin();
 
         auto translationUnitDeclaration = ParseTranslationUnitDeclaration(compilationUnit.GetSource()->GetName().GetName());
+
+        for (auto &message : _messages) {
+            message->Write(_context);
+        }
+
+        _messages = IO::GSMessagePtrArray();
 
         _tokens = Lexer::GSTokenArray();
 
@@ -579,13 +590,13 @@ namespace GSLanguageCompiler::Parser {
     Void GS_Parser::Message(UString message, IO::MessageLevel messageLevel) {
         auto textMessage = IO::GS_TextMessage::Create(std::move(message), messageLevel);
 
-        textMessage->Write(_context);
+        _messages.emplace_back(textMessage);
     }
 
     Void GS_Parser::LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation messageLocation) {
         auto locatedTextMessage = IO::GS_LocatedTextMessage::Create(std::move(message), messageLevel, messageLocation);
 
-        locatedTextMessage->Write(_context);
+        _messages.emplace_back(locatedTextMessage);
     }
 
 }

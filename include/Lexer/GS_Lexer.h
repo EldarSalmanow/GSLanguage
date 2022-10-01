@@ -65,12 +65,36 @@ namespace GSLanguageCompiler::Lexer {
          */
         Void PrevSymbol();
 
+    public:
+
+        /**
+         * Creating text message
+         * @param message Message
+         * @param messageLevel Message level
+         * @return
+         */
+        Void Message(UString message, IO::MessageLevel messageLevel);
+
+        /**
+         * Creating located text message
+         * @param message Message
+         * @param messageLevel Message level
+         * @param messageLocation Message location
+         * @return
+         */
+        Void LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation messageLocation);
+
     private:
 
         /**
          * Context
          */
         Driver::GSContextPtr _context;
+
+        /**
+         * Messages
+         */
+        IO::GSMessagePtrArray _messages;
 
         /**
          * Content

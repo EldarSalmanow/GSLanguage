@@ -102,6 +102,8 @@ namespace GSLanguageCompiler::IO {
             return;
         }
 
+        auto [startLocation, endLocation] = source->GetLineColumnLocation(_location);
+
         stream << rang::style::bold;
 
         switch (GetLevel()) {
@@ -123,14 +125,14 @@ namespace GSLanguageCompiler::IO {
                 break;
         }
 
-        stream << "{"
+        stream << "{ "
                << source->GetName().GetName()
-               << "["
-               << _location.GetStartPosition()
+               << " [ "
+               << startLocation.first
                << ":"
-               << _location.GetEndPosition()
-               << "]"
-               << "} >> "
+               << startLocation.second
+               << " ] "
+               << " } >> "
                << GetText()
                << std::endl;
 

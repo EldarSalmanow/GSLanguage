@@ -122,18 +122,17 @@ namespace GSLanguageCompiler::Parser {
 
     private:
 
-        // check
         template<typename T>
         inline T TryParse(T (GS_Parser::*method)()) {
-            // TODO add error recovering
-
-            std::deque<IO::GSMessagePtr> messages;
+            auto messages = _messages;
 
             auto tokensIterator = _tokensIterator;
 
             auto result = (this->*method)();
 
             if (!result) {
+                _messages = messages;
+
                 _tokensIterator = tokensIterator;
 
                 return nullptr;
@@ -165,6 +164,8 @@ namespace GSLanguageCompiler::Parser {
     private:
 
         Driver::GSContextPtr _context;
+
+        IO::GSMessagePtrArray _messages;
 
         Lexer::GSTokenArray _tokens;
 
