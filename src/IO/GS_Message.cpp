@@ -102,7 +102,9 @@ namespace GSLanguageCompiler::IO {
             return;
         }
 
-        auto [startLocation, endLocation] = source->GetLineColumnLocation(_location);
+        auto [line, column] = GS_SourceLocation::ToLineColumnLocation(_location.GetStartPosition(), source);
+
+//        auto [startLocation, endLocation] = source->GetLineColumnLocation(_location);
 
         stream << rang::style::bold;
 
@@ -128,9 +130,9 @@ namespace GSLanguageCompiler::IO {
         stream << "{ "
                << source->GetName().GetName()
                << " [ "
-               << startLocation.first
+               << line
                << ":"
-               << startLocation.second
+               << column
                << " ] "
                << " } >> "
                << GetText()

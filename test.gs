@@ -1,4 +1,4 @@
-func main() {
+func 1() {
     var string: String = input()
 
     var iterator: Iterator = Iterate(string)

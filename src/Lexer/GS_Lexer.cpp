@@ -137,7 +137,6 @@ namespace GSLanguageCompiler::Lexer {
         auto token = GetToken();
 
         while (true) {
-            tokens.emplace_back(token);
 
             // remove or update
             if (token.GetType() == TokenType::SymbolSpace) {
@@ -145,6 +144,8 @@ namespace GSLanguageCompiler::Lexer {
 
                 continue;
             }
+
+            tokens.emplace_back(token);
 
             if (token.GetType() == TokenType::EndOfFile) {
                 break;

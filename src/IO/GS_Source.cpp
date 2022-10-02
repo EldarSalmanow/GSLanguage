@@ -27,6 +27,49 @@ namespace GSLanguageCompiler::IO {
         return GS_SourceLocation::Create(0, 0, 0);
     }
 
+    U64 GS_SourceLocation::ToSymbolLocation(U64 line, U64 column, std::shared_ptr<GS_Source> source) {
+        auto stringSource = source->GetSource();
+
+        U64 position = 0;
+
+        for (U64 index = 0, lineCount = 1;; ++index, ++position) {
+            if (stringSource[index] == '\n') {
+                ++lineCount;
+            }
+
+            if (lineCount == line) {
+                break;
+            }
+        }
+
+        // todo add validating line and column position
+        position += column;
+
+//        for (U64 index = position - 1;; ++index) {
+//
+//        }
+
+        return position;
+    }
+
+    std::pair<U64, U64> GS_SourceLocation::ToLineColumnLocation(U64 position, std::shared_ptr<GS_Source> source) {
+        auto stringSource = source->GetSource();
+
+        U64 line = 1, column = 0;
+
+        for (U64 index = 0; index < position; ++index) {
+            if (stringSource[index] == '\n') {
+                ++line;
+
+                column = 0;
+            } else {
+                ++column;
+            }
+        }
+
+        return std::make_pair(line, column);
+    }
+
     U64 GS_SourceLocation::GetSourceHash() const {
         return _sourceHash;
     }
