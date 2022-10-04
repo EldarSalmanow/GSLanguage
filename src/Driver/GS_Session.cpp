@@ -27,7 +27,10 @@ namespace GSLanguageCompiler::Driver {
 
             compilationUnit->Compile();
 
-            Debug::DumpAST(compilationUnit->GetNode());
+            // todo add flag for debug compiler mode
+            if (auto node = compilationUnit->GetNode()) {
+                Debug::DumpAST(node);
+            }
 
             compilationUnits.emplace_back(compilationUnit);
         }
