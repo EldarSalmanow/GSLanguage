@@ -6,6 +6,18 @@
 namespace GSLanguageCompiler::Driver {
 
     /**
+     * Signal handler function type
+     */
+    using SignalHandlerFunctionPtr = Void (*) (I32);
+
+    /**
+     * Default signal handler function
+     * @param signal Signal
+     * @return
+     */
+    Void DefaultSignalHandler(I32 signal);
+
+    /**
      * Global compiler context for containing and manipulating information and operation system
      */
     class GS_GlobalContext {
@@ -26,11 +38,19 @@ namespace GSLanguageCompiler::Driver {
         static I32 InitializeIO(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager);
 
         /**
-         * Initializing global context
-         * @param stdIOStreamsManager Standard IO streams manager
+         * Initializing global signal handlers
+         * @param signalHandlerFunction Signal handler function
          * @return Initialization result
          */
-        static I32 Initialize(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager);
+        static I32 InitializeSignals(SignalHandlerFunctionPtr signalHandlerFunction);
+
+        /**
+         * Initializing global context
+         * @param stdIOStreamsManager Standard IO streams manager
+         * @param signalHandlerFunction Signal handler function
+         * @return Initialization result
+         */
+        static I32 Initialize(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager, SignalHandlerFunctionPtr signalHandlerFunction);
 
         /**
          * Default initializing global context

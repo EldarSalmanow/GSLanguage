@@ -104,8 +104,6 @@ namespace GSLanguageCompiler::IO {
 
         auto [line, column] = GS_SourceLocation::ToLineColumnLocation(_location.GetStartPosition(), source);
 
-//        auto [startLocation, endLocation] = source->GetLineColumnLocation(_location);
-
         stream << rang::style::bold;
 
         switch (GetLevel()) {

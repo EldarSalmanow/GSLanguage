@@ -65,6 +65,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
+        // todo update
         static U64 ToSymbolLocation(U64 line, U64 column, std::shared_ptr<GS_Source> source);
 
         static std::pair<U64, U64> ToLineColumnLocation(U64 position, std::shared_ptr<GS_Source> source);
@@ -286,13 +287,6 @@ namespace GSLanguageCompiler::IO {
          * @return Code in range [startPosition..endPosition]
          */
         UString GetCodeByLocation(GS_SourceLocation location);
-
-        // GS_SourceLocation::ToByteLocation(U64 line, U64 column)
-        // GS_SourceLocation::ToLineColumnLocation(U64 position)
-
-        std::pair<std::pair<U64, U64>, std::pair<U64, U64>> GetLineColumnLocation(GS_SourceLocation location);
-
-        std::pair<U64, U64> GetLineColumnLocation(U64 position);
 
     public:
 

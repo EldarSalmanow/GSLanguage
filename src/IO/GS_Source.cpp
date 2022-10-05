@@ -45,10 +45,6 @@ namespace GSLanguageCompiler::IO {
         // todo add validating line and column position
         position += column;
 
-//        for (U64 index = position - 1;; ++index) {
-//
-//        }
-
         return position;
     }
 
@@ -196,32 +192,6 @@ namespace GSLanguageCompiler::IO {
         }
 
         return code;
-    }
-
-    std::pair<std::pair<U64, U64>, std::pair<U64, U64>> GS_Source::GetLineColumnLocation(GS_SourceLocation location) {
-        auto startPosition = location.GetStartPosition();
-        auto endPosition = location.GetEndPosition();
-
-        auto startLocation = GetLineColumnLocation(startPosition);
-        auto endLocation = GetLineColumnLocation(endPosition);
-
-        return std::make_pair(startLocation, endLocation);
-    }
-
-    std::pair<U64, U64> GS_Source::GetLineColumnLocation(U64 position) {
-        U64 line = 1, column = 1;
-
-        for (U64 index = 0; index < position; ++index) {
-            if (_source[index] == '\n') {
-                ++line;
-
-                column = 0;
-            } else {
-                ++column;
-            }
-        }
-
-        return std::make_pair(line, column);
     }
 
     UString GS_Source::GetSource() const {
