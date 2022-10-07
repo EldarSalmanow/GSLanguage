@@ -15,10 +15,20 @@ namespace GSLanguageCompiler::AST {
          * Constructor for translation unit declaration
          * @param name Name
          * @param nodes Nodes
+         * @param sourceHash Source hash
          */
-        GS_TranslationUnitDeclaration(UString name, GSNodePtrArray nodes);
+        GS_TranslationUnitDeclaration(UString name, GSNodePtrArray nodes, U64 sourceHash);
 
     public:
+
+        /**
+         * Creating translation unit declaration ptr
+         * @param name Name
+         * @param nodes Nodes
+         * @param sourceHash Source hash
+         * @return Translation unit declaration ptr
+         */
+        static std::shared_ptr<GS_TranslationUnitDeclaration> Create(UString name, GSNodePtrArray nodes, U64 sourceHash);
 
         /**
          * Creating translation unit declaration ptr
@@ -76,6 +86,12 @@ namespace GSLanguageCompiler::AST {
          */
         LRef<GSNodePtrArray> GetNodes();
 
+        /**
+         * Getter for source hash
+         * @return Source hash
+         */
+        U64 GetSourceHash() const;
+
     public:
 
         /**
@@ -95,6 +111,11 @@ namespace GSLanguageCompiler::AST {
          * Nodes
          */
         GSNodePtrArray _nodes;
+
+        /**
+         * Source hash
+         */
+        U64 _sourceHash;
     };
 
     /**

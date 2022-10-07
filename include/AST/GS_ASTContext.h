@@ -32,19 +32,19 @@ namespace GSLanguageCompiler::AST {
          * Getter for default Void type
          * @return Void type
          */
-        std::shared_ptr<Semantic::GS_VoidType> GetVoidType() const;
+        Semantic::TypePtr<Semantic::GS_VoidType> GetVoidType() const;
 
         /**
          * Getter for default I32 type
          * @return I32 type
          */
-        std::shared_ptr<Semantic::GS_I32Type> GetI32Type() const;
+        Semantic::TypePtr<Semantic::GS_I32Type> GetI32Type() const;
 
         /**
          * Getter for default String type
          * @return String type
          */
-        std::shared_ptr<Semantic::GS_StringType> GetStringType() const;
+        Semantic::TypePtr<Semantic::GS_StringType> GetStringType() const;
 
     public:
 

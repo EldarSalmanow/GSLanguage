@@ -9,7 +9,7 @@ namespace GSLanguageCompiler::Debug {
     class GS_ASTDumpVisitor : public AST::GS_Visitor {
     public:
 
-        Void VisitTranslationUnitDeclaration(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration) override {
+        Void VisitTranslationUnitDeclaration(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration, LRef<Driver::GSContextPtr> context) override {
             Print("TranslationUnitDeclaration: {"_us);
 
             AddTab();
@@ -33,7 +33,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitFunctionDeclaration(LRef<std::shared_ptr<AST::GS_FunctionDeclaration>> functionDeclaration) override {
+        Void VisitFunctionDeclaration(LRef<std::shared_ptr<AST::GS_FunctionDeclaration>> functionDeclaration, LRef<Driver::GSContextPtr> context) override {
             Print("FunctionDeclaration: {"_us);
 
             AddTab();
@@ -72,7 +72,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitVariableDeclarationStatement(LRef<std::shared_ptr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement) override {
+        Void VisitVariableDeclarationStatement(LRef<std::shared_ptr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement, LRef<Driver::GSContextPtr> context) override {
             Print("VariableDeclarationStatement: {"_us);
 
             AddTab();
@@ -96,7 +96,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitAssignmentStatement(LRef<std::shared_ptr<AST::GS_AssignmentStatement>> assignmentStatement) override {
+        Void VisitAssignmentStatement(LRef<std::shared_ptr<AST::GS_AssignmentStatement>> assignmentStatement, LRef<Driver::GSContextPtr> context) override {
             Print("AssignmentStatement: {"_us);
 
             AddTab();
@@ -126,7 +126,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitExpressionStatement(LRef<std::shared_ptr<AST::GS_ExpressionStatement>> expressionStatement) override {
+        Void VisitExpressionStatement(LRef<std::shared_ptr<AST::GS_ExpressionStatement>> expressionStatement, LRef<Driver::GSContextPtr> context) override {
             Print("ExpressionStatement: {"_us);
 
             AddTab();
@@ -138,7 +138,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitConstantExpression(LRef<std::shared_ptr<AST::GS_ConstantExpression>> constantExpression) override {
+        Void VisitConstantExpression(LRef<std::shared_ptr<AST::GS_ConstantExpression>> constantExpression, LRef<Driver::GSContextPtr> context) override {
             Print("ConstantExpression: {"_us);
 
             AddTab();
@@ -167,7 +167,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitUnaryExpression(LRef<std::shared_ptr<AST::GS_UnaryExpression>> unaryExpression) override {
+        Void VisitUnaryExpression(LRef<std::shared_ptr<AST::GS_UnaryExpression>> unaryExpression, LRef<Driver::GSContextPtr> context) override {
             Print("UnaryExpression: {"_us);
 
             AddTab();
@@ -200,7 +200,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitBinaryExpression(LRef<std::shared_ptr<AST::GS_BinaryExpression>> binaryExpression) override {
+        Void VisitBinaryExpression(LRef<std::shared_ptr<AST::GS_BinaryExpression>> binaryExpression, LRef<Driver::GSContextPtr> context) override {
             Print("BinaryExpression: {"_us);
 
             AddTab();
@@ -255,7 +255,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitVariableUsingExpression(LRef<std::shared_ptr<AST::GS_VariableUsingExpression>> variableUsingExpression) override {
+        Void VisitVariableUsingExpression(LRef<std::shared_ptr<AST::GS_VariableUsingExpression>> variableUsingExpression, LRef<Driver::GSContextPtr> context) override {
             Print("VariableUsingExpression: {"_us);
 
             AddTab();
@@ -267,7 +267,7 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us);
         }
 
-        Void VisitFunctionCallingExpression(LRef<std::shared_ptr<AST::GS_FunctionCallingExpression>> functionCallingExpression) override {
+        Void VisitFunctionCallingExpression(LRef<std::shared_ptr<AST::GS_FunctionCallingExpression>> functionCallingExpression, LRef<Driver::GSContextPtr> context) override {
             Print("FunctionCallingExpression: {"_us);
 
             AddTab();

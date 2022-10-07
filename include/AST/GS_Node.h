@@ -40,9 +40,33 @@ namespace GSLanguageCompiler::AST {
     };
 
     /**
+     * Custom node ptr type for any node
+     */
+    template<typename T>
+    using NodePtr = std::shared_ptr<T>;
+
+    /**
+     * Custom node ptr left value type for any node
+     */
+    template<typename T>
+    using NodePtrLRef = LRef<NodePtr<T>>;
+
+    /**
+     * Custom node ptr right value type for any node
+     */
+    template<typename T>
+    using NodePtrRRef = RRef<NodePtr<T>>;
+
+    /**
+     * Custom node ptr array type for any node
+     */
+    template<typename T>
+    using NodePtrArray = std::vector<NodePtr<T>>;
+
+    /**
      * Node ptr type
      */
-    using GSNodePtr = std::shared_ptr<GS_Node>;
+    using GSNodePtr = NodePtr<GS_Node>;
 
     /**
      * Container with nodes type

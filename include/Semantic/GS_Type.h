@@ -60,9 +60,33 @@ namespace GSLanguageCompiler::Semantic {
     };
 
     /**
+     * Custom type ptr type for any type
+     */
+    template<typename T>
+    using TypePtr = std::shared_ptr<T>;
+
+    /**
+     * Custom type ptr left value type for any type
+     */
+    template<typename T>
+    using TypePtrLRef = LRef<TypePtr<T>>;
+
+    /**
+     * Custom type ptr left value type for any type
+     */
+    template<typename T>
+    using TypePtrRRef = RRef<TypePtr<T>>;
+
+    /**
+     * Custom type ptr array type for any type
+     */
+    template<typename T>
+    using TypePtrArray = std::vector<TypePtr<T>>;
+
+    /**
      * Type ptr type
      */
-    using GSTypePtr = std::shared_ptr<GS_Type>;
+    using GSTypePtr = TypePtr<GS_Type>;
 
     /**
      * Type ptr array type
@@ -184,36 +208,36 @@ namespace GSLanguageCompiler::Semantic {
          * Getter for default Void type
          * @return Void type
          */
-        std::shared_ptr<Semantic::GS_VoidType> GetVoidType() const;
+        TypePtr<GS_VoidType> GetVoidType() const;
 
         /**
          * Getter for default I32 type
          * @return I32 type
          */
-        std::shared_ptr<Semantic::GS_I32Type> GetI32Type() const;
+        TypePtr<GS_I32Type> GetI32Type() const;
 
         /**
          * Getter for default String type
          * @return String type
          */
-        std::shared_ptr<Semantic::GS_StringType> GetStringType() const;
+        TypePtr<GS_StringType> GetStringType() const;
 
     private:
 
         /**
          * Void type
          */
-        std::shared_ptr<Semantic::GS_VoidType> _voidType;
+        TypePtr<GS_VoidType> _voidType;
 
         /**
          * I32 type
          */
-        std::shared_ptr<Semantic::GS_I32Type> _i32Type;
+        TypePtr<GS_I32Type> _i32Type;
 
         /**
          * String type
          */
-        std::shared_ptr<Semantic::GS_StringType> _stringType;
+        TypePtr<GS_StringType> _stringType;
     };
 
     /**

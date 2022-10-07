@@ -14,15 +14,15 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
-        virtual Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration);
+        virtual Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration, LRef<Driver::GSContextPtr> context);
 
-        virtual Void Run(LRef<GSNodePtrArray> nodes);
+        virtual Void Run(LRef<GSNodePtrArray> nodes, LRef<Driver::GSContextPtr> context);
 
-        virtual Void Run(LRef<GSDeclarationPtrArray> declarations);
+        virtual Void Run(LRef<GSDeclarationPtrArray> declarations, LRef<Driver::GSContextPtr> context);
 
-        virtual Void Run(LRef<GSStatementPtrArray> statements);
+        virtual Void Run(LRef<GSStatementPtrArray> statements, LRef<Driver::GSContextPtr> context);
 
-        virtual Void Run(LRef<GSExpressionPtrArray> expressions);
+        virtual Void Run(LRef<GSExpressionPtrArray> expressions, LRef<Driver::GSContextPtr> context);
     };
 
     using GSPassPtr = std::shared_ptr<GS_Pass>;
@@ -33,41 +33,41 @@ namespace GSLanguageCompiler::AST {
     class GS_VisitPass : public GS_Pass {
     public:
 
-        Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration) override {
+        Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration, LRef<Driver::GSContextPtr> context) override {
             T visitor;
 
-            visitor.VisitTranslationUnitDeclaration(translationUnitDeclaration);
+            visitor.VisitTranslationUnitDeclaration(translationUnitDeclaration, context);
         }
 
-        Void Run(LRef<GSNodePtrArray> nodes) override {
+        Void Run(LRef<GSNodePtrArray> nodes, LRef<Driver::GSContextPtr> context) override {
             T visitor;
 
             for (auto &node : nodes) {
-                visitor.VisitNode(node);
+                visitor.VisitNode(node, context);
             }
         }
 
-        Void Run(LRef<GSDeclarationPtrArray> declarations) override {
+        Void Run(LRef<GSDeclarationPtrArray> declarations, LRef<Driver::GSContextPtr> context) override {
             T visitor;
 
             for (auto &declaration : declarations) {
-                visitor.VisitDeclaration(declaration);
+                visitor.VisitDeclaration(declaration, context);
             }
         }
 
-        Void Run(LRef<GSStatementPtrArray> statements) override {
+        Void Run(LRef<GSStatementPtrArray> statements, LRef<Driver::GSContextPtr> context) override {
             T visitor;
 
             for (auto &statement : statements) {
-                visitor.VisitStatement(statement);
+                visitor.VisitStatement(statement, context);
             }
         }
 
-        Void Run(LRef<GSExpressionPtrArray> expressions) override {
+        Void Run(LRef<GSExpressionPtrArray> expressions, LRef<Driver::GSContextPtr> context) override {
             T visitor;
 
             for (auto &expression : expressions) {
-                visitor.VisitExpression(expression);
+                visitor.VisitExpression(expression, context);
             }
         }
     };
@@ -76,41 +76,42 @@ namespace GSLanguageCompiler::AST {
     class GS_TransformPass : public GS_Pass {
     public:
 
-        Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration) override {
+        Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration, LRef<Driver::GSContextPtr> context) override {
             T transformer;
 
-            translationUnitDeclaration = ToDeclaration<GS_TranslationUnitDeclaration>(transformer.TransformTranslationUnitDeclaration(translationUnitDeclaration));
+            translationUnitDeclaration = ToDeclaration<GS_TranslationUnitDeclaration>(
+                    transformer.TransformTranslationUnitDeclaration(translationUnitDeclaration, context));
         }
 
-        Void Run(LRef<GSNodePtrArray> nodes) override {
+        Void Run(LRef<GSNodePtrArray> nodes, LRef<Driver::GSContextPtr> context) override {
             T transformer;
 
             for (auto &node : nodes) {
-                node = transformer.TransformNode(node);
+                node = transformer.TransformNode(node, context);
             }
         }
 
-        Void Run(LRef<GSDeclarationPtrArray> declarations) override {
+        Void Run(LRef<GSDeclarationPtrArray> declarations, LRef<Driver::GSContextPtr> context) override {
             T transformer;
 
             for (auto &declaration : declarations) {
-                declaration = ToDeclaration(transformer.TransformDeclaration(declaration));
+                declaration = ToDeclaration(transformer.TransformDeclaration(declaration, context));
             }
         }
 
-        Void Run(LRef<GSStatementPtrArray> statements) override {
+        Void Run(LRef<GSStatementPtrArray> statements, LRef<Driver::GSContextPtr> context) override {
             T transformer;
 
             for (auto &statement : statements) {
-                statement = ToStatement(transformer.TransformStatement(statement));
+                statement = ToStatement(transformer.TransformStatement(statement, context));
             }
         }
 
-        Void Run(LRef<GSExpressionPtrArray> expressions) override {
+        Void Run(LRef<GSExpressionPtrArray> expressions, LRef<Driver::GSContextPtr> context) override {
             T transformer;
 
             for (auto &expression : expressions) {
-                expression = ToExpression(transformer.TransformExpression(expression));
+                expression = ToExpression(transformer.TransformExpression(expression, context));
             }
         }
     };
@@ -128,15 +129,15 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
-        Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration);
+        Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration, LRef<Driver::GSContextPtr> context);
 
-        Void Run(LRef<GSNodePtrArray> nodes);
+        Void Run(LRef<GSNodePtrArray> nodes, LRef<Driver::GSContextPtr> context);
 
-        Void Run(LRef<GSDeclarationPtrArray> declarations);
+        Void Run(LRef<GSDeclarationPtrArray> declarations, LRef<Driver::GSContextPtr> context);
 
-        Void Run(LRef<GSStatementPtrArray> statements);
+        Void Run(LRef<GSStatementPtrArray> statements, LRef<Driver::GSContextPtr> context);
 
-        Void Run(LRef<GSExpressionPtrArray> expressions);
+        Void Run(LRef<GSExpressionPtrArray> expressions, LRef<Driver::GSContextPtr> context);
 
         Void AddPass(GSPassPtr pass);
 
