@@ -1,44 +1,49 @@
-#include <AST/AST.h>
+#include <Driver/Driver.h>
 
 #include <GS_ASTDumper.h>
 
 namespace GSLanguageCompiler::Debug {
 
-    // TODO update AST dump visitor
-
     class GS_ASTDumpVisitor : public AST::GS_Visitor {
     public:
 
-        Void VisitTranslationUnitDeclaration(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration, LRef<Driver::GSContextPtr> context) override {
-            Print("TranslationUnitDeclaration: {"_us);
+        GS_ASTDumpVisitor()
+                : _tabsNumber(0) {}
 
-            AddTab();
+    public:
 
-            Print("Name: "_us + translationUnitDeclaration->GetName());
+        Void VisitTranslationUnitDeclaration(AST::NodePtrLRef<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration,
+                                             LRef<Driver::GSContextPtr> context) override {
+            Print("TranslationUnitDeclaration: {"_us, context);
 
-            Print("Nodes: {"_us);
+            IncTab();
 
-            AddTab();
+            Print("Name: "_us + translationUnitDeclaration->GetName(), context);
+
+            Print("Nodes: {"_us, context);
+
+            DecTab();
 
             for (auto &node : translationUnitDeclaration->GetNodes()) {
-                VisitNode(node);
+                VisitNode(node, context);
             }
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
         }
 
-        Void VisitFunctionDeclaration(LRef<std::shared_ptr<AST::GS_FunctionDeclaration>> functionDeclaration, LRef<Driver::GSContextPtr> context) override {
-            Print("FunctionDeclaration: {"_us);
+        Void VisitFunctionDeclaration(AST::NodePtrLRef<AST::GS_FunctionDeclaration> functionDeclaration,
+                                      LRef<Driver::GSContextPtr> context) override {
+            Print("FunctionDeclaration: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            Print("Name: "_us + functionDeclaration->GetName());
+            Print("Name: "_us + functionDeclaration->GetName(), context);
 
             auto signature = functionDeclaration->GetSignature();
 
@@ -53,134 +58,139 @@ namespace GSLanguageCompiler::Debug {
 
             signatureMessage += ") -> "_us + returnType->GetName();
 
-            Print(signatureMessage);
+            Print(signatureMessage, context);
 
-            Print("Body: {"_us);
+            Print("Body: {"_us, context);
 
-            AddTab();
+            IncTab();
 
             for (auto &statement : functionDeclaration->GetBody()) {
-                VisitStatement(statement);
+                VisitStatement(statement, context);
             }
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
         }
 
-        Void VisitVariableDeclarationStatement(LRef<std::shared_ptr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement, LRef<Driver::GSContextPtr> context) override {
-            Print("VariableDeclarationStatement: {"_us);
+        Void VisitVariableDeclarationStatement(AST::NodePtrLRef<AST::GS_VariableDeclarationStatement> variableDeclarationStatement,
+                                               LRef<Driver::GSContextPtr> context) override {
+            Print("VariableDeclarationStatement: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            Print("Name: "_us + variableDeclarationStatement->GetName());
+            Print("Name: "_us + variableDeclarationStatement->GetName(), context);
 
-            Print("Type: "_us + variableDeclarationStatement->GetType()->GetName());
+            Print("Type: "_us + variableDeclarationStatement->GetType()->GetName(), context);
 
-            Print("Expression: {"_us);
+            Print("Expression: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            VisitExpression(variableDeclarationStatement->GetExpression());
+            VisitExpression(variableDeclarationStatement->GetExpression(), context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
         }
 
-        Void VisitAssignmentStatement(LRef<std::shared_ptr<AST::GS_AssignmentStatement>> assignmentStatement, LRef<Driver::GSContextPtr> context) override {
-            Print("AssignmentStatement: {"_us);
+        Void VisitAssignmentStatement(AST::NodePtrLRef<AST::GS_AssignmentStatement> assignmentStatement,
+                                      LRef<Driver::GSContextPtr> context) override {
+            Print("AssignmentStatement: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            Print("LValueExpression: {"_us);
+            Print("LValueExpression: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            VisitExpression(assignmentStatement->GetLValueExpression());
+            VisitExpression(assignmentStatement->GetLValueExpression(), context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
 
-            Print("RValueExpression: {"_us);
+            Print("RValueExpression: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            VisitExpression(assignmentStatement->GetRValueExpression());
+            VisitExpression(assignmentStatement->GetRValueExpression(), context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
         }
 
-        Void VisitExpressionStatement(LRef<std::shared_ptr<AST::GS_ExpressionStatement>> expressionStatement, LRef<Driver::GSContextPtr> context) override {
-            Print("ExpressionStatement: {"_us);
+        Void VisitExpressionStatement(AST::NodePtrLRef<AST::GS_ExpressionStatement> expressionStatement,
+                                      LRef<Driver::GSContextPtr> context) override {
+            Print("ExpressionStatement: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            VisitExpression(expressionStatement->GetExpression());
+            VisitExpression(expressionStatement->GetExpression(), context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
         }
 
-        Void VisitConstantExpression(LRef<std::shared_ptr<AST::GS_ConstantExpression>> constantExpression, LRef<Driver::GSContextPtr> context) override {
-            Print("ConstantExpression: {"_us);
+        Void VisitConstantExpression(AST::NodePtrLRef<AST::GS_ConstantExpression> constantExpression,
+                                     LRef<Driver::GSContextPtr> context) override {
+            Print("ConstantExpression: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            Print("Value: {"_us);
+            Print("Value: {"_us, context);
 
-            AddTab();
+            IncTab();
 
             auto value = AST::GSValueCast<AST::GS_LiteralValue>(constantExpression->GetValue());
             auto typeName = value->GetType()->GetName();
 
-            Print("Type: " + typeName.AsUTF8());
+            Print("Type: " + typeName.AsUTF8(), context);
 
             if (typeName == "I32"_us) {
-                Print("Value: "_us + UString(std::to_string(value->GetValueWithCast<I32>())));
+                Print("Value: "_us + UString(std::to_string(value->GetValueWithCast<I32>())), context);
             } else if (typeName == "String"_us) {
-                Print("Value: "_us + value->GetValueWithCast<UString>());
+                Print("Value: "_us + value->GetValueWithCast<UString>(), context);
             }
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
         }
 
-        Void VisitUnaryExpression(LRef<std::shared_ptr<AST::GS_UnaryExpression>> unaryExpression, LRef<Driver::GSContextPtr> context) override {
-            Print("UnaryExpression: {"_us);
+        Void VisitUnaryExpression(AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression,
+                                  LRef<Driver::GSContextPtr> context) override {
+            Print("UnaryExpression: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            Print("Expression: {"_us);
+            Print("Expression: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            VisitExpression(unaryExpression->GetExpression());
+            VisitExpression(unaryExpression->GetExpression(), context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
 
             auto operation = unaryExpression->GetUnaryOperation();
 
@@ -193,37 +203,38 @@ namespace GSLanguageCompiler::Debug {
                     break;
             }
 
-            Print("Operation: "_us + stringOperation);
+            Print("Operation: "_us + stringOperation, context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
         }
 
-        Void VisitBinaryExpression(LRef<std::shared_ptr<AST::GS_BinaryExpression>> binaryExpression, LRef<Driver::GSContextPtr> context) override {
-            Print("BinaryExpression: {"_us);
+        Void VisitBinaryExpression(AST::NodePtrLRef<AST::GS_BinaryExpression> binaryExpression,
+                                   LRef<Driver::GSContextPtr> context) override {
+            Print("BinaryExpression: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            Print("FirstExpression: {"_us);
+            Print("FirstExpression: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            VisitExpression(binaryExpression->GetFirstExpression());
+            VisitExpression(binaryExpression->GetFirstExpression(), context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
 
-            Print("SecondExpression: {"_us);
+            Print("SecondExpression: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            VisitExpression(binaryExpression->GetSecondExpression());
+            VisitExpression(binaryExpression->GetSecondExpression(), context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
 
             auto operation = binaryExpression->GetBinaryOperation();
 
@@ -248,91 +259,93 @@ namespace GSLanguageCompiler::Debug {
                     break;
             }
 
-            Print("Operation: "_us + stringOperation);
+            Print("Operation: "_us + stringOperation, context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
         }
 
-        Void VisitVariableUsingExpression(LRef<std::shared_ptr<AST::GS_VariableUsingExpression>> variableUsingExpression, LRef<Driver::GSContextPtr> context) override {
-            Print("VariableUsingExpression: {"_us);
+        Void VisitVariableUsingExpression(AST::NodePtrLRef<AST::GS_VariableUsingExpression> variableUsingExpression,
+                                          LRef<Driver::GSContextPtr> context) override {
+            Print("VariableUsingExpression: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            Print("Name: "_us + variableUsingExpression->GetName());
+            Print("Name: "_us + variableUsingExpression->GetName(), context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
         }
 
-        Void VisitFunctionCallingExpression(LRef<std::shared_ptr<AST::GS_FunctionCallingExpression>> functionCallingExpression, LRef<Driver::GSContextPtr> context) override {
-            Print("FunctionCallingExpression: {"_us);
+        Void VisitFunctionCallingExpression(AST::NodePtrLRef<AST::GS_FunctionCallingExpression> functionCallingExpression,
+                                            LRef<Driver::GSContextPtr> context) override {
+            Print("FunctionCallingExpression: {"_us, context);
 
-            AddTab();
+            IncTab();
 
-            Print("Name: "_us + functionCallingExpression->GetName());
+            Print("Name: "_us + functionCallingExpression->GetName(), context);
 
-            Print("Params: {"_us);
+            Print("Params: {"_us, context);
 
-            AddTab();
+            IncTab();
 
             for (auto &param : functionCallingExpression->GetParams()) {
-                VisitExpression(param);
+                VisitExpression(param, context);
             }
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
 
-            SubTab();
+            DecTab();
 
-            Print("}"_us);
+            Print("}"_us, context);
         }
 
     private:
 
-        Void Print(UString message) {
-            PrintTabs();
+        Void Print(ConstLRef<UString> message, LRef<Driver::GSContextPtr> context) {
+            auto outputStream = context->GetStdOutStream();
 
-            std::cout << message << std::endl;
-        }
+            auto &stdOutputStream = outputStream->GetOutStream();
 
-        Void PrintTabs() {
-            for (auto i = 0; i < tabsNumber; ++i) {
-                std::cout << "  "_us;
+            for (U64 i = 0; i < _tabsNumber; ++i) {
+                stdOutputStream << "  "_us;
             }
+
+            stdOutputStream << message << "\n"_us;
         }
 
-        Void AddTab() {
-            ++tabsNumber;
+        Void IncTab() {
+            ++_tabsNumber;
         }
 
-        Void SubTab() {
-            --tabsNumber;
+        Void DecTab() {
+            --_tabsNumber;
         }
 
     private:
 
-        I32 tabsNumber = 0;
+        U64 _tabsNumber;
     };
 
-    GS_ASTDumper::GS_ASTDumper(AST::GSNodePtr node)
-            : _node(std::move(node)) {}
+    GS_ASTDumper::GS_ASTDumper(AST::GSNodePtr node, LRef<Driver::GSContextPtr> context)
+            : _node(std::move(node)), _context(context) {}
 
-    std::shared_ptr<GS_ASTDumper> GS_ASTDumper::Create(AST::GSNodePtr node) {
-        return std::make_shared<GS_ASTDumper>(std::move(node));
+    std::shared_ptr<GS_ASTDumper> GS_ASTDumper::Create(AST::GSNodePtr node, LRef<Driver::GSContextPtr> context) {
+        return std::make_shared<GS_ASTDumper>(std::move(node), context);
     }
 
     Void GS_ASTDumper::Dump() {
         GS_ASTDumpVisitor visitor;
 
-        visitor.VisitNode(_node);
+        visitor.VisitNode(_node, _context);
     }
 
-    Void DumpAST(AST::GSNodePtr node) {
-        auto dumper = GS_ASTDumper::Create(std::move(node));
+    Void DumpAST(AST::GSNodePtr node, LRef<Driver::GSContextPtr> context) {
+        auto dumper = GS_ASTDumper::Create(std::move(node), context);
 
         dumper->Dump();
     }

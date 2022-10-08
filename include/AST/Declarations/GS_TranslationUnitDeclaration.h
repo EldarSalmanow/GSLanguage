@@ -86,6 +86,8 @@ namespace GSLanguageCompiler::AST {
          */
         LRef<GSNodePtrArray> GetNodes();
 
+        // todo remove ?
+
         /**
          * Getter for source hash
          * @return Source hash

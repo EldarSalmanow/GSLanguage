@@ -65,8 +65,12 @@ namespace GSLanguageCompiler::AST {
         }
     }
 
-    Void GS_PassManager::AddPass(GSPassPtr pass) {
-        _passes.emplace_back(std::move(pass));
+    GSPassPtr GS_PassManager::AddPass(GSPassPtr pass) {
+        auto inputPass = std::move(pass);
+
+        _passes.emplace_back(inputPass);
+
+        return inputPass;
     }
 
     GSPassPtrArray GS_PassManager::GetPasses() const {

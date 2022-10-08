@@ -4,31 +4,37 @@
 
 using namespace GSLanguageCompiler;
 
-class Trans : public AST::GS_Transformer {
+class ArithmeticOptimizingVisitor : public AST::GS_Transformer {
 public:
 
     /*
+     *
+     * + ( expression )   -> expression
      *
      * - ( - expression ) -> expression
      *
      */
     AST::GSNodePtr TransformUnaryExpression(AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression,
                                             LRef<Driver::GSContextPtr> context) override {
-        auto &expression = unaryExpression->GetExpression();
+        unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(SuperUnaryExpression(unaryExpression, context));
 
-        auto transformedExpression = AST::ToExpression(TransformExpression(expression, context));
+        auto &secondExpression = unaryExpression->GetExpression();
 
-        if (auto transformedUnaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(transformedExpression)) {
-            auto unaryExpressionOperation = unaryExpression->GetUnaryOperation();
-            auto transformedUnaryExpressionOperation = transformedUnaryExpression->GetUnaryOperation();
+        if (auto secondUnaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(secondExpression)) {
+            auto firstOperation = unaryExpression->GetUnaryOperation();
+            auto secondOperation = secondUnaryExpression->GetUnaryOperation();
 
             AST::GSExpressionPtr resultExpression;
 
-            switch (unaryExpressionOperation) {
+            switch (firstOperation) {
+
+                // - ( secondUnaryExpression )
                 case AST::UnaryOperation::Minus:
-                    switch (transformedUnaryExpressionOperation) {
+                    switch (secondOperation) {
+
+                        // - ( - expression ) -> expression
                         case AST::UnaryOperation::Minus:
-                            resultExpression = transformedUnaryExpression->GetExpression();
+                            resultExpression = secondUnaryExpression->GetExpression();
 
                             break;
                     }
@@ -39,16 +45,38 @@ public:
             return resultExpression;
         }
 
-        expression.swap(transformedExpression);
-
         return unaryExpression;
     }
 };
 
-class TransPass : public AST::GS_TransformPass<Trans> {};
+class ArithmeticOptimizingPass : public AST::GS_TransformPass<ArithmeticOptimizingVisitor> {};
 
-AST::GSPassPtr CreateTransPass() {
-    return std::make_shared<TransPass>();
+AST::GSPassPtr CreateArithmeticOptimizingPass() {
+    return std::make_shared<ArithmeticOptimizingPass>();
+}
+
+I32 Test() {
+    auto Context = Driver::GS_Context::Create();
+
+    auto Builder = AST::GS_ASTBuilder::Create();
+
+    auto Expression = Builder->CreateUnaryExpression(AST::UnaryOperation::Minus,
+                                                     Builder->CreateUnaryExpression(AST::UnaryOperation::Minus,
+                                                                                    Builder->CreateConstantExpression(1)));
+
+    AST::GSExpressionPtrArray Expressions = { Expression };
+
+    auto PM = AST::GS_PassManager::Create();
+
+    PM->AddPass(CreateArithmeticOptimizingPass());
+
+    Debug::DumpAST(Expressions[0], Context);
+
+    PM->Run(Expressions, Context);
+
+    Debug::DumpAST(Expressions[0], Context);
+
+    return 0;
 }
 
 /**
@@ -56,37 +84,17 @@ AST::GSPassPtr CreateTransPass() {
  * @return Compiler result
  */
 I32 main(I32 argc, Ptr<Ptr<C>> argv) {
-    auto PM = AST::GS_PassManager::Create();
+//    return Test();
 
-    PM->AddPass(CreateTransPass());
+    auto globalContextInitializingResult = Driver::GS_GlobalContext::Initialize();
 
-    auto Builder = AST::GS_ASTBuilder::Create();
+    if (globalContextInitializingResult) {
+        return 1;
+    }
 
-    auto number_1 = Builder->CreateConstantExpression(1);
+    auto compilingResult = Driver::GS_Compiler::Start(argc, argv);
 
-    auto unaryExpression_1 = Builder->CreateUnaryExpression(AST::UnaryOperation::Minus, number_1);
+    auto programResult = StaticCast<I32>(compilingResult);
 
-    AST::GSNodePtr unaryExpression_2 = Builder->CreateUnaryExpression(AST::UnaryOperation::Minus, unaryExpression_1);
-
-    Debug::DumpAST(unaryExpression_2);
-
-    Driver::GSContextPtr ctx = nullptr;
-
-    Trans t;
-    unaryExpression_2 = t.TransformNode(unaryExpression_2, ctx);
-
-    Debug::DumpAST(unaryExpression_2);
-
-    return 0;
-//    auto globalContextInitializingResult = Driver::GS_GlobalContext::Initialize();
-//
-//    if (globalContextInitializingResult) {
-//        return 1;
-//    }
-//
-//    auto compilingResult = Driver::GS_Compiler::Start(argc, argv);
-//
-//    auto programResult = StaticCast<I32>(compilingResult);
-//
-//    return programResult;
+    return programResult;
 }
