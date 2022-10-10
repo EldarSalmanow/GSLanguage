@@ -67,18 +67,30 @@ namespace GSLanguageCompiler::Parser {
      *
      */
 
+    /**
+     * Class for parsing and creating AST from tokens
+     */
     class GS_Parser {
     public:
 
+        /**
+         * Constructor for parser
+         * @param context Context
+         */
         explicit GS_Parser(Driver::GSContextPtr context);
 
     public:
 
+        /**
+         * Creating parser
+         * @param context Context
+         * @return Parser
+         */
         static GS_Parser Create(Driver::GSContextPtr context);
 
     public:
 
-        AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_CompilationUnit> compilationUnit);
+        AST::GSTranslationUnitDeclarationPtr ParseProgram(Lexer::GSTokenArray tokens, UString translationUnitName);
 
     private:
 

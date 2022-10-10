@@ -30,6 +30,8 @@ namespace GSLanguageCompiler::Driver {
 
             GS_GlobalContext::Err(stringStream.String());
         }
+
+        std::exit(1);
     }
 
     I32 GS_GlobalContext::InitializeIO(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager) {

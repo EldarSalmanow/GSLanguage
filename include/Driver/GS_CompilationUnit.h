@@ -1,8 +1,6 @@
 #ifndef GSLANGUAGE_GS_COMPILATIONUNIT_H
 #define GSLANGUAGE_GS_COMPILATIONUNIT_H
 
-#include <IO/IO.h>
-
 #include <Driver/GS_Context.h>
 
 namespace GSLanguageCompiler::Driver {

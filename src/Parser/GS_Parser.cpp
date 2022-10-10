@@ -22,14 +22,14 @@ namespace GSLanguageCompiler::Parser {
         return GS_Parser(std::move(context));
     }
 
-    AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseProgram(LRef<Driver::GS_CompilationUnit> compilationUnit) {
+    AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseProgram(Lexer::GSTokenArray tokens, UString translationUnitName) {
         _messages = IO::GSMessagePtrArray();
 
-        _tokens = compilationUnit.GetTokens();
+        _tokens = std::move(tokens);
 
         _tokensIterator = _tokens.begin();
 
-        auto translationUnitDeclaration = ParseTranslationUnitDeclaration(compilationUnit.GetSource()->GetName().GetName());
+        auto translationUnitDeclaration = ParseTranslationUnitDeclaration(std::move(translationUnitName));
 
         for (auto &message : _messages) {
             message->Write(_context);

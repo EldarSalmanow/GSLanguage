@@ -1,7 +1,9 @@
 #ifndef GSLANGUAGE_GS_LEXER_H
 #define GSLANGUAGE_GS_LEXER_H
 
-#include <Driver/GS_CompilationUnit.h>
+#include <Driver/Driver.h>
+
+#include <IO/IO.h>
 
 #include <Lexer/GS_Token.h>
 
@@ -32,10 +34,10 @@ namespace GSLanguageCompiler::Lexer {
 
         /**
          * Tokenizing code from source
-         * @param compilationUnit Compilation unit
+         * @param source Source
          * @return Tokens
          */
-        GSTokenArray Tokenize(LRef<Driver::GS_CompilationUnit> compilationUnit);
+        GSTokenArray Tokenize(IO::GSSourcePtr source);
 
     private:
 
@@ -97,6 +99,11 @@ namespace GSLanguageCompiler::Lexer {
         IO::GSMessagePtrArray _messages;
 
         /**
+         * Source
+         */
+        IO::GSSourcePtr _source;
+
+        /**
          * Content
          */
         UString _content;
@@ -105,11 +112,6 @@ namespace GSLanguageCompiler::Lexer {
          * Content iterator
          */
         UString::Iterator _contentIterator;
-
-        /**
-         * Current source hash
-         */
-        U64 _sourceHash;
 
         /**
          * Current position in source

@@ -22,7 +22,7 @@ namespace GSLanguageCompiler::Debug {
 
             Print("Nodes: {"_us, context);
 
-            DecTab();
+            IncTab();
 
             for (auto &node : translationUnitDeclaration->GetNodes()) {
                 VisitNode(node, context);
