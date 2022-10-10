@@ -1,5 +1,8 @@
 #include <Lexer/Lexer.h>
 #include <Parser/Parser.h>
+#include <AST/AST.h>
+#include <Semantic/Semantic.h>
+#include <Optimizer/Optimizer.h>
 
 #include <GS_CompilationUnit.h>
 
@@ -23,6 +26,14 @@ namespace GSLanguageCompiler::Driver {
         auto parser = Parser::GS_Parser::Create(_context);
 
         _node = parser.ParseProgram(_tokens, _source->GetName().GetName());
+
+        auto optimizer = Optimizer::GS_Optimizer::Create(_context);
+
+//        optimizer->AddPass(Optimizer::CreateConstantFoldingPass());
+
+        _node = optimizer->Optimize(_node, {
+                Optimizer::CreateConstantFoldingPass()
+        });
 
         return CompilingResult::Success;
     }

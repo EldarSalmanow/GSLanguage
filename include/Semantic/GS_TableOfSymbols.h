@@ -14,6 +14,9 @@ namespace GSLanguageCompiler::Semantic {
     class GS_Symbol {
     public:
 
+        /**
+         *
+         */
         virtual ~GS_Symbol();
 
     public:

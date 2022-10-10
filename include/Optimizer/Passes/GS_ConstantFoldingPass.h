@@ -5,16 +5,48 @@
 
 namespace GSLanguageCompiler::Optimizer {
 
+    /**
+     * Transformer class for applying constant folding optimization on nodes
+     */
     class GS_ConstantFoldingTransformer : public AST::GS_Transformer {
     public:
 
-        AST::GSNodePtr TransformUnaryExpression(LRef<std::shared_ptr<AST::GS_UnaryExpression>> unaryExpression) override;
+        /**
+         * Transform unary expression
+         *
+         * Transformation rules:
+         * --- - ( constant expression ) -> - constant expression
+         *
+         * @param unaryExpression Unary expression
+         * @param context Context
+         * @return Transformed unary expression
+         */
+        AST::GSNodePtr TransformUnaryExpression(AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression,
+                                                LRef<Driver::GSContextPtr> context) override;
 
-        AST::GSNodePtr TransformBinaryExpression(LRef<std::shared_ptr<AST::GS_BinaryExpression>> binaryExpression) override;
+        /**
+         * Transform binary expression
+         *
+         * Transformation rules:
+         * --- ( constant expression ) +|-|*|/ ( constant expression ) -> constant expression +|-|*|/ constant expression
+         *
+         * @param binaryExpression Binary expression
+         * @param context Context
+         * @return Transformed binary expression
+         */
+        AST::GSNodePtr TransformBinaryExpression(AST::NodePtrLRef<AST::GS_BinaryExpression> binaryExpression,
+                                                 LRef<Driver::GSContextPtr> context) override;
     };
 
+    /**
+     * Pass class for run constant folding optimization transformer on nodes
+     */
     class GS_ConstantFoldingPass : public AST::GS_TransformPass<GS_ConstantFoldingTransformer> {};
 
+    /**
+     * Creating constant folding optimization pass
+     * @return Constant folding optimization pass
+     */
     AST::GSPassPtr CreateConstantFoldingPass();
 
 }

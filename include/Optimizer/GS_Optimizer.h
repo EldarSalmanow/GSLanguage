@@ -6,26 +6,72 @@
 namespace GSLanguageCompiler::Optimizer {
 
     /**
-     * Class for optimizing program AST
+     * Class for optimizing AST
      */
     class GS_Optimizer {
     public:
 
-        explicit GS_Optimizer(AST::GSPassPtrArray passes);
+        /**
+         * Constructor for optimizer
+         * @param passes Optimizing passes
+         * @param context Context
+         */
+//        GS_Optimizer(AST::GSPassPtrArray passes, Driver::GSContextPtr context);
+
+
+        /**
+         * Constructor for optimizer
+         * @param context Context
+         */
+        explicit GS_Optimizer(Driver::GSContextPtr context);
 
     public:
 
-        static std::shared_ptr<GS_Optimizer> Create(AST::GSPassPtrArray passes);
+        /**
+         * Creating optimizer
+         * @param passes Optimizing passes
+         * @param context Context
+         * @return Optimizer ptr
+         */
+//        static std::shared_ptr<GS_Optimizer> Create(AST::GSPassPtrArray passes, Driver::GSContextPtr context);
 
-        static std::shared_ptr<GS_Optimizer> Create();
+        /**
+         * Creating optimizer
+         * @param context Context
+         * @return Optimizer ptr
+         */
+        static std::shared_ptr<GS_Optimizer> Create(Driver::GSContextPtr context);
 
     public:
 
-        Void Optimize(LRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration);
+        /**
+         * Run optimizing passes for optimize node
+         * @param node Node
+         * @param passes Optimizing passes
+         * @return Optimized node
+         */
+        AST::GSNodePtr Optimize(AST::GSNodePtr node, AST::GSPassPtrArray passes);
+
+    public:
+
+        /**
+         * Add pass to passes list
+         * @param pass Pass
+         * @return
+         */
+//        Void AddPass(AST::GSPassPtr pass);
 
     private:
 
-        AST::GSPassPtrArray _passes;
+        /**
+         * Passes
+         */
+//        AST::GSPassPtrArray _passes;
+
+        /**
+         * Context
+         */
+        Driver::GSContextPtr _context;
     };
 
 }

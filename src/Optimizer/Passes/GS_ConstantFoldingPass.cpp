@@ -4,11 +4,12 @@
 
 namespace GSLanguageCompiler::Optimizer {
 
-    AST::GSNodePtr GS_ConstantFoldingTransformer::TransformUnaryExpression(LRef<std::shared_ptr<AST::GS_UnaryExpression>> unaryExpression) {
-        unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(GS_Transformer::TransformUnaryExpression(unaryExpression));
+    AST::GSNodePtr GS_ConstantFoldingTransformer::TransformUnaryExpression(AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression,
+                                                                           LRef<Driver::GSContextPtr> context) {
+        unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(GS_Transformer::TransformUnaryExpression(unaryExpression, context));
 
         auto expression = unaryExpression->GetExpression();
-        auto operation = unaryExpression->GetUnaryOperation();
+        auto operation  = unaryExpression->GetUnaryOperation();
 
         if (auto constantExpression = AST::ToExpression<AST::GS_ConstantExpression>(expression)) {
             auto value = constantExpression->GetValue();
@@ -32,21 +33,22 @@ namespace GSLanguageCompiler::Optimizer {
         return unaryExpression;
     }
 
-    AST::GSNodePtr GS_ConstantFoldingTransformer::TransformBinaryExpression(LRef<std::shared_ptr<AST::GS_BinaryExpression>> binaryExpression) {
-        binaryExpression = AST::ToExpression<AST::GS_BinaryExpression>(GS_Transformer::TransformBinaryExpression(binaryExpression));
+    AST::GSNodePtr GS_ConstantFoldingTransformer::TransformBinaryExpression(AST::NodePtrLRef<AST::GS_BinaryExpression> binaryExpression,
+                                                                            LRef<Driver::GSContextPtr> context) {
+        binaryExpression = AST::ToExpression<AST::GS_BinaryExpression>(GS_Transformer::TransformBinaryExpression(binaryExpression, context));
 
-        auto firstExpression = binaryExpression->GetFirstExpression();
+        auto firstExpression  = binaryExpression->GetFirstExpression();
         auto secondExpression = binaryExpression->GetSecondExpression();
-        auto operation = binaryExpression->GetBinaryOperation();
+        auto operation        = binaryExpression->GetBinaryOperation();
 
         if (auto firstConstantExpression = AST::ToExpression<AST::GS_ConstantExpression>(firstExpression)) {
             if (auto secondConstantExpression = AST::ToExpression<AST::GS_ConstantExpression>(secondExpression)) {
-                auto firstValue = firstConstantExpression->GetValue();
+                auto firstValue  = firstConstantExpression->GetValue();
                 auto secondValue = secondConstantExpression->GetValue();
 
                 if (auto firstI32Value = AST::GSValueCast<AST::GS_I32Value>(firstValue)) {
                     if (auto secondI32Value = AST::GSValueCast<AST::GS_I32Value>(secondValue)) {
-                        auto firstNumber = firstI32Value->GetI32Value();
+                        auto firstNumber  = firstI32Value->GetI32Value();
                         auto secondNumber = secondI32Value->GetI32Value();
 
                         I32 result;
