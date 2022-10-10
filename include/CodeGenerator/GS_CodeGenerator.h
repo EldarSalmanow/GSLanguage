@@ -5,6 +5,62 @@
 
 namespace GSLanguageCompiler::CodeGenerator {
 
+    class GS_CodeHolder {
+    public:
+
+        virtual ~GS_CodeHolder();
+    };
+
+    using GSCodeHolderPtr = std::shared_ptr<GS_CodeHolder>;
+
+    class GS_CGBackend {
+    public:
+
+        virtual ~GS_CGBackend();
+
+    public:
+
+        virtual GSCodeHolderPtr Generate(LRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration) = 0;
+    };
+
+    using GSCGBackendPtr = std::shared_ptr<GS_CGBackend>;
+
+    class GS_LLVMCodeHolder : public GS_CodeHolder {
+    public:
+
+        GS_LLVMCodeHolder(UString moduleName, LRef<llvm::LLVMContext> moduleContext);
+
+    public:
+
+        static std::shared_ptr<GS_LLVMCodeHolder> Create(UString moduleName, LRef<llvm::LLVMContext> moduleContext);
+
+    public:
+
+        LRef<llvm::Module> GetModule();
+
+    private:
+
+        std::shared_ptr<llvm::Module> _module;
+    };
+
+    class GS_LLVMCGBackend : public GS_CGBackend {
+    public:
+
+        explicit GS_LLVMCGBackend(Driver::GSContextPtr context);
+
+    public:
+
+        static std::shared_ptr<GS_LLVMCGBackend> Create(Driver::GSContextPtr context);
+
+    public:
+
+        GSCodeHolderPtr Generate(LRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration) override;
+
+    private:
+
+        Driver::GSContextPtr _context;
+    };
+
     /**
      * CLass for generating code from AST
      */
@@ -15,7 +71,9 @@ namespace GSLanguageCompiler::CodeGenerator {
          * Constructor for code generator
          * @param backend Code generation backend
          */
-        explicit GS_CodeGenerator(CGBackend backend);
+//        explicit GS_CodeGenerator(CGBackend backend);
+
+        explicit GS_CodeGenerator(Driver::GSContextPtr context);
 
     public:
 
@@ -24,13 +82,15 @@ namespace GSLanguageCompiler::CodeGenerator {
          * @param backend Code generation backend
          * @return Code generator ptr
          */
-        static std::shared_ptr<GS_CodeGenerator> Create(CGBackend backend);
+//        static std::shared_ptr<GS_CodeGenerator> Create(CGBackend backend);
 
         /**
          * Creating LLVM code generator
          * @return LLVM code generator
          */
-        static std::shared_ptr<GS_CodeGenerator> CreateLLVMCG();
+//        static std::shared_ptr<GS_CodeGenerator> CreateLLVMCG();
+
+        static std::shared_ptr<GS_CodeGenerator> Create(Driver::GSContextPtr context);
 
     public:
 
@@ -39,7 +99,9 @@ namespace GSLanguageCompiler::CodeGenerator {
          * @param translationUnitDeclaration Translation unit declaration
          * @return
          */
-        Void Generate(LRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration);
+//        Void Generate(LRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration);
+
+        GSCodeHolderPtr Generate(LRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration, GSCGBackendPtr backend);
 
     public:
 
@@ -47,19 +109,21 @@ namespace GSLanguageCompiler::CodeGenerator {
          * Getter for context
          * @return Code generation context
          */
-        GSCGContextPtr GetContext();
+//        GSCGContextPtr GetContext();
 
     private:
 
         /**
          * Code generation backend
          */
-        CGBackend _backend;
+//        CGBackend _backend;
 
         /**
          * Code generation context
          */
-        GSCGContextPtr _context;
+//        GSCGContextPtr _context;
+
+        Driver::GSContextPtr _context;
     };
 
 }

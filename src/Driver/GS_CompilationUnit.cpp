@@ -3,6 +3,7 @@
 #include <AST/AST.h>
 #include <Semantic/Semantic.h>
 #include <Optimizer/Optimizer.h>
+#include <CodeGenerator/CodeGenerator.h>
 
 #include <GS_CompilationUnit.h>
 
@@ -29,11 +30,17 @@ namespace GSLanguageCompiler::Driver {
 
         auto optimizer = Optimizer::GS_Optimizer::Create(_context);
 
-//        optimizer->AddPass(Optimizer::CreateConstantFoldingPass());
-
-        _node = optimizer->Optimize(_node, {
+        AST::GSPassPtrArray optimizingPasses = {
                 Optimizer::CreateConstantFoldingPass()
-        });
+        };
+
+        optimizer->Optimize(_node, optimizingPasses);
+
+        auto codeGenerator = CodeGenerator::GS_CodeGenerator::Create(_context);
+
+        auto translationUnitDeclaration = AST::ToDeclaration<AST::GS_TranslationUnitDeclaration>(_node);
+
+        auto codeHolder = codeGenerator->Generate(translationUnitDeclaration, CodeGenerator::GS_LLVMCGBackend::Create(_context));
 
         return CompilingResult::Success;
     }
