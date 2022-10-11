@@ -15,8 +15,8 @@ namespace GSLanguageCompiler::Semantic {
         return _name;
     }
 
-    Bool GS_Type::IsLiteralType() const {
-        return false;
+    TypeType GS_Type::GetType() const {
+        return TypeType::User;
     }
 
     GS_VoidType::GS_VoidType()
@@ -26,102 +26,129 @@ namespace GSLanguageCompiler::Semantic {
         return std::make_shared<GS_VoidType>();
     }
 
-    GS_LiteralType::GS_LiteralType(UString name)
-            : GS_Type(std::move(name)) {}
-
-    std::shared_ptr<GS_LiteralType> GS_LiteralType::Create(UString name) {
-        return std::make_shared<GS_LiteralType>(std::move(name));
-    }
-
-    Bool GS_LiteralType::IsLiteralType() const {
-        return true;
+    TypeType GS_VoidType::GetType() const {
+        return TypeType::Void;
     }
 
     GS_CharType::GS_CharType()
-            : GS_LiteralType("Char"_us) {}
+            : GS_Type("Char"_us) {}
 
     std::shared_ptr<GS_CharType> GS_CharType::Create() {
         return std::make_shared<GS_CharType>();
     }
 
+    TypeType GS_CharType::GetType() const {
+        return TypeType::Char;
+    }
+
+    GS_IntegerType::GS_IntegerType(UString name)
+            : GS_Type(std::move(name)) {}
+
+    std::shared_ptr<GS_IntegerType> GS_IntegerType::Create(UString name) {
+        return std::make_shared<GS_IntegerType>(std::move(name));
+    }
+
+    TypeType GS_IntegerType::GetType() const {
+        return TypeType::Integer;
+    }
+
     GS_I8Type::GS_I8Type()
-            : GS_LiteralType("I8"_us) {}
+            : GS_IntegerType("I8"_us) {}
 
     std::shared_ptr<GS_I8Type> GS_I8Type::Create() {
         return std::make_shared<GS_I8Type>();
     }
 
     GS_I16Type::GS_I16Type()
-            : GS_LiteralType("I16"_us) {}
+            : GS_IntegerType("I16"_us) {}
 
     std::shared_ptr<GS_I16Type> GS_I16Type::Create() {
         return std::make_shared<GS_I16Type>();
     }
 
     GS_I32Type::GS_I32Type()
-            : GS_LiteralType("I32"_us) {}
+            : GS_IntegerType("I32"_us) {}
 
     std::shared_ptr<GS_I32Type> GS_I32Type::Create() {
         return std::make_shared<GS_I32Type>();
     }
 
     GS_I64Type::GS_I64Type()
-            : GS_LiteralType("I64"_us) {}
+            : GS_IntegerType("I64"_us) {}
 
     std::shared_ptr<GS_I64Type> GS_I64Type::Create() {
         return std::make_shared<GS_I64Type>();
     }
 
+    GS_UIntegerType::GS_UIntegerType(UString name)
+            : GS_Type(std::move(name)) {}
+
+    std::shared_ptr<GS_UIntegerType> GS_UIntegerType::Create(UString name) {
+        return std::make_shared<GS_UIntegerType>(std::move(name));
+    }
+
+    TypeType GS_UIntegerType::GetType() const {
+        return TypeType::UInteger;
+    }
+
     GS_U8Type::GS_U8Type()
-            : GS_LiteralType("U8"_us) {}
+            : GS_UIntegerType("U8"_us) {}
 
     std::shared_ptr<GS_U8Type> GS_U8Type::Create() {
         return std::make_shared<GS_U8Type>();
     }
 
     GS_U16Type::GS_U16Type()
-            : GS_LiteralType("U16"_us) {}
+            : GS_UIntegerType("U16"_us) {}
 
     std::shared_ptr<GS_U16Type> GS_U16Type::Create() {
         return std::make_shared<GS_U16Type>();
     }
 
     GS_U32Type::GS_U32Type()
-            : GS_LiteralType("U32"_us) {}
+            : GS_UIntegerType("U32"_us) {}
 
     std::shared_ptr<GS_U32Type> GS_U32Type::Create() {
         return std::make_shared<GS_U32Type>();
     }
 
     GS_U64Type::GS_U64Type()
-            : GS_LiteralType("U64"_us) {}
+            : GS_UIntegerType("U64"_us) {}
 
     std::shared_ptr<GS_U64Type> GS_U64Type::Create() {
         return std::make_shared<GS_U64Type>();
     }
 
     GS_StringType::GS_StringType()
-            : GS_LiteralType("String"_us) {}
+            : GS_Type("String"_us) {}
 
     std::shared_ptr<GS_StringType> GS_StringType::Create() {
         return std::make_shared<GS_StringType>();
     }
 
-    // check
-
-    GS_ArrayType::GS_ArrayType(GSTypePtr type, U64 size)
-            : _type(std::move(type)), _size(size), GS_Type("Array["_us + type->GetName() + ", "_us + UString(std::to_string(size)) + "]"_us) {}
-
-    std::shared_ptr<GS_ArrayType> GS_ArrayType::Create(GSTypePtr type, U64 size) {
-        return std::make_shared<GS_ArrayType>(std::move(type), size);
+    TypeType GS_StringType::GetType() const {
+        return TypeType::String;
     }
 
-    GSTypePtr GS_ArrayType::GetType() const {
-        return _type;
+    // check
+
+    GS_ArrayType::GS_ArrayType(GSTypePtr elementsType, U64 size)
+            : _elementsType(std::move(elementsType)), _size(size), GS_Type("Array["_us + elementsType->GetName() + ", "_us + UString(std::to_string(size)) + "]"_us) {}
+
+    std::shared_ptr<GS_ArrayType> GS_ArrayType::Create(GSTypePtr elementsType, U64 size) {
+        return std::make_shared<GS_ArrayType>(std::move(elementsType), size);
+    }
+
+    GSTypePtr GS_ArrayType::GetElementsType() const {
+        return _elementsType;
     }
 
     U64 GS_ArrayType::GetSize() const {
         return _size;
+    }
+
+    TypeType GS_ArrayType::GetType() const {
+        return TypeType::Array;
     }
 
     GS_TypeContext::GS_TypeContext()
@@ -175,6 +202,10 @@ namespace GSLanguageCompiler::Semantic {
 
     TypePtr<GS_StringType> GS_TypeContext::GetStringType() const {
         return _stringType;
+    }
+
+    TypePtr<GS_ArrayType> GS_TypeContext::GetArrayType(GSTypePtr type, U64 size) const {
+        return GS_ArrayType::Create(std::move(type), size);
     }
 
 }

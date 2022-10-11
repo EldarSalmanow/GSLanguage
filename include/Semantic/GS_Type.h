@@ -8,6 +8,22 @@
 namespace GSLanguageCompiler::Semantic {
 
     /**
+     * Type of type
+     */
+    enum class TypeType {
+        Void,
+
+        Char,
+        Integer,
+        UInteger,
+        String,
+
+        Array,
+
+        User
+    };
+
+    /**
      * Class for all types in language
      */
     class GS_Type {
@@ -29,7 +45,7 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Creating type ptr
+         * Creating type
          * @param name Name
          * @return Type ptr
          */
@@ -46,10 +62,10 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Is literal type
-         * @return Is literal type
+         * Getter for type of type
+         * @return Type of type
          */
-        virtual Bool IsLiteralType() const;
+        virtual TypeType GetType() const;
 
     private:
 
@@ -107,46 +123,24 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Creating Void type ptr
+         * Creating Void type
          * @return Void type ptr
          */
         static std::shared_ptr<GS_VoidType> Create();
-    };
-
-    /**
-     * Class for literal types
-     */
-    class GS_LiteralType : public GS_Type {
-    public:
-
-        /**
-         * Constructor for literal type
-         * @param name Type name
-         */
-        explicit GS_LiteralType(UString name);
 
     public:
 
         /**
-         * Creating literal type ptr
-         * @param name Name
-         * @return Literal type ptr
+         * Getter for type of type
+         * @return Type of type
          */
-        static std::shared_ptr<GS_LiteralType> Create(UString name);
-
-    public:
-
-        /**
-         * Is literal type
-         * @return Is literal type
-         */
-        Bool IsLiteralType() const override;
+        TypeType GetType() const override;
     };
 
     /**
      * Builtin Char type
      */
-    class GS_CharType : public GS_LiteralType {
+    class GS_CharType : public GS_Type {
     public:
 
         /**
@@ -157,48 +151,54 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Creating Char type ptr
+         * Creating Char type
          * @return Char type ptr
          */
         static std::shared_ptr<GS_CharType> Create();
+
+    public:
+
+        /**
+         * Getter for type of type
+         * @return Type of type
+         */
+        TypeType GetType() const override;
     };
 
     /**
-     * Builtin I* type
+     * Builtin integer type
      */
-//    class GS_IType : public GS_LiteralType {
-//    public:
-//
-//        /**
-//         * Constructor for I* type
-//         * @param name Type name
-//         * @param byteSize Type byte size
-//         */
-//        GS_IType(UString name, U64 byteSize);
-//
-//    public:
-//
-//        /**
-//         * Creating I* type ptr
-//         * @param name Type name
-//         * @param byteSize Type byte size
-//         * @return
-//         */
-//        static std::shared_ptr<GS_IType> Create(UString name, U64 byteSize);
-//
-//    public:
-//
-//
-//
-//    private:
-//
-//        U64 _byteSize;
-//    };
+    class GS_IntegerType : public GS_Type {
+    public:
+
+        /**
+         * Constructor for integer type
+         * @param name Type name
+         */
+        explicit GS_IntegerType(UString name);
+
+    public:
+
+        /**
+         * Creating integer type
+         * @param name Type name
+         * @return Integer type ptr
+         */
+        static std::shared_ptr<GS_IntegerType> Create(UString name);
+
+    public:
+
+        /**
+         * Getter for type of type
+         * @return Type of type
+         */
+        TypeType GetType() const override;
+    };
 
     /**
      * Builtin I8 type
      */
-    class GS_I8Type : public GS_LiteralType {
+    class GS_I8Type : public GS_IntegerType {
     public:
 
         /**
@@ -209,7 +209,7 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Creating I8 type ptr
+         * Creating I8 type
          * @return I8 type ptr
          */
         static std::shared_ptr<GS_I8Type> Create();
@@ -218,7 +218,7 @@ namespace GSLanguageCompiler::Semantic {
     /**
      * Builtin I16 type
      */
-    class GS_I16Type : public GS_LiteralType {
+    class GS_I16Type : public GS_IntegerType {
     public:
 
         /**
@@ -229,7 +229,7 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Creating I16 type ptr
+         * Creating I16 type
          * @return I16 type ptr
          */
         static std::shared_ptr<GS_I16Type> Create();
@@ -238,7 +238,7 @@ namespace GSLanguageCompiler::Semantic {
     /**
      * Builtin I32 type
      */
-    class GS_I32Type : public GS_LiteralType {
+    class GS_I32Type : public GS_IntegerType {
     public:
 
         /**
@@ -249,7 +249,7 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Creating I32 type ptr
+         * Creating I32 type
          * @return I32 type ptr
          */
         static std::shared_ptr<GS_I32Type> Create();
@@ -258,7 +258,7 @@ namespace GSLanguageCompiler::Semantic {
     /**
      * Builtin I64 type
      */
-    class GS_I64Type : public GS_LiteralType {
+    class GS_I64Type : public GS_IntegerType {
     public:
 
         /**
@@ -269,16 +269,46 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Creating I64 type ptr
+         * Creating I64 type
          * @return I64 type ptr
          */
         static std::shared_ptr<GS_I64Type> Create();
     };
 
     /**
+     * Builtin unsigned integer type
+     */
+    class GS_UIntegerType : public GS_Type {
+    public:
+
+        /**
+         * Constructor for unsigned integer type
+         * @param name Type name
+         */
+        explicit GS_UIntegerType(UString name);
+
+    public:
+
+        /**
+         * Creating unsigned integer type
+         * @param name Type name
+         * @return Unsigned integer type ptr
+         */
+        static std::shared_ptr<GS_UIntegerType> Create(UString name);
+
+    public:
+
+        /**
+         * Getter for type of type
+         * @return Type of type
+         */
+        TypeType GetType() const override;
+    };
+
+    /**
      * Builtin U8 type
      */
-    class GS_U8Type : public GS_LiteralType {
+    class GS_U8Type : public GS_UIntegerType {
     public:
 
         /**
@@ -289,7 +319,7 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Creating U8 type ptr
+         * Creating U8 type
          * @return U8 type ptr
          */
         static std::shared_ptr<GS_U8Type> Create();
@@ -298,7 +328,7 @@ namespace GSLanguageCompiler::Semantic {
     /**
      * Builtin U16 type
      */
-    class GS_U16Type : public GS_LiteralType {
+    class GS_U16Type : public GS_UIntegerType {
     public:
 
         /**
@@ -309,7 +339,7 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Creating U16 type ptr
+         * Creating U16 type
          * @return U16 type ptr
          */
         static std::shared_ptr<GS_U16Type> Create();
@@ -318,7 +348,7 @@ namespace GSLanguageCompiler::Semantic {
     /**
      * Builtin U32 type
      */
-    class GS_U32Type : public GS_LiteralType {
+    class GS_U32Type : public GS_UIntegerType {
     public:
 
         /**
@@ -329,7 +359,7 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Creating U32 type ptr
+         * Creating U32 type
          * @return U32 type ptr
          */
         static std::shared_ptr<GS_U32Type> Create();
@@ -338,7 +368,7 @@ namespace GSLanguageCompiler::Semantic {
     /**
      * Builtin U64 type
      */
-    class GS_U64Type : public GS_LiteralType {
+    class GS_U64Type : public GS_UIntegerType {
     public:
 
         /**
@@ -349,7 +379,7 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Creating U64 type ptr
+         * Creating U64 type
          * @return U64 type ptr
          */
         static std::shared_ptr<GS_U64Type> Create();
@@ -358,7 +388,7 @@ namespace GSLanguageCompiler::Semantic {
     /**
      * Builtin String type
      */
-    class GS_StringType : public GS_LiteralType {
+    class GS_StringType : public GS_Type {
     public:
 
         /**
@@ -369,31 +399,75 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Creating String type ptr
+         * Creating String type
          * @return String type ptr
          */
         static std::shared_ptr<GS_StringType> Create();
+
+    public:
+
+        /**
+         * Getter for type of type
+         * @return Type of type
+         */
+        TypeType GetType() const override;
     };
 
+    /**
+     * Builtin Array type
+     */
     class GS_ArrayType : public GS_Type {
     public:
 
-        GS_ArrayType(GSTypePtr type, U64 size);
+        /**
+         * Constructor for Array type
+         * @param elementsType Type of array elements
+         * @param size Size of array
+         */
+        GS_ArrayType(GSTypePtr elementsType, U64 size);
 
     public:
 
-        static std::shared_ptr<GS_ArrayType> Create(GSTypePtr type, U64 size);
+        /**
+         * Constructor for Array type
+         * @param elementsType Type of array elements
+         * @param size Size of array
+         * @return Array type ptr
+         */
+        static std::shared_ptr<GS_ArrayType> Create(GSTypePtr elementsType, U64 size);
 
     public:
 
-        GSTypePtr GetType() const;
+        /**
+         * Getter for type of array elements
+         * @return Type of array elements
+         */
+        GSTypePtr GetElementsType() const;
 
+        /**
+         * Getter for size of array
+         * @return Size of array
+         */
         U64 GetSize() const;
+
+    public:
+
+        /**
+         * Getter for type of type
+         * @return Type of type
+         */
+        TypeType GetType() const override;
 
     private:
 
-        GSTypePtr _type;
+        /**
+         * Type of array elements
+         */
+        GSTypePtr _elementsType;
 
+        /**
+         * Size of array
+         */
         U64 _size;
     };
 
@@ -483,6 +557,14 @@ namespace GSLanguageCompiler::Semantic {
          * @return String type
          */
         TypePtr<GS_StringType> GetStringType() const;
+
+        /**
+         * Getter for Array type
+         * @param type Type of array elements
+         * @param size Size of array
+         * @return Array type
+         */
+        TypePtr<GS_ArrayType> GetArrayType(GSTypePtr type, U64 size) const;
 
     private:
 
