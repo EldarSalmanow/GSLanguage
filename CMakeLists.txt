@@ -40,7 +40,7 @@ set(PROJECT_LIBRARIES
         GSASTLibrary
         GSOptimizerLibrary
         GSSemanticLibrary
-        GSCodeGeneratorLibrary
+#        GSCodeGeneratorLibrary
         GSDebugLibrary
         )
 
@@ -61,7 +61,7 @@ add_subdirectory(${INCLUDE_DIR}/Parser)
 add_subdirectory(${INCLUDE_DIR}/AST)
 add_subdirectory(${INCLUDE_DIR}/Optimizer)
 add_subdirectory(${INCLUDE_DIR}/Semantic)
-add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
+#add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
 add_subdirectory(${INCLUDE_DIR}/Debug)
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CONAN_LIB_DIRS})

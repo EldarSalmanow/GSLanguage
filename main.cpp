@@ -1,64 +1,8 @@
 #include <Debug/Debug.h>
 
-//#include <Lexer/Lexer.h>
-//
 #include <Driver/Driver.h>
 
 using namespace GSLanguageCompiler;
-
-//class Lexer_ {
-//public:
-//
-//    Lexer_(Driver::GSContextPtr context);
-//
-//public:
-//
-//    Lexer::GSTokenArray Lex(IO::GSSourcePtr source);
-//};
-//
-//class Parser {
-//public:
-//
-//    Parser(Driver::GSContextPtr context);
-//
-//public:
-//
-//    AST::GSTranslationUnitDeclarationPtr Parse(Lexer::GSTokenArray tokens);
-//};
-//
-//class CodeHolder {
-//
-//};
-//
-//using CodeHolderPtr = std::shared_ptr<CodeHolder>;
-//
-//class CodeGenerator {
-//public:
-//
-//    CodeGenerator(Driver::GSContextPtr context);
-//
-//public:
-//
-//    CodeHolderPtr CodeGen(AST::GSTranslationUnitDeclarationPtr translationUnitDeclaration);
-//};
-//
-//void f() {
-//    auto ctx = Driver::GS_Context::Create();
-//
-//    auto src = IO::GS_Source::CreateString("func main() {}");
-//
-//    Lexer_ l(ctx);
-//
-//    auto tokens = l.Lex(src);
-//
-//    Parser p(ctx);
-//
-//    auto tu = p.Parse(tokens);
-//
-//    CodeGenerator cg(ctx);
-//
-//    auto ch = cg.CodeGen(tu);
-//}
 
 class ArithmeticOptimizingVisitor : public AST::GS_Transformer {
 public:

@@ -25,6 +25,13 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     using GSCGBackendPtr = std::shared_ptr<GS_CGBackend>;
 
+    template<typename T>
+    class CGContext {
+    public:
+
+
+    };
+
     class GS_LLVMCodeHolder : public GS_CodeHolder {
     public:
 
@@ -36,12 +43,14 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     public:
 
-        LRef<llvm::Module> GetModule();
+        LRef<llvm::Module> GetLLVMModule();
 
     private:
 
         std::shared_ptr<llvm::Module> _module;
     };
+
+    using GSLLVMCodeHolderPtr = std::shared_ptr<GS_LLVMCodeHolder>;
 
     class GS_LLVMCGBackend : public GS_CGBackend {
     public:
@@ -57,6 +66,40 @@ namespace GSLanguageCompiler::CodeGenerator {
         GSCodeHolderPtr Generate(LRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration) override;
 
     private:
+
+        Driver::GSContextPtr _context;
+    };
+
+    template<>
+    class CGContext<GS_LLVMCGBackend> {
+    public:
+
+        CGContext(std::shared_ptr<llvm::LLVMContext> llvmContext, Driver::GSContextPtr context)
+                : _llvmContext(std::move(llvmContext)), _llvmModule(std::shared_ptr<llvm::Module>()), _context(std::move(context)) {}
+
+    public:
+
+        static CGContext<GS_LLVMCGBackend> Create(std::shared_ptr<llvm::LLVMContext> llvmContext, Driver::GSContextPtr context) {
+            return CGContext<GS_LLVMCGBackend>(std::move(llvmContext), std::move(context));
+        }
+
+        static CGContext<GS_LLVMCGBackend> Create(Driver::GSContextPtr context) {
+            return CGContext<GS_LLVMCGBackend>::Create(std::make_shared<llvm::LLVMContext>(), std::move(context));
+        }
+
+    public:
+
+        LRef<llvm::LLVMContext> GetLLVMContext();
+
+        LRef<llvm::Module> GetLLVMModule();
+
+        Driver::GSContextPtr GetContext();
+
+    private:
+
+        std::shared_ptr<llvm::LLVMContext> _llvmContext;
+
+        std::shared_ptr<llvm::Module> _llvmModule;
 
         Driver::GSContextPtr _context;
     };
