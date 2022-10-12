@@ -166,6 +166,18 @@ namespace GSLanguageCompiler::Semantic {
     };
 
     /**
+     * Integer type
+     */
+    enum class IntegerType {
+        I8,
+        I16,
+        I32,
+        I64,
+
+        User
+    };
+
+    /**
      * Builtin integer type
      */
     class GS_IntegerType : public GS_Type {
@@ -193,6 +205,14 @@ namespace GSLanguageCompiler::Semantic {
          * @return Type of type
          */
         TypeType GetType() const override;
+
+    public:
+
+        /**
+         * Getter for integer type
+         * @return Integer type
+         */
+        virtual IntegerType GetIntegerType() const;
     };
 
     /**
@@ -213,6 +233,14 @@ namespace GSLanguageCompiler::Semantic {
          * @return I8 type ptr
          */
         static std::shared_ptr<GS_I8Type> Create();
+
+    public:
+
+        /**
+         * Getter for integer type
+         * @return Integer type
+         */
+        IntegerType GetIntegerType() const override;
     };
 
     /**
@@ -233,6 +261,14 @@ namespace GSLanguageCompiler::Semantic {
          * @return I16 type ptr
          */
         static std::shared_ptr<GS_I16Type> Create();
+
+    public:
+
+        /**
+         * Getter for integer type
+         * @return Integer type
+         */
+        IntegerType GetIntegerType() const override;
     };
 
     /**
@@ -253,6 +289,14 @@ namespace GSLanguageCompiler::Semantic {
          * @return I32 type ptr
          */
         static std::shared_ptr<GS_I32Type> Create();
+
+    public:
+
+        /**
+         * Getter for integer type
+         * @return Integer type
+         */
+        IntegerType GetIntegerType() const override;
     };
 
     /**
@@ -273,6 +317,26 @@ namespace GSLanguageCompiler::Semantic {
          * @return I64 type ptr
          */
         static std::shared_ptr<GS_I64Type> Create();
+
+    public:
+
+        /**
+         * Getter for integer type
+         * @return Integer type
+         */
+        IntegerType GetIntegerType() const override;
+    };
+
+    /**
+     * Unsigned integer type
+     */
+    enum class UIntegerType {
+        U8,
+        U16,
+        U32,
+        U64,
+
+        User
     };
 
     /**
@@ -303,6 +367,14 @@ namespace GSLanguageCompiler::Semantic {
          * @return Type of type
          */
         TypeType GetType() const override;
+
+    public:
+
+        /**
+         * Getter for unsigned integer type
+         * @return Unsigned integer type
+         */
+        virtual UIntegerType GetUIntegerType() const;
     };
 
     /**
@@ -323,6 +395,14 @@ namespace GSLanguageCompiler::Semantic {
          * @return U8 type ptr
          */
         static std::shared_ptr<GS_U8Type> Create();
+
+    public:
+
+        /**
+         * Getter for unsigned integer type
+         * @return Unsigned integer type
+         */
+        UIntegerType GetUIntegerType() const override;
     };
 
     /**
@@ -343,6 +423,14 @@ namespace GSLanguageCompiler::Semantic {
          * @return U16 type ptr
          */
         static std::shared_ptr<GS_U16Type> Create();
+
+    public:
+
+        /**
+         * Getter for unsigned integer type
+         * @return Unsigned integer type
+         */
+        UIntegerType GetUIntegerType() const override;
     };
 
     /**
@@ -363,6 +451,14 @@ namespace GSLanguageCompiler::Semantic {
          * @return U32 type ptr
          */
         static std::shared_ptr<GS_U32Type> Create();
+
+    public:
+
+        /**
+         * Getter for unsigned integer type
+         * @return Unsigned integer type
+         */
+        UIntegerType GetUIntegerType() const override;
     };
 
     /**
@@ -383,6 +479,14 @@ namespace GSLanguageCompiler::Semantic {
          * @return U64 type ptr
          */
         static std::shared_ptr<GS_U64Type> Create();
+
+    public:
+
+        /**
+         * Getter for unsigned integer type
+         * @return Unsigned integer type
+         */
+        UIntegerType GetUIntegerType() const override;
     };
 
     /**

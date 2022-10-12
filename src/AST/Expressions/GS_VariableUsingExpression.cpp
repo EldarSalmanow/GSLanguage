@@ -3,10 +3,10 @@
 namespace GSLanguageCompiler::AST {
 
     GS_VariableUsingExpression::GS_VariableUsingExpression(UString name, IO::GS_SourceLocation nameLocation)
-            : _name(std::move(name)), _nameLocation(std::move(nameLocation)) {}
+            : _name(std::move(name)), _nameLocation(nameLocation) {}
 
     std::shared_ptr<GS_VariableUsingExpression> GS_VariableUsingExpression::Create(UString name, IO::GS_SourceLocation nameLocation) {
-        return std::make_shared<GS_VariableUsingExpression>(std::move(name), std::move(nameLocation));
+        return std::make_shared<GS_VariableUsingExpression>(std::move(name), nameLocation);
     }
 
     std::shared_ptr<GS_VariableUsingExpression> GS_VariableUsingExpression::Create(UString name) {

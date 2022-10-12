@@ -52,11 +52,19 @@ namespace GSLanguageCompiler::Semantic {
         return TypeType::Integer;
     }
 
+    IntegerType GS_IntegerType::GetIntegerType() const {
+        return IntegerType::User;
+    }
+
     GS_I8Type::GS_I8Type()
             : GS_IntegerType("I8"_us) {}
 
     std::shared_ptr<GS_I8Type> GS_I8Type::Create() {
         return std::make_shared<GS_I8Type>();
+    }
+
+    IntegerType GS_I8Type::GetIntegerType() const {
+        return IntegerType::I8;
     }
 
     GS_I16Type::GS_I16Type()
@@ -66,6 +74,10 @@ namespace GSLanguageCompiler::Semantic {
         return std::make_shared<GS_I16Type>();
     }
 
+    IntegerType GS_I16Type::GetIntegerType() const {
+        return IntegerType::I16;
+    }
+
     GS_I32Type::GS_I32Type()
             : GS_IntegerType("I32"_us) {}
 
@@ -73,11 +85,19 @@ namespace GSLanguageCompiler::Semantic {
         return std::make_shared<GS_I32Type>();
     }
 
+    IntegerType GS_I32Type::GetIntegerType() const {
+        return IntegerType::I32;
+    }
+
     GS_I64Type::GS_I64Type()
             : GS_IntegerType("I64"_us) {}
 
     std::shared_ptr<GS_I64Type> GS_I64Type::Create() {
         return std::make_shared<GS_I64Type>();
+    }
+
+    IntegerType GS_I64Type::GetIntegerType() const {
+        return IntegerType::I64;
     }
 
     GS_UIntegerType::GS_UIntegerType(UString name)
@@ -91,11 +111,19 @@ namespace GSLanguageCompiler::Semantic {
         return TypeType::UInteger;
     }
 
+    UIntegerType GS_UIntegerType::GetUIntegerType() const {
+        return UIntegerType::User;
+    }
+
     GS_U8Type::GS_U8Type()
             : GS_UIntegerType("U8"_us) {}
 
     std::shared_ptr<GS_U8Type> GS_U8Type::Create() {
         return std::make_shared<GS_U8Type>();
+    }
+
+    UIntegerType GS_U8Type::GetUIntegerType() const {
+        return UIntegerType::U8;
     }
 
     GS_U16Type::GS_U16Type()
@@ -105,6 +133,10 @@ namespace GSLanguageCompiler::Semantic {
         return std::make_shared<GS_U16Type>();
     }
 
+    UIntegerType GS_U16Type::GetUIntegerType() const {
+        return UIntegerType::U16;
+    }
+
     GS_U32Type::GS_U32Type()
             : GS_UIntegerType("U32"_us) {}
 
@@ -112,11 +144,19 @@ namespace GSLanguageCompiler::Semantic {
         return std::make_shared<GS_U32Type>();
     }
 
+    UIntegerType GS_U32Type::GetUIntegerType() const {
+        return UIntegerType::U32;
+    }
+
     GS_U64Type::GS_U64Type()
             : GS_UIntegerType("U64"_us) {}
 
     std::shared_ptr<GS_U64Type> GS_U64Type::Create() {
         return std::make_shared<GS_U64Type>();
+    }
+
+    UIntegerType GS_U64Type::GetUIntegerType() const {
+        return UIntegerType::U64;
     }
 
     GS_StringType::GS_StringType()
