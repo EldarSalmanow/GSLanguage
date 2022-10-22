@@ -8,6 +8,7 @@ GS_TOKENTYPE(EndOfFile),
 
 GS_TOKENTYPE(Identifier),
 
+GS_TOKENTYPE(LiteralSymbol),
 GS_TOKENTYPE(LiteralNumber),
 GS_TOKENTYPE(LiteralString),
 

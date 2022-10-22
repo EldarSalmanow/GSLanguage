@@ -215,7 +215,31 @@ namespace GSLanguageCompiler::Lexer {
             }
 
             return GS_Token::Create(TokenType::LiteralNumber, string, IO::GS_SourceLocation::Create(_source->GetHash(), startPosition, endPosition));
-        } else if (CurrentSymbol() == '"') {
+        } else if (CurrentSymbol() == '\'') {
+            UString string;
+
+            I64 startPosition = _currentPosition, endPosition = 0;
+
+            string += CurrentSymbol();
+
+            NextSymbol();
+
+            if (CurrentSymbol() != '\'') {
+                // ?
+
+                LocatedMessage("Symbol must be a one symbol!",
+                               IO::MessageLevel::Error,
+                               IO::GS_SourceLocation::Create(_source->GetHash(), startPosition, startPosition));
+
+                // ?
+            }
+
+            NextSymbol();
+
+            endPosition = _currentPosition - 1;
+
+            return GS_Token::Create(TokenType::LiteralSymbol, string, IO::GS_SourceLocation::Create(_source->GetHash(), startPosition, endPosition));
+        } else if (CurrentSymbol() == '\"') {
             UString string;
 
             I64 startPosition = _currentPosition, endPosition = 0;
@@ -225,7 +249,7 @@ namespace GSLanguageCompiler::Lexer {
 
                 NextSymbol();
 
-                if (CurrentSymbol() == '"') {
+                if (CurrentSymbol() == '\"') {
                     NextSymbol();
 
                     endPosition = _currentPosition - 1;

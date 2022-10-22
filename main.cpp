@@ -1,8 +1,61 @@
+#include <IO/IO.h>
+
 #include <Debug/Debug.h>
 
 #include <Driver/Driver.h>
 
+namespace GSLanguageCompiler::CodeGenerator {
+
+    class CGBackend {
+
+    };
+
+    using GSCGBackendPtr = std::shared_ptr<CGBackend>;
+
+}
+
 using namespace GSLanguageCompiler;
+
+class Context {
+public:
+
+    void g(IO::GSMessageHandlerPtr MH) {
+        auto Message = IO::Message::Create("Hello, World!",
+                                           IO::MessageLevel::Note);
+
+        MH->Write(Message);
+    }
+
+    void f() {
+        auto StdStreams = IO::GS_StdIOStreamsManager::Create();
+
+        auto SM = IO::GS_SourceManager::Create();
+
+        auto MH = IO::GS_MessageHandler::Create(StdStreams->GetStdOutStream(), SM);
+
+        g(MH);
+    }
+
+    Context(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+            IO::GSMessageHandlerPtr messageHandler,
+            IO::GSSourceManagerPtr sourceManager,
+            IO::GSOutStreamPtr outputStream,
+            AST::GSASTContextPtr context);
+
+private:
+
+
+};
+
+void f() {
+    auto StdStreams = IO::GS_StdIOStreamsManager::Create();
+    auto SM = IO::GS_SourceManager::Create();
+    auto MH = IO::GS_MessageHandler::Create(StdStreams->GetStdOutStream(), SM);
+    auto OutStream = IO::GS_OutFileStream::CreateOutFile("main.exe");
+    auto AstContext = AST::GS_ASTContext::Create();
+
+    auto Context_ = std::make_shared<Context>(StdStreams, MH, SM, OutStream, AstContext);
+}
 
 class ArithmeticOptimizingVisitor : public AST::GS_Transformer {
 public:
@@ -80,12 +133,12 @@ I32 Test() {
 }
 
 /**
- * Entry point for GSLanguageCompiler
+ * High level entry point for GSLanguageCompiler
+ * @param argc Arguments counter
+ * @param argv Arguments values
  * @return Compiler result
  */
-I32 main(I32 argc, Ptr<Ptr<C>> argv) {
-//    return Test();
-
+I32 GSMain(I32 argc, Ptr<Ptr<C>> argv) {
     auto globalContextInitializingResult = Driver::GS_GlobalContext::Initialize();
 
     if (globalContextInitializingResult) {
@@ -97,4 +150,16 @@ I32 main(I32 argc, Ptr<Ptr<C>> argv) {
     auto programResult = StaticCast<I32>(compilingResult);
 
     return programResult;
+}
+
+/**
+ * Low level entry point for GSLanguageCompiler
+ * @param argc Arguments counter
+ * @param argv Arguments values
+ * @return Compiler result
+ */
+I32 main(I32 argc, Ptr<Ptr<C>> argv) {
+//    return Test();
+
+    return GSMain(argc, argv);
 }
