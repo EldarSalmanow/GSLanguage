@@ -20,233 +20,157 @@ namespace GSLanguageCompiler::IO {
     };
 
     /**
-     * Base class for all messages
+     * Class for containing any messages
      */
-//    class GS_Message {
-//    public:
-//
-//        /**
-//         * Virtual destructor for supporting inheritance
-//         */
-//        virtual ~GS_Message();
-//
-//    public:
-//
-//        /**
-//         * Writing message to standard output stream
-//         * @param context Context for getting any info for printing message
-//         * @return
-//         */
-//        virtual Void Write(Driver::GSContextPtr context) const = 0;
-//    };
-//
-//    /**
-//     * Message ptr type
-//     */
-//    using GSMessagePtr = std::shared_ptr<GS_Message>;
-//
-//    /**
-//     * Message ptr array type
-//     */
-//    using GSMessagePtrArray = std::vector<GSMessagePtr>;
-//
-//    /**
-//     * Class for text messages
-//     */
-//    class GS_TextMessage : public GS_Message {
-//    public:
-//
-//        /**
-//         * Constructor for text message
-//         * @param text Text of message
-//         * @param level Level of message
-//         */
-//        GS_TextMessage(UString text, MessageLevel level);
-//
-//    public:
-//
-//        /**
-//         * Creating text message
-//         * @param text Text of message
-//         * @param level Level of message
-//         * @return Text message ptr
-//         */
-//        static std::shared_ptr<GS_TextMessage> Create(UString text, MessageLevel level);
-//
-//    public:
-//
-//        /**
-//         * Getter for text of message
-//         * @return Text of message
-//         */
-//        UString GetText() const;
-//
-//        /**
-//         * Getter for level of message
-//         * @return Level of message
-//         */
-//        MessageLevel GetLevel() const;
-//
-//    public:
-//
-//        /**
-//         * Writing text message to standard output stream
-//         * @param context Context for getting any info for printing message
-//         * @return
-//         */
-//        Void Write(Driver::GSContextPtr context) const override;
-//
-//    private:
-//
-//        /**
-//         * Text of message
-//         */
-//        UString _text;
-//
-//        /**
-//         * Level of message
-//         */
-//        MessageLevel _level;
-//    };
-//
-//    /**
-//     * Creating and writing text message to standard output stream
-//     * @param text Text of message
-//     * @param level Level of message
-//     * @param context Context for getting any info for printing message
-//     * @return
-//     */
-//    Void WriteTextMessage(UString text, MessageLevel level, Driver::GSContextPtr context);
-//
-//    /**
-//     * Class for located text messages
-//     */
-//    class GS_LocatedTextMessage : public GS_TextMessage {
-//    public:
-//
-//        /**
-//         * Constructor for located text message
-//         * @param text Text of message
-//         * @param level Level of message
-//         * @param location Location of message
-//         */
-//        GS_LocatedTextMessage(UString text, MessageLevel level, GS_SourceLocation location);
-//
-//    public:
-//
-//        /**
-//         * Creating located text message
-//         * @param text Text of message
-//         * @param level Level of message
-//         * @param location Location of message
-//         * @return Located text message ptr
-//         */
-//        static std::shared_ptr<GS_LocatedTextMessage> Create(UString text, MessageLevel level, GS_SourceLocation location);
-//
-//    public:
-//
-//        /**
-//         * Getter for location of message
-//         * @return Location of message
-//         */
-//        GS_SourceLocation GetLocation() const;
-//
-//    public:
-//
-//        /**
-//         * Writing located text message to standard output stream
-//         * @param context Context for getting any info for printing message
-//         * @return
-//         */
-//        Void Write(Driver::GSContextPtr context) const override;
-//
-//    public:
-//
-//        /**
-//         * Location of message
-//         */
-//        GS_SourceLocation _location;
-//    };
-//
-//    /**
-//     * Creating and writing located text message to standard output stream
-//     * @param text Text of message
-//     * @param level Level of message
-//     * @param location Location of message
-//     * @param context Context for getting any info for printing message
-//     * @return
-//     */
-//    Void WriteLocatedTextMessage(UString text, MessageLevel level, GS_SourceLocation location, Driver::GSContextPtr context);
-
-    class Message {
+    class GS_Message {
     public:
 
-        Message(UString text, MessageLevel level, std::optional<GS_SourceLocation> location)
-                : _text(std::move(text)), _level(level), _location(location) {}
+        /**
+         * Constructor for message
+         * @param text Message text
+         * @param level Message level
+         * @param location Message location
+         */
+        GS_Message(UString text, MessageLevel level, std::optional<GS_SourceLocation> location);
 
     public:
 
-        static Message Create(UString text, MessageLevel level, std::optional<GS_SourceLocation> location) {
-            return Message(std::move(text), level, location);
-        }
+        /**
+         * Creating message
+         * @param text Message text
+         * @param level Message level
+         * @param location Message location
+         * @return Message ptr
+         */
+        static std::shared_ptr<GS_Message> Create(UString text, MessageLevel level, std::optional<GS_SourceLocation> location);
 
-        static Message Create(UString text, MessageLevel level, GS_SourceLocation location) {
-            return Message::Create(std::move(text), level, std::make_optional(location));
-        }
+        /**
+         * Creating message
+         * @param text Message text
+         * @param level Message level
+         * @param location Message location
+         * @return Message ptr
+         */
+        static std::shared_ptr<GS_Message> Create(UString text, MessageLevel level, GS_SourceLocation location);
 
-        static Message Create(UString text, MessageLevel level) {
-            return Message::Create(std::move(text), level, std::nullopt);
-        }
+        /**
+         * Creating message
+         * @param text Message text
+         * @param level Message level
+         * @return Message ptr
+         */
+        static std::shared_ptr<GS_Message> Create(UString text, MessageLevel level);
 
     public:
 
-        UString GetText() const {
-            return _text;
-        }
+        /**
+         * Getter for message text
+         * @return Message text
+         */
+        UString GetText() const;
 
-        MessageLevel GetLevel() const {
-            return _level;
-        }
+        /**
+         * Getter for message level
+         * @return Message level
+         */
+        MessageLevel GetLevel() const;
 
-        std::optional<GS_SourceLocation> GetLocation() const {
-            return _location;
-        }
+        /**
+         * Getter for message location
+         * @return Message location
+         */
+        std::optional<GS_SourceLocation> GetLocation() const;
 
     private:
 
+        /**
+         * Message text
+         */
         UString _text;
 
+        /**
+         * Message level
+         */
         MessageLevel _level;
 
+        /**
+         * Message location
+         */
         std::optional<GS_SourceLocation> _location;
     };
 
+    /**
+     * Message ptr type
+     */
+    using GSMessagePtr = std::shared_ptr<GS_Message>;
+
+    /**
+     * Message ptr array
+     */
+    using GSMessagePtrArray = std::vector<GSMessagePtr>;
+
+    /**
+     * Class for handling messages and writing to output stream
+     */
     class GS_MessageHandler {
     public:
 
+        /**
+         * Constructor for message handler
+         * @param outputStream Output stream
+         * @param sourceManager Source manager
+         */
         GS_MessageHandler(GSOutStreamPtr outputStream, GSSourceManagerPtr sourceManager);
 
     public:
 
+        /**
+         * Creating message handler
+         * @param outputStream Output stream
+         * @param sourceManager Source manager
+         * @return Message handler ptr
+         */
         static std::shared_ptr<GS_MessageHandler> Create(GSOutStreamPtr outputStream, GSSourceManagerPtr sourceManager);
 
     public:
 
-        Void Write(Message message);
+        /**
+         * Writing message to output stream
+         * @param message Message
+         * @return
+         */
+        Void Write(GSMessagePtr message);
 
     public:
 
+        /**
+         * Getter for output stream
+         * @return Output stream
+         */
         GSOutStreamPtr GetOutputStream();
 
+        /**
+         * Getter for source manager
+         * @return Source manager
+         */
         GSSourceManagerPtr GetSourceManager();
 
     private:
 
+        /**
+         * Output stream
+         */
         GSOutStreamPtr _outputStream;
 
+        /**
+         * Source manager
+         */
         GSSourceManagerPtr _sourceManager;
     };
 
+    /**
+     * Message handler ptr type
+     */
     using GSMessageHandlerPtr = std::shared_ptr<GS_MessageHandler>;
 
 }

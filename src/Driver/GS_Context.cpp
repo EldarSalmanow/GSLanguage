@@ -25,32 +25,6 @@ namespace GSLanguageCompiler::Driver {
                                             std::move(astContext));
     }
 
-//    std::shared_ptr<GS_Context> GS_Context::Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
-//                                                   IO::GSSourceManagerPtr       sourceManager,
-//                                                   IO::GSOutStreamPtr           outputStream) {
-//        return GS_Context::Create(std::move(stdIOStreamsManager),
-//                                  std::move(sourceManager),
-//                                  std::move(outputStream),
-//                                  AST::GS_ASTContext::Create());
-//    }
-//
-//    std::shared_ptr<GS_Context> GS_Context::Create(IO::GSSourceManagerPtr sourceManager,
-//                                                   IO::GSOutStreamPtr     outputStream,
-//                                                   AST::GSASTContextPtr   astContext) {
-//        return GS_Context::Create(IO::GS_StdIOStreamsManager::Create(),
-//                                  std::move(sourceManager),
-//                                  std::move(outputStream),
-//                                  std::move(astContext));
-//    }
-//
-//    std::shared_ptr<GS_Context> GS_Context::Create(IO::GSSourceManagerPtr sourceManager,
-//                                                   IO::GSOutStreamPtr     outputStream) {
-//        return GS_Context::Create(IO::GS_StdIOStreamsManager::Create(),
-//                                  std::move(sourceManager),
-//                                  std::move(outputStream),
-//                                  AST::GS_ASTContext::Create());
-//    }
-
     std::shared_ptr<GS_Context> GS_Context::Create() {
         auto stdStreams = IO::GS_StdIOStreamsManager::Create();
         auto sourceManager = IO::GS_SourceManager::Create();
@@ -81,7 +55,10 @@ namespace GSLanguageCompiler::Driver {
             sourceManager->AddSource(inputSource);
         }
 
-        outputStream = IO::GS_OutFileStream::CreateOutFile(outputFileName);
+
+        // TODO: create container class for code holding
+//        outputStream = IO::GS_OutFileStream::CreateOutFile(outputFileName);
+        outputStream = nullptr;
 
         return GS_Context::Create(stdStreams,
                                   sourceManager,
@@ -138,16 +115,8 @@ namespace GSLanguageCompiler::Driver {
         return _sourceManager->GetSources();
     }
 
-    std::shared_ptr<Semantic::GS_VoidType> GS_Context::GetVoidType() const {
-        return _astContext->GetVoidType();
-    }
-
-    std::shared_ptr<Semantic::GS_I32Type> GS_Context::GetI32Type() const {
-        return _astContext->GetI32Type();
-    }
-
-    std::shared_ptr<Semantic::GS_StringType> GS_Context::GetStringType() const {
-        return _astContext->GetStringType();
+    Void GS_Context::Write(IO::GSMessagePtr message) {
+        _messageHandler->Write(std::move(message));
     }
 
     Semantic::GSTypeContextPtr GS_Context::GetTypeContext() const {
@@ -160,6 +129,10 @@ namespace GSLanguageCompiler::Driver {
 
     IO::GSSourceManagerPtr GS_Context::GetSourceManager() const {
         return _sourceManager;
+    }
+
+    IO::GSMessageHandlerPtr GS_Context::GetMessageHandler() const {
+        return _messageHandler;
     }
 
     IO::GSOutStreamPtr GS_Context::GetOutputStream() const {

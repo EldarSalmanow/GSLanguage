@@ -1,61 +1,8 @@
-#include <IO/IO.h>
-
 #include <Debug/Debug.h>
 
 #include <Driver/Driver.h>
 
-namespace GSLanguageCompiler::CodeGenerator {
-
-    class CGBackend {
-
-    };
-
-    using GSCGBackendPtr = std::shared_ptr<CGBackend>;
-
-}
-
 using namespace GSLanguageCompiler;
-
-class Context {
-public:
-
-    void g(IO::GSMessageHandlerPtr MH) {
-        auto Message = IO::Message::Create("Hello, World!",
-                                           IO::MessageLevel::Note);
-
-        MH->Write(Message);
-    }
-
-    void f() {
-        auto StdStreams = IO::GS_StdIOStreamsManager::Create();
-
-        auto SM = IO::GS_SourceManager::Create();
-
-        auto MH = IO::GS_MessageHandler::Create(StdStreams->GetStdOutStream(), SM);
-
-        g(MH);
-    }
-
-    Context(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
-            IO::GSMessageHandlerPtr messageHandler,
-            IO::GSSourceManagerPtr sourceManager,
-            IO::GSOutStreamPtr outputStream,
-            AST::GSASTContextPtr context);
-
-private:
-
-
-};
-
-void f() {
-    auto StdStreams = IO::GS_StdIOStreamsManager::Create();
-    auto SM = IO::GS_SourceManager::Create();
-    auto MH = IO::GS_MessageHandler::Create(StdStreams->GetStdOutStream(), SM);
-    auto OutStream = IO::GS_OutFileStream::CreateOutFile("main.exe");
-    auto AstContext = AST::GS_ASTContext::Create();
-
-    auto Context_ = std::make_shared<Context>(StdStreams, MH, SM, OutStream, AstContext);
-}
 
 class ArithmeticOptimizingVisitor : public AST::GS_Transformer {
 public:

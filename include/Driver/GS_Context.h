@@ -9,7 +9,7 @@
 
 namespace GSLanguageCompiler::Driver {
 
-    // optimize class
+    // TODO: optimize class (?)
 
     /**
      * Class for containing and manipulating information about compiling process
@@ -47,37 +47,6 @@ namespace GSLanguageCompiler::Driver {
                                                   IO::GSMessageHandlerPtr      messageHandler,
                                                   IO::GSOutStreamPtr           outputStream,
                                                   AST::GSASTContextPtr         astContext);
-
-        /**
-         * Creating context
-         * @param stdIOStreamsManager Standard IO streams manager
-         * @param sourceManager Source manager
-         * @param outputStream Output stream
-         * @return Context ptr
-         */
-//        static std::shared_ptr<GS_Context> Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
-//                                                  IO::GSSourceManagerPtr       sourceManager,
-//                                                  IO::GSOutStreamPtr           outputStream);
-//
-//        /**
-//         * Creating context
-//         * @param sourceManager Source manager
-//         * @param outputStream Output stream
-//         * @param astContext AST context
-//         * @return Context ptr
-//         */
-//        static std::shared_ptr<GS_Context> Create(IO::GSSourceManagerPtr sourceManager,
-//                                                  IO::GSOutStreamPtr     outputStream,
-//                                                  AST::GSASTContextPtr   astContext);
-//
-//        /**
-//         * Creating context
-//         * @param sourceManager Source manager
-//         * @param outputStream Output stream
-//         * @return Context ptr
-//         */
-//        static std::shared_ptr<GS_Context> Create(IO::GSSourceManagerPtr sourceManager,
-//                                                  IO::GSOutStreamPtr     outputStream);
 
         /**
          * Creating context
@@ -179,27 +148,18 @@ namespace GSLanguageCompiler::Driver {
 
     public:
 
-        // for writing code to output stream
+        /**
+         * Writing message to message handler
+         * @param message Message
+         * @return
+         */
+        Void Write(IO::GSMessagePtr message);
 
     public:
 
-        /**
-         * Getter for default Void type from AST context
-         * @return Void type
-         */
-        std::shared_ptr<Semantic::GS_VoidType> GetVoidType() const;
+        // for writing code to output stream
 
-        /**
-         * Getter for default I32 type from AST context
-         * @return I32 type
-         */
-        std::shared_ptr<Semantic::GS_I32Type> GetI32Type() const;
-
-        /**
-         * Getter for default String type from AST context
-         * @return String type
-         */
-        std::shared_ptr<Semantic::GS_StringType> GetStringType() const;
+    public:
 
         /**
          * Getter for type context from AST context
@@ -220,6 +180,12 @@ namespace GSLanguageCompiler::Driver {
          * @return Source manager
          */
         IO::GSSourceManagerPtr GetSourceManager() const;
+
+        /**
+         * Getter for message handler
+         * @return Message handler
+         */
+        IO::GSMessageHandlerPtr GetMessageHandler() const;
 
         /**
          * Getter for output stream

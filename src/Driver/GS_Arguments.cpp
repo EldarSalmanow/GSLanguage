@@ -14,7 +14,7 @@ namespace GSLanguageCompiler::Driver {
     }
 
     GS_Arguments GS_Arguments::Create(std::vector<UString> inputFileNames) {
-        // TODO
+        // TODO: replace output name to ?
 
         return GS_Arguments::Create(std::move(inputFileNames), "a.exe"_us);
     }

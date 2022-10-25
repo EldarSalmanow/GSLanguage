@@ -32,7 +32,7 @@ namespace GSLanguageCompiler::Parser {
         auto translationUnitDeclaration = ParseTranslationUnitDeclaration(std::move(translationUnitName));
 
         for (auto &message : _messages) {
-            message->Write(_context);
+            _context->Write(message);
         }
 
         _messages = IO::GSMessagePtrArray();
@@ -588,13 +588,13 @@ namespace GSLanguageCompiler::Parser {
     }
 
     Void GS_Parser::Message(UString message, IO::MessageLevel messageLevel) {
-        auto textMessage = IO::GS_TextMessage::Create(std::move(message), messageLevel);
+        auto textMessage = IO::GS_Message::Create(std::move(message), messageLevel);
 
         _messages.emplace_back(textMessage);
     }
 
     Void GS_Parser::LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation messageLocation) {
-        auto locatedTextMessage = IO::GS_LocatedTextMessage::Create(std::move(message), messageLevel, messageLocation);
+        auto locatedTextMessage = IO::GS_Message::Create(std::move(message), messageLevel, messageLocation);
 
         _messages.emplace_back(locatedTextMessage);
     }

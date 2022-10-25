@@ -123,6 +123,14 @@ namespace GSLanguageCompiler::Lexer {
         return GS_Lexer(std::move(context));
     }
 
+    GSTokenArray GS_Lexer::Run(Driver::GSContextPtr context, IO::GSSourcePtr source) {
+        auto lexer = GS_Lexer::Create(std::move(context));
+
+        auto tokens = lexer.Tokenize(std::move(source));
+
+        return tokens;
+    }
+
     GSTokenArray GS_Lexer::Tokenize(IO::GSSourcePtr source) {
         _source = std::move(source);
 
@@ -152,7 +160,7 @@ namespace GSLanguageCompiler::Lexer {
         }
 
         for (auto &message : _messages) {
-            message->Write(_context);
+            _context->Write(message);
         }
 
         _messages = IO::GSMessagePtrArray();
@@ -291,13 +299,13 @@ namespace GSLanguageCompiler::Lexer {
     }
 
     Void GS_Lexer::Message(UString message, IO::MessageLevel messageLevel) {
-        auto textMessage = IO::GS_TextMessage::Create(std::move(message), messageLevel);
+        auto textMessage = IO::GS_Message::Create(std::move(message), messageLevel);
 
         _messages.emplace_back(textMessage);
     }
 
     Void GS_Lexer::LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation messageLocation) {
-        auto locatedTextMessage = IO::GS_LocatedTextMessage::Create(std::move(message), messageLevel, messageLocation);
+        auto locatedTextMessage = IO::GS_Message::Create(std::move(message), messageLevel, messageLocation);
 
         _messages.emplace_back(locatedTextMessage);
     }

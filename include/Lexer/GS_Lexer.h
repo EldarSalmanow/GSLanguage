@@ -3,8 +3,6 @@
 
 #include <Driver/Driver.h>
 
-#include <IO/IO.h>
-
 #include <Lexer/GS_Token.h>
 
 namespace GSLanguageCompiler::Lexer {
@@ -29,6 +27,11 @@ namespace GSLanguageCompiler::Lexer {
          * @return Lexer
          */
         static GS_Lexer Create(Driver::GSContextPtr context);
+
+    public:
+
+        // TODO: remove or update
+        static GSTokenArray Run(Driver::GSContextPtr context, IO::GSSourcePtr source);
 
     public:
 

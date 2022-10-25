@@ -65,7 +65,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        // todo update
+        // TODO: update
         static U64 ToSymbolLocation(U64 line, U64 column, std::shared_ptr<GS_Source> source);
 
         static std::pair<U64, U64> ToLineColumnLocation(U64 position, std::shared_ptr<GS_Source> source);
