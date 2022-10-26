@@ -30,7 +30,12 @@ namespace GSLanguageCompiler::Lexer {
 
     public:
 
-        // TODO: remove or update
+        /**
+         * Creating lexer and tokenizing source
+         * @param context Context
+         * @param source Source
+         * @return Tokens
+         */
         static GSTokenArray Run(Driver::GSContextPtr context, IO::GSSourcePtr source);
 
     public:
@@ -70,7 +75,7 @@ namespace GSLanguageCompiler::Lexer {
          */
         Void PrevSymbol();
 
-    public:
+    private:
 
         /**
          * Creating text message

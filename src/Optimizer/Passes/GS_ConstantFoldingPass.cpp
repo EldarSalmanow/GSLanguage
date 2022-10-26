@@ -4,6 +4,61 @@
 
 namespace GSLanguageCompiler::Optimizer {
 
+    // TODO: add folding values with non I32 type
+
+    AST::GSValuePtr FoldConstants(AST::UnaryOperation operation, AST::GSValuePtr value) {
+        if (auto i32Value = AST::GSValueCast<AST::GS_I32Value>(value)) {
+            auto number = i32Value->GetI32Value();
+
+            I32 result;
+
+            switch (operation) {
+                case AST::UnaryOperation::Minus:
+                    result = -number;
+
+                    break;
+            }
+
+            return AST::GS_ASTBuilder::Create()->CreateI32Value(result);
+        }
+
+        return nullptr;
+    }
+
+    AST::GSValuePtr FoldConstants(AST::BinaryOperation operation, AST::GSValuePtr firstValue, AST::GSValuePtr secondValue) {
+        if (auto firstI32Value = AST::GSValueCast<AST::GS_I32Value>(firstValue)) {
+            if (auto secondI32Value = AST::GSValueCast<AST::GS_I32Value>(secondValue)) {
+                auto firstNumber  = firstI32Value->GetI32Value();
+                auto secondNumber = secondI32Value->GetI32Value();
+
+                I32 result;
+
+                switch (operation) {
+                    case AST::BinaryOperation::Plus:
+                        result = firstNumber + secondNumber;
+
+                        break;
+                    case AST::BinaryOperation::Minus:
+                        result = firstNumber - secondNumber;
+
+                        break;
+                    case AST::BinaryOperation::Star:
+                        result = firstNumber * secondNumber;
+
+                        break;
+                    case AST::BinaryOperation::Slash:
+                        result = firstNumber / secondNumber;
+
+                        break;
+                }
+
+                return AST::GS_ASTBuilder::Create()->CreateI32Value(result);
+            }
+        }
+
+        return nullptr;
+    }
+
     AST::GSNodePtr GS_ConstantFoldingTransformer::TransformUnaryExpression(AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression,
                                                                            LRef<Driver::GSContextPtr> context) {
         unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(GS_Transformer::TransformUnaryExpression(unaryExpression, context));
@@ -14,18 +69,7 @@ namespace GSLanguageCompiler::Optimizer {
         if (auto constantExpression = AST::ToExpression<AST::GS_ConstantExpression>(expression)) {
             auto value = constantExpression->GetValue();
 
-            if (auto i32Value = AST::GSValueCast<AST::GS_I32Value>(value)) {
-                auto number = i32Value->GetI32Value();
-
-                I32 result;
-
-                switch (operation) {
-                    case AST::UnaryOperation::Minus:
-                        result = -number;
-
-                        break;
-                }
-
+            if (auto result = FoldConstants(operation, value)) {
                 return AST::GS_ASTBuilder::Create()->CreateConstantExpression(result);
             }
         }
@@ -46,34 +90,8 @@ namespace GSLanguageCompiler::Optimizer {
                 auto firstValue  = firstConstantExpression->GetValue();
                 auto secondValue = secondConstantExpression->GetValue();
 
-                if (auto firstI32Value = AST::GSValueCast<AST::GS_I32Value>(firstValue)) {
-                    if (auto secondI32Value = AST::GSValueCast<AST::GS_I32Value>(secondValue)) {
-                        auto firstNumber  = firstI32Value->GetI32Value();
-                        auto secondNumber = secondI32Value->GetI32Value();
-
-                        I32 result;
-
-                        switch (operation) {
-                            case AST::BinaryOperation::Plus:
-                                result = firstNumber + secondNumber;
-
-                                break;
-                            case AST::BinaryOperation::Minus:
-                                result = firstNumber - secondNumber;
-
-                                break;
-                            case AST::BinaryOperation::Star:
-                                result = firstNumber * secondNumber;
-
-                                break;
-                            case AST::BinaryOperation::Slash:
-                                result = firstNumber / secondNumber;
-
-                                break;
-                        }
-
-                        return AST::GS_ASTBuilder::Create()->CreateConstantExpression(result);
-                    }
+                if (auto result = FoldConstants(operation, firstValue, secondValue)) {
+                    return AST::GS_ASTBuilder::Create()->CreateConstantExpression(result);
                 }
             }
         }

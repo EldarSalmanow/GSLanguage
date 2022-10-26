@@ -5,6 +5,8 @@
 
 namespace GSLanguageCompiler::Debug {
 
+    // TODO: update dumping data infrastructure
+
     /**
      * Base class for all dumpers
      */

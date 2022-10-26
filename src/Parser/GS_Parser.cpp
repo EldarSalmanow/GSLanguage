@@ -22,6 +22,14 @@ namespace GSLanguageCompiler::Parser {
         return GS_Parser(std::move(context));
     }
 
+    AST::GSTranslationUnitDeclarationPtr GS_Parser::Run(Driver::GSContextPtr context, Lexer::GSTokenArray tokens, UString translationUnitName) {
+        auto parser = GS_Parser::Create(std::move(context));
+
+        auto translationUnitDeclaration = parser.ParseProgram(std::move(tokens), std::move(translationUnitName));
+
+        return translationUnitDeclaration;
+    }
+
     AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseProgram(Lexer::GSTokenArray tokens, UString translationUnitName) {
         _messages = IO::GSMessagePtrArray();
 
@@ -597,6 +605,14 @@ namespace GSLanguageCompiler::Parser {
         auto locatedTextMessage = IO::GS_Message::Create(std::move(message), messageLevel, messageLocation);
 
         _messages.emplace_back(locatedTextMessage);
+    }
+
+    AST::GSTranslationUnitDeclarationPtr RunFrontend(Driver::GSContextPtr context, IO::GSSourcePtr source) {
+        auto tokens = Lexer::GS_Lexer::Run(context, source);
+
+        auto program = Parser::GS_Parser::Run(context, tokens, source->GetName().GetName());
+
+        return program;
     }
 
 }

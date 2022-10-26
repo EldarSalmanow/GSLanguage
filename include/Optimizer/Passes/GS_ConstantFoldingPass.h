@@ -6,6 +6,23 @@
 namespace GSLanguageCompiler::Optimizer {
 
     /**
+     * Folding unary expression
+     * @param operation Unary operation
+     * @param value Value
+     * @return Folded value
+     */
+    AST::GSValuePtr FoldConstants(AST::UnaryOperation operation, AST::GSValuePtr value);
+
+    /**
+     * Folding binary expression
+     * @param operation Binary operation
+     * @param firstValue First value
+     * @param secondValue Second value
+     * @return Folded value
+     */
+    AST::GSValuePtr FoldConstants(AST::BinaryOperation operation, AST::GSValuePtr firstValue, AST::GSValuePtr secondValue);
+
+    /**
      * Transformer class for applying constant folding optimization on nodes
      */
     class GS_ConstantFoldingTransformer : public AST::GS_Transformer {

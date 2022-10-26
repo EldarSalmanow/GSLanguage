@@ -5,8 +5,6 @@
 
 #include <AST/AST.h>
 
-#include <deque>
-
 namespace GSLanguageCompiler::Parser {
 
     /**
@@ -22,7 +20,7 @@ namespace GSLanguageCompiler::Parser {
     /**
      * Declaration
      *
-     * decl -> func_decl (, translation_unit_decl (only in AST, not in real programs!))
+     * decl -> func_decl (, translation_unit_decl (using only in compiler infrastructure, not in real programs!))
      *
      * func_decl -> 'func' id '(' ')' '{' stmt... '}'
      *
@@ -87,6 +85,17 @@ namespace GSLanguageCompiler::Parser {
          * @return Parser
          */
         static GS_Parser Create(Driver::GSContextPtr context);
+
+    public:
+
+        /**
+         * Creating parser and parsing tokens
+         * @param context Context
+         * @param tokens Tokens
+         * @param translationUnitName Translation unit name
+         * @return Translation unit declaration
+         */
+        static AST::GSTranslationUnitDeclarationPtr Run(Driver::GSContextPtr context, Lexer::GSTokenArray tokens, UString translationUnitName);
 
     public:
 
@@ -185,6 +194,14 @@ namespace GSLanguageCompiler::Parser {
 
         AST::GSASTBuilderPtr _builder;
     };
+
+    /**
+     * Run frontend in compiler (lexing and parsing)
+     * @param context Context
+     * @param source Source
+     * @return Translation unit declaration
+     */
+    AST::GSTranslationUnitDeclarationPtr RunFrontend(Driver::GSContextPtr context, IO::GSSourcePtr source);
 
 }
 

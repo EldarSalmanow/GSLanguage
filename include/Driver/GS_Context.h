@@ -50,6 +50,39 @@ namespace GSLanguageCompiler::Driver {
 
         /**
          * Creating context
+         * @param stdIOStreamsManager Standard IO streams manager
+         * @param sourceManager Source manager
+         * @param messageHandler Message handler
+         * @param outputStream Output stream
+         * @return Context ptr
+         */
+        static std::shared_ptr<GS_Context> Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+                                                  IO::GSSourceManagerPtr       sourceManager,
+                                                  IO::GSMessageHandlerPtr      messageHandler,
+                                                  IO::GSOutStreamPtr           outputStream);
+
+        /**
+         * Creating context
+         * @param sourceManager Source manager
+         * @param outputStream Output stream
+         * @param astContext AST context
+         * @return Context ptr
+         */
+        static std::shared_ptr<GS_Context> Create(IO::GSSourceManagerPtr sourceManager,
+                                                  IO::GSOutStreamPtr     outputStream,
+                                                  AST::GSASTContextPtr   astContext);
+
+        /**
+         * Creating context
+         * @param sourceManager Source manager
+         * @param outputStream Output stream
+         * @return Context ptr
+         */
+        static std::shared_ptr<GS_Context> Create(IO::GSSourceManagerPtr  sourceManager,
+                                                  IO::GSOutStreamPtr      outputStream);
+
+        /**
+         * Creating context
          * @return Context ptr
          */
         static std::shared_ptr<GS_Context> Create();
