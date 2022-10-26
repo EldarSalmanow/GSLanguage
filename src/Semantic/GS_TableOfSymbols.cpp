@@ -4,100 +4,110 @@ namespace GSLanguageCompiler::Semantic {
 
     GS_Symbol::~GS_Symbol() = default;
     
-    Bool GS_Symbol::IsVariable() const {
-        return false;
-    }
-
     Bool GS_Symbol::IsFunction() const {
         return false;
     }
 
-    GS_FunctionSymbol::GS_FunctionSymbol(UString name, AST::GSStatementPtrArray body)
-            : _name(std::move(name)), _body(std::move(body)) {}
+    Bool GS_Symbol::IsVariable() const {
+        return false;
+    }
 
-    std::shared_ptr<GS_FunctionSymbol> GS_FunctionSymbol::Create(UString name, AST::GSStatementPtrArray body) {
-        return std::make_shared<GS_FunctionSymbol>(std::move(name), std::move(body));
+    GS_FunctionSymbol::GS_FunctionSymbol(UString name, AST::GS_FunctionSignature signature)
+            : _name(std::move(name)), _signature(std::move(signature)) {}
+
+    std::shared_ptr<GS_FunctionSymbol> GS_FunctionSymbol::Create(UString name, AST::GS_FunctionSignature signature) {
+        return std::make_shared<GS_FunctionSymbol>(std::move(name), std::move(signature));
     }
 
     UString GS_FunctionSymbol::GetName() const {
         return _name;
     }
 
-    LRef<AST::GSStatementPtrArray> GS_FunctionSymbol::GetBody() {
-        return _body;
+    AST::GS_FunctionSignature GS_FunctionSymbol::GetSignature() const {
+        return _signature;
     }
 
     Bool GS_FunctionSymbol::IsFunction() const {
         return true;
     }
 
-    GS_VariableSymbol::GS_VariableSymbol(UString name, GSTypePtr type, AST::GSExpressionPtr expression)
-            : _name(std::move(name)), _type(std::move(type)), _expression(std::move(expression)) {}
+    GS_VariableSymbol::GS_VariableSymbol(UString name, GSTypePtr type)
+            : _name(std::move(name)), _type(std::move(type)) {}
 
-    std::shared_ptr<GS_VariableSymbol> GS_VariableSymbol::Create(UString name, GSTypePtr type, AST::GSExpressionPtr expression) {
-        return std::make_shared<GS_VariableSymbol>(std::move(name), std::move(type), std::move(expression));
+    std::shared_ptr<GS_VariableSymbol> GS_VariableSymbol::Create(UString name, GSTypePtr type) {
+        return std::make_shared<GS_VariableSymbol>(std::move(name), std::move(type));
     }
 
     UString GS_VariableSymbol::GetName() const {
         return _name;
     }
 
-    LRef<GSTypePtr> GS_VariableSymbol::GetType() {
+    GSTypePtr GS_VariableSymbol::GetType() const {
         return _type;
-    }
-
-    LRef<AST::GSExpressionPtr> GS_VariableSymbol::GetExpression() {
-        return _expression;
     }
 
     Bool GS_VariableSymbol::IsVariable() const {
         return true;
     }
     
-    GS_TableOfSymbols::GS_TableOfSymbols() = default;
+    GS_TableOfSymbols::GS_TableOfSymbols(GSSymbolPtrArray symbols)
+            : _symbols(std::move(symbols)) {}
+
+    std::shared_ptr<GS_TableOfSymbols> GS_TableOfSymbols::Create(GSSymbolPtrArray symbols) {
+        return std::make_shared<GS_TableOfSymbols>(std::move(symbols));
+    }
 
     std::shared_ptr<GS_TableOfSymbols> GS_TableOfSymbols::Create() {
-        return std::make_shared<GS_TableOfSymbols>();
+        return GS_TableOfSymbols::Create(GSSymbolPtrArray());
     }
 
-    Void GS_TableOfSymbols::AddFunction(UString name, AST::GSStatementPtrArray body) {
-        auto function = GS_FunctionSymbol::Create(std::move(name), std::move(body));
-
-        _functions.emplace_back(function);
+    Void GS_TableOfSymbols::AddSymbol(GSSymbolPtr symbol) {
+        _symbols.emplace_back(std::move(symbol));
     }
 
-    Void GS_TableOfSymbols::AddVariable(UString name, GSTypePtr type, AST::GSExpressionPtr expression) {
-        auto variable = GS_VariableSymbol::Create(std::move(name), std::move(type), std::move(expression));
+    Void GS_TableOfSymbols::AddFunction(UString name, AST::GS_FunctionSignature signature) {
+        auto function = GS_FunctionSymbol::Create(std::move(name), std::move(signature));
+
+        AddSymbol(function);
+    }
+
+    Void GS_TableOfSymbols::AddVariable(UString name, GSTypePtr type) {
+        auto variable = GS_VariableSymbol::Create(std::move(name), std::move(type));
         
-        _variables.emplace_back(variable);
+        AddSymbol(variable);
     }
 
-    std::shared_ptr<GS_FunctionSymbol> GS_TableOfSymbols::FindFunction(UString name) {
-        for (auto &function : _functions) {
-            if (function->GetName() == name) {
-                return function;
+    SymbolPtr<GS_FunctionSymbol> GS_TableOfSymbols::GetFunction(UString name) const {
+        for (auto &symbol : _symbols) {
+            if (symbol->IsFunction()) {
+                // TODO: add SymbolCast function for casting symbols from any type to concrete type with check
+                auto function = std::reinterpret_pointer_cast<GS_FunctionSymbol>(symbol);
+
+                if (function->GetName() == name) {
+                    return function;
+                }
             }
         }
 
         return nullptr;
     }
 
-    std::shared_ptr<GS_VariableSymbol> GS_TableOfSymbols::FindVariable(UString name) {
-        for (auto &variable : _variables) {
-            if (variable->GetName() == name) {
-                return variable;
+    SymbolPtr<GS_VariableSymbol> GS_TableOfSymbols::GetVariable(UString name) const {
+        for (auto &symbol : _symbols) {
+            if (symbol->IsVariable()) {
+                auto variable = std::reinterpret_pointer_cast<GS_VariableSymbol>(symbol);
+
+                if (variable->GetName() == name) {
+                    return variable;
+                }
             }
         }
 
         return nullptr;
     }
 
-    std::vector<std::shared_ptr<GS_FunctionSymbol>> GS_TableOfSymbols::GetFunctions() const {
-        return _functions;
-    }
-
-    std::vector<std::shared_ptr<GS_VariableSymbol>> GS_TableOfSymbols::GetVariables() const {
-        return _variables;
+    GSSymbolPtrArray GS_TableOfSymbols::GetSymbols() const {
+        return _symbols;
     }
 
 }

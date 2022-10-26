@@ -1,37 +1,63 @@
 #ifndef GSLANGUAGE_GS_TABLEOFSYMBOLS_H
 #define GSLANGUAGE_GS_TABLEOFSYMBOLS_H
 
-#include <AST/GS_Statement.h>
-#include <AST/GS_Expression.h>
+#include <AST/Declarations/GS_FunctionDeclaration.h>
+
+#include <AST/Statements/GS_VariableDeclarationStatement.h>
 
 #include <Semantic/GS_Type.h>
 
 namespace GSLanguageCompiler::Semantic {
 
     /**
-     *
+     * Base class for all symbols in table of symbols
      */
     class GS_Symbol {
     public:
 
         /**
-         *
+         * Virtual destructor for supporting inheritance
          */
         virtual ~GS_Symbol();
 
     public:
 
         /**
-         *
-         * @return
-         */
-        virtual Bool IsVariable() const;
-
-        /**
-         *
+         * Is function symbol
+         * @return Is function symbol
          */
         virtual Bool IsFunction() const;
+
+        /**
+         * Is variable symbol
+         * @return Is variable symbol
+         */
+        virtual Bool IsVariable() const;
     };
+
+    /**
+     * Custom symbol ptr type for any symbol
+     */
+    template<typename T>
+    using SymbolPtr = std::shared_ptr<T>;
+
+    /**
+     * Custom symbol ptr left value type for any symbol
+     */
+    template<typename T>
+    using SymbolPtrLRef = LRef<SymbolPtr<T>>;
+
+    /**
+     * Custom symbol ptr right value type for any symbol
+     */
+    template<typename T>
+    using SymbolPtrRRef = RRef<SymbolPtr<T>>;
+
+    /**
+     * Custom symbol ptr array type for any symbol
+     */
+    template<typename T>
+    using SymbolPtrArray = std::vector<SymbolPtr<T>>;
 
     /**
      * Symbol ptr type
@@ -44,211 +70,201 @@ namespace GSLanguageCompiler::Semantic {
     using GSSymbolPtrArray = std::vector<GSSymbolPtr>;
 
     /**
-     *
+     * Class for functions symbols
      */
     class GS_FunctionSymbol : public GS_Symbol {
     public:
 
         /**
-         *
-         * @param name
-         * @param body
+         * Constructor for function symbol
+         * @param name Function name
+         * @param signature Function signature
          */
-        GS_FunctionSymbol(UString name, AST::GSStatementPtrArray body);
+        GS_FunctionSymbol(UString name, AST::GS_FunctionSignature signature);
 
     public:
 
         /**
-         *
-         * @param name
-         * @param body
-         * @return
+         * Creating function symbol
+         * @param name Function name
+         * @param signature Function signature
+         * @return Function symbol ptr
          */
-        static std::shared_ptr<GS_FunctionSymbol> Create(UString name, AST::GSStatementPtrArray body);
+        static std::shared_ptr<GS_FunctionSymbol> Create(UString name, AST::GS_FunctionSignature signature);
 
     public:
 
         /**
-         *
-         * @return
+         * Getter for function name
+         * @return Function name
          */
         UString GetName() const;
 
         /**
-         *
-         * @return
+         * Getter for function signature
+         * @return Function signature
          */
-        LRef<AST::GSStatementPtrArray> GetBody();
+        AST::GS_FunctionSignature GetSignature() const;
 
     public:
 
         /**
-         *
-         * @return
+         * Is function symbol
+         * @return Is function symbol
          */
         Bool IsFunction() const override;
 
     private:
 
         /**
-         *
+         * Function name
          */
         UString _name;
 
         /**
-         *
+         * Function signature
          */
-        AST::GSStatementPtrArray _body;
+        AST::GS_FunctionSignature _signature;
     };
 
     /**
-     *
+     * Class for variable symbols
      */
     class GS_VariableSymbol : public GS_Symbol {
     public:
 
         /**
-         *
-         * @param name
-         * @param type
-         * @param expression
+         * Constructor for variable symbol
+         * @param name Variable name
+         * @param type Variable type
          */
-        GS_VariableSymbol(UString name, GSTypePtr type, AST::GSExpressionPtr expression);
+        GS_VariableSymbol(UString name, GSTypePtr type);
 
     public:
 
         /**
-         *
-         * @param name
-         * @param type
-         * @param expression
-         * @return
+         * Creating variable symbol
+         * @param name Variable name
+         * @param type Variable type
+         * @return Variable symbol ptr
          */
-        static std::shared_ptr<GS_VariableSymbol> Create(UString name, GSTypePtr type, AST::GSExpressionPtr expression);
+        static std::shared_ptr<GS_VariableSymbol> Create(UString name, GSTypePtr type);
 
     public:
 
         /**
-         *
-         * @return
+         * Getter for variable name
+         * @return Variable name
          */
         UString GetName() const;
 
         /**
-         *
-         * @return
+         * Getter for variable type
+         * @return Variable type
          */
-        LRef<GSTypePtr> GetType();
-
-        /**
-         *
-         * @return
-         */
-        LRef<AST::GSExpressionPtr> GetExpression();
+        GSTypePtr GetType() const;
 
     public:
 
         /**
-         *
-         * @return
+         * Is variable symbol
+         * @return Is variable symbol
          */
         Bool IsVariable() const override;
 
     private:
 
         /**
-         *
+         * Variable name
          */
         UString _name;
 
         /**
-         *
+         * Variable type
          */
         GSTypePtr _type;
-
-        /**
-         *
-         */
-        AST::GSExpressionPtr _expression;
     };
 
     /**
-     *
+     * Class for containing all symbols in program
      */
     class GS_TableOfSymbols {
     public:
 
         /**
-         *
+         * Constructor for table of symbols
+         * @param symbols Symbols
          */
-        GS_TableOfSymbols();
+        explicit GS_TableOfSymbols(GSSymbolPtrArray symbols);
 
     public:
 
         /**
-         *
-         * @return
+         * Creating table of symbols
+         * @param symbols Symbols
+         * @return Table of symbols ptr
+         */
+        static std::shared_ptr<GS_TableOfSymbols> Create(GSSymbolPtrArray symbols);
+
+        /**
+         * Creating table of symbols
+         * @return Table of symbols ptr
          */
         static std::shared_ptr<GS_TableOfSymbols> Create();
 
     public:
 
         /**
-         *
-         * @param name
-         * @param body
+         * Adding new symbol to table of symbols
+         * @param symbol Symbol
          * @return
          */
-        Void AddFunction(UString name, AST::GSStatementPtrArray body);
+        Void AddSymbol(GSSymbolPtr symbol);
 
         /**
-         *
-         * @param name
-         * @param type
-         * @param expression
+         * Adding new function symbol to table of symbols
+         * @param name Function name
+         * @param signature Function signature
          * @return
          */
-        Void AddVariable(UString name, GSTypePtr type, AST::GSExpressionPtr expression);
+        Void AddFunction(UString name, AST::GS_FunctionSignature signature);
 
         /**
-         *
-         * @param name
+         * Adding new variable symbol to table of symbols
+         * @param name Variable name
+         * @param type Variable type
          * @return
          */
-        std::shared_ptr<GS_FunctionSymbol> FindFunction(UString name);
+        Void AddVariable(UString name, GSTypePtr type);
 
         /**
-         *
-         * @param name
-         * @return
+         * Getting function symbol by name
+         * @param name Function name
+         * @return Function symbol
          */
-        std::shared_ptr<GS_VariableSymbol> FindVariable(UString name);
+        SymbolPtr<GS_FunctionSymbol> GetFunction(UString name) const;
+
+        /**
+         * Getting variable symbol by name
+         * @param name Variable name
+         * @return Variable symbol
+         */
+        SymbolPtr<GS_VariableSymbol> GetVariable(UString name) const;
 
     public:
 
         /**
-         *
-         * @return
+         * Getter for symbols
+         * @return Symbols
          */
-        std::vector<std::shared_ptr<GS_FunctionSymbol>> GetFunctions() const;
-
-        /**
-         *
-         * @return
-         */
-        std::vector<std::shared_ptr<GS_VariableSymbol>> GetVariables() const;
+        GSSymbolPtrArray GetSymbols() const;
 
     private:
 
         /**
-         *
+         * Symbols
          */
-        std::vector<std::shared_ptr<GS_FunctionSymbol>> _functions;
-
-        /**
-         *
-         */
-        std::vector<std::shared_ptr<GS_VariableSymbol>> _variables;
+        GSSymbolPtrArray _symbols;
     };
 
     /**
