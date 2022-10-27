@@ -12,27 +12,19 @@ namespace GSLanguageCompiler::Debug {
     Void GS_TableOfSymbolsDumper::Dump() {
         std::cout << "---------- Table Of Symbols Dump ----------"_us << std::endl;
 
-        auto functions = _tableOfSymbols->GetFunctions();
+        U64 index = 0;
 
-        if (!functions.empty()) {
-            std::cout << "----------       Functions       ----------"_us << std::endl;
+        for (auto &symbol : _tableOfSymbols->GetSymbols()) {
+            ++index;
 
-            for (auto index = 0; index < functions.size(); ++index) {
-                auto function = functions[index];
+            if (symbol->IsFunction()) {
+                auto functionSymbol = std::reinterpret_pointer_cast<Semantic::GS_FunctionSymbol>(symbol);
 
-                std::cout << UString(std::to_string(index + 1)) << ": " << std::endl << "  Name -> "_us << function->GetName() << std::endl;
-            }
-        }
+                std::cout << UString(std::to_string(index + 1)) << ": " << std::endl << "  Name -> "_us << functionSymbol->GetName() << std::endl;
+            } else if (symbol->IsVariable()) {
+                auto variableSymbol = std::reinterpret_pointer_cast<Semantic::GS_VariableSymbol>(symbol);
 
-        auto variables = _tableOfSymbols->GetVariables();
-
-        if (!variables.empty()) {
-            std::cout << "----------       Variables       ----------"_us << std::endl;
-
-            for (auto index = 0; index < variables.size(); ++index) {
-                auto variable = variables[index];
-
-                std::cout << UString(std::to_string(index + 1)) << ": " << std::endl << "  Name -> "_us << variable->GetName() << std::endl << "  Type -> " << variable->GetType()->GetName() << std::endl;
+                std::cout << UString(std::to_string(index + 1)) << ": " << std::endl << "  Name -> "_us << variableSymbol->GetName() << std::endl << "  Type -> " << variableSymbol->GetType()->GetName() << std::endl;
             }
         }
 

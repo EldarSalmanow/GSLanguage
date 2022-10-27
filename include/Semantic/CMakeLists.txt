@@ -5,7 +5,9 @@ set(SEMANTIC_DIR ${SOURCE_DIR}/Semantic)
 set(GS_SEMANTIC_SOURCE
         ${SEMANTIC_DIR}/GS_Type.cpp
 
-        ${SEMANTIC_DIR}/GS_TableOfSymbols.cpp)
+        ${SEMANTIC_DIR}/GS_TableOfSymbols.cpp
+
+        ${SEMANTIC_DIR}/Passes/GS_SymbolsPlaceholderPass.cpp)
 
 add_library(
 #       Library name

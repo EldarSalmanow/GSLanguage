@@ -5,6 +5,7 @@
 #include <Optimizer/Optimizer.h>
 
 #include <GS_CompilationUnit.h>
+#include "Optimizer/Passes/GS_ConstantFoldingPass.h"
 
 namespace GSLanguageCompiler::Driver {
 

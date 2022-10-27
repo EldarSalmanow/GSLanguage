@@ -9,4 +9,6 @@
 
 #include <Semantic/GS_TableOfSymbols.h>
 
+#include <Semantic/Passes/Passes.h>
+
 #endif //GSLANGUAGE_SEMANTIC_H
