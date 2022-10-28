@@ -1,3 +1,11 @@
+#include <Driver/GS_CompilationUnit.h>
+
+void f() {
+    auto CU = GSLanguageCompiler::Driver::GS_CompilationUnit::Create(nullptr, nullptr);
+
+    CU.G
+}
+
 #include <Debug/Debug.h>
 
 #include <Driver/Driver.h>
@@ -79,6 +87,96 @@ I32 Test() {
     return 0;
 }
 
+class CompilationUnit {
+public:
+
+    CompilationUnit(IO::GSSourcePtr source, Driver::GSContextPtr context);
+
+public:
+
+    static std::shared_ptr<CompilationUnit> Create(IO::GSSourcePtr source, Driver::GSContextPtr context);
+
+public:
+
+    Driver::CompilingResult Compile();
+
+public:
+
+    IO::GSSourcePtr GetSource() const;
+
+    Lexer::GSTokenArray GetTokens() const;
+
+    AST::GSNodePtr GetNode() const;
+
+    Semantic::GSTableOfSymbolsPtr GetTableOfSymbols() const;
+
+    Driver::GSContextPtr GetContext() const;
+
+    U64 GetId() const;
+
+private:
+
+    IO::GSSourcePtr _source;
+
+    Lexer::GSTokenArray _tokens;
+
+    AST::GSNodePtr _node;
+
+    Semantic::GSTableOfSymbolsPtr _tableOfSymbols;
+
+    Driver::GSContextPtr _context;
+
+    U64 _id;
+};
+
+using CompilationUnitPtr = std::shared_ptr<CompilationUnit>;
+
+using CompilationUnitPtrArray = std::vector<CompilationUnitPtr>;
+
+class CompilationUnitManager {
+public:
+
+    explicit CompilationUnitManager(CompilationUnitPtrArray compilationUnits);
+
+public:
+
+    static std::shared_ptr<CompilationUnitManager> Create(CompilationUnitPtrArray compilationUnits);
+
+    static std::shared_ptr<CompilationUnitManager> Create();
+
+public:
+
+    U64 AddCompilationUnit(CompilationUnitPtr compilationUnit);
+
+    CompilationUnitPtr GetCompiltionUnit(U64 compilationUnitId);
+
+public:
+
+    CompilationUnitPtrArray GetCompilationUnits() const;
+
+private:
+
+    CompilationUnitPtrArray _compilationUnits;
+};
+
+#include <Semantic/Semantic.h>
+
+void f() {
+    auto Context = Driver::GS_Context::Create();
+
+    auto CUM = CompilationUnitManager::Create();
+
+    auto CompilationUnitId = CUM->AddCompilationUnit(CompilationUnit::Create(IO::GS_Source::CreateString("func main() {}"), Context));
+
+    auto CU = CUM->GetCompiltionUnit(CompilationUnitId);
+
+    auto Func = AST::GS_FunctionDeclaration::Create("main", AST::GS_FunctionSignature::Create(Semantic::GS_I32Type::Create()));
+
+    auto TOS = CU->GetTableOfSymbols();
+
+    Semantic::AddFunction(Func, TOS);
+}
+
 /**
  * High level entry point for GSLanguageCompiler
  * @param argc Arguments counter
@@ -106,7 +204,5 @@ I32 GSMain(I32 argc, Ptr<Ptr<C>> argv) {
  * @return Compiler result
  */
 I32 main(I32 argc, Ptr<Ptr<C>> argv) {
-//    return Test();
-
     return GSMain(argc, argv);
 }

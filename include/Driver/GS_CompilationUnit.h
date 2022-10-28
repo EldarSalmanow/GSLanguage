@@ -3,105 +3,203 @@
 
 #include <Driver/GS_Context.h>
 
-namespace GSLanguageCompiler::Driver {
+namespace GSLanguageCompiler {
 
-    /**
-     * Result of compiling
-     */
-    enum class CompilingResult : I32 {
-        Success = 0,
-        Failure = 1
-    };
+    namespace Semantic {
 
-    /**
-     * Class for compiling source and containing source, tokens and AST node
-     */
-    class GS_CompilationUnit {
-    public:
+        class GS_TableOfSymbols;
+
+        using GSTableOfSymbolsPtr = std::shared_ptr<GS_TableOfSymbols>;
+
+    }
+
+    namespace Driver {
 
         /**
-         * Constructor for compilation unit
-         * @param source Source
-         * @param context Context
+         * Result of compiling
          */
-        GS_CompilationUnit(IO::GSSourcePtr source, Driver::GSContextPtr context);
-
-    public:
+        enum class CompilingResult : I32 {
+            Success = 0,
+            Failure = 1
+        };
 
         /**
-         * Creating compilation unit
-         * @param source Source
-         * @param context Context
-         * @return Compilation unit ptr
+         * Class for compiling source and containing source, tokens and AST node
          */
-        static std::shared_ptr<GS_CompilationUnit> Create(IO::GSSourcePtr source, Driver::GSContextPtr context);
+        class GS_CompilationUnit {
+        public:
 
-    public:
+            /**
+             * Constructor for compilation unit
+             * @param source Source
+             * @param context Context
+             */
+            GS_CompilationUnit(IO::GSSourcePtr source, Driver::GSContextPtr context);
+
+        public:
+
+            /**
+             * Creating compilation unit
+             * @param source Source
+             * @param context Context
+             * @return Compilation unit ptr
+             */
+            static std::shared_ptr<GS_CompilationUnit> Create(IO::GSSourcePtr source, Driver::GSContextPtr context);
+
+        public:
+
+            /**
+             * Read, lex and parse input source and compile it
+             * @return Compiling result
+             */
+            CompilingResult Compile();
+
+        public:
+
+            /**
+             * Getter for source
+             * @return Source
+             */
+            IO::GSSourcePtr GetSource() const;
+
+            /**
+             * Getter for tokens
+             * @return Tokens
+             */
+            Lexer::GSTokenArray GetTokens() const;
+
+            /**
+             * Getter for AST node
+             * @return AST node
+             */
+            AST::GSNodePtr GetNode() const;
+
+            /**
+             * Getter for table of symbols
+             * @return Table of symbols
+             */
+            Semantic::GSTableOfSymbolsPtr GetTableOfSymbols() const;
+
+            /**
+             * Getter for context
+             * @return Context
+             */
+            Driver::GSContextPtr GetContext() const;
+
+            /**
+             * Getter for id
+             * @return Id
+             */
+            U64 GetId() const;
+
+        private:
+
+            /**
+             * Source
+             */
+            IO::GSSourcePtr _source;
+
+            /**
+             * Tokens
+             */
+            Lexer::GSTokenArray _tokens;
+
+            /**
+             * AST node
+             */
+            AST::GSNodePtr _node;
+
+            /**
+             * Table of symbols
+             */
+            Semantic::GSTableOfSymbolsPtr _tableOfSymbols;
+
+            /**
+             * Context
+             */
+            Driver::GSContextPtr _context;
+
+            /**
+             * Id
+             */
+            U64 _id;
+        };
 
         /**
-         * Read, lex and parse input source and compile it
-         * @return Compiling result
+         * Compilation unit ptr type
          */
-        CompilingResult Compile();
-
-    public:
+        using GSCompilationUnitPtr = std::shared_ptr<GS_CompilationUnit>;
 
         /**
-         * Getter for source
-         * @return Source
+         * Compilation unit ptr array type
          */
-        IO::GSSourcePtr GetSource() const;
+        using GSCompilationUnitPtrArray = std::vector<GSCompilationUnitPtr>;
 
         /**
-         * Getter for tokens
-         * @return Tokens
+         * Class for containing and managing compilation units
          */
-        Lexer::GSTokenArray GetTokens() const;
+        class GS_CompilationUnitsManager {
+        public:
+
+            /**
+             * Constructor for compilation units manager
+             * @param compilationUnits Compilation units
+             */
+            explicit GS_CompilationUnitsManager(GSCompilationUnitPtrArray compilationUnits);
+
+        public:
+
+            /**
+             * Creating compilation units manager
+             * @param compilationUnits Compilation units
+             * @return Compilation units manager ptr
+             */
+            static std::shared_ptr<GS_CompilationUnitsManager> Create(GSCompilationUnitPtrArray compilationUnits);
+
+            /**
+             * Creating compilation units manager
+             * @return Compilation units manager ptr
+             */
+            static std::shared_ptr<GS_CompilationUnitsManager> Create();
+
+        public:
+
+            /**
+             * Adding compilation unit and return compilation unit id
+             * @param compilationUnit Compilation unit
+             * @return Compilation unit id
+             */
+            U64 AddCompilationUnit(GSCompilationUnitPtr compilationUnit);
+
+            /**
+             * Getting compilation unit by id
+             * @param compilationUnitId Compilation unit id
+             * @return Compilation unit
+             */
+            GSCompilationUnitPtr GetCompilationUnit(U64 compilationUnitId);
+
+        public:
+
+            /**
+             * Getter for compilation units
+             * @return Compilation units
+             */
+            GSCompilationUnitPtrArray GetCompilationUnits() const;
+
+        private:
+
+            /**
+             * Compilation units
+             */
+            GSCompilationUnitPtrArray _compilationUnits;
+        };
 
         /**
-         * Getter for AST node
-         * @return AST node
+         * Compilation units manager ptr type
          */
-        AST::GSNodePtr GetNode() const;
+        using GSCompilationUnitsManager = std::shared_ptr<GS_CompilationUnitsManager>;
 
-        /**
-         * Getter for context
-         * @return Context
-         */
-        Driver::GSContextPtr GetContext() const;
-
-    private:
-
-        /**
-         * Source
-         */
-        IO::GSSourcePtr _source;
-
-        /**
-         * Tokens
-         */
-        Lexer::GSTokenArray _tokens;
-
-        /**
-         * AST node
-         */
-        AST::GSNodePtr _node;
-
-        /**
-         * Context
-         */
-        Driver::GSContextPtr _context;
-    };
-
-    /**
-     * Compilation unit ptr type
-     */
-    using GSCompilationUnitPtr = std::shared_ptr<GS_CompilationUnit>;
-
-    /**
-     * Compilation unit ptr array type
-     */
-    using GSCompilationUnitPtrArray = std::vector<GSCompilationUnitPtr>;
+    }
 
 }
 

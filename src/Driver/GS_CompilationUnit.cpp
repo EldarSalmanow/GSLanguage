@@ -51,8 +51,49 @@ namespace GSLanguageCompiler::Driver {
         return _node;
     }
 
+    Semantic::GSTableOfSymbolsPtr GS_CompilationUnit::GetTableOfSymbols() const {
+        return _tableOfSymbols;
+    }
+
     Driver::GSContextPtr GS_CompilationUnit::GetContext() const {
         return _context;
+    }
+
+    U64 GS_CompilationUnit::GetId() const {
+        return _id;
+    }
+
+    GS_CompilationUnitsManager::GS_CompilationUnitsManager(GSCompilationUnitPtrArray compilationUnits)
+            : _compilationUnits(std::move(compilationUnits)) {}
+
+    std::shared_ptr<GS_CompilationUnitsManager> GS_CompilationUnitsManager::Create(GSCompilationUnitPtrArray compilationUnits) {
+        return std::make_shared<GS_CompilationUnitsManager>(std::move(compilationUnits));
+    }
+
+    std::shared_ptr<GS_CompilationUnitsManager> GS_CompilationUnitsManager::Create() {
+        return GS_CompilationUnitsManager::Create(GSCompilationUnitPtrArray());
+    }
+
+    U64 GS_CompilationUnitsManager::AddCompilationUnit(GSCompilationUnitPtr compilationUnit) {
+        auto compilationUnitId = compilationUnit->GetId();
+
+        _compilationUnits.emplace_back(std::move(compilationUnit));
+
+        return compilationUnitId;
+    }
+
+    GSCompilationUnitPtr GS_CompilationUnitsManager::GetCompilationUnit(U64 compilationUnitId) {
+        for (auto &compilationUnit : _compilationUnits) {
+            if (compilationUnit->GetId() == compilationUnitId) {
+                return compilationUnit;
+            }
+        }
+
+        return nullptr;
+    }
+
+    GSCompilationUnitPtrArray GS_CompilationUnitsManager::GetCompilationUnits() const {
+        return _compilationUnits;
     }
 
 }
