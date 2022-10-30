@@ -11,7 +11,7 @@ namespace GSLanguageCompiler::Optimizer {
      * @param value Value
      * @return Folded value
      */
-    AST::GSValuePtr FoldConstants(AST::UnaryOperation operation, AST::GSValuePtr value);
+    AST::GSValuePtr FoldConstants(AST::UnaryOperation operation, ConstLRef<AST::GSValuePtr> value);
 
     /**
      * Folding binary expression
@@ -20,7 +20,7 @@ namespace GSLanguageCompiler::Optimizer {
      * @param secondValue Second value
      * @return Folded value
      */
-    AST::GSValuePtr FoldConstants(AST::BinaryOperation operation, AST::GSValuePtr firstValue, AST::GSValuePtr secondValue);
+    AST::GSValuePtr FoldConstants(AST::BinaryOperation operation, ConstLRef<AST::GSValuePtr> firstValue, ConstLRef<AST::GSValuePtr> secondValue);
 
     /**
      * Transformer class for applying constant folding optimization on nodes
@@ -35,11 +35,11 @@ namespace GSLanguageCompiler::Optimizer {
          * --- - ( constant expression ) -> - constant expression
          *
          * @param unaryExpression Unary expression
-         * @param context Context
+         * @param session Session
          * @return Transformed unary expression
          */
         AST::GSNodePtr TransformUnaryExpression(AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression,
-                                                LRef<Driver::GSContextPtr> context) override;
+                                                LRef<Driver::GS_Session> session) override;
 
         /**
          * Transform binary expression
@@ -48,11 +48,11 @@ namespace GSLanguageCompiler::Optimizer {
          * --- ( constant expression ) +|-|*|/ ( constant expression ) -> constant expression +|-|*|/ constant expression
          *
          * @param binaryExpression Binary expression
-         * @param context Context
+         * @param session Session
          * @return Transformed binary expression
          */
         AST::GSNodePtr TransformBinaryExpression(AST::NodePtrLRef<AST::GS_BinaryExpression> binaryExpression,
-                                                 LRef<Driver::GSContextPtr> context) override;
+                                                 LRef<Driver::GS_Session> session) override;
     };
 
     /**

@@ -73,29 +73,29 @@ namespace GSLanguageCompiler::Parser {
 
         /**
          * Constructor for parser
-         * @param context Context
+         * @param session Session
          */
-        explicit GS_Parser(Driver::GSContextPtr context);
+        explicit GS_Parser(LRef<Driver::GS_Session> session);
 
     public:
 
         /**
          * Creating parser
-         * @param context Context
+         * @param session Session
          * @return Parser
          */
-        static GS_Parser Create(Driver::GSContextPtr context);
+        static GS_Parser Create(LRef<Driver::GS_Session> session);
 
     public:
 
         /**
          * Creating parser and parsing tokens
-         * @param context Context
+         * @param session Session
          * @param tokens Tokens
          * @param translationUnitName Translation unit name
          * @return Translation unit declaration
          */
-        static AST::GSTranslationUnitDeclarationPtr Run(Driver::GSContextPtr context, Lexer::GSTokenArray tokens, UString translationUnitName);
+        static AST::GSTranslationUnitDeclarationPtr Run(LRef<Driver::GS_Session> session, Lexer::GSTokenArray tokens, UString translationUnitName);
 
     public:
 
@@ -184,7 +184,7 @@ namespace GSLanguageCompiler::Parser {
 
     private:
 
-        Driver::GSContextPtr _context;
+        LRef<Driver::GS_Session> _session;
 
         IO::GSMessagePtrArray _messages;
 
@@ -197,11 +197,11 @@ namespace GSLanguageCompiler::Parser {
 
     /**
      * Run frontend in compiler (lexing and parsing)
-     * @param context Context
+     * @param session Session
      * @param source Source
      * @return Translation unit declaration
      */
-    AST::GSTranslationUnitDeclarationPtr RunFrontend(Driver::GSContextPtr context, IO::GSSourcePtr source);
+    AST::GSTranslationUnitDeclarationPtr RunFrontend(LRef<Driver::GS_Session> session, LRef<IO::GSSourcePtr> source);
 
 }
 

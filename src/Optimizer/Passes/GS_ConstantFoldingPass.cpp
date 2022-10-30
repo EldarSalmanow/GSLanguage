@@ -6,7 +6,7 @@ namespace GSLanguageCompiler::Optimizer {
 
     // TODO: add folding values with non I32 type
 
-    AST::GSValuePtr FoldConstants(AST::UnaryOperation operation, AST::GSValuePtr value) {
+    AST::GSValuePtr FoldConstants(AST::UnaryOperation operation, ConstLRef<AST::GSValuePtr> value) {
         if (auto i32Value = AST::GSValueCast<AST::GS_I32Value>(value)) {
             auto number = i32Value->GetI32Value();
 
@@ -25,7 +25,7 @@ namespace GSLanguageCompiler::Optimizer {
         return nullptr;
     }
 
-    AST::GSValuePtr FoldConstants(AST::BinaryOperation operation, AST::GSValuePtr firstValue, AST::GSValuePtr secondValue) {
+    AST::GSValuePtr FoldConstants(AST::BinaryOperation operation, ConstLRef<AST::GSValuePtr> firstValue, ConstLRef<AST::GSValuePtr> secondValue) {
         if (auto firstI32Value = AST::GSValueCast<AST::GS_I32Value>(firstValue)) {
             if (auto secondI32Value = AST::GSValueCast<AST::GS_I32Value>(secondValue)) {
                 auto firstNumber  = firstI32Value->GetI32Value();
@@ -60,8 +60,8 @@ namespace GSLanguageCompiler::Optimizer {
     }
 
     AST::GSNodePtr GS_ConstantFoldingTransformer::TransformUnaryExpression(AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression,
-                                                                           LRef<Driver::GSContextPtr> context) {
-        unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(GS_Transformer::TransformUnaryExpression(unaryExpression, context));
+                                                                           LRef<Driver::GS_Session> session) {
+        unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(GS_Transformer::TransformUnaryExpression(unaryExpression, session));
 
         auto expression = unaryExpression->GetExpression();
         auto operation  = unaryExpression->GetUnaryOperation();
@@ -78,8 +78,8 @@ namespace GSLanguageCompiler::Optimizer {
     }
 
     AST::GSNodePtr GS_ConstantFoldingTransformer::TransformBinaryExpression(AST::NodePtrLRef<AST::GS_BinaryExpression> binaryExpression,
-                                                                            LRef<Driver::GSContextPtr> context) {
-        binaryExpression = AST::ToExpression<AST::GS_BinaryExpression>(GS_Transformer::TransformBinaryExpression(binaryExpression, context));
+                                                                            LRef<Driver::GS_Session> session) {
+        binaryExpression = AST::ToExpression<AST::GS_BinaryExpression>(GS_Transformer::TransformBinaryExpression(binaryExpression, session));
 
         auto firstExpression  = binaryExpression->GetFirstExpression();
         auto secondExpression = binaryExpression->GetSecondExpression();

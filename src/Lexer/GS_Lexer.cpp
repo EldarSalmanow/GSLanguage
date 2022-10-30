@@ -111,20 +111,20 @@ namespace GSLanguageCompiler::Lexer {
         return TokenType::Unknown;
     }
 
-    GS_Lexer::GS_Lexer(Driver::GSContextPtr context)
-            : _context(std::move(context)),
+    GS_Lexer::GS_Lexer(LRef<Driver::GS_Session> session)
+            : _session(session),
               _messages(IO::GSMessagePtrArray()),
               _source(IO::GSSourcePtr()),
               _content(UString()),
               _contentIterator(UString::Iterator()),
               _currentPosition(1) {}
 
-    GS_Lexer GS_Lexer::Create(Driver::GSContextPtr context) {
-        return GS_Lexer(std::move(context));
+    GS_Lexer GS_Lexer::Create(LRef<Driver::GS_Session> session) {
+        return GS_Lexer(session);
     }
 
-    GSTokenArray GS_Lexer::Run(Driver::GSContextPtr context, IO::GSSourcePtr source) {
-        auto lexer = GS_Lexer::Create(std::move(context));
+    GSTokenArray GS_Lexer::Run(LRef<Driver::GS_Session> session, IO::GSSourcePtr source) {
+        auto lexer = GS_Lexer::Create(session);
 
         auto tokens = lexer.Tokenize(std::move(source));
 
@@ -160,7 +160,7 @@ namespace GSLanguageCompiler::Lexer {
         }
 
         for (auto &message : _messages) {
-            _context->Write(message);
+            _session.Write(message);
         }
 
         _messages = IO::GSMessagePtrArray();

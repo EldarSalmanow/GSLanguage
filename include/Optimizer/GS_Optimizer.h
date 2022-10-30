@@ -13,18 +13,18 @@ namespace GSLanguageCompiler::Optimizer {
 
         /**
          * Constructor for optimizer
-         * @param context Context
+         * @param session Session
          */
-        explicit GS_Optimizer(Driver::GSContextPtr context);
+        explicit GS_Optimizer(LRef<Driver::GS_Session> session);
 
     public:
 
         /**
          * Creating optimizer
-         * @param context Context
+         * @param session Session
          * @return Optimizer ptr
          */
-        static std::shared_ptr<GS_Optimizer> Create(Driver::GSContextPtr context);
+        static std::shared_ptr<GS_Optimizer> Create(LRef<Driver::GS_Session> session);
 
     public:
 
@@ -39,9 +39,9 @@ namespace GSLanguageCompiler::Optimizer {
     private:
 
         /**
-         * Context
+         * Session
          */
-        Driver::GSContextPtr _context;
+        LRef<Driver::GS_Session> _session;
     };
 
 }

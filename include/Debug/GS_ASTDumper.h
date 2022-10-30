@@ -16,19 +16,19 @@ namespace GSLanguageCompiler::Debug {
         /**
          * Constructor for AST dumper
          * @param node Node
-         * @param context Context
+         * @param session Session
          */
-        GS_ASTDumper(AST::GSNodePtr node, LRef<Driver::GSContextPtr> context);
+        GS_ASTDumper(AST::GSNodePtr node, LRef<Driver::GS_Session> session);
 
     public:
 
         /**
          * Creating AST dumper
          * @param node Node
-         * @param context Context
+         * @param session Session
          * @return AST dumper ptr
          */
-        static std::shared_ptr<GS_ASTDumper> Create(AST::GSNodePtr node, LRef<Driver::GSContextPtr> context);
+        static std::shared_ptr<GS_ASTDumper> Create(AST::GSNodePtr node, LRef<Driver::GS_Session> session);
 
     public:
 
@@ -46,18 +46,18 @@ namespace GSLanguageCompiler::Debug {
         AST::GSNodePtr _node;
 
         /**
-         * Context
+         * Session
          */
-        LRef<Driver::GSContextPtr> _context;
+        LRef<Driver::GS_Session> _session;
     };
 
     /**
      * Dump AST
      * @param node Node
-     * @param context Context
+     * @param session Session
      * @return
      */
-    Void DumpAST(AST::GSNodePtr node, LRef<Driver::GSContextPtr> context);
+    Void DumpAST(AST::GSNodePtr node, LRef<Driver::GS_Session> session);
 
 }
 

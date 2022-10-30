@@ -11,8 +11,6 @@
 
 #include <Driver/GS_Context.h>
 
-#include <Driver/GS_CompilationUnit.h>
-
 #include <Driver/GS_Session.h>
 #include <Driver/GS_SessionsManager.h>
 

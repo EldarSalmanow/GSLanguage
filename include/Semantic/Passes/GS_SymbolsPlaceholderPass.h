@@ -13,7 +13,7 @@ namespace GSLanguageCompiler::Semantic {
      * @param tableOfSymbols Table of symbols
      * @return
      */
-    Void AddFunction(LRef<AST::NodePtr<AST::GS_FunctionDeclaration>> functionDeclaration, LRef<GSTableOfSymbolsPtr> tableOfSymbols);
+    Void AddFunction(ConstLRef<AST::NodePtr<AST::GS_FunctionDeclaration>> functionDeclaration, LRef<GSTableOfSymbolsPtr> tableOfSymbols);
 
     /**
      * Adding variable symbol with variable declaration statement data to table of symbols
@@ -21,7 +21,7 @@ namespace GSLanguageCompiler::Semantic {
      * @param tableOfSymbols Table of symbols
      * @return
      */
-    Void AddVariable(LRef<AST::NodePtr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement, LRef<GSTableOfSymbolsPtr> tableOfSymbols);
+    Void AddVariable(ConstLRef<AST::NodePtr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement, LRef<GSTableOfSymbolsPtr> tableOfSymbols);
 
     /**
      * Visitor class for adding symbols with data from nodes to table of symbols
@@ -32,20 +32,20 @@ namespace GSLanguageCompiler::Semantic {
         /**
          * Visiting function declaration statement
          * @param functionDeclaration Function declaration
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void VisitFunctionDeclaration(LRef<AST::NodePtr<AST::GS_FunctionDeclaration>> functionDeclaration,
-                                      LRef<Driver::GSContextPtr> context) override;
+                                      LRef<Driver::GS_Session> session) override;
 
         /**
          * Visiting variable declaration statement
          * @param variableDeclarationStatement Variable declaration statement
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void VisitVariableDeclarationStatement(LRef<AST::NodePtr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement,
-                                               LRef<Driver::GSContextPtr> context) override;
+                                               LRef<Driver::GS_Session> session) override;
     };
 
     /**

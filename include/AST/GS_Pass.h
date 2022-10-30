@@ -21,56 +21,56 @@ namespace GSLanguageCompiler::AST {
         /**
          * Run pass on translation unit declaration ptr
          * @param translationUnitDeclaration Translation unit declaration ptr
-         * @param context Context
+         * @param session Session
          * @return
          */
         virtual Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration,
-                         LRef<Driver::GSContextPtr> context);
+                         LRef<Driver::GS_Session> session);
 
         /**
          * Run pass on node ptr
          * @param node Node ptr
-         * @param context Context
+         * @param session Session
          * @return
          */
         virtual Void Run(LRef<GSNodePtr> node,
-                         LRef<Driver::GSContextPtr> context);
+                         LRef<Driver::GS_Session> session);
 
         /**
          * Run pass on nodes
          * @param nodes Nodes
-         * @param context Context
+         * @param session Session
          * @return
          */
         virtual Void Run(LRef<GSNodePtrArray> nodes,
-                         LRef<Driver::GSContextPtr> context);
+                         LRef<Driver::GS_Session> session);
 
         /**
          * Run pass on declarations
          * @param declarations Declarations
-         * @param context Context
+         * @param session Session
          * @return
          */
         virtual Void Run(LRef<GSDeclarationPtrArray> declarations,
-                         LRef<Driver::GSContextPtr> context);
+                         LRef<Driver::GS_Session> session);
 
         /**
          * Run pass on statements
          * @param statements Statements
-         * @param context Context
+         * @param session Session
          * @return
          */
         virtual Void Run(LRef<GSStatementPtrArray> statements,
-                         LRef<Driver::GSContextPtr> context);
+                         LRef<Driver::GS_Session> session);
 
         /**
          * Run pass on expressions
          * @param expressions Expressions
-         * @param context Context
+         * @param session Session
          * @return
          */
         virtual Void Run(LRef<GSExpressionPtrArray> expressions,
-                         LRef<Driver::GSContextPtr> context);
+                         LRef<Driver::GS_Session> session);
     };
 
     /**
@@ -94,86 +94,86 @@ namespace GSLanguageCompiler::AST {
         /**
          * Run pass on translation unit declaration ptr
          * @param translationUnitDeclaration Translation unit declaration ptr
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration,
-                 LRef<Driver::GSContextPtr> context) override {
+                 LRef<Driver::GS_Session> session) override {
             T visitor;
 
-            visitor.VisitTranslationUnitDeclaration(translationUnitDeclaration, context);
+            visitor.VisitTranslationUnitDeclaration(translationUnitDeclaration, session);
         }
 
         /**
          * Run pass on node ptr
          * @param node Node ptr
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSNodePtr> node,
-                 LRef<Driver::GSContextPtr> context) override {
+                 LRef<Driver::GS_Session> session) override {
             T visitor;
 
-            visitor.VisitNode(node, context);
+            visitor.VisitNode(node, session);
         }
 
         /**
          * Run pass on nodes
          * @param nodes Nodes
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSNodePtrArray> nodes,
-                 LRef<Driver::GSContextPtr> context) override {
+                 LRef<Driver::GS_Session> session) override {
             T visitor;
 
             for (auto &node : nodes) {
-                visitor.VisitNode(node, context);
+                visitor.VisitNode(node, session);
             }
         }
 
         /**
          * Run pass on declarations
          * @param declarations Declarations
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSDeclarationPtrArray> declarations,
-                 LRef<Driver::GSContextPtr> context) override {
+                 LRef<Driver::GS_Session> session) override {
             T visitor;
 
             for (auto &declaration : declarations) {
-                visitor.VisitDeclaration(declaration, context);
+                visitor.VisitDeclaration(declaration, session);
             }
         }
 
         /**
          * Run pass on statements
          * @param statements Statements
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSStatementPtrArray> statements,
-                 LRef<Driver::GSContextPtr> context) override {
+                 LRef<Driver::GS_Session> session) override {
             T visitor;
 
             for (auto &statement : statements) {
-                visitor.VisitStatement(statement, context);
+                visitor.VisitStatement(statement, session);
             }
         }
 
         /**
          * Run pass on expressions
          * @param expressions Expressions
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSExpressionPtrArray> expressions,
-                 LRef<Driver::GSContextPtr> context) override {
+                 LRef<Driver::GS_Session> session) override {
             T visitor;
 
             for (auto &expression : expressions) {
-                visitor.VisitExpression(expression, context);
+                visitor.VisitExpression(expression, session);
             }
         }
     };
@@ -189,87 +189,87 @@ namespace GSLanguageCompiler::AST {
         /**
          * Run pass on translation unit declaration ptr
          * @param translationUnitDeclaration Translation unit declaration ptr
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration,
-                 LRef<Driver::GSContextPtr> context) override {
+                 LRef<Driver::GS_Session> session) override {
             T transformer;
 
             translationUnitDeclaration = ToDeclaration<GS_TranslationUnitDeclaration>(
-                    transformer.TransformTranslationUnitDeclaration(translationUnitDeclaration, context));
+                    transformer.TransformTranslationUnitDeclaration(translationUnitDeclaration, session));
         }
 
         /**
          * Run pass on node ptr
          * @param node Node ptr
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSNodePtr> node,
-                 LRef<Driver::GSContextPtr> context) override {
+                 LRef<Driver::GS_Session> session) override {
             T transformer;
 
-            node = transformer.TransformNode(node, context);
+            node = transformer.TransformNode(node, session);
         }
 
         /**
          * Run pass on nodes
          * @param nodes Nodes
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSNodePtrArray> nodes,
-                 LRef<Driver::GSContextPtr> context) override {
+                 LRef<Driver::GS_Session> session) override {
             T transformer;
 
             for (auto &node : nodes) {
-                node = transformer.TransformNode(node, context);
+                node = transformer.TransformNode(node, session);
             }
         }
 
         /**
          * Run pass on declarations
          * @param declarations Declarations
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSDeclarationPtrArray> declarations,
-                 LRef<Driver::GSContextPtr> context) override {
+                 LRef<Driver::GS_Session> session) override {
             T transformer;
 
             for (auto &declaration : declarations) {
-                declaration = ToDeclaration(transformer.TransformDeclaration(declaration, context));
+                declaration = ToDeclaration(transformer.TransformDeclaration(declaration, session));
             }
         }
 
         /**
          * Run pass on statements
          * @param statements Statements
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSStatementPtrArray> statements,
-                 LRef<Driver::GSContextPtr> context) override {
+                 LRef<Driver::GS_Session> session) override {
             T transformer;
 
             for (auto &statement : statements) {
-                statement = ToStatement(transformer.TransformStatement(statement, context));
+                statement = ToStatement(transformer.TransformStatement(statement, session));
             }
         }
 
         /**
          * Run pass on expressions
          * @param expressions Expressions
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSExpressionPtrArray> expressions,
-                 LRef<Driver::GSContextPtr> context) override {
+                 LRef<Driver::GS_Session> session) override {
             T transformer;
 
             for (auto &expression : expressions) {
-                expression = ToExpression(transformer.TransformExpression(expression, context));
+                expression = ToExpression(transformer.TransformExpression(expression, session));
             }
         }
     };
@@ -306,57 +306,57 @@ namespace GSLanguageCompiler::AST {
         /**
          * Run passes on translation unit declaration ptr
          * @param translationUnitDeclaration Translation unit declaration ptr
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration,
-                 LRef<Driver::GSContextPtr> context);
+                 LRef<Driver::GS_Session> session);
 
 
         /**
          * Run passes on node ptr
          * @param node Node ptr
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSNodePtr> node,
-                 LRef<Driver::GSContextPtr> context);
+                 LRef<Driver::GS_Session> session);
 
         /**
          * Run pass on nodes
          * @param nodes Nodes
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSNodePtrArray> nodes,
-                 LRef<Driver::GSContextPtr> context);
+                 LRef<Driver::GS_Session> session);
 
         /**
          * Run pass on declarations
          * @param declarations Declarations
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSDeclarationPtrArray> declarations,
-                 LRef<Driver::GSContextPtr> context);
+                 LRef<Driver::GS_Session> session);
 
         /**
          * Run pass on statements
          * @param statements Statements
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSStatementPtrArray> statements,
-                 LRef<Driver::GSContextPtr> context);
+                 LRef<Driver::GS_Session> session);
 
         /**
          * Run pass on expressions
          * @param expressions Expressions
-         * @param context Context
+         * @param session Session
          * @return
          */
         Void Run(LRef<GSExpressionPtrArray> expressions,
-                 LRef<Driver::GSContextPtr> context);
+                 LRef<Driver::GS_Session> session);
 
     public:
 

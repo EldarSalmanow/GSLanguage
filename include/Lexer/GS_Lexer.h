@@ -15,28 +15,28 @@ namespace GSLanguageCompiler::Lexer {
 
         /**
          * Constructor for lexer
-         * @param context Context
+         * @param session Session
          */
-        explicit GS_Lexer(Driver::GSContextPtr context);
+        explicit GS_Lexer(LRef<Driver::GS_Session> session);
 
     public:
 
         /**
          * Creating lexer
-         * @param context Context
+         * @param session Session
          * @return Lexer
          */
-        static GS_Lexer Create(Driver::GSContextPtr context);
+        static GS_Lexer Create(LRef<Driver::GS_Session> session);
 
     public:
 
         /**
          * Creating lexer and tokenizing source
-         * @param context Context
+         * @param session Session
          * @param source Source
          * @return Tokens
          */
-        static GSTokenArray Run(Driver::GSContextPtr context, IO::GSSourcePtr source);
+        static GSTokenArray Run(LRef<Driver::GS_Session> session, IO::GSSourcePtr source);
 
     public:
 
@@ -97,9 +97,9 @@ namespace GSLanguageCompiler::Lexer {
     private:
 
         /**
-         * Context
+         * Session
          */
-        Driver::GSContextPtr _context;
+        LRef<Driver::GS_Session> _session;
 
         /**
          * Messages

@@ -5,32 +5,32 @@ namespace GSLanguageCompiler::AST {
     GS_Pass::~GS_Pass() = default;
 
     Void GS_Pass::Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration,
-                      LRef<Driver::GSContextPtr> context) {
+                      LRef<Driver::GS_Session> session) {
 
     }
 
     Void GS_Pass::Run(LRef<GSNodePtr> node,
-                      LRef<Driver::GSContextPtr> context) {
+                      LRef<Driver::GS_Session> session) {
 
     }
 
     Void GS_Pass::Run(LRef<GSNodePtrArray> nodes,
-                      LRef<Driver::GSContextPtr> context) {
+                      LRef<Driver::GS_Session> session) {
 
     }
 
     Void GS_Pass::Run(LRef<GSDeclarationPtrArray> declarations,
-                      LRef<Driver::GSContextPtr> context) {
+                      LRef<Driver::GS_Session> session) {
 
     }
 
     Void GS_Pass::Run(LRef<GSStatementPtrArray> statements,
-                      LRef<Driver::GSContextPtr> context) {
+                      LRef<Driver::GS_Session> session) {
 
     }
 
     Void GS_Pass::Run(LRef<GSExpressionPtrArray> expressions,
-                      LRef<Driver::GSContextPtr> context) {
+                      LRef<Driver::GS_Session> session) {
 
     }
 
@@ -46,44 +46,44 @@ namespace GSLanguageCompiler::AST {
     }
 
     Void GS_PassManager::Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration,
-                             LRef<Driver::GSContextPtr> context) {
+                             LRef<Driver::GS_Session> session) {
         for (auto &pass : _passes) {
-            pass->Run(translationUnitDeclaration, context);
+            pass->Run(translationUnitDeclaration, session);
         }
     }
 
     Void GS_PassManager::Run(LRef<GSNodePtr> node,
-                             LRef<Driver::GSContextPtr> context) {
+                             LRef<Driver::GS_Session> session) {
         for (auto &pass : _passes) {
-            pass->Run(node, context);
+            pass->Run(node, session);
         }
     }
 
     Void GS_PassManager::Run(LRef<GSNodePtrArray> nodes,
-                             LRef<Driver::GSContextPtr> context) {
+                             LRef<Driver::GS_Session> session) {
         for (auto &pass : _passes) {
-            pass->Run(nodes, context);
+            pass->Run(nodes, session);
         }
     }
 
     Void GS_PassManager::Run(LRef<GSDeclarationPtrArray> declarations,
-                             LRef<Driver::GSContextPtr> context) {
+                             LRef<Driver::GS_Session> session) {
         for (auto &pass : _passes) {
-            pass->Run(declarations, context);
+            pass->Run(declarations, session);
         }
     }
 
     Void GS_PassManager::Run(LRef<GSStatementPtrArray> statements,
-                             LRef<Driver::GSContextPtr> context) {
+                             LRef<Driver::GS_Session> session) {
         for (auto &pass : _passes) {
-            pass->Run(statements, context);
+            pass->Run(statements, session);
         }
     }
 
     Void GS_PassManager::Run(LRef<GSExpressionPtrArray> expressions,
-                             LRef<Driver::GSContextPtr> context) {
+                             LRef<Driver::GS_Session> session) {
         for (auto &pass : _passes) {
-            pass->Run(expressions, context);
+            pass->Run(expressions, session);
         }
     }
 

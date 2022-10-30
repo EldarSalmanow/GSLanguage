@@ -11,19 +11,19 @@ namespace GSLanguageCompiler::Parser {
             {Lexer::TokenType::SymbolMinus, 1}
     };
 
-    GS_Parser::GS_Parser(Driver::GSContextPtr context)
-            : _context(std::move(context)),
+    GS_Parser::GS_Parser(LRef<Driver::GS_Session> session)
+            : _session(session),
               _messages(IO::GSMessagePtrArray()),
               _tokens(Lexer::GSTokenArray()),
               _tokensIterator(Lexer::GSTokenArrayIterator()),
-              _builder(AST::GS_ASTBuilder::Create(_context->GetASTContext())) {}
+              _builder(AST::GS_ASTBuilder::Create(_session.GetASTContext())) {}
 
-    GS_Parser GS_Parser::Create(Driver::GSContextPtr context) {
-        return GS_Parser(std::move(context));
+    GS_Parser GS_Parser::Create(LRef<Driver::GS_Session> session) {
+        return GS_Parser(session);
     }
 
-    AST::GSTranslationUnitDeclarationPtr GS_Parser::Run(Driver::GSContextPtr context, Lexer::GSTokenArray tokens, UString translationUnitName) {
-        auto parser = GS_Parser::Create(std::move(context));
+    AST::GSTranslationUnitDeclarationPtr GS_Parser::Run(LRef<Driver::GS_Session> session, Lexer::GSTokenArray tokens, UString translationUnitName) {
+        auto parser = GS_Parser::Create(session);
 
         auto translationUnitDeclaration = parser.ParseProgram(std::move(tokens), std::move(translationUnitName));
 
@@ -40,7 +40,7 @@ namespace GSLanguageCompiler::Parser {
         auto translationUnitDeclaration = ParseTranslationUnitDeclaration(std::move(translationUnitName));
 
         for (auto &message : _messages) {
-            _context->Write(message);
+            _session.Write(message);
         }
 
         _messages = IO::GSMessagePtrArray();
@@ -607,10 +607,10 @@ namespace GSLanguageCompiler::Parser {
         _messages.emplace_back(locatedTextMessage);
     }
 
-    AST::GSTranslationUnitDeclarationPtr RunFrontend(Driver::GSContextPtr context, IO::GSSourcePtr source) {
-        auto tokens = Lexer::GS_Lexer::Run(context, source);
+    AST::GSTranslationUnitDeclarationPtr RunFrontend(LRef<Driver::GS_Session> session, LRef<IO::GSSourcePtr> source) {
+        auto tokens = Lexer::GS_Lexer::Run(session, source);
 
-        auto program = Parser::GS_Parser::Run(context, tokens, source->GetName().GetName());
+        auto program = Parser::GS_Parser::Run(session, tokens, source->GetName().GetName());
 
         return program;
     }

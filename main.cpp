@@ -1,11 +1,3 @@
-#include <Driver/GS_CompilationUnit.h>
-
-void f() {
-    auto CU = GSLanguageCompiler::Driver::GS_CompilationUnit::Create(nullptr, nullptr);
-
-    CU.G
-}
-
 #include <Debug/Debug.h>
 
 #include <Driver/Driver.h>
@@ -23,8 +15,8 @@ public:
      *
      */
     AST::GSNodePtr TransformUnaryExpression(AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression,
-                                            LRef<Driver::GSContextPtr> context) override {
-        unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(SuperUnaryExpression(unaryExpression, context));
+                                            LRef<Driver::GS_Session> session) override {
+        unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(SuperUnaryExpression(unaryExpression, session));
 
         auto &secondExpression = unaryExpression->GetExpression();
 
@@ -64,7 +56,7 @@ AST::GSPassPtr CreateArithmeticOptimizingPass() {
 }
 
 I32 Test() {
-    auto Context = Driver::GS_Context::Create();
+    auto Session = Driver::GS_Session::Create();
 
     auto Builder = AST::GS_ASTBuilder::Create();
 
@@ -78,103 +70,130 @@ I32 Test() {
 
     PM->AddPass(CreateArithmeticOptimizingPass());
 
-    Debug::DumpAST(Expressions[0], Context);
+    Debug::DumpAST(Expressions[0], *Session);
 
-    PM->Run(Expressions, Context);
+    PM->Run(Expressions, *Session);
 
-    Debug::DumpAST(Expressions[0], Context);
+    Debug::DumpAST(Expressions[0], *Session);
 
     return 0;
 }
 
-class CompilationUnit {
-public:
+//class Scope;
+//
+//using ScopePtr = std::shared_ptr<Scope>;
+//
+//using ScopePtrArray = std::vector<ScopePtr>;
+//
+//class Scope {
+//public:
+//
+//    Scope(AST::GSNodePtrArray nodes, ScopePtr parent, ScopePtrArray childrens);
+//
+//public:
+//
+//    static std::shared_ptr<Scope> Create(AST::GSNodePtrArray nodes, ScopePtr parent, ScopePtrArray childrens);
+//
+//    static std::shared_ptr<Scope> Create(AST::GSNodePtrArray nodes, ScopePtr parent);
+//
+//    static std::shared_ptr<Scope> Create(ScopePtr parent, ScopePtrArray childrens);
+//
+//    static std::shared_ptr<Scope> Create(ScopePtr parent);
+//
+//    static std::shared_ptr<Scope> Create();
+//
+//public:
+//
+//    static std::shared_ptr<Scope> CreateGlobal(AST::GSNodePtrArray nodes, ScopePtrArray childrens);
+//
+//    static std::shared_ptr<Scope> CreateGlobal(AST::GSNodePtrArray nodes);
+//
+//    static std::shared_ptr<Scope> CreateGlobal(ScopePtrArray childrens);
+//
+//    static std::shared_ptr<Scope> CreateGlobal();
+//
+//public:
+//
+//    Void AddNode(AST::GSNodePtr node);
+//
+//    Void EraseFromParent();
+//
+//    Void AddChildren(ScopePtr children);
+//
+//    Void RemoveChildren(ScopePtr children);
+//
+//public:
+//
+//    AST::GSNodePtrArray GetNodes() const;
+//
+//    ScopePtr GetParent() const;
+//
+//    ScopePtrArray GetChildrens() const;
+//
+//public:
+//
+//    Void SetParent(ScopePtr scope);
+//
+//private:
+//
+//    AST::GSNodePtrArray _nodes;
+//
+//    ScopePtr _parent;
+//
+//    ScopePtrArray _childrens;
+//};
+//
+//ScopePtr AddFunction(AST::NodePtrLRef<AST::GS_FunctionDeclaration> functionDeclaration, LRef<ScopePtr> scope) {
+//    auto functionScope = Scope::Create(scope);
+//
+//    scope->AddNode(functionDeclaration);
+//
+//    return functionScope;
+//}
 
-    CompilationUnit(IO::GSSourcePtr source, Driver::GSContextPtr context);
+void g() {
+    /*
+     *
+     * main.gs
+     *
+     * using sum
+     *
+     * func main() {
+     *     var summa = sum::sum(1, 2)
+     *
+     *     print(summa)
+     * }
+     *
+     * sum.gs
+     *
+     * func sum(num_1: I32, num_2: I32) -> I32 {
+     *     return num_1 + num_2
+     * }
+     *
+     */
 
-public:
+//    auto module_scope = Scope::CreateGlobal();
+//
+//    auto compilation_unit_scope_1 = Scope::Create(module_scope);
+//
+//    auto main_func = AST::GS_FunctionDeclaration::Create("main",
+//                                                         AST::GS_FunctionSignature::Create(Semantic::GS_I32Type::Create()));
+//
+//    auto main_func_scope = AddFunction(main_func, compilation_unit_scope_1);
 
-    static std::shared_ptr<CompilationUnit> Create(IO::GSSourcePtr source, Driver::GSContextPtr context);
+//    compilation_unit_scope_1->AddNode(main_func);
+//
+//    auto main_func_scope = Scope::Create(compilation_unit_scope_1);
 
-public:
-
-    Driver::CompilingResult Compile();
-
-public:
-
-    IO::GSSourcePtr GetSource() const;
-
-    Lexer::GSTokenArray GetTokens() const;
-
-    AST::GSNodePtr GetNode() const;
-
-    Semantic::GSTableOfSymbolsPtr GetTableOfSymbols() const;
-
-    Driver::GSContextPtr GetContext() const;
-
-    U64 GetId() const;
-
-private:
-
-    IO::GSSourcePtr _source;
-
-    Lexer::GSTokenArray _tokens;
-
-    AST::GSNodePtr _node;
-
-    Semantic::GSTableOfSymbolsPtr _tableOfSymbols;
-
-    Driver::GSContextPtr _context;
-
-    U64 _id;
-};
-
-using CompilationUnitPtr = std::shared_ptr<CompilationUnit>;
-
-using CompilationUnitPtrArray = std::vector<CompilationUnitPtr>;
-
-class CompilationUnitManager {
-public:
-
-    explicit CompilationUnitManager(CompilationUnitPtrArray compilationUnits);
-
-public:
-
-    static std::shared_ptr<CompilationUnitManager> Create(CompilationUnitPtrArray compilationUnits);
-
-    static std::shared_ptr<CompilationUnitManager> Create();
-
-public:
-
-    U64 AddCompilationUnit(CompilationUnitPtr compilationUnit);
-
-    CompilationUnitPtr GetCompiltionUnit(U64 compilationUnitId);
-
-public:
-
-    CompilationUnitPtrArray GetCompilationUnits() const;
-
-private:
-
-    CompilationUnitPtrArray _compilationUnits;
-};
-
-#include <Semantic/Semantic.h>
-
-void f() {
-    auto Context = Driver::GS_Context::Create();
-
-    auto CUM = CompilationUnitManager::Create();
-
-    auto CompilationUnitId = CUM->AddCompilationUnit(CompilationUnit::Create(IO::GS_Source::CreateString("func main() {}"), Context));
-
-    auto CU = CUM->GetCompiltionUnit(CompilationUnitId);
-
-    auto Func = AST::GS_FunctionDeclaration::Create("main", AST::GS_FunctionSignature::Create(Semantic::GS_I32Type::Create()));
-
-    auto TOS = CU->GetTableOfSymbols();
-
-    Semantic::AddFunction(Func, TOS);
+//    auto compilation_unit_scope_2 = Scope::Create(module_scope);
+//
+//    auto sum_func = AST::GS_FunctionDeclaration::Create("sum",
+//                                                        AST::GS_FunctionSignature::Create({Semantic::GS_I32Type::Create(), Semantic::GS_I32Type::Create()},
+//                                                                                          Semantic::GS_I32Type::Create()));
+//
+//    compilation_unit_scope_2->AddNode(sum_func);
+//
+//    auto sum_func_scope = Scope::Create(compilation_unit_scope_2);
 }
 
 /**
