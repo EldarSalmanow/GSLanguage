@@ -17,15 +17,31 @@ namespace GSLanguageCompiler::Debug {
         for (auto &symbol : _tableOfSymbols->GetSymbols()) {
             ++index;
 
-            if (symbol->IsFunction()) {
-                auto functionSymbol = std::reinterpret_pointer_cast<Semantic::GS_FunctionSymbol>(symbol);
+            UStringStream stringStream;
 
-                std::cout << UString(std::to_string(index + 1)) << ": " << std::endl << "  Name -> "_us << functionSymbol->GetName() << std::endl;
-            } else if (symbol->IsVariable()) {
-                auto variableSymbol = std::reinterpret_pointer_cast<Semantic::GS_VariableSymbol>(symbol);
+            switch (symbol->GetSymbolType()) {
+                case Semantic::SymbolType::Function: {
+                    auto functionSymbol = Semantic::ToSymbol<Semantic::GS_FunctionSymbol>(symbol);
 
-                std::cout << UString(std::to_string(index + 1)) << ": " << std::endl << "  Name -> "_us << variableSymbol->GetName() << std::endl << "  Type -> " << variableSymbol->GetType()->GetName() << std::endl;
+                    stringStream
+                            << index << ": Function {\n"_us
+                            << "  Name: "_us << functionSymbol->GetName() << "\n}\n"_us;
+
+                    break;
+                }
+                case Semantic::SymbolType::Variable: {
+                    auto variableSymbol = Semantic::ToSymbol<Semantic::GS_VariableSymbol>(symbol);
+
+                    stringStream
+                            << index << ": Variable {\n"_us
+                            << "  Name: "_us << variableSymbol->GetName() << "\n"_us
+                            << "  Type: "_us << variableSymbol->GetType()->GetName() << "\n}\n"_us;
+
+                    break;
+                }
             }
+
+            std::cout << stringStream.String();
         }
 
         std::cout << "-------------------------------------------"_us << std::endl;

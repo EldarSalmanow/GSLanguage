@@ -7,7 +7,7 @@ namespace GSLanguageCompiler::Optimizer {
     // TODO: add folding values with non I32 type
 
     AST::GSValuePtr FoldConstants(AST::UnaryOperation operation, ConstLRef<AST::GSValuePtr> value) {
-        if (auto i32Value = AST::GSValueCast<AST::GS_I32Value>(value)) {
+        if (auto i32Value = AST::ToValue<AST::GS_I32Value>(value)) {
             auto number = i32Value->GetI32Value();
 
             I32 result;
@@ -26,8 +26,8 @@ namespace GSLanguageCompiler::Optimizer {
     }
 
     AST::GSValuePtr FoldConstants(AST::BinaryOperation operation, ConstLRef<AST::GSValuePtr> firstValue, ConstLRef<AST::GSValuePtr> secondValue) {
-        if (auto firstI32Value = AST::GSValueCast<AST::GS_I32Value>(firstValue)) {
-            if (auto secondI32Value = AST::GSValueCast<AST::GS_I32Value>(secondValue)) {
+        if (auto firstI32Value = AST::ToValue<AST::GS_I32Value>(firstValue)) {
+            if (auto secondI32Value = AST::ToValue<AST::GS_I32Value>(secondValue)) {
                 auto firstNumber  = firstI32Value->GetI32Value();
                 auto secondNumber = secondI32Value->GetI32Value();
 

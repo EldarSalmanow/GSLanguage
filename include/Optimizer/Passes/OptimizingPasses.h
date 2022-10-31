@@ -1,5 +1,5 @@
-#ifndef GSLANGUAGE_PASSES_H
-#define GSLANGUAGE_PASSES_H
+#ifndef GSLANGUAGE_OPTIMIZINGPASSES_H
+#define GSLANGUAGE_OPTIMIZINGPASSES_H
 
 /**
  * This file includes all files from GSLanguageCompiler Optimizer Passes Module
@@ -7,4 +7,4 @@
 
 #include <Optimizer/Passes/GS_ConstantFoldingPass.h>
 
-#endif //GSLANGUAGE_PASSES_H
+#endif //GSLANGUAGE_OPTIMIZINGPASSES_H

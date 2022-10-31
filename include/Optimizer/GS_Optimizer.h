@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_OPTIMIZER_H
 #define GSLANGUAGE_GS_OPTIMIZER_H
 
-#include <Optimizer/Passes/Passes.h>
+#include <Optimizer/Passes/OptimizingPasses.h>
 
 namespace GSLanguageCompiler::Optimizer {
 

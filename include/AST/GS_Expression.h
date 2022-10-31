@@ -77,7 +77,7 @@ namespace GSLanguageCompiler::AST {
      * @return Expression or nullptr
      */
     template<typename T>
-    inline std::shared_ptr<T> ToExpression(ConstLRef<GSNodePtr> node) {
+    inline NodePtr<T> ToExpression(ConstLRef<GSNodePtr> node) {
         static_assert(std::is_base_of_v<GS_Expression, T>, "Type for casting must be inherited from GS_Expression!");
 
         auto expression = ToExpression(node);

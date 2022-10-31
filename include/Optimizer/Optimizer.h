@@ -7,6 +7,6 @@
 
 #include <Optimizer/GS_Optimizer.h>
 
-#include <Optimizer/Passes/Passes.h>
+#include <Optimizer/Passes/OptimizingPasses.h>
 
 #endif //GSLANGUAGE_OPTIMIZER_H

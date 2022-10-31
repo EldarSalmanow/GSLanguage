@@ -68,18 +68,6 @@ namespace GSLanguageCompiler::AST {
     using ValuePtr = std::shared_ptr<T>;
 
     /**
-     * Custom value ptr left value type for any value
-     */
-    template<typename T>
-    using ValuePtrLRef = LRef<ValuePtr<T>>;
-
-    /**
-     * Custom value ptr left value type for any value
-     */
-    template<typename T>
-    using ValuePtrRRef = RRef<ValuePtr<T>>;
-
-    /**
      * Custom value ptr array type for any value
      */
     template<typename T>
@@ -475,7 +463,7 @@ namespace GSLanguageCompiler::AST {
      * @return Concrete value ptr or nullptr
      */
     template<typename T>
-    inline std::shared_ptr<T> GSValueCast(GSValuePtr value) {
+    inline Semantic::TypePtr<T> ToValue(GSValuePtr value) {
         static_assert(std::is_base_of_v<GS_Value, T>, "Type for casting must be inherited from GS_Value!");
 
         auto type = value->GetType();

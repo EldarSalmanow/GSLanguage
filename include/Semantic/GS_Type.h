@@ -82,18 +82,6 @@ namespace GSLanguageCompiler::Semantic {
     using TypePtr = std::shared_ptr<T>;
 
     /**
-     * Custom type ptr left value type for any type
-     */
-    template<typename T>
-    using TypePtrLRef = LRef<TypePtr<T>>;
-
-    /**
-     * Custom type ptr left value type for any type
-     */
-    template<typename T>
-    using TypePtrRRef = RRef<TypePtr<T>>;
-
-    /**
      * Custom type ptr array type for any type
      */
     template<typename T>

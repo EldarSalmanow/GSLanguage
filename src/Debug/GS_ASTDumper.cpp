@@ -156,7 +156,7 @@ namespace GSLanguageCompiler::Debug {
 
             IncTab();
 
-            auto value = AST::GSValueCast<AST::GS_LiteralValue>(constantExpression->GetValue());
+            auto value = AST::ToValue<AST::GS_LiteralValue>(constantExpression->GetValue());
             auto typeName = value->GetType()->GetName();
 
             Print("Type: " + typeName.AsUTF8(), session);

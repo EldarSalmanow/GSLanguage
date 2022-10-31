@@ -1,4 +1,5 @@
 #include <Parser/Parser.h>
+#include <Optimizer/Optimizer.h>
 #include <Semantic/Semantic.h>
 #include <Debug/Debug.h>
 
@@ -26,8 +27,20 @@ namespace GSLanguageCompiler::Driver {
 
         AST::GSTranslationUnitDeclarationPtrArray translationUnitDeclarations;
 
+        auto optimizingPasses = {
+                Optimizer::CreateConstantFoldingPass()
+        };
+
         for (auto &source : sources) {
             auto translationUnitDeclaration = Parser::RunFrontend(*this, source);
+
+            Semantic::CreateSymbolsPlaceholderPass()->Run(translationUnitDeclaration, *this);
+
+            for (auto &optimizingPass : optimizingPasses) {
+                optimizingPass->Run(translationUnitDeclaration, *this);
+            }
+
+            Debug::DumpTableOfSymbols(_tableOfSymbols);
 
             // todo add flag for debug compiler mode
             Debug::DumpAST(translationUnitDeclaration, *this);

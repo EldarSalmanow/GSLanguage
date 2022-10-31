@@ -1,5 +1,5 @@
-#ifndef GSLANGUAGE_PASSES_H
-#define GSLANGUAGE_PASSES_H
+#ifndef GSLANGUAGE_SEMANTICPASSES_H
+#define GSLANGUAGE_SEMANTICPASSES_H
 
 /**
  * This file includes all files from GSLanguageCompiler Semantic Passes Module
@@ -7,4 +7,4 @@
 
 #include <Semantic/Passes/GS_SymbolsPlaceholderPass.h>
 
-#endif //GSLANGUAGE_PASSES_H
+#endif //GSLANGUAGE_SEMANTICPASSES_H

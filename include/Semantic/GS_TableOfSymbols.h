@@ -10,6 +10,14 @@
 namespace GSLanguageCompiler::Semantic {
 
     /**
+     * Symbol type
+     */
+    enum class SymbolType {
+        Function,
+        Variable
+    };
+
+    /**
      * Base class for all symbols in table of symbols
      */
     class GS_Symbol {
@@ -23,16 +31,10 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Is function symbol
-         * @return Is function symbol
+         * Getter for symbol type
+         * @return Symbol type
          */
-        virtual Bool IsFunction() const;
-
-        /**
-         * Is variable symbol
-         * @return Is variable symbol
-         */
-        virtual Bool IsVariable() const;
+        virtual SymbolType GetSymbolType() const = 0;
     };
 
     /**
@@ -40,18 +42,6 @@ namespace GSLanguageCompiler::Semantic {
      */
     template<typename T>
     using SymbolPtr = std::shared_ptr<T>;
-
-    /**
-     * Custom symbol ptr left value type for any symbol
-     */
-    template<typename T>
-    using SymbolPtrLRef = LRef<SymbolPtr<T>>;
-
-    /**
-     * Custom symbol ptr right value type for any symbol
-     */
-    template<typename T>
-    using SymbolPtrRRef = RRef<SymbolPtr<T>>;
 
     /**
      * Custom symbol ptr array type for any symbol
@@ -109,10 +99,10 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Is function symbol
-         * @return Is function symbol
+         * Getter for symbol type
+         * @return Symbol type
          */
-        Bool IsFunction() const override;
+        SymbolType GetSymbolType() const override;
 
     private:
 
@@ -167,10 +157,10 @@ namespace GSLanguageCompiler::Semantic {
     public:
 
         /**
-         * Is variable symbol
-         * @return Is variable symbol
+         * Getter for symbol type
+         * @return Symbol type
          */
-        Bool IsVariable() const override;
+        SymbolType GetSymbolType() const override;
 
     private:
 
@@ -184,6 +174,34 @@ namespace GSLanguageCompiler::Semantic {
          */
         GSTypePtr _type;
     };
+
+    /**
+     * Casting symbol to any type of symbol
+     * @tparam T Type for symbol
+     * @param symbol Symbol
+     * @return Symbol or nullptr
+     */
+    template<typename T>
+    inline SymbolPtr<T> ToSymbol(ConstLRef<GSSymbolPtr> symbol) {
+        static_assert(std::is_base_of_v<GS_Symbol, T>, "Type for casting must be inherited from GS_Symbol!");
+
+        switch (symbol->GetSymbolType()) {
+            case SymbolType::Function:
+                if constexpr (!std::is_same_v<GS_FunctionSymbol, T>) {
+                    return nullptr;
+                }
+
+                break;
+            case SymbolType::Variable:
+                if constexpr (!std::is_same_v<GS_VariableSymbol, T>) {
+                    return nullptr;
+                }
+
+                break;
+        }
+
+        return std::reinterpret_pointer_cast<T>(symbol);
+    }
 
     /**
      * Class for containing all symbols in program

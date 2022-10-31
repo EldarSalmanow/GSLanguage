@@ -3,14 +3,6 @@
 namespace GSLanguageCompiler::Semantic {
 
     GS_Symbol::~GS_Symbol() = default;
-    
-    Bool GS_Symbol::IsFunction() const {
-        return false;
-    }
-
-    Bool GS_Symbol::IsVariable() const {
-        return false;
-    }
 
     GS_FunctionSymbol::GS_FunctionSymbol(UString name, AST::GS_FunctionSignature signature)
             : _name(std::move(name)), _signature(std::move(signature)) {}
@@ -27,8 +19,8 @@ namespace GSLanguageCompiler::Semantic {
         return _signature;
     }
 
-    Bool GS_FunctionSymbol::IsFunction() const {
-        return true;
+    SymbolType GS_FunctionSymbol::GetSymbolType() const {
+        return SymbolType::Function;
     }
 
     GS_VariableSymbol::GS_VariableSymbol(UString name, GSTypePtr type)
@@ -46,10 +38,10 @@ namespace GSLanguageCompiler::Semantic {
         return _type;
     }
 
-    Bool GS_VariableSymbol::IsVariable() const {
-        return true;
+    SymbolType GS_VariableSymbol::GetSymbolType() const {
+        return SymbolType::Variable;
     }
-    
+
     GS_TableOfSymbols::GS_TableOfSymbols(GSSymbolPtrArray symbols)
             : _symbols(std::move(symbols)) {}
 
@@ -79,12 +71,9 @@ namespace GSLanguageCompiler::Semantic {
 
     SymbolPtr<GS_FunctionSymbol> GS_TableOfSymbols::GetFunction(UString name) const {
         for (auto &symbol : _symbols) {
-            if (symbol->IsFunction()) {
-                // TODO: add SymbolCast function for casting symbols from any type to concrete type with check
-                auto function = std::reinterpret_pointer_cast<GS_FunctionSymbol>(symbol);
-
-                if (function->GetName() == name) {
-                    return function;
+            if (auto functionSymbol = ToSymbol<GS_FunctionSymbol>(symbol)) {
+                if (functionSymbol->GetName() == name) {
+                    return functionSymbol;
                 }
             }
         }
@@ -94,11 +83,9 @@ namespace GSLanguageCompiler::Semantic {
 
     SymbolPtr<GS_VariableSymbol> GS_TableOfSymbols::GetVariable(UString name) const {
         for (auto &symbol : _symbols) {
-            if (symbol->IsVariable()) {
-                auto variable = std::reinterpret_pointer_cast<GS_VariableSymbol>(symbol);
-
-                if (variable->GetName() == name) {
-                    return variable;
+            if (auto variableSymbol = ToSymbol<GS_VariableSymbol>(symbol)) {
+                if (variableSymbol->GetName() == name) {
+                    return variableSymbol;
                 }
             }
         }

@@ -30,4 +30,8 @@ namespace GSLanguageCompiler::Semantic {
         AddVariable(variableDeclarationStatement, tableOfSymbols);
     }
 
+    AST::GSPassPtr CreateSymbolsPlaceholderPass() {
+        return std::make_shared<GS_SymbolsPlaceholderPass>();
+    }
+
 }
