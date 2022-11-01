@@ -173,18 +173,6 @@ namespace GSLanguageCompiler {
         public:
 
             /**
-             * Getter for type context from AST context
-             * @return Type context
-             */
-            Semantic::GSTypeContextPtr GetTypeContext() const;
-
-        public:
-
-            // todo add methods for table of symbols
-
-        public:
-
-            /**
              * Getter for context
              * @return Context
              */

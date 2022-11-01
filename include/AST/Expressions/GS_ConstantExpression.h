@@ -451,9 +451,42 @@ namespace GSLanguageCompiler::AST {
         UString GetStringValue() const;
     };
 
-    // todo ?
+    // todo add inheritance from GS_Value
+    /**
+     * Array value
+     */
     class GS_ArrayValue {
+    public:
 
+        /**
+         * Constructor for Array value
+         * @param values Array values
+         */
+        explicit GS_ArrayValue(GSValuePtrArray values);
+
+    public:
+
+        /**
+         * Creating Array value
+         * @param values Array values
+         * @return Array value ptr
+         */
+        static std::shared_ptr<GS_ArrayValue> Create(GSValuePtrArray values);
+
+    public:
+
+        /**
+         * Getter for values
+         * @return Values
+         */
+        GSValuePtrArray GetValues() const;
+
+    private:
+
+        /**
+         * Values
+         */
+        GSValuePtrArray _values;
     };
 
     /**
@@ -465,6 +498,8 @@ namespace GSLanguageCompiler::AST {
     template<typename T>
     inline Semantic::TypePtr<T> ToValue(GSValuePtr value) {
         static_assert(std::is_base_of_v<GS_Value, T>, "Type for casting must be inherited from GS_Value!");
+
+        // todo may be optimized
 
         auto type = value->GetType();
         auto typeType = type->GetType();
@@ -588,6 +623,16 @@ namespace GSLanguageCompiler::AST {
 
             return nullptr;
         }
+
+        // todo see GS_ArrayValue todo
+
+//        if constexpr (std::is_same_v<GS_ArrayValue, T>) {
+//            if (typeType == Semantic::TypeType::Array) {
+//                return std::reinterpret_pointer_cast<GS_ArrayValue>(value);
+//            }
+//
+//            return nullptr;
+//        }
 
         return std::reinterpret_pointer_cast<T>(value);
     }

@@ -115,10 +115,6 @@ namespace GSLanguageCompiler::Driver {
         return _context->GetMessageHandler();
     }
 
-    Semantic::GSTypeContextPtr GS_Session::GetTypeContext() const {
-        return _astContext->GetTypeContext();
-    }
-
     GSContextPtr GS_Session::GetContext() const {
         return _context;
     }

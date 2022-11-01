@@ -137,6 +137,17 @@ namespace GSLanguageCompiler::AST {
         return GetValueWithCast<UString>();
     }
 
+    GS_ArrayValue::GS_ArrayValue(GSValuePtrArray values)
+            : _values(std::move(values)) {}
+
+    std::shared_ptr<GS_ArrayValue> GS_ArrayValue::Create(GSValuePtrArray values) {
+        return std::make_shared<GS_ArrayValue>(std::move(values));
+    }
+
+    GSValuePtrArray GS_ArrayValue::GetValues() const {
+        return _values;
+    }
+
     GS_ConstantExpression::GS_ConstantExpression(GSValuePtr value)
             : _value(std::move(value)) {}
 

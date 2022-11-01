@@ -207,6 +207,13 @@ namespace GSLanguageCompiler::AST {
          */
         ValuePtr<GS_StringValue> CreateStringValue(UString string);
 
+        /**
+         * Create Array value
+         * @param values Values
+         * @return Array value
+         */
+        ValuePtr<GS_ArrayValue> CreateArrayValue(GSValuePtrArray values);
+
     public:
 
         /**
@@ -404,6 +411,13 @@ namespace GSLanguageCompiler::AST {
          * @return Constant expression
          */
         NodePtr<GS_ConstantExpression> CreateConstantExpression(UString string);
+
+        /**
+         * Create constant expression
+         * @param values Values
+         * @return Constant expression
+         */
+        NodePtr<GS_ConstantExpression> CreateConstantExpression(GSValuePtrArray values);
 
         /**
          * Create unary expression
