@@ -50,6 +50,8 @@ namespace GSLanguageCompiler::Lexer {
              || symbol == ')'
              || symbol == '{'
              || symbol == '}'
+             || symbol == '['
+             || symbol == ']'
 
              || symbol == ':'
              || symbol == ','
@@ -92,6 +94,10 @@ namespace GSLanguageCompiler::Lexer {
             return TokenType::SymbolLeftBrace;
         } else if (symbol == '}') {
             return TokenType::SymbolRightBrace;
+        } else if (symbol == '[') {
+            return TokenType::SymbolLeftBracket;
+        } else if (symbol == ']') {
+            return TokenType::SymbolRightBracket;
         } else if (symbol == ':') {
             return TokenType::SymbolColon;
         } else if (symbol == ',') {
@@ -143,7 +149,7 @@ namespace GSLanguageCompiler::Lexer {
         auto token = GetToken();
 
         while (true) {
-            // remove or update
+            // todo remove or update
             if (token.GetType() == TokenType::SymbolSpace) {
                 token = GetToken();
 
@@ -233,7 +239,7 @@ namespace GSLanguageCompiler::Lexer {
             NextSymbol();
 
             if (CurrentSymbol() != '\'') {
-                // ?
+                // todo ?
 
                 LocatedMessage("Symbol must be a one symbol!",
                                IO::MessageLevel::Error,

@@ -11,6 +11,7 @@
 #include <AST/Expressions/GS_ConstantExpression.h>
 #include <AST/Expressions/GS_UnaryExpression.h>
 #include <AST/Expressions/GS_BinaryExpression.h>
+#include <AST/Expressions/GS_ArrayExpression.h>
 #include <AST/Expressions/GS_VariableUsingExpression.h>
 #include <AST/Expressions/GS_FunctionCallingExpression.h>
 
@@ -139,6 +140,15 @@ namespace GSLanguageCompiler {
                                        LRef<Driver::GS_Session> session);
 
             /**
+             * Default visit array expression
+             * @param arrayExpression Array expression
+             * @param session Session
+             * @return
+             */
+            Void SuperArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
+                                      LRef<Driver::GS_Session> session);
+
+            /**
              * Default visit variable using expression
              * @param variableUsingExpression Variable using expression
              * @param session Session
@@ -264,6 +274,15 @@ namespace GSLanguageCompiler {
              * @return
              */
             virtual Void VisitBinaryExpression(NodePtrLRef<GS_BinaryExpression> binaryExpression,
+                                               LRef<Driver::GS_Session> session);
+
+            /**
+             * Visit array expression
+             * @param arrayExpression Array expression
+             * @param session Session
+             * @return
+             */
+            virtual Void VisitArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
                                                LRef<Driver::GS_Session> session);
 
             /**
@@ -400,6 +419,15 @@ namespace GSLanguageCompiler {
                                             LRef<Driver::GS_Session> session);
 
             /**
+             * Default transform array expression
+             * @param arrayExpression Array expression
+             * @param session Session
+             * @return Transformed array expression
+             */
+            GSNodePtr SuperArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
+                                            LRef<Driver::GS_Session> session);
+
+            /**
              * Default transform variable using expression
              * @param variableUsingExpression Variable using expression
              * @param session Session
@@ -525,6 +553,15 @@ namespace GSLanguageCompiler {
              * @return Transformed binary expression
              */
             virtual GSNodePtr TransformBinaryExpression(NodePtrLRef<GS_BinaryExpression> binaryExpression,
+                                                        LRef<Driver::GS_Session> session);
+
+            /**
+             * Transform array expression
+             * @param arrayExpression Array expression
+             * @param session Session
+             * @return Transformed array expression
+             */
+            virtual GSNodePtr TransformArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
                                                         LRef<Driver::GS_Session> session);
 
             /**

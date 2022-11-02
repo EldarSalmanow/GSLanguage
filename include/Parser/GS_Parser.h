@@ -107,15 +107,15 @@ namespace GSLanguageCompiler::Parser {
 
         AST::GSDeclarationPtr ParseDeclaration();
 
-        std::shared_ptr<AST::GS_FunctionDeclaration> ParseFunctionDeclaration();
+        AST::NodePtr<AST::GS_FunctionDeclaration> ParseFunctionDeclaration();
 
         AST::GSStatementPtr ParseStatement();
 
-        std::shared_ptr<AST::GS_VariableDeclarationStatement> ParseVariableDeclarationStatement();
+        AST::NodePtr<AST::GS_VariableDeclarationStatement> ParseVariableDeclarationStatement();
 
-        std::shared_ptr<AST::GS_AssignmentStatement> ParseAssignmentStatement();
+        AST::NodePtr<AST::GS_AssignmentStatement> ParseAssignmentStatement();
 
-        std::shared_ptr<AST::GS_ExpressionStatement> ParseExpressionStatement();
+        AST::NodePtr<AST::GS_ExpressionStatement> ParseExpressionStatement();
 
         AST::GSExpressionPtr ParseExpression();
 
@@ -128,6 +128,8 @@ namespace GSLanguageCompiler::Parser {
         AST::GSExpressionPtr ParseUnaryExpression();
 
         AST::GSExpressionPtr ParseBinaryExpression(I32 precedence, LRef<AST::GSExpressionPtr> expression);
+
+        AST::NodePtr<AST::GS_ArrayExpression> ParseArrayExpression();
 
         AST::GSExpressionPtr ParseVariableUsingExpression();
 

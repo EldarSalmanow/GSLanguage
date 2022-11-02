@@ -266,6 +266,29 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us, session);
         }
 
+        Void VisitArrayExpression(AST::NodePtrLRef<AST::GS_ArrayExpression> arrayExpression,
+                                  LRef<Driver::GS_Session> session) override {
+            Print("ArrayExpression: {"_us, session);
+
+            IncTab();
+
+            Print("Expressions: {"_us, session);
+
+            IncTab();
+
+            for (auto &expression : arrayExpression->GetExpressions()) {
+                VisitExpression(expression, session);
+            }
+
+            DecTab();
+
+            Print("}"_us, session);
+
+            DecTab();
+
+            Print("}"_us, session);
+        }
+
         Void VisitVariableUsingExpression(AST::NodePtrLRef<AST::GS_VariableUsingExpression> variableUsingExpression,
                                           LRef<Driver::GS_Session> session) override {
             Print("VariableUsingExpression: {"_us, session);

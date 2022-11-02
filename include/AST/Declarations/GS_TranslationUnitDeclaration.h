@@ -16,7 +16,7 @@ namespace GSLanguageCompiler::AST {
          * @param name Name
          * @param nodes Nodes
          */
-        GS_TranslationUnitDeclaration(UString name, GSNodePtrArray nodes;
+        GS_TranslationUnitDeclaration(UString name, GSNodePtrArray nodes);
 
     public:
 

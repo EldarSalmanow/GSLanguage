@@ -18,6 +18,7 @@
 #include <AST/Declarations/GS_TranslationUnitDeclaration.h>
 #include <AST/Declarations/GS_FunctionDeclaration.h>
 
+// todo add GS_BlockStatement AST node
 #include <AST/Statements/GS_VariableDeclarationStatement.h>
 #include <AST/Statements/GS_AssignmentStatement.h>
 #include <AST/Statements/GS_ExpressionStatement.h>
@@ -25,6 +26,7 @@
 #include <AST/Expressions/GS_ConstantExpression.h>
 #include <AST/Expressions/GS_UnaryExpression.h>
 #include <AST/Expressions/GS_BinaryExpression.h>
+#include <AST/Expressions/GS_ArrayExpression.h>
 #include <AST/Expressions/GS_VariableUsingExpression.h>
 #include <AST/Expressions/GS_FunctionCallingExpression.h>
 

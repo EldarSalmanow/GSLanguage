@@ -84,7 +84,7 @@ namespace GSLanguageCompiler::Parser {
         return nullptr;
     }
 
-    std::shared_ptr<AST::GS_FunctionDeclaration> GS_Parser::ParseFunctionDeclaration() {
+    AST::NodePtr<AST::GS_FunctionDeclaration> GS_Parser::ParseFunctionDeclaration() {
         if (!IsTokenType(Lexer::TokenType::KeywordFunc)) {
             UStringStream stringStream;
 
@@ -188,7 +188,7 @@ namespace GSLanguageCompiler::Parser {
         return ParseExpressionStatement();
     }
 
-    std::shared_ptr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement() {
+    AST::NodePtr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement() {
         auto lvalueExpression = ParseLValueExpression();
 
         if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
@@ -212,7 +212,7 @@ namespace GSLanguageCompiler::Parser {
         return assignmentStatement;
     }
 
-    std::shared_ptr<AST::GS_VariableDeclarationStatement> GS_Parser::ParseVariableDeclarationStatement() {
+    AST::NodePtr<AST::GS_VariableDeclarationStatement> GS_Parser::ParseVariableDeclarationStatement() {
         UString variableName;
         Semantic::GSTypePtr variableType;
         AST::GSExpressionPtr variableExpression;
@@ -274,7 +274,7 @@ namespace GSLanguageCompiler::Parser {
         return variable;
     }
 
-    std::shared_ptr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement() {
+    AST::NodePtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement() {
         auto expression = ParseExpression();
 
         auto expressionStatement = _builder->CreateExpressionStatement(expression);
@@ -283,9 +283,29 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSExpressionPtr GS_Parser::ParseExpression() {
-        auto expression = ParseUnaryExpression();
+        AST::GSExpressionPtr expression;
 
-        return ParseBinaryExpression(0, expression);
+        expression = TryParse(&GS_Parser::ParseUnaryExpression);
+
+        if (expression) {
+            return ParseBinaryExpression(0, expression);
+        }
+
+        expression = TryParse(&GS_Parser::ParseArrayExpression);
+
+        if (expression) {
+            return expression;
+        }
+
+        UStringStream stringStream;
+
+        stringStream << "Unknown expression!"_us;
+
+        LocatedMessage(stringStream.String(),
+                       IO::MessageLevel::Error,
+                       TokenLocation());
+
+        return nullptr;
     }
 
     AST::GSExpressionPtr GS_Parser::ParseLValueExpression() {
@@ -305,9 +325,29 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSExpressionPtr GS_Parser::ParseRValueExpression() {
-        auto expression = ParseUnaryExpression();
+        AST::GSExpressionPtr expression;
 
-        return ParseBinaryExpression(0, expression);
+        expression = TryParse(&GS_Parser::ParseUnaryExpression);
+
+        if (expression) {
+            return ParseBinaryExpression(0, expression);
+        }
+
+        expression = TryParse(&GS_Parser::ParseArrayExpression);
+
+        if (expression) {
+            return expression;
+        }
+
+        UStringStream stringStream;
+
+        stringStream << "Unknown expression!"_us;
+
+        LocatedMessage(stringStream.String(),
+                       IO::MessageLevel::Error,
+                       TokenLocation());
+
+        return nullptr;
     }
 
     AST::GSExpressionPtr GS_Parser::ParseConstantExpression() {
@@ -383,6 +423,47 @@ namespace GSLanguageCompiler::Parser {
 
             expression = _builder->CreateBinaryExpression(binaryOperator, expression, secondExpression);
         }
+    }
+
+    AST::NodePtr<AST::GS_ArrayExpression> GS_Parser::ParseArrayExpression() {
+        if (!IsTokenType(Lexer::TokenType::SymbolLeftBracket)) {
+            UStringStream stringStream;
+
+            stringStream << "Missed symbol ']' in array expression!"_us;
+
+            LocatedMessage(stringStream.String(),
+                           IO::MessageLevel::Error,
+                           TokenLocation());
+
+            return nullptr;
+        }
+
+        NextToken(); // skip '['
+
+        AST::GSExpressionPtrArray expressions;
+
+        while (!IsTokenType(Lexer::TokenType::SymbolRightBracket)) {
+            auto expression = ParseExpression();
+
+            if (!IsTokenType(Lexer::TokenType::SymbolRightBracket)
+             && !IsTokenType(Lexer::TokenType::SymbolComma)) {
+                UStringStream stringStream;
+
+                stringStream << "Missed symbol ',' or symbol ']' in array expression!"_us;
+
+                LocatedMessage(stringStream.String(),
+                               IO::MessageLevel::Error,
+                               TokenLocation());
+
+                return nullptr;
+            }
+
+            NextToken(); // skip ',' or ']'
+
+            expressions.emplace_back(expression);
+        }
+
+        return _builder->CreateArrayExpression(expressions);
     }
 
     AST::GSExpressionPtr GS_Parser::ParseVariableUsingExpression() {
@@ -542,20 +623,74 @@ namespace GSLanguageCompiler::Parser {
             return nullptr;
         }
 
-        auto stringVariableType = TokenValue();
-
-        NextToken(); // skip variable type
-
         Semantic::GSTypePtr variableType;
 
-        if (stringVariableType == "Void"_us) {
-            variableType = _builder->CreateVoidType();
-        } else if (stringVariableType == "I32"_us) {
-            variableType = _builder->CreateI32Type();
-        } else if (stringVariableType == "String"_us) {
-            variableType = _builder->CreateStringType();
+        if (IsTokenType(Lexer::TokenType::SymbolLeftBracket)) {
+            NextToken(); // skip '['
+
+            auto arrayElementsType = ParseType();
+
+            // todo add compile-time calculating array size
+
+            if (!IsTokenType(Lexer::TokenType::SymbolComma)) {
+                UStringStream stringStream;
+
+                stringStream << "Missed symbol ',' in array type!"_us;
+
+                LocatedMessage(stringStream.String(),
+                               IO::MessageLevel::Error,
+                               TokenLocation());
+
+                return nullptr;
+            }
+
+            NextToken(); // skip ','
+
+            if (!IsTokenType(Lexer::TokenType::LiteralNumber)) {
+                UStringStream stringStream;
+
+                stringStream << "Array size must be a number in array type!"_us;
+
+                LocatedMessage(stringStream.String(),
+                               IO::MessageLevel::Error,
+                               TokenLocation());
+
+                return nullptr;
+            }
+
+            auto arraySize = std::stoi(TokenValue().AsUTF8());
+
+            NextToken(); // skip array size
+
+            if (!IsTokenType(Lexer::TokenType::SymbolRightBracket)) {
+                UStringStream stringStream;
+
+                stringStream << "Missed symbol ']' in array type!"_us;
+
+                LocatedMessage(stringStream.String(),
+                               IO::MessageLevel::Error,
+                               TokenLocation());
+
+                return nullptr;
+            }
+
+            NextToken(); // skip ']'
+
+            variableType = _builder->CreateArrayType(arrayElementsType, arraySize);
         } else {
-            variableType = _builder->CreateType(stringVariableType);
+            auto stringVariableType = TokenValue();
+
+            NextToken(); // skip variable type
+
+            if (stringVariableType == "Void"_us) {
+                variableType = _builder->CreateVoidType();
+            } else if (stringVariableType == "I32"_us) {
+                variableType = _builder->CreateI32Type();
+            } else if (stringVariableType == "String"_us) {
+                variableType = _builder->CreateStringType();
+            } else {
+                variableType = _builder->CreateType(stringVariableType);
+            }
         }
 
         return variableType;

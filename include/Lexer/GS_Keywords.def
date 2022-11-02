@@ -19,6 +19,8 @@ GS_TOKENTYPE(SymbolLeftParen),
 GS_TOKENTYPE(SymbolRightParen),
 GS_TOKENTYPE(SymbolLeftBrace),
 GS_TOKENTYPE(SymbolRightBrace),
+GS_TOKENTYPE(SymbolLeftBracket),
+GS_TOKENTYPE(SymbolRightBracket),
 
 GS_TOKENTYPE(SymbolColon),
 GS_TOKENTYPE(SymbolComma),

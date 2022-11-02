@@ -12,6 +12,7 @@ namespace GSLanguageCompiler::AST {
         ConstantExpression,
         UnaryExpression,
         BinaryExpression,
+        ArrayExpression,
         VariableUsingExpression,
         FunctionCallingExpression
     };
@@ -67,6 +68,7 @@ namespace GSLanguageCompiler::AST {
     class GS_ConstantExpression;
     class GS_UnaryExpression;
     class GS_BinaryExpression;
+    class GS_ArrayExpression;
     class GS_VariableUsingExpression;
     class GS_FunctionCallingExpression;
 
@@ -101,6 +103,12 @@ namespace GSLanguageCompiler::AST {
                 break;
             case ExpressionType::BinaryExpression:
                 if constexpr (!std::is_same_v<GS_BinaryExpression, T>) {
+                    return nullptr;
+                }
+
+                break;
+            case ExpressionType::ArrayExpression:
+                if constexpr (!std::is_same_v<GS_ArrayExpression, T>) {
                     return nullptr;
                 }
 
@@ -146,6 +154,7 @@ namespace GSLanguageCompiler::AST {
             case ExpressionType::ConstantExpression:
             case ExpressionType::UnaryExpression:
             case ExpressionType::BinaryExpression:
+            case ExpressionType::ArrayExpression:
             case ExpressionType::VariableUsingExpression:
             case ExpressionType::FunctionCallingExpression:
                 return true;

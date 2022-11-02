@@ -23,6 +23,7 @@ set(GS_AST_SOURCE
         ${AST_DIR}/Expressions/GS_ConstantExpression.cpp
         ${AST_DIR}/Expressions/GS_UnaryExpression.cpp
         ${AST_DIR}/Expressions/GS_BinaryExpression.cpp
+        ${AST_DIR}/Expressions/GS_ArrayExpression.cpp
         ${AST_DIR}/Expressions/GS_VariableUsingExpression.cpp
         ${AST_DIR}/Expressions/GS_FunctionCallingExpression.cpp
 

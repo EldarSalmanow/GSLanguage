@@ -109,10 +109,6 @@ namespace GSLanguageCompiler::AST {
         return GS_StringValue::Create(std::move(string));
     }
 
-    ValuePtr<GS_ArrayValue> GS_ASTBuilder::CreateArrayValue(GSValuePtrArray values) {
-        return GS_ArrayValue::Create(std::move(values));
-    }
-
     GSTranslationUnitDeclarationPtr GS_ASTBuilder::CreateTranslationUnitDeclaration(UString name, GSNodePtrArray nodes) {
         return GS_TranslationUnitDeclaration::Create(std::move(name), std::move(nodes));
     }
@@ -217,20 +213,16 @@ namespace GSLanguageCompiler::AST {
         return CreateConstantExpression(CreateStringValue(std::move(string)));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(GSValuePtrArray values) {
-        // todo see GS_ConstantExpression.cpp todo
-
-//        return CreateConstantExpression(CreateArrayValue(std::move(values)));
-
-        return nullptr;
-    }
-
     NodePtr<GS_UnaryExpression> GS_ASTBuilder::CreateUnaryExpression(UnaryOperation operation, GSExpressionPtr expression) {
         return GS_UnaryExpression::Create(operation, std::move(expression));
     }
 
     NodePtr<GS_BinaryExpression> GS_ASTBuilder::CreateBinaryExpression(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression) {
         return GS_BinaryExpression::Create(operation, std::move(firstExpression), std::move(secondExpression));
+    }
+
+    NodePtr<GS_ArrayExpression> GS_ASTBuilder::CreateArrayExpression(GSExpressionPtrArray expressions) {
+        return GS_ArrayExpression::Create(std::move(expressions));
     }
 
     NodePtr<GS_VariableUsingExpression> GS_ASTBuilder::CreateVariableUsingExpression(UString name) {

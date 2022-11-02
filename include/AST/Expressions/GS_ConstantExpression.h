@@ -451,44 +451,6 @@ namespace GSLanguageCompiler::AST {
         UString GetStringValue() const;
     };
 
-    // todo add inheritance from GS_Value
-    /**
-     * Array value
-     */
-    class GS_ArrayValue {
-    public:
-
-        /**
-         * Constructor for Array value
-         * @param values Array values
-         */
-        explicit GS_ArrayValue(GSValuePtrArray values);
-
-    public:
-
-        /**
-         * Creating Array value
-         * @param values Array values
-         * @return Array value ptr
-         */
-        static std::shared_ptr<GS_ArrayValue> Create(GSValuePtrArray values);
-
-    public:
-
-        /**
-         * Getter for values
-         * @return Values
-         */
-        GSValuePtrArray GetValues() const;
-
-    private:
-
-        /**
-         * Values
-         */
-        GSValuePtrArray _values;
-    };
-
     /**
      * Casting any value ptr to concrete value ptr
      * @tparam T Type of value
@@ -623,16 +585,6 @@ namespace GSLanguageCompiler::AST {
 
             return nullptr;
         }
-
-        // todo see GS_ArrayValue todo
-
-//        if constexpr (std::is_same_v<GS_ArrayValue, T>) {
-//            if (typeType == Semantic::TypeType::Array) {
-//                return std::reinterpret_pointer_cast<GS_ArrayValue>(value);
-//            }
-//
-//            return nullptr;
-//        }
 
         return std::reinterpret_pointer_cast<T>(value);
     }

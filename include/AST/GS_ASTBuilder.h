@@ -11,6 +11,7 @@
 #include <AST/Expressions/GS_ConstantExpression.h>
 #include <AST/Expressions/GS_UnaryExpression.h>
 #include <AST/Expressions/GS_BinaryExpression.h>
+#include <AST/Expressions/GS_ArrayExpression.h>
 #include <AST/Expressions/GS_VariableUsingExpression.h>
 #include <AST/Expressions/GS_FunctionCallingExpression.h>
 
@@ -206,13 +207,6 @@ namespace GSLanguageCompiler::AST {
          * @return String value
          */
         ValuePtr<GS_StringValue> CreateStringValue(UString string);
-
-        /**
-         * Create Array value
-         * @param values Values
-         * @return Array value
-         */
-        ValuePtr<GS_ArrayValue> CreateArrayValue(GSValuePtrArray values);
 
     public:
 
@@ -413,13 +407,6 @@ namespace GSLanguageCompiler::AST {
         NodePtr<GS_ConstantExpression> CreateConstantExpression(UString string);
 
         /**
-         * Create constant expression
-         * @param values Values
-         * @return Constant expression
-         */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(GSValuePtrArray values);
-
-        /**
          * Create unary expression
          * @param operation Operation
          * @param expression Expression
@@ -435,6 +422,13 @@ namespace GSLanguageCompiler::AST {
          * @return Binary expression
          */
         NodePtr<GS_BinaryExpression> CreateBinaryExpression(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression);
+
+        /**
+         * Create array expression
+         * @param expressions Expressions
+         * @return Array expression
+         */
+        NodePtr<GS_ArrayExpression> CreateArrayExpression(GSExpressionPtrArray expressions);
 
         /**
          * Create variable using expression

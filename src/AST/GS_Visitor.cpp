@@ -153,6 +153,15 @@ namespace GSLanguageCompiler::AST {
         VisitExpression(secondExpression, session);
     }
 
+    Void GS_Visitor::SuperArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
+                                          LRef<Driver::GS_Session> session) {
+        auto expressions = arrayExpression->GetExpressions();
+
+        for (auto &expression : expressions) {
+            VisitExpression(expression, session);
+        }
+    }
+
     Void GS_Visitor::SuperVariableUsingExpression(NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression,
                                                   LRef<Driver::GS_Session> session) {
 
@@ -221,6 +230,11 @@ namespace GSLanguageCompiler::AST {
     Void GS_Visitor::VisitBinaryExpression(NodePtrLRef<GS_BinaryExpression> binaryExpression,
                                            LRef<Driver::GS_Session> session) {
         SuperBinaryExpression(binaryExpression, session);
+    }
+
+    Void GS_Visitor::VisitArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
+                                          LRef<Driver::GS_Session> session) {
+        SuperArrayExpression(arrayExpression, session);
     }
 
     Void GS_Visitor::VisitVariableUsingExpression(NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression,
@@ -422,6 +436,19 @@ namespace GSLanguageCompiler::AST {
         return binaryExpression;
     }
 
+    GSNodePtr GS_Transformer::SuperArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
+                                         LRef<Driver::GS_Session> session) {
+        auto &expressions = arrayExpression->GetExpressions();
+
+        for (auto &expression : expressions) {
+            auto transformedExpression = ToExpression(TransformExpression(expression, session));
+
+            expression.swap(transformedExpression);
+        }
+
+        return arrayExpression;
+    }
+
     GSNodePtr GS_Transformer::SuperVariableUsingExpression(NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression,
                                                            LRef<Driver::GS_Session> session) {
         return variableUsingExpression;
@@ -490,6 +517,11 @@ namespace GSLanguageCompiler::AST {
     GSNodePtr GS_Transformer::TransformBinaryExpression(NodePtrLRef<GS_BinaryExpression> binaryExpression,
                                                         LRef<Driver::GS_Session> session) {
         return SuperBinaryExpression(binaryExpression, session);
+    }
+
+    GSNodePtr GS_Transformer::TransformArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
+                                             LRef<Driver::GS_Session> session) {
+        return SuperArrayExpression(arrayExpression, session);
     }
 
     GSNodePtr GS_Transformer::TransformVariableUsingExpression(NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression,
