@@ -9,6 +9,8 @@ namespace GSLanguageCompiler::IO {
 
     class GS_Source;
 
+    class GS_FullSourceLocation;
+
     /**
      * Class for containing location in source
      */
@@ -21,7 +23,9 @@ namespace GSLanguageCompiler::IO {
          * @param startPosition Start position
          * @param endPosition End position
          */
-        GS_SourceLocation(U64 sourceHash, U64 startPosition, U64 endPosition);
+        GS_SourceLocation(U64 sourceHash,
+                          U64 startPosition,
+                          U64 endPosition);
 
     public:
 
@@ -32,7 +36,9 @@ namespace GSLanguageCompiler::IO {
          * @param endPosition End position
          * @return Source location
          */
-        static GS_SourceLocation Create(U64 sourceHash, U64 startPosition, U64 endPosition);
+        static GS_SourceLocation Create(U64 sourceHash,
+                                        U64 startPosition,
+                                        U64 endPosition);
 
         /**
          * Creating source location
@@ -40,7 +46,8 @@ namespace GSLanguageCompiler::IO {
          * @param endPosition End position
          * @return Source location
          */
-        static GS_SourceLocation Create(U64 sourceHash, U64 endPosition);
+        static GS_SourceLocation Create(U64 sourceHash,
+                                        U64 endPosition);
 
         /**
          * Creating source location without source hash
@@ -48,7 +55,8 @@ namespace GSLanguageCompiler::IO {
          * @param endPosition End position
          * @return Source location
          */
-        static GS_SourceLocation CreateWithoutHash(U64 startPosition, U64 endPosition);
+        static GS_SourceLocation CreateWithoutHash(U64 startPosition,
+                                                   U64 endPosition);
 
         /**
          * Creating source location without source hash
@@ -65,10 +73,13 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        // TODO: update
-        static U64 ToSymbolLocation(U64 line, U64 column, std::shared_ptr<GS_Source> source);
+        static GS_SourceLocation FromFullSourceLocation(GS_FullSourceLocation fullSourceLocation,
+                                                        std::shared_ptr<GS_Source> source);
 
-        static std::pair<U64, U64> ToLineColumnLocation(U64 position, std::shared_ptr<GS_Source> source);
+        // TODO: update
+//        static U64 ToSymbolLocation(U64 line, U64 column, std::shared_ptr<GS_Source> source);
+//
+//        static std::pair<U64, U64> ToLineColumnLocation(U64 position, std::shared_ptr<GS_Source> source);
 
     public:
 
@@ -108,6 +119,67 @@ namespace GSLanguageCompiler::IO {
         U64 _endPosition;
     };
 
+    class GS_FullSourceLocation {
+    public:
+
+        GS_FullSourceLocation(U64 sourceHash,
+                              U64 startLine,
+                              U64 startColumn,
+                              U64 endLine,
+                              U64 endColumn);
+
+    public:
+
+        static GS_FullSourceLocation Create(U64 sourceHash,
+                                            U64 startLine,
+                                            U64 startColumn,
+                                            U64 endLine,
+                                            U64 endColumn);
+
+        static GS_FullSourceLocation Create(U64 sourceHash,
+                                            U64 endLine,
+                                            U64 endColumn);
+
+        static GS_FullSourceLocation CreateWithoutHash(U64 startLine,
+                                                       U64 startColumn,
+                                                       U64 endLine,
+                                                       U64 endColumn);
+
+        static GS_FullSourceLocation CreateWithoutHash(U64 endLine,
+                                                       U64 endColumn);
+
+        static GS_FullSourceLocation Create();
+
+    public:
+
+        static GS_FullSourceLocation FromSourceLocation(GS_SourceLocation sourceLocation,
+                                                        std::shared_ptr<GS_Source> source);
+
+    public:
+
+        U64 GetSourceHash() const;
+
+        U64 GetStartLine() const;
+
+        U64 GetStartColumn() const;
+
+        U64 GetEndLine() const;
+
+        U64 GetEndColumn() const;
+
+    private:
+
+        U64 _sourceHash;
+
+        U64 _startLine;
+
+        U64 _startColumn;
+
+        U64 _endLine;
+
+        U64 _endColumn;
+    };
+
     /**
      * Source name type
      */
@@ -128,7 +200,8 @@ namespace GSLanguageCompiler::IO {
          * @param name Source name
          * @param type Source name type
          */
-        GS_SourceName(UString name, SourceNameType type);
+        GS_SourceName(UString name,
+                      SourceNameType type);
 
     public:
 
@@ -138,7 +211,8 @@ namespace GSLanguageCompiler::IO {
          * @param type Source name type
          * @return Source name
          */
-        static GS_SourceName Create(UString name, SourceNameType type);
+        static GS_SourceName Create(UString name,
+                                    SourceNameType type);
 
         /**
          * Creating file source name
@@ -245,7 +319,8 @@ namespace GSLanguageCompiler::IO {
          * @param source Source code
          * @param name Source name
          */
-        GS_Source(UString source, GS_SourceName name);
+        GS_Source(UString source,
+                  GS_SourceName name);
 
     public:
 
@@ -255,7 +330,8 @@ namespace GSLanguageCompiler::IO {
          * @param name Source name
          * @return Source ptr
          */
-        static std::shared_ptr<GS_Source> Create(UString source, GS_SourceName name);
+        static std::shared_ptr<GS_Source> Create(UString source,
+                                                 GS_SourceName name);
 
         /**
          * Creating file source
@@ -277,7 +353,8 @@ namespace GSLanguageCompiler::IO {
          * @param name Source name
          * @return Source ptr
          */
-        static std::shared_ptr<GS_Source> CreateCustom(UString source, UString name);
+        static std::shared_ptr<GS_Source> CreateCustom(UString source,
+                                                       UString name);
 
     public:
 

@@ -95,7 +95,12 @@ namespace GSLanguageCompiler::IO {
                 return;
             }
 
-            auto [line, column] = GS_SourceLocation::ToLineColumnLocation(location.GetStartPosition(), source);
+            auto fullSourceLocation = GS_FullSourceLocation::FromSourceLocation(location, source);
+
+            auto line = fullSourceLocation.GetStartLine();
+            auto column = fullSourceLocation.GetStartColumn();
+
+//            auto [line, column] = GS_SourceLocation::ToLineColumnLocation(location.GetStartPosition(), source);
 
             stream << "{ "
                    << source->GetName().GetName()
