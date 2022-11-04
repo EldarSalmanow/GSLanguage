@@ -20,7 +20,8 @@ namespace GSLanguageCompiler::Driver {
          * @param inputFileNames Input file names
          * @param outputFileName Output file name
          */
-        GS_Arguments(std::vector<UString> inputFileNames, UString outputFileName);
+        GS_Arguments(std::vector<UString> inputFileNames,
+                     UString outputFileName);
 
     public:
 
@@ -30,7 +31,8 @@ namespace GSLanguageCompiler::Driver {
          * @param outputFileName Output file name
          * @return Arguments
          */
-        static GS_Arguments Create(std::vector<UString> inputFileNames, UString outputFileName);
+        static GS_Arguments Create(std::vector<UString> inputFileNames,
+                                   UString outputFileName);
 
         /**
          * Creating arguments

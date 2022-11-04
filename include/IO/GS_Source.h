@@ -7,12 +7,12 @@
 
 namespace GSLanguageCompiler::IO {
 
-    class GS_Source;
-
     class GS_FullSourceLocation;
 
+    class GS_Source;
+
     /**
-     * Class for containing location in source
+     * Class for containing information about location in source
      */
     class GS_SourceLocation {
     public:
@@ -73,13 +73,14 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
+        /**
+         * Creating source location from ful source location
+         * @param fullSourceLocation Full source location
+         * @param source Source
+         * @return Source location
+         */
         static GS_SourceLocation FromFullSourceLocation(GS_FullSourceLocation fullSourceLocation,
                                                         std::shared_ptr<GS_Source> source);
-
-        // TODO: update
-//        static U64 ToSymbolLocation(U64 line, U64 column, std::shared_ptr<GS_Source> source);
-//
-//        static std::pair<U64, U64> ToLineColumnLocation(U64 position, std::shared_ptr<GS_Source> source);
 
     public:
 
@@ -119,9 +120,20 @@ namespace GSLanguageCompiler::IO {
         U64 _endPosition;
     };
 
+    /**
+     * Class for containing full information about location in source
+     */
     class GS_FullSourceLocation {
     public:
 
+        /**
+         * Constructor for full source location
+         * @param sourceHash Source hash
+         * @param startLine Start line
+         * @param startColumn Start column
+         * @param endLine End line
+         * @param endColumn End column
+         */
         GS_FullSourceLocation(U64 sourceHash,
                               U64 startLine,
                               U64 startColumn,
@@ -130,53 +142,128 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
+        /**
+         * Creating full source location
+         * @param sourceHash Source hash
+         * @param startLine Start line
+         * @param startColumn Start column
+         * @param endLine End line
+         * @param endColumn End column
+         * @return Full source location
+         */
         static GS_FullSourceLocation Create(U64 sourceHash,
                                             U64 startLine,
                                             U64 startColumn,
                                             U64 endLine,
                                             U64 endColumn);
 
+        /**
+         * Creating full source location
+         * @param sourceHash Source hash
+         * @param endLine End line
+         * @param endColumn End column
+         * @return Full source location
+         */
         static GS_FullSourceLocation Create(U64 sourceHash,
                                             U64 endLine,
                                             U64 endColumn);
 
+        /**
+         * Creating full source location without source hash
+         * @param startLine Start line
+         * @param startColumn Start column
+         * @param endLine End line
+         * @param endColumn End column
+         * @return Full source location
+         */
         static GS_FullSourceLocation CreateWithoutHash(U64 startLine,
                                                        U64 startColumn,
                                                        U64 endLine,
                                                        U64 endColumn);
 
+        /**
+         * Creating full source location without source hash
+         * @param endLine End line
+         * @param endColumn End column
+         * @return Full source location
+         */
         static GS_FullSourceLocation CreateWithoutHash(U64 endLine,
                                                        U64 endColumn);
 
+        /**
+         * Creating full source location
+         * @return Full source location
+         */
         static GS_FullSourceLocation Create();
 
     public:
 
+        /**
+         * Creating full source location from source location
+         * @param sourceLocation Source location
+         * @param source Source
+         * @return Full source location
+         */
         static GS_FullSourceLocation FromSourceLocation(GS_SourceLocation sourceLocation,
                                                         std::shared_ptr<GS_Source> source);
 
     public:
 
+        /**
+         * Getter for source hash
+         * @return Source hash
+         */
         U64 GetSourceHash() const;
 
+        /**
+         * Getter for start line
+         * @return Start line
+         */
         U64 GetStartLine() const;
 
+        /**
+         * Getter for start column
+         * @return Start column
+         */
         U64 GetStartColumn() const;
 
+        /**
+         * Getter for end line
+         * @return End line
+         */
         U64 GetEndLine() const;
 
+        /**
+         * Getter for end column
+         * @return End column
+         */
         U64 GetEndColumn() const;
 
     private:
 
+        /**
+         * Source hash
+         */
         U64 _sourceHash;
 
+        /**
+         * Start line
+         */
         U64 _startLine;
 
+        /**
+         * Start column
+         */
         U64 _startColumn;
 
+        /**
+         * End line
+         */
         U64 _endLine;
 
+        /**
+         * End column
+         */
         U64 _endColumn;
     };
 

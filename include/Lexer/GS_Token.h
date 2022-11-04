@@ -19,7 +19,9 @@ namespace GSLanguageCompiler::Lexer {
          * @param value Value
          * @param location Location
          */
-        GS_Token(TokenType type, UString value, IO::GS_SourceLocation location);
+        GS_Token(TokenType type,
+                 UString value,
+                 IO::GS_SourceLocation location);
 
     public:
 
@@ -30,7 +32,9 @@ namespace GSLanguageCompiler::Lexer {
          * @param location Location
          * @return Token
          */
-        static GS_Token Create(TokenType type, UString value, IO::GS_SourceLocation location);
+        static GS_Token Create(TokenType type,
+                               UString value,
+                               IO::GS_SourceLocation location);
 
         /**
          * Creating token
@@ -38,7 +42,8 @@ namespace GSLanguageCompiler::Lexer {
          * @param value Value
          * @return Token
          */
-        static GS_Token Create(TokenType type, UString value);
+        static GS_Token Create(TokenType type,
+                               UString value);
 
         /**
          * Creating token
@@ -46,7 +51,8 @@ namespace GSLanguageCompiler::Lexer {
          * @param location Location
          * @return Token
          */
-        static GS_Token Create(TokenType type, IO::GS_SourceLocation location);
+        static GS_Token Create(TokenType type,
+                               IO::GS_SourceLocation location);
 
         /**
          * Creating token

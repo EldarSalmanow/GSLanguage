@@ -3,15 +3,15 @@
 namespace GSLanguageCompiler::Driver {
 
     GS_Context::GS_Context(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
-                           IO::GSSourceManagerPtr       sourceManager,
-                           IO::GSMessageHandlerPtr      messageHandler)
+                           IO::GSSourceManagerPtr sourceManager,
+                           IO::GSMessageHandlerPtr messageHandler)
             : _stdIOStreamsManager(std::move(stdIOStreamsManager)),
               _sourceManager(std::move(sourceManager)),
               _messageHandler(std::move(messageHandler)) {}
 
     std::shared_ptr<GS_Context> GS_Context::Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
-                                                   IO::GSSourceManagerPtr       sourceManager,
-                                                   IO::GSMessageHandlerPtr      messageHandler) {
+                                                   IO::GSSourceManagerPtr sourceManager,
+                                                   IO::GSMessageHandlerPtr messageHandler) {
         return std::make_shared<GS_Context>(std::move(stdIOStreamsManager),
                                             std::move(sourceManager),
                                             std::move(messageHandler));
@@ -19,7 +19,8 @@ namespace GSLanguageCompiler::Driver {
 
     std::shared_ptr<GS_Context> GS_Context::Create(IO::GSSourceManagerPtr sourceManager) {
         auto stdIOStreamsManager = IO::GS_StdIOStreamsManager::Create();
-        auto messageHandler = IO::GS_MessageHandler::Create(stdIOStreamsManager->GetStdOutStream(), sourceManager);
+        auto messageHandler = IO::GS_MessageHandler::Create(stdIOStreamsManager->GetStdOutStream(),
+                                                            sourceManager);
 
         return GS_Context::Create(stdIOStreamsManager,
                                   std::move(sourceManager),
@@ -29,7 +30,8 @@ namespace GSLanguageCompiler::Driver {
     std::shared_ptr<GS_Context> GS_Context::Create() {
         auto stdIOStreamsManager = IO::GS_StdIOStreamsManager::Create();
         auto sourceManager = IO::GS_SourceManager::Create();
-        auto messageHandler = IO::GS_MessageHandler::Create(stdIOStreamsManager->GetStdOutStream(), sourceManager);
+        auto messageHandler = IO::GS_MessageHandler::Create(stdIOStreamsManager->GetStdOutStream(),
+                                                            sourceManager);
 
         return GS_Context::Create(stdIOStreamsManager,
                                   sourceManager,
@@ -42,7 +44,8 @@ namespace GSLanguageCompiler::Driver {
 
         auto stdIOStreamsManager = IO::GS_StdIOStreamsManager::Create();
         auto sourceManager = IO::GS_SourceManager::Create();
-        auto messageHandler = IO::GS_MessageHandler::Create(stdIOStreamsManager->GetStdOutStream(), sourceManager);
+        auto messageHandler = IO::GS_MessageHandler::Create(stdIOStreamsManager->GetStdOutStream(),
+                                                            sourceManager);
 
         for (auto &inputFileName : inputFileNames) {
             auto inputSource = IO::GS_Source::CreateFile(inputFileName);

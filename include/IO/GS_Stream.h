@@ -16,25 +16,25 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Constructor for stream info
-         * @param fileName File name
+         * @param streamName Stream name
          */
-        explicit GS_StreamInfo(UString fileName);
+        explicit GS_StreamInfo(UString streamName);
 
     public:
 
         /**
          * Creating stream info
-         * @param fileName File name
+         * @param streamName Stream name
          * @return Stream info ptr
          */
-        static std::shared_ptr<GS_StreamInfo> Create(UString fileName);
+        static std::shared_ptr<GS_StreamInfo> Create(UString streamName);
 
         /**
          * Creating file stream info
-         * @param fileName File name
+         * @param streamName Stream name
          * @return Stream info ptr
          */
-        static std::shared_ptr<GS_StreamInfo> CreateFileInfo(UString fileName);
+        static std::shared_ptr<GS_StreamInfo> CreateFileInfo(UString streamName);
 
         /**
          * Creating console stream info
@@ -71,17 +71,17 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
-         * Getter for file name
-         * @return File name
+         * Getter for stream name
+         * @return Stream name
          */
-        UString GetFileName() const;
+        UString GetStreamName() const;
 
     private:
 
         /**
-         * File name
+         * Stream name
          */
-        UString _fileName;
+        UString _streamName;
     };
 
     /**
@@ -181,7 +181,8 @@ namespace GSLanguageCompiler::IO {
          * @param stream Standard input file stream
          * @param streamInfo Stream info
          */
-        GS_InFileStream(std::ifstream stream, GSStreamInfoPtr streamInfo);
+        GS_InFileStream(std::ifstream stream,
+                        GSStreamInfoPtr streamInfo);
 
     public:
 
@@ -191,7 +192,8 @@ namespace GSLanguageCompiler::IO {
          * @param streamInfo Stream info
          * @return Input file stream ptr
          */
-        static std::shared_ptr<GS_InFileStream> Create(std::ifstream stream, GSStreamInfoPtr streamInfo);
+        static std::shared_ptr<GS_InFileStream> Create(std::ifstream stream,
+                                                       GSStreamInfoPtr streamInfo);
 
         /**
          * Creating input file stream
@@ -227,7 +229,8 @@ namespace GSLanguageCompiler::IO {
          * @param stream Standard input console stream
          * @param streamInfo Stream info
          */
-        GS_InConsoleStream(LRef<std::istream> stream, GSStreamInfoPtr streamInfo);
+        GS_InConsoleStream(LRef<std::istream> stream,
+                           GSStreamInfoPtr streamInfo);
 
     public:
 
@@ -237,7 +240,8 @@ namespace GSLanguageCompiler::IO {
          * @param streamInfo Stream info
          * @return Input console stream ptr
          */
-        static std::shared_ptr<GS_InConsoleStream> Create(LRef<std::istream> stream, GSStreamInfoPtr streamInfo);
+        static std::shared_ptr<GS_InConsoleStream> Create(LRef<std::istream> stream,
+                                                          GSStreamInfoPtr streamInfo);
 
         /**
          * Creating input console stream (std::cin standard stream)
@@ -272,7 +276,8 @@ namespace GSLanguageCompiler::IO {
          * @param stream Standard input string stream
          * @param streamInfo Stream info
          */
-        GS_InStringStream(std::istringstream stream, GSStreamInfoPtr streamInfo);
+        GS_InStringStream(std::istringstream stream,
+                          GSStreamInfoPtr streamInfo);
 
     public:
 
@@ -351,7 +356,8 @@ namespace GSLanguageCompiler::IO {
          * @param stream Standard output file stream
          * @param streamInfo Stream info
          */
-        GS_OutFileStream(std::ofstream stream, GSStreamInfoPtr streamInfo);
+        GS_OutFileStream(std::ofstream stream,
+                         GSStreamInfoPtr streamInfo);
 
     public:
 
@@ -361,7 +367,8 @@ namespace GSLanguageCompiler::IO {
          * @param streamInfo Stream info
          * @return Output file stream ptr
          */
-        static std::shared_ptr<GS_OutFileStream> Create(std::ofstream stream, GSStreamInfoPtr streamInfo);
+        static std::shared_ptr<GS_OutFileStream> Create(std::ofstream stream,
+                                                        GSStreamInfoPtr streamInfo);
 
         /**
          * Creating output file stream
@@ -397,7 +404,8 @@ namespace GSLanguageCompiler::IO {
          * @param stream Standard output console stream
          * @param streamInfo Stream info
          */
-        GS_OutConsoleStream(LRef<std::ostream> stream, GSStreamInfoPtr streamInfo);
+        GS_OutConsoleStream(LRef<std::ostream> stream,
+                            GSStreamInfoPtr streamInfo);
 
     public:
 
@@ -407,7 +415,8 @@ namespace GSLanguageCompiler::IO {
          * @param streamInfo Stream info
          * @return Output console stream
          */
-        static std::shared_ptr<GS_OutConsoleStream> Create(LRef<std::ostream> stream, GSStreamInfoPtr streamInfo);
+        static std::shared_ptr<GS_OutConsoleStream> Create(LRef<std::ostream> stream,
+                                                           GSStreamInfoPtr streamInfo);
 
         /**
          * Creating output console stream (std::cout standard stream)
@@ -454,7 +463,8 @@ namespace GSLanguageCompiler::IO {
          * @param stream Standard output string stream
          * @param streamInfo Stream info
          */
-        GS_OutStringStream(std::ostringstream stream, GSStreamInfoPtr streamInfo);
+        GS_OutStringStream(std::ostringstream stream,
+                           GSStreamInfoPtr streamInfo);
 
     public:
 
@@ -507,7 +517,7 @@ namespace GSLanguageCompiler::IO {
          * @param standardErr Standard error stream
          * @param standardLog Standard logging stream
          */
-        GS_StdIOStreamsManager(IO::GSInStreamPtr  standardIn,
+        GS_StdIOStreamsManager(IO::GSInStreamPtr standardIn,
                                IO::GSOutStreamPtr standardOut,
                                IO::GSOutStreamPtr standardErr,
                                IO::GSOutStreamPtr standardLog);
@@ -522,7 +532,7 @@ namespace GSLanguageCompiler::IO {
          * @param standardLog Standard logging stream
          * @return Standard IO streams manager ptr
          */
-        static std::shared_ptr<GS_StdIOStreamsManager> Create(IO::GSInStreamPtr  standardIn,
+        static std::shared_ptr<GS_StdIOStreamsManager> Create(IO::GSInStreamPtr standardIn,
                                                               IO::GSOutStreamPtr standardOut,
                                                               IO::GSOutStreamPtr standardErr,
                                                               IO::GSOutStreamPtr standardLog);
@@ -594,7 +604,7 @@ namespace GSLanguageCompiler::IO {
         /**
          * Standard input stream
          */
-        IO::GSInStreamPtr  _standardIn;
+        IO::GSInStreamPtr _standardIn;
 
         /**
          * Standard output stream

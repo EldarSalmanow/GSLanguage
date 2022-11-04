@@ -31,7 +31,9 @@ namespace GSLanguageCompiler::IO {
          * @param level Message level
          * @param location Message location
          */
-        GS_Message(UString text, MessageLevel level, std::optional<GS_SourceLocation> location);
+        GS_Message(UString text,
+                   MessageLevel level,
+                   std::optional<GS_SourceLocation> location);
 
     public:
 
@@ -42,7 +44,9 @@ namespace GSLanguageCompiler::IO {
          * @param location Message location
          * @return Message ptr
          */
-        static std::shared_ptr<GS_Message> Create(UString text, MessageLevel level, std::optional<GS_SourceLocation> location);
+        static std::shared_ptr<GS_Message> Create(UString text,
+                                                  MessageLevel level,
+                                                  std::optional<GS_SourceLocation> location);
 
         /**
          * Creating message
@@ -51,7 +55,9 @@ namespace GSLanguageCompiler::IO {
          * @param location Message location
          * @return Message ptr
          */
-        static std::shared_ptr<GS_Message> Create(UString text, MessageLevel level, GS_SourceLocation location);
+        static std::shared_ptr<GS_Message> Create(UString text,
+                                                  MessageLevel level,
+                                                  GS_SourceLocation location);
 
         /**
          * Creating message
@@ -59,7 +65,8 @@ namespace GSLanguageCompiler::IO {
          * @param level Message level
          * @return Message ptr
          */
-        static std::shared_ptr<GS_Message> Create(UString text, MessageLevel level);
+        static std::shared_ptr<GS_Message> Create(UString text,
+                                                  MessageLevel level);
 
     public:
 
@@ -120,7 +127,8 @@ namespace GSLanguageCompiler::IO {
          * @param outputStream Output stream
          * @param sourceManager Source manager
          */
-        GS_MessageHandler(GSOutStreamPtr outputStream, GSSourceManagerPtr sourceManager);
+        GS_MessageHandler(GSOutStreamPtr outputStream,
+                          GSSourceManagerPtr sourceManager);
 
     public:
 
@@ -130,7 +138,8 @@ namespace GSLanguageCompiler::IO {
          * @param sourceManager Source manager
          * @return Message handler ptr
          */
-        static std::shared_ptr<GS_MessageHandler> Create(GSOutStreamPtr outputStream, GSSourceManagerPtr sourceManager);
+        static std::shared_ptr<GS_MessageHandler> Create(GSOutStreamPtr outputStream,
+                                                         GSSourceManagerPtr sourceManager);
 
     public:
 

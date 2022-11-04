@@ -17,6 +17,8 @@ namespace GSLanguageCompiler::Driver {
      */
     Void DefaultSignalHandler(I32 signal);
 
+    // todo use singleton pattern
+
     /**
      * Global compiler context for containing and manipulating information and operation system
      */

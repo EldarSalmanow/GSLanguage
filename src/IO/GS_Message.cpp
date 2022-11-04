@@ -16,19 +16,34 @@
 
 namespace GSLanguageCompiler::IO {
 
-    GS_Message::GS_Message(UString text, MessageLevel level, std::optional<GS_SourceLocation> location)
-            : _text(std::move(text)), _level(level), _location(location) {}
+    GS_Message::GS_Message(UString text,
+                           MessageLevel level,
+                           std::optional<GS_SourceLocation> location)
+            : _text(std::move(text)),
+              _level(level),
+              _location(location) {}
 
-    std::shared_ptr<GS_Message> GS_Message::Create(UString text, MessageLevel level, std::optional<GS_SourceLocation> location) {
-        return std::make_shared<GS_Message>(std::move(text), level, location);
+    std::shared_ptr<GS_Message> GS_Message::Create(UString text,
+                                                   MessageLevel level,
+                                                   std::optional<GS_SourceLocation> location) {
+        return std::make_shared<GS_Message>(std::move(text),
+                                            level,
+                                            location);
     }
 
-    std::shared_ptr<GS_Message> GS_Message::Create(UString text, MessageLevel level, GS_SourceLocation location) {
-        return GS_Message::Create(std::move(text), level, std::make_optional(location));
+    std::shared_ptr<GS_Message> GS_Message::Create(UString text,
+                                                   MessageLevel level,
+                                                   GS_SourceLocation location) {
+        return GS_Message::Create(std::move(text),
+                                  level,
+                                  std::make_optional(location));
     }
 
-    std::shared_ptr<GS_Message> GS_Message::Create(UString text, MessageLevel level) {
-        return GS_Message::Create(std::move(text), level, std::nullopt);
+    std::shared_ptr<GS_Message> GS_Message::Create(UString text,
+                                                   MessageLevel level) {
+        return GS_Message::Create(std::move(text),
+                                  level,
+                                  std::nullopt);
     }
 
     UString GS_Message::GetText() const {
@@ -43,11 +58,15 @@ namespace GSLanguageCompiler::IO {
         return _location;
     }
 
-    GS_MessageHandler::GS_MessageHandler(GSOutStreamPtr outputStream, GSSourceManagerPtr sourceManager)
-            : _outputStream(std::move(outputStream)), _sourceManager(std::move(sourceManager)) {}
+    GS_MessageHandler::GS_MessageHandler(GSOutStreamPtr outputStream,
+                                         GSSourceManagerPtr sourceManager)
+            : _outputStream(std::move(outputStream)),
+              _sourceManager(std::move(sourceManager)) {}
 
-    std::shared_ptr<GS_MessageHandler> GS_MessageHandler::Create(GSOutStreamPtr outputStream, GSSourceManagerPtr sourceManager) {
-        return std::make_shared<GS_MessageHandler>(std::move(outputStream), std::move(sourceManager));
+    std::shared_ptr<GS_MessageHandler> GS_MessageHandler::Create(GSOutStreamPtr outputStream,
+                                                                 GSSourceManagerPtr sourceManager) {
+        return std::make_shared<GS_MessageHandler>(std::move(outputStream),
+                                                   std::move(sourceManager));
     }
 
     Void GS_MessageHandler::Write(GSMessagePtr message) {
@@ -90,17 +109,19 @@ namespace GSLanguageCompiler::IO {
                              << location.GetSourceHash()
                              << "' for printing error!"_us;
 
-                Write(GS_Message::Create(stringStream.String(), MessageLevel::Fatal));
+                auto fatalMessage = GS_Message::Create(stringStream.String(),
+                                                       MessageLevel::Fatal);
+
+                Write(fatalMessage);
 
                 return;
             }
 
-            auto fullSourceLocation = GS_FullSourceLocation::FromSourceLocation(location, source);
+            auto fullSourceLocation = GS_FullSourceLocation::FromSourceLocation(location,
+                                                                                source);
 
             auto line = fullSourceLocation.GetStartLine();
             auto column = fullSourceLocation.GetStartColumn();
-
-//            auto [line, column] = GS_SourceLocation::ToLineColumnLocation(location.GetStartPosition(), source);
 
             stream << "{ "
                    << source->GetName().GetName()

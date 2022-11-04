@@ -22,8 +22,8 @@ namespace GSLanguageCompiler::Driver {
          * @param messageHandler Message handler
          */
         GS_Context(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
-                   IO::GSSourceManagerPtr       sourceManager,
-                   IO::GSMessageHandlerPtr      messageHandler);
+                   IO::GSSourceManagerPtr sourceManager,
+                   IO::GSMessageHandlerPtr messageHandler);
 
     public:
 
@@ -35,8 +35,8 @@ namespace GSLanguageCompiler::Driver {
          * @return Context ptr
          */
         static std::shared_ptr<GS_Context> Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
-                                                  IO::GSSourceManagerPtr       sourceManager,
-                                                  IO::GSMessageHandlerPtr      messageHandler);
+                                                  IO::GSSourceManagerPtr sourceManager,
+                                                  IO::GSMessageHandlerPtr messageHandler);
 
         /**
          * Creating context

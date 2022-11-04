@@ -5,6 +5,8 @@
 
 namespace GSLanguageCompiler::Driver {
 
+    // todo use session manager ?
+
     /**
      * Class for startup and manage GSLanguageCompiler
      */
