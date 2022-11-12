@@ -19,14 +19,14 @@ namespace GSLanguageCompiler::Lexer {
             return Cursor(contentIterator);
         }
 
-        static Cursor Create(ConstLRef<UString> content) {
+        static Cursor Create(LRef<UString> content) {
             return Cursor::Create(content.begin());
         }
 
     public:
 
         Void EatWhile(Bool (*predicate) (ConstLRef<USymbol>)) {
-            while (predicate(Current())) {
+            while (predicate(Current()) && !IsEof()) {
                 Next();
             }
         }
@@ -45,9 +45,57 @@ namespace GSLanguageCompiler::Lexer {
             --_contentIterator;
         }
 
+        Bool IsEof() const {
+            // TODO set EOF symbol to '\0' symbol
+            return Current().CodePoint() == InvalidCodePoint;
+        }
+
     private:
 
         UString::ConstIterator _contentIterator;
+    };
+
+    class Lexer_ {
+    public:
+
+        explicit Lexer_(Cursor cursor)
+                : _cursor(cursor) {}
+
+    public:
+
+        static Lexer_ Create(Cursor cursor) {
+            return Lexer_(cursor);
+        }
+
+        static Lexer_ Create(LRef<UString> content) {
+            return Lexer_::Create(Cursor::Create(content));
+        }
+
+    public:
+
+        GS_Token GetToken() {
+            if (_cursor.Current().IsWhitespace()) {
+                _cursor.Next();
+
+                return GS_Token::Create(TokenType::SymbolSpace);
+            } else if (_cursor.Current().IsIDStart()) {
+                UString string;
+
+                while (_cursor.Current().IsIDContinue() && !_cursor.IsEof()) {
+                    string += _cursor.Current();
+
+                    _cursor.Next();
+                }
+
+
+
+                return GS_Token::Create(TokenType::Identifier, );
+            }
+        }
+
+    private:
+
+        Cursor _cursor;
     };
 
     /**

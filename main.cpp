@@ -2,6 +2,8 @@
 
 #include <Driver/Driver.h>
 
+#include <Lexer/Lexer.h>
+
 using namespace GSLanguageCompiler;
 
 class ArithmeticOptimizingVisitor : public AST::GS_Transformer {
@@ -223,5 +225,18 @@ I32 GSMain(I32 argc, Ptr<Ptr<C>> argv) {
  * @return Compiler result
  */
 I32 main(I32 argc, Ptr<Ptr<C>> argv) {
-    return GSMain(argc, argv);
+    auto content = "      "_us;
+
+    auto cursor = Lexer::Cursor::Create(content);
+
+    cursor.EatWhile([] (ConstLRef<USymbol> symbol) -> Bool {
+        return symbol.IsWhitespace();
+    });
+
+    auto e = cursor.IsEof();
+
+//    cursor.Next();
+
+    return 0;
+//    return GSMain(argc, argv);
 }
