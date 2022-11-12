@@ -5,8 +5,6 @@
  * This file includes all files from GSLanguageCompiler Lexer Module
  */
 
-#include <Lexer/GS_Keywords.h>
-
 #include <Lexer/GS_Token.h>
 
 #include <Lexer/GS_Lexer.h>

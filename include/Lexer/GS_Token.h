@@ -3,9 +3,14 @@
 
 #include <IO/GS_Source.h>
 
-#include <Lexer/GS_Keywords.h>
-
 namespace GSLanguageCompiler::Lexer {
+
+    /**
+     * Type of token
+     */
+    enum class TokenType {
+        #include <Lexer/GS_TokenTypes.def>
+    };
 
     /**
      * Class for representation token in lexer

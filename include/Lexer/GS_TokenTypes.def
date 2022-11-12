@@ -1,0 +1,115 @@
+#ifndef GS_TOKENTYPE
+    #define GS_TOKENTYPE(name) name
+#endif
+
+/**
+ * Unknown (error)
+ */
+GS_TOKENTYPE(Unknown),
+
+/**
+ * End of file
+ */
+GS_TOKENTYPE(EndOfFile),
+
+/**
+ * Identifier ( abc )
+ */
+GS_TOKENTYPE(Identifier),
+
+/**
+ * Symbol literal ( 'a' )
+ */
+GS_TOKENTYPE(LiteralSymbol),
+
+/**
+ * Number literal ( 123 )
+ */
+GS_TOKENTYPE(LiteralNumber),
+
+/**
+ * String literal ( "abc" )
+ */
+GS_TOKENTYPE(LiteralString),
+
+/**
+ * Var keyword ( var )
+ */
+GS_TOKENTYPE(KeywordVar),
+
+/**
+ * Func keyword ( func )
+ */
+GS_TOKENTYPE(KeywordFunc),
+
+/**
+ * Left paren symbol ( ( )
+ */
+GS_TOKENTYPE(SymbolLeftParen),
+
+/**
+ * Right paren symbol ( ) )
+ */
+GS_TOKENTYPE(SymbolRightParen),
+
+/**
+ * Left brace symbol ( { )
+ */
+GS_TOKENTYPE(SymbolLeftBrace),
+
+/**
+ * Right brace symbol ( } )
+ */
+GS_TOKENTYPE(SymbolRightBrace),
+
+/**
+ * Left bracket symbol ( [ )
+ */
+GS_TOKENTYPE(SymbolLeftBracket),
+
+/**
+ * Right bracket symbol ( ] )
+ */
+GS_TOKENTYPE(SymbolRightBracket),
+
+/**
+ * Colon symbol ( : )
+ */
+GS_TOKENTYPE(SymbolColon),
+
+/**
+ * Comma symbol ( , )
+ */
+GS_TOKENTYPE(SymbolComma),
+
+/**
+ * Plus symbol ( + )
+ */
+GS_TOKENTYPE(SymbolPlus),
+
+/**
+ * Minus symbol ( - )
+ */
+GS_TOKENTYPE(SymbolMinus),
+
+/**
+ * Star symbol ( * )
+ */
+GS_TOKENTYPE(SymbolStar),
+
+/**
+ * Slash symbol ( / )
+ */
+GS_TOKENTYPE(SymbolSlash),
+
+/**
+ * Eq symbol ( = )
+ */
+GS_TOKENTYPE(SymbolEq),
+
+/**
+ * Space symbol (   )
+ */
+GS_TOKENTYPE(SymbolSpace)
+
+#undef GS_TOKENTYPE

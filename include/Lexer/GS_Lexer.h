@@ -7,6 +7,49 @@
 
 namespace GSLanguageCompiler::Lexer {
 
+    class Cursor {
+    public:
+
+        explicit Cursor(UString::ConstIterator contentIterator)
+                : _contentIterator(contentIterator) {}
+
+    public:
+
+        static Cursor Create(UString::ConstIterator contentIterator) {
+            return Cursor(contentIterator);
+        }
+
+        static Cursor Create(ConstLRef<UString> content) {
+            return Cursor::Create(content.begin());
+        }
+
+    public:
+
+        Void EatWhile(Bool (*predicate) (ConstLRef<USymbol>)) {
+            while (predicate(Current())) {
+                Next();
+            }
+        }
+
+    public:
+
+        USymbol Current() const {
+            return *_contentIterator;
+        }
+
+        Void Next() {
+            ++_contentIterator;
+        }
+
+        Void Prev() {
+            --_contentIterator;
+        }
+
+    private:
+
+        UString::ConstIterator _contentIterator;
+    };
+
     /**
      * Class for tokenizing source code
      */
