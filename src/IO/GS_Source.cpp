@@ -53,7 +53,7 @@ namespace GSLanguageCompiler::IO {
         auto endColumn = fullSourceLocation.GetEndColumn();
 
         // todo add check source hash
-        auto stringSource = source->GetSource();
+        auto stringSource = source->GetBuffer().GetSource();
 
         U64 startPosition = 0;
 
@@ -168,7 +168,7 @@ namespace GSLanguageCompiler::IO {
         auto endPosition = sourceLocation.GetEndPosition();
 
         // todo add check source hash
-        auto stringSource = source->GetSource();
+        auto stringSource = source->GetBuffer().GetSource();
 
         U64 startLine = 1, startColumn = 0;
 
@@ -219,6 +219,41 @@ namespace GSLanguageCompiler::IO {
 
     U64 GS_FullSourceLocation::GetEndColumn() const {
         return _endColumn;
+    }
+
+    GS_SourceBuffer::GS_SourceBuffer(UString source)
+            : _source(std::move(source)) {}
+
+    GS_SourceBuffer GS_SourceBuffer::Create(UString source) {
+        return GS_SourceBuffer(std::move(source));
+    }
+
+    GS_SourceBuffer::Iterator GS_SourceBuffer::begin() {
+        return _source.begin();
+    }
+
+    GS_SourceBuffer::Iterator GS_SourceBuffer::end() {
+        return _source.end();
+    }
+
+    GS_SourceBuffer::ConstIterator GS_SourceBuffer::begin() const {
+        return _source.begin();
+    }
+
+    GS_SourceBuffer::ConstIterator GS_SourceBuffer::end() const {
+        return _source.end();
+    }
+
+    GS_SourceBuffer::ConstIterator GS_SourceBuffer::cbegin() const {
+        return _source.cbegin();
+    }
+
+    GS_SourceBuffer::ConstIterator GS_SourceBuffer::cend() const {
+        return _source.cend();
+    }
+
+    ConstLRef<UString> GS_SourceBuffer::GetSource() const {
+        return _source;
     }
 
     GS_SourceName::GS_SourceName(UString name,
@@ -296,9 +331,9 @@ namespace GSLanguageCompiler::IO {
         return !(*this == name);
     }
 
-    GS_Source::GS_Source(UString source,
+    GS_Source::GS_Source(GS_SourceBuffer buffer,
                          GS_SourceName name)
-            : _source(std::move(source)),
+            : _buffer(std::move(buffer)),
               _name(std::move(name)),
               _hash(0) {
         // TODO delete tabs ?
@@ -315,14 +350,14 @@ namespace GSLanguageCompiler::IO {
 
         std::hash<std::string> sourceHasher;
 
-        _hash = sourceHasher(_source.AsUTF8());
+        _hash = sourceHasher(_buffer.GetSource().AsUTF8());
 
         _hash ^= _name.GetHash();
     }
 
-    std::shared_ptr<GS_Source> GS_Source::Create(UString source,
+    std::shared_ptr<GS_Source> GS_Source::Create(GS_SourceBuffer buffer,
                                                  GS_SourceName name) {
-        return std::make_shared<GS_Source>(std::move(source),
+        return std::make_shared<GS_Source>(std::move(buffer),
                                            std::move(name));
     }
 
@@ -331,18 +366,20 @@ namespace GSLanguageCompiler::IO {
 
         auto reader = IO::GS_Reader::Create(fileStream);
 
-        return GS_Source::Create(reader.Read(),
+        auto source = reader.Read();
+
+        return GS_Source::Create(GS_SourceBuffer::Create(source),
                                  GS_SourceName::CreateFile(name));
     }
 
     std::shared_ptr<GS_Source> GS_Source::CreateString(UString source) {
-        return GS_Source::Create(std::move(source),
+        return GS_Source::Create(GS_SourceBuffer::Create(std::move(source)),
                                  GS_SourceName::CreateString());
     }
 
     std::shared_ptr<GS_Source> GS_Source::CreateCustom(UString source,
                                                        UString name) {
-        return GS_Source::Create(std::move(source),
+        return GS_Source::Create(GS_SourceBuffer::Create(std::move(source)),
                                  GS_SourceName::CreateCustom(std::move(name)));
     }
 
@@ -350,14 +387,14 @@ namespace GSLanguageCompiler::IO {
         UString code;
 
         for (U64 index = location.GetStartPosition() - 1; index < location.GetEndPosition(); ++index) {
-            code += _source[index];
+            code += _buffer.GetSource()[index];
         }
 
         return code;
     }
 
-    UString GS_Source::GetSource() const {
-        return _source;
+    GS_SourceBuffer GS_Source::GetBuffer() const {
+        return _buffer;
     }
 
     GS_SourceName GS_Source::GetName() const {

@@ -268,6 +268,93 @@ namespace GSLanguageCompiler::IO {
     };
 
     /**
+     * Buffer for containing source code
+     */
+    class GS_SourceBuffer {
+    public:
+
+        /**
+         * Iterator type
+         */
+        using Iterator = UString::Iterator;
+
+        /**
+         * Const iterator type
+         */
+        using ConstIterator = UString::ConstIterator;
+
+    public:
+
+        /**
+         * Constructor for source buffer
+         * @param source Source code
+         */
+        explicit GS_SourceBuffer(UString source);
+
+    public:
+
+        /**
+         * Creating source buffer
+         * @param source Source code
+         * @return Source buffer
+         */
+        static GS_SourceBuffer Create(UString source);
+
+    public:
+
+        /**
+         * Getting begin source code iterator
+         * @return Begin source code iterator
+         */
+        Iterator begin();
+
+        /**
+         * Getting end source code iterator
+         * @return End source code iterator
+         */
+        Iterator end();
+
+        /**
+         * Getting begin source code const iterator
+         * @return Begin source code const iterator
+         */
+        ConstIterator begin() const;
+
+        /**
+         * Getting end source code const iterator
+         * @return End source code const iterator
+         */
+        ConstIterator end() const;
+
+        /**
+         * Getting begin source code const iterator
+         * @return Begin source code const iterator
+         */
+        ConstIterator cbegin() const;
+
+        /**
+         * Getting end source code const iterator
+         * @return End source code const iterator
+         */
+        ConstIterator cend() const;
+
+    public:
+
+        /**
+         * Getting source code
+         * @return Source code
+         */
+        ConstLRef<UString> GetSource() const;
+
+    private:
+
+        /**
+         * Source code
+         */
+        UString _source;
+    };
+
+    /**
      * Source name type
      */
     enum class SourceNameType {
@@ -402,22 +489,34 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         * Iterator (const) type
+         */
+        using Iterator = GS_SourceBuffer::ConstIterator;
+
+        /**
+         * Const iterator type
+         */
+        using ConstIterator = GS_SourceBuffer::ConstIterator;
+
+    public:
+
+        /**
          * Constructor for source
-         * @param source Source code
+         * @param buffer Source buffer
          * @param name Source name
          */
-        GS_Source(UString source,
+        GS_Source(GS_SourceBuffer buffer,
                   GS_SourceName name);
 
     public:
 
         /**
          * Creating source
-         * @param source Source code
+         * @param buffer Source buffer
          * @param name Source name
          * @return Source ptr
          */
-        static std::shared_ptr<GS_Source> Create(UString source,
+        static std::shared_ptr<GS_Source> Create(GS_SourceBuffer buffer,
                                                  GS_SourceName name);
 
         /**
@@ -455,10 +554,36 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
-         * Getter for source code
-         * @return Source code
+         * Getting begin source buffer const iterator
+         * @return Begin source buffer const iterator
          */
-        UString GetSource() const;
+        ConstIterator begin() const;
+
+        /**
+         * Getting end source buffer const iterator
+         * @return End source buffer const iterator
+         */
+        ConstIterator end() const;
+
+        /**
+         * Getting begin source buffer const iterator
+         * @return Begin source buffer const iterator
+         */
+        ConstIterator cbegin() const;
+
+        /**
+         * Getting end source buffer const iterator
+         * @return End source buffer const iterator
+         */
+        ConstIterator cend() const;
+
+    public:
+
+        /**
+         * Getter for source buffer
+         * @return Source buffer
+         */
+        GS_SourceBuffer GetBuffer() const;
 
         /**
          * Getter for source name
@@ -491,9 +616,9 @@ namespace GSLanguageCompiler::IO {
     private:
 
         /**
-         * Source code
+         * Source buffer
          */
-        UString _source;
+        GS_SourceBuffer _buffer;
 
         /**
          * Source name
