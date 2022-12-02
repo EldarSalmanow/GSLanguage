@@ -549,7 +549,7 @@ namespace GSLanguageCompiler::IO {
          * @param location Source location
          * @return Code in range [startPosition..endPosition]
          */
-        UString GetCodeByLocation(GS_SourceLocation location);
+        UString GetCodeByLocation(GS_SourceLocation location) const;
 
     public:
 
@@ -583,13 +583,13 @@ namespace GSLanguageCompiler::IO {
          * Getter for source buffer
          * @return Source buffer
          */
-        GS_SourceBuffer GetBuffer() const;
+        ConstLRef<GS_SourceBuffer> GetBuffer() const;
 
         /**
          * Getter for source name
          * @return Source name
          */
-        GS_SourceName GetName() const;
+        ConstLRef<GS_SourceName> GetName() const;
 
         /**
          * Getter for source hash
@@ -689,7 +689,7 @@ namespace GSLanguageCompiler::IO {
          * @param sourceName Source name
          * @return Source or nullptr
          */
-        ConstLRef<GS_Source> GetSource(GS_SourceName sourceName) const;
+        ConstLRef<GS_Source> GetSource(ConstLRef<GS_SourceName> sourceName) const;
 
     public:
 

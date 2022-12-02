@@ -2,15 +2,15 @@
 
 namespace GSLanguageCompiler::IO {
 
-    GS_Reader::GS_Reader(GSInStreamPtr stream)
-            : _stream(std::move(stream)) {}
+    GS_Reader::GS_Reader(LRef<std::istream> stream)
+            : _stream(stream) {}
 
-    GS_Reader GS_Reader::Create(GSInStreamPtr stream) {
-        return GS_Reader(std::move(stream));
+    GS_Reader GS_Reader::Create(LRef<std::istream> stream) {
+        return GS_Reader(stream);
     }
 
-    UString GS_Reader::Run(GSInStreamPtr stream) {
-        auto reader = GS_Reader::Create(std::move(stream));
+    UString GS_Reader::Run(LRef<std::istream> stream) {
+        auto reader = GS_Reader::Create(stream);
 
         auto text = reader.Read();
 
@@ -20,14 +20,12 @@ namespace GSLanguageCompiler::IO {
     UString GS_Reader::Read() {
         UString text;
 
-        auto &stream = _stream->GetInStream();
-
         while (true) {
             USymbol symbol;
 
-            stream >> symbol;
+            _stream >> symbol;
 
-            if (stream.eof()) {
+            if (_stream.eof()) {
                 break;
             }
 

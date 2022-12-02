@@ -338,18 +338,6 @@ namespace GSLanguageCompiler::IO {
             : _buffer(std::move(buffer)),
               _name(std::move(name)),
               _hash(0) {
-        // TODO delete tabs ?
-
-//        for (auto &symbol : source) {
-//            if (symbol == '\t') {
-//                _source += "    ";
-//
-//                continue;
-//            }
-//
-//            _source += symbol;
-//        }
-
         std::hash<std::string> sourceHasher;
 
         _hash = sourceHasher(_buffer.GetSource().AsUTF8());
@@ -364,14 +352,18 @@ namespace GSLanguageCompiler::IO {
     }
 
     std::unique_ptr<GS_Source> GS_Source::CreateFile(UString name) {
-//        auto fileStream = IO::GS_InFileStream::CreateInFile(name);
-
         std::ifstream fileStream(name.AsUTF8());
 
         if (!fileStream.is_open()) {
-            // TODO handle error
+            UStringStream stringStream;
 
-            return nullptr;
+            stringStream << "Can`t open file with name '"_us
+                         << name
+                         << "'!"_us;
+
+            Driver::GS_GlobalContext::Err(stringStream.String());
+
+            Driver::GS_GlobalContext::Exit(1);
         }
 
         auto reader = IO::GS_Reader::Create(fileStream);
@@ -379,7 +371,7 @@ namespace GSLanguageCompiler::IO {
         auto source = reader.Read();
 
         return GS_Source::Create(GS_SourceBuffer::Create(source),
-                                 GS_SourceName::CreateFile(name));
+                                 GS_SourceName::CreateFile(std::move(name)));
     }
 
     std::unique_ptr<GS_Source> GS_Source::CreateString(UString source) {
@@ -393,7 +385,7 @@ namespace GSLanguageCompiler::IO {
                                  GS_SourceName::CreateCustom(std::move(name)));
     }
 
-    UString GS_Source::GetCodeByLocation(GS_SourceLocation location) {
+    UString GS_Source::GetCodeByLocation(GS_SourceLocation location) const {
         UString code;
 
         for (U64 index = location.GetStartPosition() - 1; index < location.GetEndPosition(); ++index) {
@@ -403,11 +395,11 @@ namespace GSLanguageCompiler::IO {
         return code;
     }
 
-    GS_SourceBuffer GS_Source::GetBuffer() const {
+    ConstLRef<GS_SourceBuffer> GS_Source::GetBuffer() const {
         return _buffer;
     }
 
-    GS_SourceName GS_Source::GetName() const {
+    ConstLRef<GS_SourceName> GS_Source::GetName() const {
         return _name;
     }
 
@@ -451,16 +443,16 @@ namespace GSLanguageCompiler::IO {
 
         UStringStream stringStream;
 
-        stringStream << "Can`t find source with source hash "_us
+        stringStream << "Can`t find source with source hash '"_us
                      << sourceHash
-                     << " in source manager!"_us;
+                     << "' in source manager!"_us;
 
         Driver::GS_GlobalContext::Err(stringStream.String());
 
         Driver::GS_GlobalContext::Exit(1);
     }
 
-    ConstLRef<GS_Source> GS_SourceManager::GetSource(GS_SourceName sourceName) const {
+    ConstLRef<GS_Source> GS_SourceManager::GetSource(ConstLRef<GS_SourceName> sourceName) const {
         for (auto &source : _sources) {
             if (source->GetName() == sourceName) {
                 return *source;
@@ -469,9 +461,9 @@ namespace GSLanguageCompiler::IO {
 
         UStringStream stringStream;
 
-        stringStream << "Can`t find source with source name "_us
+        stringStream << "Can`t find source with source name '"_us
                      << sourceName.GetName()
-                     << " in source manager!"_us;
+                     << "' in source manager!"_us;
 
         Driver::GS_GlobalContext::Err(stringStream.String());
 
