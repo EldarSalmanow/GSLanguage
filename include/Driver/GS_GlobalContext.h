@@ -93,6 +93,15 @@ namespace GSLanguageCompiler::Driver {
     public:
 
         /**
+         * Exiting from program
+         * @param exitCode Exit code
+         * @return
+         */
+        [[noreturn]] static Void Exit(I32 exitCode);
+
+    public:
+
+        /**
          * Getter for standard input stream from standard IO streams manager
          * @return Standard input stream
          */

@@ -84,6 +84,10 @@ namespace GSLanguageCompiler::Driver {
         _stdIOStreamsManager->Log(string);
     }
 
+    Void GS_GlobalContext::Exit(I32 exitCode) {
+        std::exit(exitCode);
+    }
+
     IO::GSInStreamPtr GS_GlobalContext::GetStdInStream() const {
         return _stdIOStreamsManager->GetStdInStream();
     }

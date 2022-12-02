@@ -15,7 +15,7 @@ namespace GSLanguageCompiler::IO {
          * Constructor for reader
          * @param stream Input stream
          */
-        explicit GS_Reader(GSInStreamPtr stream);
+        explicit GS_Reader(LRef<std::istream> stream);
 
     public:
 
@@ -24,7 +24,7 @@ namespace GSLanguageCompiler::IO {
          * @param stream Stream
          * @return Reader
          */
-        static GS_Reader Create(GSInStreamPtr stream);
+        static GS_Reader Create(LRef<std::istream> stream);
 
     public:
 
@@ -33,7 +33,7 @@ namespace GSLanguageCompiler::IO {
          * @param stream Stream
          * @return Text
          */
-        static UString Run(GSInStreamPtr stream);
+        static UString Run(LRef<std::istream> stream);
 
     public:
 
@@ -48,7 +48,7 @@ namespace GSLanguageCompiler::IO {
         /**
          * Stream for reading text
          */
-        GSInStreamPtr _stream;
+        LRef<std::istream> _stream;
     };
 
 }

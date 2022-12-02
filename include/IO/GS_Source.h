@@ -80,7 +80,7 @@ namespace GSLanguageCompiler::IO {
          * @return Source location
          */
         static GS_SourceLocation FromFullSourceLocation(GS_FullSourceLocation fullSourceLocation,
-                                                        std::shared_ptr<GS_Source> source);
+                                                        ConstLRef<GS_Source> source);
 
     public:
 
@@ -205,7 +205,7 @@ namespace GSLanguageCompiler::IO {
          * @return Full source location
          */
         static GS_FullSourceLocation FromSourceLocation(GS_SourceLocation sourceLocation,
-                                                        std::shared_ptr<GS_Source> source);
+                                                        ConstLRef<GS_Source> source);
 
     public:
 
@@ -434,7 +434,7 @@ namespace GSLanguageCompiler::IO {
          * Getter for source name
          * @return Source name
          */
-        UString GetName() const;
+        ConstLRef<UString> GetName() const;
 
         /**
          * Getter for source name type
@@ -516,7 +516,7 @@ namespace GSLanguageCompiler::IO {
          * @param name Source name
          * @return Source ptr
          */
-        static std::shared_ptr<GS_Source> Create(GS_SourceBuffer buffer,
+        static std::unique_ptr<GS_Source> Create(GS_SourceBuffer buffer,
                                                  GS_SourceName name);
 
         /**
@@ -524,14 +524,14 @@ namespace GSLanguageCompiler::IO {
          * @param name File name
          * @return Source ptr
          */
-        static std::shared_ptr<GS_Source> CreateFile(UString name);
+        static std::unique_ptr<GS_Source> CreateFile(UString name);
 
         /**
          * Creating string source
          * @param source Source code
          * @return Source ptr
          */
-        static std::shared_ptr<GS_Source> CreateString(UString source);
+        static std::unique_ptr<GS_Source> CreateString(UString source);
 
         /**
          * Creating custom source
@@ -539,7 +539,7 @@ namespace GSLanguageCompiler::IO {
          * @param name Source name
          * @return Source ptr
          */
-        static std::shared_ptr<GS_Source> CreateCustom(UString source,
+        static std::unique_ptr<GS_Source> CreateCustom(UString source,
                                                        UString name);
 
     public:
@@ -634,7 +634,7 @@ namespace GSLanguageCompiler::IO {
     /**
      * Source ptr type
      */
-    using GSSourcePtr = std::shared_ptr<GS_Source>;
+    using GSSourcePtr = std::unique_ptr<GS_Source>;
 
     /**
      * Source ptr array type
@@ -682,14 +682,14 @@ namespace GSLanguageCompiler::IO {
          * @param sourceHash Source hash
          * @return Source or nullptr
          */
-        GSSourcePtr GetSource(U64 sourceHash) const;
+        ConstLRef<GS_Source> GetSource(U64 sourceHash) const;
 
         /**
          * Get source from manager by source name
          * @param sourceName Source name
          * @return Source or nullptr
          */
-        GSSourcePtr GetSource(GS_SourceName sourceName) const;
+        ConstLRef<GS_Source> GetSource(GS_SourceName sourceName) const;
 
     public:
 
@@ -697,7 +697,7 @@ namespace GSLanguageCompiler::IO {
          * Getter for sources
          * @return Sources
          */
-        GSSourcePtrArray GetSources() const;
+        ConstLRef<GSSourcePtrArray> GetSources() const;
 
     public:
 

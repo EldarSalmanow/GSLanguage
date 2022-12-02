@@ -1,3 +1,5 @@
+#include <Driver/GS_GlobalContext.h>
+
 #include <GS_Reader.h>
 
 #include <GS_Source.h>
@@ -45,7 +47,7 @@ namespace GSLanguageCompiler::IO {
     }
 
     GS_SourceLocation GS_SourceLocation::FromFullSourceLocation(GS_FullSourceLocation fullSourceLocation,
-                                                                std::shared_ptr<GS_Source> source) {
+                                                                ConstLRef<GS_Source> source) {
         auto sourceHash = fullSourceLocation.GetSourceHash();
         auto startLine = fullSourceLocation.GetStartLine();
         auto startColumn = fullSourceLocation.GetStartColumn();
@@ -53,7 +55,7 @@ namespace GSLanguageCompiler::IO {
         auto endColumn = fullSourceLocation.GetEndColumn();
 
         // todo add check source hash
-        auto stringSource = source->GetBuffer().GetSource();
+        auto stringSource = source.GetBuffer().GetSource();
 
         U64 startPosition = 0;
 
@@ -162,13 +164,13 @@ namespace GSLanguageCompiler::IO {
     }
 
     GS_FullSourceLocation GS_FullSourceLocation::FromSourceLocation(GS_SourceLocation sourceLocation,
-                                                                    std::shared_ptr<GS_Source> source) {
+                                                                    ConstLRef<GS_Source> source) {
         auto sourceHash = sourceLocation.GetSourceHash();
         auto startPosition = sourceLocation.GetStartPosition();
         auto endPosition = sourceLocation.GetEndPosition();
 
         // todo add check source hash
-        auto stringSource = source->GetBuffer().GetSource();
+        auto stringSource = source.GetBuffer().GetSource();
 
         U64 startLine = 1, startColumn = 0;
 
@@ -311,7 +313,7 @@ namespace GSLanguageCompiler::IO {
         return _type == SourceNameType::Custom;
     }
 
-    UString GS_SourceName::GetName() const {
+    ConstLRef<UString> GS_SourceName::GetName() const {
         return _name;
     }
 
@@ -355,14 +357,22 @@ namespace GSLanguageCompiler::IO {
         _hash ^= _name.GetHash();
     }
 
-    std::shared_ptr<GS_Source> GS_Source::Create(GS_SourceBuffer buffer,
+    std::unique_ptr<GS_Source> GS_Source::Create(GS_SourceBuffer buffer,
                                                  GS_SourceName name) {
-        return std::make_shared<GS_Source>(std::move(buffer),
+        return std::make_unique<GS_Source>(std::move(buffer),
                                            std::move(name));
     }
 
-    std::shared_ptr<GS_Source> GS_Source::CreateFile(UString name) {
-        auto fileStream = IO::GS_InFileStream::CreateInFile(name);
+    std::unique_ptr<GS_Source> GS_Source::CreateFile(UString name) {
+//        auto fileStream = IO::GS_InFileStream::CreateInFile(name);
+
+        std::ifstream fileStream(name.AsUTF8());
+
+        if (!fileStream.is_open()) {
+            // TODO handle error
+
+            return nullptr;
+        }
 
         auto reader = IO::GS_Reader::Create(fileStream);
 
@@ -372,12 +382,12 @@ namespace GSLanguageCompiler::IO {
                                  GS_SourceName::CreateFile(name));
     }
 
-    std::shared_ptr<GS_Source> GS_Source::CreateString(UString source) {
+    std::unique_ptr<GS_Source> GS_Source::CreateString(UString source) {
         return GS_Source::Create(GS_SourceBuffer::Create(std::move(source)),
                                  GS_SourceName::CreateString());
     }
 
-    std::shared_ptr<GS_Source> GS_Source::CreateCustom(UString source,
+    std::unique_ptr<GS_Source> GS_Source::CreateCustom(UString source,
                                                        UString name) {
         return GS_Source::Create(GS_SourceBuffer::Create(std::move(source)),
                                  GS_SourceName::CreateCustom(std::move(name)));
@@ -432,27 +442,43 @@ namespace GSLanguageCompiler::IO {
         return sourceHash;
     }
 
-    GSSourcePtr GS_SourceManager::GetSource(U64 sourceHash) const {
+    ConstLRef<GS_Source> GS_SourceManager::GetSource(U64 sourceHash) const {
         for (auto &source : _sources) {
             if (source->GetHash() == sourceHash) {
-                return source;
+                return *source;
             }
         }
 
-        return nullptr;
+        UStringStream stringStream;
+
+        stringStream << "Can`t find source with source hash "_us
+                     << sourceHash
+                     << " in source manager!"_us;
+
+        Driver::GS_GlobalContext::Err(stringStream.String());
+
+        Driver::GS_GlobalContext::Exit(1);
     }
 
-    GSSourcePtr GS_SourceManager::GetSource(GS_SourceName sourceName) const {
+    ConstLRef<GS_Source> GS_SourceManager::GetSource(GS_SourceName sourceName) const {
         for (auto &source : _sources) {
             if (source->GetName() == sourceName) {
-                return source;
+                return *source;
             }
         }
 
-        return nullptr;
+        UStringStream stringStream;
+
+        stringStream << "Can`t find source with source name "_us
+                     << sourceName.GetName()
+                     << " in source manager!"_us;
+
+        Driver::GS_GlobalContext::Err(stringStream.String());
+
+        Driver::GS_GlobalContext::Exit(1);
     }
 
-    GSSourcePtrArray GS_SourceManager::GetSources() const {
+    ConstLRef<GSSourcePtrArray> GS_SourceManager::GetSources() const {
         return _sources;
     }
 
