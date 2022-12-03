@@ -289,8 +289,8 @@ private:
     GS_TokensBuffer::ConstIterator _tokensIterator;
 };
 
-AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_Session> session, LRef<IO::GSSourcePtr> source) {
-    auto sourceBuffer = source->GetBuffer();
+AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_Session> session, ConstLRef<IO::GS_Source> source) {
+    auto sourceBuffer = source.GetBuffer();
 
     auto lexer = GS_Lexer::Create(session, sourceBuffer);
 
@@ -316,9 +316,9 @@ AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_Session> sessi
 AST::GSTranslationUnitDeclarationPtr ParseProgramFromString(LRef<Driver::GS_Session> session, ConstLRef<UString> string) {
     auto source = IO::GS_Source::CreateString(string);
 
-    session.AddSource(source);
+    auto sourceRef = session.AddSource(std::move(source));
 
-    auto program = ParseProgram(session, source);
+    auto program = ParseProgram(session, sourceRef);
 
     return program;
 }
@@ -326,9 +326,9 @@ AST::GSTranslationUnitDeclarationPtr ParseProgramFromString(LRef<Driver::GS_Sess
 AST::GSTranslationUnitDeclarationPtr ParseProgramFromFile(LRef<Driver::GS_Session> session, ConstLRef<UString> fileName) {
     auto source = IO::GS_Source::CreateFile(fileName);
 
-    session.AddSource(source);
+    auto sourceRef = session.AddSource(std::move(source));
 
-    auto program = ParseProgram(session, source);
+    auto program = ParseProgram(session, sourceRef);
 
     return program;
 }

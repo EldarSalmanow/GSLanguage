@@ -44,9 +44,9 @@ namespace GSLanguageCompiler::IO {
          * @param location Message location
          * @return Message ptr
          */
-        static std::shared_ptr<GS_Message> Create(UString text,
-                                                  MessageLevel level,
-                                                  std::optional<GS_SourceLocation> location);
+        static GS_Message Create(UString text,
+                                 MessageLevel level,
+                                 std::optional<GS_SourceLocation> location);
 
         /**
          * Creating message
@@ -55,9 +55,9 @@ namespace GSLanguageCompiler::IO {
          * @param location Message location
          * @return Message ptr
          */
-        static std::shared_ptr<GS_Message> Create(UString text,
-                                                  MessageLevel level,
-                                                  GS_SourceLocation location);
+        static GS_Message Create(UString text,
+                                 MessageLevel level,
+                                 GS_SourceLocation location);
 
         /**
          * Creating message
@@ -65,8 +65,8 @@ namespace GSLanguageCompiler::IO {
          * @param level Message level
          * @return Message ptr
          */
-        static std::shared_ptr<GS_Message> Create(UString text,
-                                                  MessageLevel level);
+        static GS_Message Create(UString text,
+                                 MessageLevel level);
 
     public:
 
@@ -74,7 +74,7 @@ namespace GSLanguageCompiler::IO {
          * Getter for message text
          * @return Message text
          */
-        UString GetText() const;
+        ConstLRef<UString> GetText() const;
 
         /**
          * Getter for message level
@@ -148,7 +148,7 @@ namespace GSLanguageCompiler::IO {
          * @param message Message
          * @return
          */
-        Void Write(GSMessagePtr message);
+        Void Write(GS_Message message);
 
     public:
 

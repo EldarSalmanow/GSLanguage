@@ -47,7 +47,7 @@ namespace GSLanguageCompiler::Lexer {
         return _type;
     }
 
-    UString GS_Token::GetValue() const {
+    ConstLRef<UString> GS_Token::GetValue() const {
         return _value;
     }
 

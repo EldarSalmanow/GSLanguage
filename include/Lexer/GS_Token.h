@@ -84,7 +84,7 @@ namespace GSLanguageCompiler::Lexer {
          * Getter for value
          * @return Value
          */
-        UString GetValue() const;
+        ConstLRef<UString> GetValue() const;
 
         /**
          * Getter for location

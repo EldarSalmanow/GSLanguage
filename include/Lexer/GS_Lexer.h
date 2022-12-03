@@ -36,7 +36,7 @@ namespace GSLanguageCompiler::Lexer {
          * @param source Source
          * @return Tokens
          */
-        static GSTokenArray Run(LRef<Driver::GS_Session> session, IO::GSSourcePtr source);
+        static GSTokenArray Run(LRef<Driver::GS_Session> session, ConstLRef<IO::GS_Source> source);
 
     public:
 
@@ -45,7 +45,7 @@ namespace GSLanguageCompiler::Lexer {
          * @param source Source
          * @return Tokens
          */
-        GSTokenArray Tokenize(IO::GSSourcePtr source);
+        GSTokenArray Tokenize(ConstLRef<IO::GS_Source> source);
 
     private:
 

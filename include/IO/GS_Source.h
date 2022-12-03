@@ -673,23 +673,36 @@ namespace GSLanguageCompiler::IO {
         /**
          * Add source to manager
          * @param source Source
-         * @return Source hash
+         * @return Source
          */
-        U64 AddSource(GSSourcePtr source);
+        ConstLRef<GS_Source> AddSource(GSSourcePtr source);
 
         /**
          * Get source from manager by source hash
          * @param sourceHash Source hash
-         * @return Source or nullptr
+         * @return Source
          */
         ConstLRef<GS_Source> GetSource(U64 sourceHash) const;
 
         /**
          * Get source from manager by source name
          * @param sourceName Source name
-         * @return Source or nullptr
+         * @return Source
          */
-        ConstLRef<GS_Source> GetSource(ConstLRef<GS_SourceName> sourceName) const;
+        ConstLRef<GS_Source> GetSource(GS_SourceName sourceName) const;
+
+        /**
+         * Get file source from manager by file name
+         * @param fileName File name
+         * @return File source
+         */
+        ConstLRef<GS_Source> GetFileSource(UString fileName) const;
+
+        /**
+         * Get custom source from manager by source name
+         * @return Custom source
+         */
+        ConstLRef<GS_Source> GetCustomSource(UString sourceName) const;
 
     public:
 
@@ -697,7 +710,7 @@ namespace GSLanguageCompiler::IO {
          * Getter for sources
          * @return Sources
          */
-        ConstLRef<GSSourcePtrArray> GetSources() const;
+        ConstLRef<GSSourcePtrArray> GetSources() const; // TODO remove ?
 
     public:
 

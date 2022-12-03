@@ -426,12 +426,10 @@ namespace GSLanguageCompiler::IO {
         return GS_SourceManager::Create(GSSourcePtrArray());
     }
 
-    U64 GS_SourceManager::AddSource(GSSourcePtr source) {
-        auto sourceHash = source->GetHash();
-
+    ConstLRef<GS_Source> GS_SourceManager::AddSource(GSSourcePtr source) {
         _sources.emplace_back(std::move(source));
 
-        return sourceHash;
+        return *_sources[_sources.size() - 1]; // TODO optimize
     }
 
     ConstLRef<GS_Source> GS_SourceManager::GetSource(U64 sourceHash) const {
@@ -452,9 +450,11 @@ namespace GSLanguageCompiler::IO {
         Driver::GS_GlobalContext::Exit(1);
     }
 
-    ConstLRef<GS_Source> GS_SourceManager::GetSource(ConstLRef<GS_SourceName> sourceName) const {
+    ConstLRef<GS_Source> GS_SourceManager::GetSource(GS_SourceName sourceName) const {
+        auto movedSourceName = std::move(sourceName); // TODO remove ?
+
         for (auto &source : _sources) {
-            if (source->GetName() == sourceName) {
+            if (source->GetName() == movedSourceName) {
                 return *source;
             }
         }
@@ -462,12 +462,20 @@ namespace GSLanguageCompiler::IO {
         UStringStream stringStream;
 
         stringStream << "Can`t find source with source name '"_us
-                     << sourceName.GetName()
+                     << movedSourceName.GetName()
                      << "' in source manager!"_us;
 
         Driver::GS_GlobalContext::Err(stringStream.String());
 
         Driver::GS_GlobalContext::Exit(1);
+    }
+
+    ConstLRef<GS_Source> GS_SourceManager::GetFileSource(UString fileName) const {
+        return GetSource(GS_SourceName::CreateFile(std::move(fileName)));
+    }
+
+    ConstLRef<GS_Source> GS_SourceManager::GetCustomSource(UString sourceName) const {
+        return GetSource(GS_SourceName::CreateCustom(std::move(sourceName)));
     }
 
     ConstLRef<GSSourcePtrArray> GS_SourceManager::GetSources() const {
