@@ -74,32 +74,38 @@ namespace GSLanguageCompiler::Parser {
         /**
          * Constructor for parser
          * @param session Session
+         * @param tokensBuffer Tokens buffer
          */
-        explicit GS_Parser(LRef<Driver::GS_Session> session);
+        GS_Parser(LRef<Driver::GS_Session> session,
+                  ConstLRef<Lexer::GS_TokensBuffer> tokensBuffer);
 
     public:
 
         /**
          * Creating parser
          * @param session Session
+         * @param tokensBuffer Tokens buffer
          * @return Parser
          */
-        static GS_Parser Create(LRef<Driver::GS_Session> session);
+        static GS_Parser Create(LRef<Driver::GS_Session> session,
+                                ConstLRef<Lexer::GS_TokensBuffer> tokensBuffer);
 
     public:
 
         /**
          * Creating parser and parsing tokens
          * @param session Session
-         * @param tokens Tokens
+         * @param tokensBuffer Tokens buffer
          * @param translationUnitName Translation unit name
          * @return Translation unit declaration
          */
-        static AST::GSTranslationUnitDeclarationPtr Run(LRef<Driver::GS_Session> session, Lexer::GSTokenArray tokens, UString translationUnitName);
+        static AST::GSTranslationUnitDeclarationPtr Run(LRef<Driver::GS_Session> session,
+                                                        ConstLRef<Lexer::GS_TokensBuffer> tokensBuffer,
+                                                        UString translationUnitName);
 
     public:
 
-        AST::GSTranslationUnitDeclarationPtr ParseProgram(Lexer::GSTokenArray tokens, UString translationUnitName);
+        AST::GSTranslationUnitDeclarationPtr ParseProgram(UString translationUnitName);
 
     private:
 
@@ -147,14 +153,14 @@ namespace GSLanguageCompiler::Parser {
 
         template<typename T>
         inline T TryParse(T (GS_Parser::*method)()) {
-            auto messages = _messages;
+//            auto messages = _messages;
 
             auto tokensIterator = _tokensIterator;
 
             auto result = (this->*method)();
 
             if (!result) {
-                _messages = messages;
+//                _messages = messages;
 
                 _tokensIterator = tokensIterator;
 
@@ -188,11 +194,11 @@ namespace GSLanguageCompiler::Parser {
 
         LRef<Driver::GS_Session> _session;
 
-        IO::GSMessagePtrArray _messages;
+//        IO::GSMessagePtrArray _messages;
 
-        Lexer::GSTokenArray _tokens;
+        ConstLRef<Lexer::GS_TokensBuffer> _tokensBuffer;
 
-        Lexer::GSTokenArrayIterator _tokensIterator;
+        Lexer::GS_TokensBuffer::ConstIterator _tokensIterator;
 
         AST::GSASTBuilderPtr _builder;
     };
@@ -203,7 +209,23 @@ namespace GSLanguageCompiler::Parser {
      * @param source Source
      * @return Translation unit declaration
      */
-    AST::GSTranslationUnitDeclarationPtr RunFrontend(LRef<Driver::GS_Session> session, LRef<IO::GSSourcePtr> source);
+    AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_Session> session, ConstLRef<IO::GS_Source> source);
+
+    /**
+     * Run frontend in compiler (lexing and parsing)
+     * @param session Session
+     * @param source Source
+     * @return Translation unit declaration
+     */
+    AST::GSTranslationUnitDeclarationPtr ParseProgramFromFile(LRef<Driver::GS_Session> session, UString fileName);
+
+    /**
+     * Parsing program from
+     * @param session Session
+     * @param string String
+     * @return Translation unit declaration
+     */
+    AST::GSTranslationUnitDeclarationPtr ParseProgramFromString(LRef<Driver::GS_Session> session, UString string);
 
 }
 

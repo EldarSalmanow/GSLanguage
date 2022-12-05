@@ -117,33 +117,29 @@ namespace GSLanguageCompiler::Lexer {
         return TokenType::Unknown;
     }
 
-    GS_Lexer::GS_Lexer(LRef<Driver::GS_Session> session)
+    GS_Lexer::GS_Lexer(LRef<Driver::GS_Session> session,
+                       ConstLRef<IO::GS_Source> source)
             : _session(session),
-              _messages(IO::GSMessagePtrArray()),
-              _source(IO::GSSourcePtr()),
-              _content(UString()),
-              _contentIterator(UString::Iterator()),
+//              _messages(IO::GSMessagePtrArray()),
+              _source(source),
+              _sourceIterator(_source.cbegin()),
               _currentPosition(1) {}
 
-    GS_Lexer GS_Lexer::Create(LRef<Driver::GS_Session> session) {
-        return GS_Lexer(session);
+    GS_Lexer GS_Lexer::Create(LRef<Driver::GS_Session> session,
+                              ConstLRef<IO::GS_Source> source) {
+        return GS_Lexer(session, source);
     }
 
-    GSTokenArray GS_Lexer::Run(LRef<Driver::GS_Session> session, IO::GSSourcePtr source) {
-        auto lexer = GS_Lexer::Create(session);
+    GS_TokensBuffer GS_Lexer::Run(LRef<Driver::GS_Session> session,
+                                  ConstLRef<IO::GS_Source> source) {
+        auto lexer = GS_Lexer::Create(session, source);
 
-        auto tokens = lexer.Tokenize(std::move(source));
+        auto tokensBuffer = lexer.Tokenize();
 
-        return tokens;
+        return tokensBuffer;
     }
 
-    GSTokenArray GS_Lexer::Tokenize(IO::GSSourcePtr source) {
-        _source = std::move(source);
-
-        _content = _source->GetSource();
-
-        _contentIterator = _content.begin();
-
+    GS_TokensBuffer GS_Lexer::Tokenize() {
         GSTokenArray tokens;
 
         auto token = GetToken();
@@ -165,21 +161,13 @@ namespace GSLanguageCompiler::Lexer {
             token = GetToken();
         }
 
-        for (auto &message : _messages) {
-            _session.Write(message);
-        }
+        auto tokensBuffer = GS_TokensBuffer::Create(std::move(tokens));
 
-        _messages = IO::GSMessagePtrArray();
+//        for (auto &message : _messages) {
+//            _session.Write(message);
+//        }
 
-        _source = IO::GSSourcePtr();
-
-        _content = UString();
-
-        _contentIterator = UString::Iterator();
-
-        _currentPosition = 1;
-
-        return tokens;
+        return tokensBuffer;
     }
 
     GS_Token GS_Lexer::GetToken() {
@@ -188,7 +176,7 @@ namespace GSLanguageCompiler::Lexer {
 
             NextSymbol();
 
-            return GS_Token::Create(TokenType::SymbolSpace, IO::GS_SourceLocation::Create(_source->GetHash(), startPosition, endPosition));
+            return GS_Token::Create(TokenType::SymbolSpace, IO::GS_SourceLocation::Create(_source.GetHash(), startPosition, endPosition));
         } else if (ValidSymbolRule<IDStartSymbolRule>(CurrentSymbol())) {
             UString string;
 
@@ -207,10 +195,10 @@ namespace GSLanguageCompiler::Lexer {
             }
 
             if (ReservedWordType(string) != TokenType::Unknown) {
-                return GS_Token::Create(ReservedWordType(string), IO::GS_SourceLocation::Create(_source->GetHash(), startPosition, endPosition));
+                return GS_Token::Create(ReservedWordType(string), IO::GS_SourceLocation::Create(_source.GetHash(), startPosition, endPosition));
             }
 
-            return GS_Token::Create(TokenType::Identifier, string, IO::GS_SourceLocation::Create(_source->GetHash(), startPosition, endPosition));
+            return GS_Token::Create(TokenType::Identifier, string, IO::GS_SourceLocation::Create(_source.GetHash(), startPosition, endPosition));
         } else if (ValidSymbolRule<DigitSymbolRule>(CurrentSymbol())) {
             UString string;
 
@@ -228,7 +216,7 @@ namespace GSLanguageCompiler::Lexer {
                 }
             }
 
-            return GS_Token::Create(TokenType::LiteralNumber, string, IO::GS_SourceLocation::Create(_source->GetHash(), startPosition, endPosition));
+            return GS_Token::Create(TokenType::LiteralNumber, string, IO::GS_SourceLocation::Create(_source.GetHash(), startPosition, endPosition));
         } else if (CurrentSymbol() == '\'') {
             UString string;
 
@@ -241,9 +229,9 @@ namespace GSLanguageCompiler::Lexer {
             if (CurrentSymbol() != '\'') {
                 // todo ?
 
-                LocatedMessage("Symbol must be a one symbol!",
-                               IO::MessageLevel::Error,
-                               IO::GS_SourceLocation::Create(_source->GetHash(), startPosition, startPosition));
+//                LocatedMessage("Symbol must be a one symbol!",
+//                               IO::MessageLevel::Error,
+//                               IO::GS_SourceLocation::Create(_source.GetHash(), startPosition, startPosition));
 
                 // ?
             }
@@ -252,7 +240,7 @@ namespace GSLanguageCompiler::Lexer {
 
             endPosition = _currentPosition - 1;
 
-            return GS_Token::Create(TokenType::LiteralSymbol, string, IO::GS_SourceLocation::Create(_source->GetHash(), startPosition, endPosition));
+            return GS_Token::Create(TokenType::LiteralSymbol, string, IO::GS_SourceLocation::Create(_source.GetHash(), startPosition, endPosition));
         } else if (CurrentSymbol() == '\"') {
             UString string;
 
@@ -272,7 +260,7 @@ namespace GSLanguageCompiler::Lexer {
                 }
             }
 
-            return GS_Token::Create(TokenType::LiteralNumber, string, IO::GS_SourceLocation::Create(_source->GetHash(), startPosition, endPosition));
+            return GS_Token::Create(TokenType::LiteralNumber, string, IO::GS_SourceLocation::Create(_source.GetHash(), startPosition, endPosition));
         } else if (ValidSymbolRule<ReservedSymbolRule>(CurrentSymbol())) {
             I64 startPosition = _currentPosition, endPosition = _currentPosition;
 
@@ -280,40 +268,40 @@ namespace GSLanguageCompiler::Lexer {
 
             NextSymbol();
 
-            return GS_Token::Create(type, IO::GS_SourceLocation::Create(_source->GetHash(), startPosition, endPosition));
+            return GS_Token::Create(type, IO::GS_SourceLocation::Create(_source.GetHash(), startPosition, endPosition));
         }
 
         // TODO add detecting end of file or unknown symbol
 
-        return GS_Token::Create(TokenType::EndOfFile, IO::GS_SourceLocation::Create(_source->GetHash(), _currentPosition, _currentPosition));
+        return GS_Token::Create(TokenType::EndOfFile, IO::GS_SourceLocation::Create(_source.GetHash(), _currentPosition, _currentPosition));
     }
 
     USymbol GS_Lexer::CurrentSymbol() {
-        return *_contentIterator;
+        return *_sourceIterator;
     }
 
     Void GS_Lexer::NextSymbol() {
-        ++_contentIterator;
+        ++_sourceIterator;
 
         ++_currentPosition;
     }
 
     Void GS_Lexer::PrevSymbol() {
-        --_contentIterator;
+        --_sourceIterator;
 
         --_currentPosition;
     }
 
-    Void GS_Lexer::Message(UString message, IO::MessageLevel messageLevel) {
-        auto textMessage = IO::GS_Message::Create(std::move(message), messageLevel);
+//    Void GS_Lexer::Message(UString message, IO::MessageLevel messageLevel) {
+//        auto textMessage = IO::GS_Message::Create(std::move(message), messageLevel);
+//
+//        _messages.emplace_back(textMessage);
+//    }
 
-        _messages.emplace_back(textMessage);
-    }
-
-    Void GS_Lexer::LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation messageLocation) {
-        auto locatedTextMessage = IO::GS_Message::Create(std::move(message), messageLevel, messageLocation);
-
-        _messages.emplace_back(locatedTextMessage);
-    }
+//    Void GS_Lexer::LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation messageLocation) {
+//        auto locatedTextMessage = IO::GS_Message::Create(std::move(message), messageLevel, messageLocation);
+//
+//        _messages.emplace_back(locatedTextMessage);
+//    }
 
 }

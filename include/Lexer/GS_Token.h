@@ -116,9 +116,91 @@ namespace GSLanguageCompiler::Lexer {
     using GSTokenArray = std::vector<GS_Token>;
 
     /**
-     * Token ptr array iterator type
+     * Class for containing tokens
      */
-    using GSTokenArrayIterator = GSTokenArray::iterator;
+    class GS_TokensBuffer {
+    public:
+
+        /**
+         * Iterator type
+         */
+        using Iterator = GSTokenArray::iterator;
+
+        /**
+         * Const iterator type
+         */
+        using ConstIterator = GSTokenArray::const_iterator;
+
+    public:
+
+        /**
+         * Constructor for tokens buffer
+         * @param tokens Tokens
+         */
+        explicit GS_TokensBuffer(GSTokenArray tokens);
+
+    public:
+
+        /**
+         * Creating tokens buffer
+         * @param tokens Tokens
+         * @return Tokens buffer
+         */
+        static GS_TokensBuffer Create(GSTokenArray tokens);
+
+    public:
+
+        /**
+         * Getting begin tokens buffer iterator
+         * @return Begin tokens buffer iterator
+         */
+        Iterator begin();
+
+        /**
+         * Getting end tokens buffer iterator
+         * @return End tokens buffer iterator
+         */
+        Iterator end();
+
+        /**
+         * Getting begin tokens buffer const iterator
+         * @return Begin tokens buffer const iterator
+         */
+        ConstIterator begin() const;
+
+        /**
+         * Getting end tokens buffer const iterator
+         * @return End tokens buffer const iterator
+         */
+        ConstIterator end() const;
+
+        /**
+         * Getting begin tokens buffer const iterator
+         * @return Begin tokens buffer const iterator
+         */
+        ConstIterator cbegin() const;
+
+        /**
+         * Getting end tokens buffer const iterator
+         * @return End tokens buffer const iterator
+         */
+        ConstIterator cend() const;
+
+    public:
+
+        /**
+         * Getter for tokens
+         * @return Tokens
+         */
+        ConstLRef<GSTokenArray> GetTokens() const;
+
+    private:
+
+        /**
+         * Tokens
+         */
+        GSTokenArray _tokens;
+    };
 
 }
 

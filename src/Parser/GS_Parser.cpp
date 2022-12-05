@@ -11,43 +11,35 @@ namespace GSLanguageCompiler::Parser {
             {Lexer::TokenType::SymbolMinus, 1}
     };
 
-    GS_Parser::GS_Parser(LRef<Driver::GS_Session> session)
+    GS_Parser::GS_Parser(LRef<Driver::GS_Session> session,
+                         ConstLRef<Lexer::GS_TokensBuffer> tokensBuffer)
             : _session(session),
-              _messages(IO::GSMessagePtrArray()),
-              _tokens(Lexer::GSTokenArray()),
-              _tokensIterator(Lexer::GSTokenArrayIterator()),
+//              _messages(IO::GSMessagePtrArray()),
+              _tokensBuffer(tokensBuffer),
+              _tokensIterator(_tokensBuffer.cbegin()),
               _builder(AST::GS_ASTBuilder::Create(_session.GetASTContext())) {}
 
-    GS_Parser GS_Parser::Create(LRef<Driver::GS_Session> session) {
-        return GS_Parser(session);
+    GS_Parser GS_Parser::Create(LRef<Driver::GS_Session> session,
+                                ConstLRef<Lexer::GS_TokensBuffer> tokensBuffer) {
+        return GS_Parser(session, tokensBuffer);
     }
 
-    AST::GSTranslationUnitDeclarationPtr GS_Parser::Run(LRef<Driver::GS_Session> session, Lexer::GSTokenArray tokens, UString translationUnitName) {
-        auto parser = GS_Parser::Create(session);
+    AST::GSTranslationUnitDeclarationPtr GS_Parser::Run(LRef<Driver::GS_Session> session,
+                                                        ConstLRef<Lexer::GS_TokensBuffer> tokensBuffer,
+                                                        UString translationUnitName) {
+        auto parser = GS_Parser::Create(session, tokensBuffer);
 
-        auto translationUnitDeclaration = parser.ParseProgram(std::move(tokens), std::move(translationUnitName));
+        auto translationUnitDeclaration = parser.ParseProgram(std::move(translationUnitName));
 
         return translationUnitDeclaration;
     }
 
-    AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseProgram(Lexer::GSTokenArray tokens, UString translationUnitName) {
-        _messages = IO::GSMessagePtrArray();
-
-        _tokens = std::move(tokens);
-
-        _tokensIterator = _tokens.begin();
-
+    AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseProgram(UString translationUnitName) {
         auto translationUnitDeclaration = ParseTranslationUnitDeclaration(std::move(translationUnitName));
 
-        for (auto &message : _messages) {
-            _session.Write(message);
-        }
-
-        _messages = IO::GSMessagePtrArray();
-
-        _tokens = Lexer::GSTokenArray();
-
-        _tokensIterator = Lexer::GSTokenArrayIterator();
+//        for (auto &message : _messages) {
+//            _session.Write(message);
+//        }
 
         return translationUnitDeclaration;
     }
@@ -731,21 +723,24 @@ namespace GSLanguageCompiler::Parser {
     }
 
     Void GS_Parser::Message(UString message, IO::MessageLevel messageLevel) {
-        auto textMessage = IO::GS_Message::Create(std::move(message), messageLevel);
-
-        _messages.emplace_back(textMessage);
+//        auto textMessage = IO::GS_Message::Create(std::move(message), messageLevel);
+//
+//        _messages.emplace_back(textMessage);
     }
 
     Void GS_Parser::LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation messageLocation) {
-        auto locatedTextMessage = IO::GS_Message::Create(std::move(message), messageLevel, messageLocation);
-
-        _messages.emplace_back(locatedTextMessage);
+//        auto locatedTextMessage = IO::GS_Message::Create(std::move(message), messageLevel, messageLocation);
+//
+//        _messages.emplace_back(locatedTextMessage);
     }
 
-    AST::GSTranslationUnitDeclarationPtr RunFrontend(LRef<Driver::GS_Session> session, LRef<IO::GSSourcePtr> source) {
-        auto tokens = Lexer::GS_Lexer::Run(session, source);
+    AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_Session> session, ConstLRef<IO::GS_Source> source) {
+        auto tokensBuffer = Lexer::GS_Lexer::Run(session,
+                                                 source);
 
-        auto program = Parser::GS_Parser::Run(session, tokens, source->GetName().GetName());
+        auto program = Parser::GS_Parser::Run(session,
+                                              tokensBuffer,
+                                              source.GetName().GetName());
 
         return program;
     }

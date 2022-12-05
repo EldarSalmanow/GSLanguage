@@ -33,14 +33,14 @@ GS_TOKENTYPE(LiteralNumber),
 GS_TOKENTYPE(LiteralString),
 
 /**
- * Var keyword ( var )
- */
-GS_TOKENTYPE(KeywordVar),
-
-/**
  * Func keyword ( func )
  */
 GS_TOKENTYPE(KeywordFunc),
+
+/**
+ * Var keyword ( var )
+ */
+GS_TOKENTYPE(KeywordVar),
 
 /**
  * Left paren symbol ( ( )

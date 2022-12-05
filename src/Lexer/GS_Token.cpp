@@ -55,4 +55,39 @@ namespace GSLanguageCompiler::Lexer {
         return _location;
     }
 
+    GS_TokensBuffer::GS_TokensBuffer(GSTokenArray tokens)
+            : _tokens(std::move(tokens)) {}
+
+    GS_TokensBuffer GS_TokensBuffer::Create(GSTokenArray tokens) {
+        return GS_TokensBuffer(std::move(tokens));
+    }
+
+    GS_TokensBuffer::Iterator GS_TokensBuffer::begin() {
+        return _tokens.begin();
+    }
+
+    GS_TokensBuffer::Iterator GS_TokensBuffer::end() {
+        return _tokens.end();
+    }
+
+    GS_TokensBuffer::ConstIterator GS_TokensBuffer::begin() const {
+        return _tokens.begin();
+    }
+
+    GS_TokensBuffer::ConstIterator GS_TokensBuffer::end() const {
+        return _tokens.end();
+    }
+
+    GS_TokensBuffer::ConstIterator GS_TokensBuffer::cbegin() const {
+        return _tokens.cbegin();
+    }
+
+    GS_TokensBuffer::ConstIterator GS_TokensBuffer::cend() const {
+        return _tokens.cend();
+    }
+
+    ConstLRef<GSTokenArray> GS_TokensBuffer::GetTokens() const {
+        return _tokens;
+    }
+
 }

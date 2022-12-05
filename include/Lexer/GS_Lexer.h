@@ -16,17 +16,21 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Constructor for lexer
          * @param session Session
+         * @param source Source
          */
-        explicit GS_Lexer(LRef<Driver::GS_Session> session);
+        GS_Lexer(LRef<Driver::GS_Session> session,
+                 ConstLRef<IO::GS_Source> source);
 
     public:
 
         /**
          * Creating lexer
          * @param session Session
+         * @param source Source
          * @return Lexer
          */
-        static GS_Lexer Create(LRef<Driver::GS_Session> session);
+        static GS_Lexer Create(LRef<Driver::GS_Session> session,
+                               ConstLRef<IO::GS_Source> source);
 
     public:
 
@@ -36,16 +40,16 @@ namespace GSLanguageCompiler::Lexer {
          * @param source Source
          * @return Tokens
          */
-        static GSTokenArray Run(LRef<Driver::GS_Session> session, ConstLRef<IO::GS_Source> source);
+        static GS_TokensBuffer Run(LRef<Driver::GS_Session> session,
+                                   ConstLRef<IO::GS_Source> source);
 
     public:
 
         /**
          * Tokenizing code from source
-         * @param source Source
          * @return Tokens
          */
-        GSTokenArray Tokenize(ConstLRef<IO::GS_Source> source);
+        GS_TokensBuffer Tokenize();
 
     private:
 
@@ -83,7 +87,7 @@ namespace GSLanguageCompiler::Lexer {
          * @param messageLevel Message level
          * @return
          */
-        Void Message(UString message, IO::MessageLevel messageLevel);
+//        Void Message(UString message, IO::MessageLevel messageLevel);
 
         /**
          * Creating located text message
@@ -92,7 +96,7 @@ namespace GSLanguageCompiler::Lexer {
          * @param messageLocation Message location
          * @return
          */
-        Void LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation messageLocation);
+//        Void LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation messageLocation);
 
     private:
 
@@ -104,22 +108,17 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Messages
          */
-        IO::GSMessagePtrArray _messages;
+//        IO::GSMessagePtrArray _messages;
 
         /**
          * Source
          */
-        IO::GSSourcePtr _source;
+        ConstLRef<IO::GS_Source> _source;
 
         /**
-         * Content
+         * Source buffer iterator
          */
-        UString _content;
-
-        /**
-         * Content iterator
-         */
-        UString::Iterator _contentIterator;
+        IO::GS_Source::ConstIterator _sourceIterator;
 
         /**
          * Current position in source
