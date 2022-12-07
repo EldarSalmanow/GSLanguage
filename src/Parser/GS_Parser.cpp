@@ -745,4 +745,24 @@ namespace GSLanguageCompiler::Parser {
         return program;
     }
 
+    AST::GSTranslationUnitDeclarationPtr ParseProgramFromFile(LRef<Driver::GS_Session> session, UString fileName) {
+        auto fileSource = IO::GS_Source::CreateFile(std::move(fileName));
+
+        auto fileSourceRef = session.AddSource(std::move(fileSource));
+
+        auto program = ParseProgram(session, fileSourceRef);
+
+        return program;
+    }
+
+    AST::GSTranslationUnitDeclarationPtr ParseProgramFromString(LRef<Driver::GS_Session> session, UString string) {
+        auto stringSource = IO::GS_Source::CreateString(std::move(string));
+
+        auto stringSourceRef = session.AddSource(std::move(stringSource));
+
+        auto program = ParseProgram(session, stringSourceRef);
+
+        return program;
+    }
+
 }

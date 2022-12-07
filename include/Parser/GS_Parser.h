@@ -204,7 +204,7 @@ namespace GSLanguageCompiler::Parser {
     };
 
     /**
-     * Run frontend in compiler (lexing and parsing)
+     * Parsing program from source
      * @param session Session
      * @param source Source
      * @return Translation unit declaration
@@ -212,15 +212,15 @@ namespace GSLanguageCompiler::Parser {
     AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_Session> session, ConstLRef<IO::GS_Source> source);
 
     /**
-     * Run frontend in compiler (lexing and parsing)
+     * Parsing program from file
      * @param session Session
-     * @param source Source
+     * @param fileName File name
      * @return Translation unit declaration
      */
     AST::GSTranslationUnitDeclarationPtr ParseProgramFromFile(LRef<Driver::GS_Session> session, UString fileName);
 
     /**
-     * Parsing program from
+     * Parsing program from string
      * @param session Session
      * @param string String
      * @return Translation unit declaration

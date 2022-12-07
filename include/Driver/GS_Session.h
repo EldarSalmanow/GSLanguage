@@ -119,7 +119,7 @@ namespace GSLanguageCompiler {
              * @param source Source
              * @return Source hash
              */
-            U64 AddSource(IO::GSSourcePtr source);
+            ConstLRef<IO::GS_Source> AddSource(IO::GSSourcePtr source);
 
             /**
              * Get source from source manager by source hash

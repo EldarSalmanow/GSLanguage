@@ -45,7 +45,7 @@ namespace GSLanguageCompiler::Driver {
          * Creating arguments
          * @return Arguments
          */
-        static GS_Arguments Create();
+//        static GS_Arguments Create();
 
     public:
 
@@ -63,13 +63,13 @@ namespace GSLanguageCompiler::Driver {
          * Getter for input file names
          * @return Input file names
          */
-        std::vector<UString> GetInputFileNames() const;
+        ConstLRef<std::vector<UString>> GetInputFileNames() const;
 
         /**
          * Getter for output file name
          * @return Output file name
          */
-        UString GetOutputFileName() const;
+        ConstLRef<UString> GetOutputFileName() const;
 
     private:
 
