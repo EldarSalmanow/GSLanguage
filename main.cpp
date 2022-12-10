@@ -202,26 +202,32 @@ void g() {
  * @param argv Arguments values
  * @return Compiler result
  */
-I32 GSMain(I32 argc, Ptr<Ptr<C>> argv) {
-    auto globalContextInitializingResult = Driver::GS_GlobalContext::Initialize();
+Result GSMain(I32 argc, Ptr<Ptr<C>> argv) {
+    auto globalContextInitializingResult = Driver::GlobalContext().Initialize();
 
-    if (globalContextInitializingResult) {
-        return 1;
+    if (globalContextInitializingResult != Result::Ok) {
+        return Result::Err;
     }
 
     auto compilingResult = Driver::GS_Compiler::Start(argc, argv);
 
-    auto programResult = StaticCast<I32>(compilingResult);
+    if (compilingResult != Driver::CompilingResult::Success) {
+        return Result::Err;
+    }
 
-    return programResult;
+    return Result::Ok;
 }
 
 /**
  * Low level entry point for GSLanguageCompiler
  * @param argc Arguments counter
  * @param argv Arguments values
- * @return Compiler result
+ * @return Exit code
  */
 I32 main(I32 argc, Ptr<Ptr<C>> argv) {
-    return GSMain(argc, argv);
+    auto compilerResult = GSMain(argc, argv);
+
+    auto exitCode = StaticCast<I32>(compilerResult);
+
+    return exitCode;
 }

@@ -5,42 +5,47 @@
 namespace GSLanguageCompiler::Driver {
 
     Void DefaultSignalHandler(I32 signal) {
+        UStringStream stringStream;
+
         if (signal == SIGINT) {
-            GS_GlobalContext::Err("Signal: SIGINT\n");
+            stringStream << "Signal: SIGINT"_us;
         } else if (signal == SIGILL) {
-            GS_GlobalContext::Err("Signal: SIGILL\n");
+            stringStream << "Signal: SIGILL"_us;
         } else if (signal == SIGFPE) {
-            GS_GlobalContext::Err("Signal: SIGFPE\n");
+            stringStream << "Signal: SIGFPE"_us;
         } else if (signal == SIGSEGV) {
-            GS_GlobalContext::Err("Signal: SIGSEGV\n");
+            stringStream << "Signal: SIGSEGV"_us;
         } else if (signal == SIGTERM) {
-            GS_GlobalContext::Err("Signal: SIGTERM\n");
+            stringStream << "Signal: SIGTERM"_us;
         } else if (signal == SIGBREAK) {
-            GS_GlobalContext::Err("Signal: SIGBREAK\n");
+            stringStream << "Signal: SIGBREAK"_us;
         } else if (signal == SIGABRT) {
-            GS_GlobalContext::Err("Signal: SIGABRT\n");
+            stringStream << "Signal: SIGABRT"_us;
         } else if (signal == SIGABRT_COMPAT) {
-            GS_GlobalContext::Err("Signal: SIGABRT_COMPAT\n");
+            stringStream << "Signal: SIGABRT_COMPAT"_us;
         } else {
-            UStringStream stringStream;
-
             stringStream << "Not default signal: "_us
-                         << signal
-                         << "\n"_us;
-
-            GS_GlobalContext::Err(stringStream.String());
+                         << signal;
         }
 
-        std::exit(1);
+        stringStream << "\n"_us;
+
+        GlobalContext().Err(stringStream.String());
+
+        GlobalContext().Exit(StaticCast<I32>(Result::Err));
     }
 
-    I32 GS_GlobalContext::InitializeIO(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager) {
+    LRef<GS_GlobalContext> GS_GlobalContext::GetInstance() {
+        return _context;
+    }
+
+    Result GS_GlobalContext::InitializeIO(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager) {
         _stdIOStreamsManager = std::move(stdIOStreamsManager);
 
-        return 0;
+        return Result::Ok;
     }
 
-    I32 GS_GlobalContext::InitializeSignals(SignalHandlerFunctionPtr signalHandlerFunction) {
+    Result GS_GlobalContext::InitializeSignals(SignalHandlerFunctionPtr signalHandlerFunction) {
         if (signal(SIGINT,         signalHandlerFunction) == SIG_ERR
          || signal(SIGILL,         signalHandlerFunction) == SIG_ERR
          || signal(SIGFPE,         signalHandlerFunction) == SIG_ERR
@@ -49,23 +54,25 @@ namespace GSLanguageCompiler::Driver {
          || signal(SIGBREAK,       signalHandlerFunction) == SIG_ERR
          || signal(SIGABRT,        signalHandlerFunction) == SIG_ERR
          || signal(SIGABRT_COMPAT, signalHandlerFunction) == SIG_ERR) {
-            return 1;
+            return Result::Err;
         }
 
-        return 0;
+        return Result::Ok;
     }
 
-    I32 GS_GlobalContext::Initialize(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager, SignalHandlerFunctionPtr signalHandlerFunction) {
-        if (InitializeIO(std::move(stdIOStreamsManager))
-         || InitializeSignals(signalHandlerFunction)) {
-            return 1;
+    Result GS_GlobalContext::Initialize(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+                                        SignalHandlerFunctionPtr signalHandlerFunction) {
+        if (InitializeIO(std::move(stdIOStreamsManager)) != Result::Ok
+         || InitializeSignals(signalHandlerFunction)     != Result::Ok) {
+            return Result::Err;
         }
 
-        return 0;
+        return Result::Ok;
     }
 
-    I32 GS_GlobalContext::Initialize() {
-        return Initialize(IO::GS_StdIOStreamsManager::Create(), DefaultSignalHandler);
+    Result GS_GlobalContext::Initialize() {
+        return Initialize(IO::GS_StdIOStreamsManager::Create(),
+                          DefaultSignalHandler);
     }
 
     Void GS_GlobalContext::In(LRef<UString> string) {
@@ -85,6 +92,8 @@ namespace GSLanguageCompiler::Driver {
     }
 
     Void GS_GlobalContext::Exit(I32 exitCode) {
+        // TODO add cleanup ?
+
         std::exit(exitCode);
     }
 
@@ -102,6 +111,13 @@ namespace GSLanguageCompiler::Driver {
 
     IO::GSOutStreamPtr GS_GlobalContext::GetStdLogStream() const {
         return _stdIOStreamsManager->GetStdLogStream();
+    }
+
+    GS_GlobalContext::GS_GlobalContext()
+            : _stdIOStreamsManager(nullptr) {}
+
+    LRef<GS_GlobalContext> GlobalContext() {
+        return GS_GlobalContext::GetInstance();
     }
 
 }

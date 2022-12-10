@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_GLOBALCONTEXT_H
 #define GSLANGUAGE_GS_GLOBALCONTEXT_H
 
+#include <GSCrossPlatform/UException.h>
+
 #include <IO/IO.h>
 
 namespace GSLanguageCompiler::Driver {
@@ -17,8 +19,6 @@ namespace GSLanguageCompiler::Driver {
      */
     Void DefaultSignalHandler(I32 signal);
 
-    // todo use singleton pattern
-
     /**
      * Global compiler context for containing and manipulating information and operation system
      */
@@ -26,9 +26,18 @@ namespace GSLanguageCompiler::Driver {
     public:
 
         /**
-         * Delete constructor for global context. Only static class
+         * Delete copy constructor for global context
+         * @param context Context
          */
-        GS_GlobalContext() = delete;
+        GS_GlobalContext(ConstLRef<GS_GlobalContext> context) = delete;
+
+    public:
+
+        /**
+         * Getting global context instance
+         * @return Global context instance
+         */
+        static LRef<GS_GlobalContext> GetInstance();
 
     public:
 
@@ -37,14 +46,14 @@ namespace GSLanguageCompiler::Driver {
          * @param stdIOStreamsManager Standard IO streams manager
          * @return Initialization result
          */
-        static I32 InitializeIO(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager);
+        Result InitializeIO(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager);
 
         /**
          * Initializing global signal handlers
          * @param signalHandlerFunction Signal handler function
          * @return Initialization result
          */
-        static I32 InitializeSignals(SignalHandlerFunctionPtr signalHandlerFunction);
+        Result InitializeSignals(SignalHandlerFunctionPtr signalHandlerFunction);
 
         /**
          * Initializing global context
@@ -52,13 +61,14 @@ namespace GSLanguageCompiler::Driver {
          * @param signalHandlerFunction Signal handler function
          * @return Initialization result
          */
-        static I32 Initialize(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager, SignalHandlerFunctionPtr signalHandlerFunction);
+        Result Initialize(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+                          SignalHandlerFunctionPtr signalHandlerFunction);
 
         /**
          * Default initializing global context
          * @return Initialization result
          */
-        static I32 Initialize();
+        Result Initialize();
 
     public:
 
@@ -67,37 +77,39 @@ namespace GSLanguageCompiler::Driver {
          * @param string String for reading
          * @return
          */
-        static Void In(LRef<UString> string);
+        Void In(LRef<UString> string);
 
         /**
          * Write string to standard output stream from standard IO streams manager
          * @param string String for writing
          * @return
          */
-        static Void Out(ConstLRef<UString> string);
+        Void Out(ConstLRef<UString> string);
 
         /**
          * Write string to standard error stream from standard IO streams manager
          * @param string String for writing
          * @return
          */
-        static Void Err(ConstLRef<UString> string);
+        Void Err(ConstLRef<UString> string);
 
         /**
          * Write string to standard logging stream from standard IO streams manager
          * @param string String for writing
          * @return
          */
-        static Void Log(ConstLRef<UString> string);
+        Void Log(ConstLRef<UString> string);
 
     public:
+
+        // TODO add GS_NORETURN macro
 
         /**
          * Exiting from program
          * @param exitCode Exit code
          * @return
          */
-        [[noreturn]] static Void Exit(I32 exitCode);
+        [[noreturn]] Void Exit(I32 exitCode);
 
     public:
 
@@ -125,13 +137,39 @@ namespace GSLanguageCompiler::Driver {
          */
         IO::GSOutStreamPtr GetStdLogStream() const;
 
+    public:
+
+        /**
+         * Delete assignment operator for global context
+         * @param context Context
+         * @return Context
+         */
+        LRef<GS_GlobalContext> operator=(ConstLRef<GS_GlobalContext> context) = delete;
+
+    private:
+
+        /**
+         * Default constructor for global context
+         */
+        GS_GlobalContext();
+
+    private:
+
+        static GS_GlobalContext _context;
+
     private:
 
         /**
          * Standard IO streams manager
          */
-        inline static IO::GSStdIOStreamsManagerPtr _stdIOStreamsManager = nullptr;
+        IO::GSStdIOStreamsManagerPtr _stdIOStreamsManager;
     };
+
+    /**
+     * Getting global context instance
+     * @return Global context instance
+     */
+    LRef<GS_GlobalContext> GlobalContext();
 
 }
 
