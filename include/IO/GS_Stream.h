@@ -517,10 +517,10 @@ namespace GSLanguageCompiler::IO {
          * @param standardErr Standard error stream
          * @param standardLog Standard logging stream
          */
-        GS_StdIOStreamsManager(IO::GSInStreamPtr standardIn,
-                               IO::GSOutStreamPtr standardOut,
-                               IO::GSOutStreamPtr standardErr,
-                               IO::GSOutStreamPtr standardLog);
+        GS_StdIOStreamsManager(LRef<std::istream> standardIn,
+                               LRef<std::ostream> standardOut,
+                               LRef<std::ostream> standardErr,
+                               LRef<std::ostream> standardLog);
 
     public:
 
@@ -532,100 +532,70 @@ namespace GSLanguageCompiler::IO {
          * @param standardLog Standard logging stream
          * @return Standard IO streams manager ptr
          */
-        static std::shared_ptr<GS_StdIOStreamsManager> Create(IO::GSInStreamPtr standardIn,
-                                                              IO::GSOutStreamPtr standardOut,
-                                                              IO::GSOutStreamPtr standardErr,
-                                                              IO::GSOutStreamPtr standardLog);
+        static std::unique_ptr<GS_StdIOStreamsManager> Create(LRef<std::istream> standardIn,
+                                                              LRef<std::ostream> standardOut,
+                                                              LRef<std::ostream> standardErr,
+                                                              LRef<std::ostream> standardLog);
 
         /**
          * Creating standard IO streams manager with console standard IO streams
          * @return Standard IO streams manager ptr
          */
-        static std::shared_ptr<GS_StdIOStreamsManager> Create();
+        static std::unique_ptr<GS_StdIOStreamsManager> Create();
 
     public:
 
         /**
-         * Read string from standard input stream
-         * @param string String for reading
-         * @return
-         */
-        Void In(LRef<UString> string);
-
-        /**
-         * Write string to standard output stream
-         * @param string String for writing
-         * @return
-         */
-        Void Out(ConstLRef<UString> string);
-
-        /**
-         * Write string to standard error stream
-         * @param string String for writing
-         * @return
-         */
-        Void Err(ConstLRef<UString> string);
-
-        /**
-         * Write string to standard logging stream
-         * @param string String for writing
-         * @return
-         */
-        Void Log(ConstLRef<UString> string);
-
-    public:
-
-        /**
-         * Getter for standard input stream
+         * Getting standard input stream for reading data from stream
          * @return Standard input stream
          */
-        GSInStreamPtr GetStdInStream() const;
+        LRef<std::istream> In();
 
         /**
-         * Getter for standard output stream
+         * Getting standard output stream for writing data to stream
          * @return Standard output stream
          */
-        GSOutStreamPtr GetStdOutStream() const;
+        LRef<std::ostream> Out();
 
         /**
-         * Getter for standard error stream
+         * Getting standard error stream for writing data to stream
          * @return Standard error stream
          */
-        GSOutStreamPtr GetStdErrStream() const;
+        LRef<std::ostream> Err();
 
         /**
-         * Getter for standard logging stream
+         * Getting standard logging stream for writing data to stream
          * @return Standard logging stream
          */
-        GSOutStreamPtr GetStdLogStream() const;
+        LRef<std::ostream> Log();
 
     private:
 
         /**
          * Standard input stream
          */
-        IO::GSInStreamPtr _standardIn;
+        LRef<std::istream> _standardIn;
 
         /**
          * Standard output stream
          */
-        IO::GSOutStreamPtr _standardOut;
+        LRef<std::ostream> _standardOut;
 
         /**
          * Standard error stream
          */
-        IO::GSOutStreamPtr _standardErr;
+        LRef<std::ostream> _standardErr;
 
         /**
          * Standard logging stream
          */
-        IO::GSOutStreamPtr _standardLog;
+        LRef<std::ostream> _standardLog;
     };
 
     /**
      * Standard IO streams manager ptr type
      */
-    using GSStdIOStreamsManagerPtr = std::shared_ptr<GS_StdIOStreamsManager>;
+    using GSStdIOStreamsManagerPtr = std::unique_ptr<GS_StdIOStreamsManager>;
 
 }
 

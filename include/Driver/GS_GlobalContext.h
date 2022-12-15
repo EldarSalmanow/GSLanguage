@@ -111,6 +111,13 @@ namespace GSLanguageCompiler::Driver {
          */
         [[noreturn]] Void Exit(I32 exitCode);
 
+        // TODO comment
+
+        [[noreturn]] Void ErrAndExit(ConstLRef<UString> string,
+                                     I32 exitCode);
+
+        [[noreturn]] Void ErrAndExit(ConstLRef<UString> string);
+
     public:
 
         /**
@@ -155,6 +162,9 @@ namespace GSLanguageCompiler::Driver {
 
     private:
 
+        /**
+         * Global context instance
+         */
         static GS_GlobalContext _context;
 
     private:

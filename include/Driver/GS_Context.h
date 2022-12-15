@@ -9,6 +9,12 @@
 
 namespace GSLanguageCompiler::Driver {
 
+    class Ctx {
+    public:
+
+
+    };
+
     /**
      * Class for containing and manipulating constantly information about compiling process
      */

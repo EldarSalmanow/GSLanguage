@@ -671,11 +671,34 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
-         * Add source to manager
+         * Adding source to manager
          * @param source Source
          * @return Source
          */
         ConstLRef<GS_Source> AddSource(GSSourcePtr source);
+
+        /**
+         * Adding file source to manager
+         * @param name File name
+         * @return File source
+         */
+        ConstLRef<GS_Source> AddFileSource(UString name);
+
+        /**
+         * Adding string source to manager
+         * @param source Source code
+         * @return String source
+         */
+        ConstLRef<GS_Source> AddStringSource(UString source);
+
+        /**
+         * Adding custom source to manager
+         * @param source Source code
+         * @param name Source name
+         * @return Custom source
+         */
+        ConstLRef<GS_Source> AddCustomSource(UString source,
+                                             UString name);
 
         /**
          * Get source from manager by source hash

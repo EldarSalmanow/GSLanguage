@@ -97,6 +97,17 @@ namespace GSLanguageCompiler::Driver {
         std::exit(exitCode);
     }
 
+    Void GS_GlobalContext::ErrAndExit(ConstLRef<UString> string, I32 exitCode) {
+        Err(string);
+
+        Exit(exitCode);
+    }
+
+    Void GS_GlobalContext::ErrAndExit(ConstLRef<UString> string) {
+        ErrAndExit(string,
+                   StaticCast<I32>(Result::Err));
+    }
+
     IO::GSInStreamPtr GS_GlobalContext::GetStdInStream() const {
         return _stdIOStreamsManager->GetStdInStream();
     }

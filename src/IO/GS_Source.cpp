@@ -361,9 +361,7 @@ namespace GSLanguageCompiler::IO {
                          << name
                          << "'!"_us;
 
-            Driver::GS_GlobalContext::Err(stringStream.String());
-
-            Driver::GS_GlobalContext::Exit(1);
+            Driver::GlobalContext().ErrAndExit(stringStream.String());
         }
 
         auto reader = IO::GS_Reader::Create(fileStream);
@@ -432,6 +430,32 @@ namespace GSLanguageCompiler::IO {
         return *_sources[_sources.size() - 1]; // TODO optimize
     }
 
+    ConstLRef<GS_Source> GS_SourceManager::AddFileSource(UString name) {
+        auto fileSource = GS_Source::CreateFile(std::move(name));
+
+        auto &fileSourceRef = AddSource(std::move(fileSource));
+
+        return fileSourceRef;
+    }
+
+    ConstLRef<GS_Source> GS_SourceManager::AddStringSource(UString source) {
+        auto stringSource = GS_Source::CreateString(std::move(source));
+
+        auto &stringSourceRef = AddSource(std::move(stringSource));
+
+        return stringSourceRef;
+    }
+
+    ConstLRef<GS_Source> GS_SourceManager::AddCustomSource(UString source,
+                                                           UString name) {
+        auto customSource = GS_Source::CreateCustom(std::move(source),
+                                                    std::move(name));
+
+        auto &customSourceRef = AddSource(std::move(customSource));
+
+        return customSourceRef;
+    }
+
     ConstLRef<GS_Source> GS_SourceManager::GetSource(U64 sourceHash) const {
         for (auto &source : _sources) {
             if (source->GetHash() == sourceHash) {
@@ -445,9 +469,7 @@ namespace GSLanguageCompiler::IO {
                      << sourceHash
                      << "' in source manager!"_us;
 
-        Driver::GS_GlobalContext::Err(stringStream.String());
-
-        Driver::GS_GlobalContext::Exit(1);
+        Driver::GlobalContext().ErrAndExit(stringStream.String());
     }
 
     ConstLRef<GS_Source> GS_SourceManager::GetSource(GS_SourceName sourceName) const {
@@ -465,9 +487,7 @@ namespace GSLanguageCompiler::IO {
                      << movedSourceName.GetName()
                      << "' in source manager!"_us;
 
-        Driver::GS_GlobalContext::Err(stringStream.String());
-
-        Driver::GS_GlobalContext::Exit(1);
+        Driver::GlobalContext().ErrAndExit(stringStream.String());
     }
 
     ConstLRef<GS_Source> GS_SourceManager::GetFileSource(UString fileName) const {

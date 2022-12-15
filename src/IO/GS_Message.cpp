@@ -23,15 +23,15 @@ namespace GSLanguageCompiler::IO {
               _level(level),
               _location(location) {}
 
-    std::shared_ptr<GS_Message> GS_Message::Create(UString text,
+    GS_Message GS_Message::Create(UString text,
                                                    MessageLevel level,
                                                    std::optional<GS_SourceLocation> location) {
-        return std::make_shared<GS_Message>(std::move(text),
+        return GS_Message(std::move(text),
                                             level,
                                             location);
     }
 
-    std::shared_ptr<GS_Message> GS_Message::Create(UString text,
+    GS_Message GS_Message::Create(UString text,
                                                    MessageLevel level,
                                                    GS_SourceLocation location) {
         return GS_Message::Create(std::move(text),
@@ -39,7 +39,7 @@ namespace GSLanguageCompiler::IO {
                                   std::make_optional(location));
     }
 
-    std::shared_ptr<GS_Message> GS_Message::Create(UString text,
+    GS_Message GS_Message::Create(UString text,
                                                    MessageLevel level) {
         return GS_Message::Create(std::move(text),
                                   level,
@@ -58,18 +58,18 @@ namespace GSLanguageCompiler::IO {
         return _location;
     }
 
-    GS_MessageHandler::GS_MessageHandler(GSOutStreamPtr outputStream,
-                                         GSSourceManagerPtr sourceManager)
-            : _outputStream(std::move(outputStream)),
-              _sourceManager(std::move(sourceManager)) {}
+    GS_MessageHandler::GS_MessageHandler(LRef<std::ostream> outputStream,
+                                         LRef<GS_SourceManager> sourceManager)
+            : _outputStream(outputStream),
+              _sourceManager(sourceManager) {}
 
-    std::shared_ptr<GS_MessageHandler> GS_MessageHandler::Create(GSOutStreamPtr outputStream,
-                                                                 GSSourceManagerPtr sourceManager) {
-        return std::make_shared<GS_MessageHandler>(std::move(outputStream),
-                                                   std::move(sourceManager));
+    std::unique_ptr<GS_MessageHandler> GS_MessageHandler::Create(LRef<std::ostream> outputStream,
+                                                                 LRef<GS_SourceManager> sourceManager) {
+        return std::make_unique<GS_MessageHandler>(outputStream,
+                                                   sourceManager);
     }
 
-    Void GS_MessageHandler::Write(GSMessagePtr message) {
+    Void GS_MessageHandler::Write(GS_Message message) {
         auto messageText = message->GetText();
         auto messageLevel = message->GetLevel();
         auto messageLocation = message->GetLocation();
@@ -138,11 +138,15 @@ namespace GSLanguageCompiler::IO {
         stream << rang::style::reset << rang::fg::reset;
     }
 
-    GSOutStreamPtr GS_MessageHandler::GetOutputStream() {
+    Void GS_MessageHandler::Write(UString text, MessageLevel level) {
+
+    }
+
+    LRef<std::ostream> GS_MessageHandler::GetOutputStream() {
         return _outputStream;
     }
 
-    GSSourceManagerPtr GS_MessageHandler::GetSourceManager() {
+    LRef<GS_SourceManager> GS_MessageHandler::GetSourceManager() {
         return _sourceManager;
     }
 

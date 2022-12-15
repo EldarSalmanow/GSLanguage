@@ -109,12 +109,12 @@ namespace GSLanguageCompiler::IO {
     /**
      * Message ptr type
      */
-    using GSMessagePtr = std::shared_ptr<GS_Message>;
+//    using GSMessagePtr = std::shared_ptr<GS_Message>;
 
     /**
      * Message ptr array
      */
-    using GSMessagePtrArray = std::vector<GSMessagePtr>;
+//    using GSMessagePtrArray = std::vector<GSMessagePtr>;
 
     /**
      * Class for handling messages and writing to output stream
@@ -127,8 +127,8 @@ namespace GSLanguageCompiler::IO {
          * @param outputStream Output stream
          * @param sourceManager Source manager
          */
-        GS_MessageHandler(GSOutStreamPtr outputStream,
-                          GSSourceManagerPtr sourceManager);
+        GS_MessageHandler(LRef<std::ostream> outputStream,
+                          LRef<GS_SourceManager> sourceManager);
 
     public:
 
@@ -138,8 +138,8 @@ namespace GSLanguageCompiler::IO {
          * @param sourceManager Source manager
          * @return Message handler ptr
          */
-        static std::shared_ptr<GS_MessageHandler> Create(GSOutStreamPtr outputStream,
-                                                         GSSourceManagerPtr sourceManager);
+        static std::unique_ptr<GS_MessageHandler> Create(LRef<std::ostream> outputStream,
+                                                         LRef<GS_SourceManager> sourceManager);
 
     public:
 
@@ -150,31 +150,38 @@ namespace GSLanguageCompiler::IO {
          */
         Void Write(GS_Message message);
 
+        Void Write(UString text,
+                   MessageLevel level,
+                   GS_SourceLocation location);
+
+        Void Write(UString text,
+                   MessageLevel level);
+
     public:
 
         /**
          * Getter for output stream
          * @return Output stream
          */
-        GSOutStreamPtr GetOutputStream();
+        LRef<std::ostream> GetOutputStream(); // TODO remove ?
 
         /**
          * Getter for source manager
          * @return Source manager
          */
-        GSSourceManagerPtr GetSourceManager();
+        LRef<GS_SourceManager> GetSourceManager();
 
     private:
 
         /**
          * Output stream
          */
-        GSOutStreamPtr _outputStream;
+        LRef<std::ostream> _outputStream;
 
         /**
          * Source manager
          */
-        GSSourceManagerPtr _sourceManager;
+        LRef<GS_SourceManager> _sourceManager;
     };
 
     /**
