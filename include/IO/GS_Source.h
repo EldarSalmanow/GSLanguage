@@ -705,7 +705,7 @@ namespace GSLanguageCompiler::IO {
          * @param sourceHash Source hash
          * @return Source
          */
-        ConstLRef<GS_Source> GetSource(U64 sourceHash) const;
+        ConstLRef<GS_Source> GetSource(U64 sourceHash) const; // TODO add optional ?
 
         /**
          * Get source from manager by source name

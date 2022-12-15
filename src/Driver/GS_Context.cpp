@@ -103,11 +103,11 @@ namespace GSLanguageCompiler::Driver {
         return _sourceManager->GetSource(std::move(sourceName));
     }
 
-    IO::GSSourcePtrArray GS_Context::GetSources() const {
+    ConstLRef<IO::GSSourcePtrArray> GS_Context::GetSources() const {
         return _sourceManager->GetSources();
     }
 
-    Void GS_Context::Write(IO::GSMessagePtr message) {
+    Void GS_Context::Write(IO::GS_Message message) {
         _messageHandler->Write(std::move(message));
     }
 

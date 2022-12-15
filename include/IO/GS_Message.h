@@ -107,14 +107,9 @@ namespace GSLanguageCompiler::IO {
     };
 
     /**
-     * Message ptr type
+     * Message array type
      */
-//    using GSMessagePtr = std::shared_ptr<GS_Message>;
-
-    /**
-     * Message ptr array
-     */
-//    using GSMessagePtrArray = std::vector<GSMessagePtr>;
+    using GSMessageArray = std::vector<GS_Message>;
 
     /**
      * Class for handling messages and writing to output stream
@@ -150,10 +145,23 @@ namespace GSLanguageCompiler::IO {
          */
         Void Write(GS_Message message);
 
+        /**
+         * Writing message to output stream
+         * @param text Message text
+         * @param level Message level
+         * @param location Message location
+         * @return
+         */
         Void Write(UString text,
                    MessageLevel level,
                    GS_SourceLocation location);
 
+        /**
+         * Writing message to output stream
+         * @param text Message text
+         * @param level Message level
+         * @return
+         */
         Void Write(UString text,
                    MessageLevel level);
 
@@ -163,7 +171,7 @@ namespace GSLanguageCompiler::IO {
          * Getter for output stream
          * @return Output stream
          */
-        LRef<std::ostream> GetOutputStream(); // TODO remove ?
+        LRef<std::ostream> GetOutputStream();
 
         /**
          * Getter for source manager

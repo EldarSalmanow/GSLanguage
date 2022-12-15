@@ -40,7 +40,7 @@ namespace GSLanguageCompiler::Driver {
          * @param messageHandler Message handler
          * @return Context ptr
          */
-        static std::shared_ptr<GS_Context> Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+        static std::unique_ptr<GS_Context> Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
                                                   IO::GSSourceManagerPtr sourceManager,
                                                   IO::GSMessageHandlerPtr messageHandler);
 
@@ -49,13 +49,13 @@ namespace GSLanguageCompiler::Driver {
          * @param sourceManager Source manager
          * @return Context ptr
          */
-        static std::shared_ptr<GS_Context> Create(IO::GSSourceManagerPtr sourceManager);
+        static std::unique_ptr<GS_Context> Create(IO::GSSourceManagerPtr sourceManager);
 
         /**
          * Creating context
          * @return Context ptr
          */
-        static std::shared_ptr<GS_Context> Create();
+        static std::unique_ptr<GS_Context> Create();
 
     public:
 
@@ -64,61 +64,33 @@ namespace GSLanguageCompiler::Driver {
          * @param arguments Arguments
          * @return Context ptr
          */
-        static std::shared_ptr<GS_Context> Create(GS_Arguments arguments);
+        static std::unique_ptr<GS_Context> Create(GS_Arguments arguments);
 
     public:
 
         /**
-         * Read string from standard input stream from standard IO streams manager
-         * @param string String for reading
-         * @return
-         */
-        Void In(LRef<UString> string);
-
-        /**
-         * Write string to standard output stream from standard IO streams manager
-         * @param string String for writing
-         * @return
-         */
-        Void Out(ConstLRef<UString> string);
-
-        /**
-         * Write string to standard error stream from standard IO streams manager
-         * @param string String for writing
-         * @return
-         */
-        Void Err(ConstLRef<UString> string);
-
-        /**
-         * Write string to standard logging stream from standard IO streams manager
-         * @param string String for writing
-         * @return
-         */
-        Void Log(ConstLRef<UString> string);
-
-        /**
-         * Getter for standard input stream from standard IO streams manager
+         * Getting standard input stream from standard IO streams manager for reading data from stream
          * @return Standard input stream
          */
-        IO::GSInStreamPtr GetStdInStream() const;
+        LRef<std::istream> In();
 
         /**
-         * Getter for standard output stream from standard IO streams manager
+         * Getting standard output stream from standard IO streams manager for writing data to stream
          * @return Standard output stream
          */
-        IO::GSOutStreamPtr GetStdOutStream() const;
+        LRef<std::ostream> Out();
 
         /**
-         * Getter for standard error stream from standard IO streams manager
+         * Getting standard error stream from standard IO streams manager for writing data to stream
          * @return Standard error stream
          */
-        IO::GSOutStreamPtr GetStdErrStream() const;
+        LRef<std::ostream> Err();
 
         /**
-         * Getter for standard logging stream from standard IO streams manager
+         * Getting standard logging stream from standard IO streams manager for writing data to stream
          * @return Standard logging stream
          */
-        IO::GSOutStreamPtr GetStdLogStream() const;
+        LRef<std::ostream> Log();
 
     public:
 
@@ -127,27 +99,63 @@ namespace GSLanguageCompiler::Driver {
          * @param source Source
          * @return Source hash
          */
-        U64 AddSource(IO::GSSourcePtr source);
+        ConstLRef<IO::GS_Source> AddSource(IO::GSSourcePtr source);
+
+        /**
+         * Adding file source to source manager
+         * @param name File name
+         * @return File source
+         */
+        ConstLRef<IO::GS_Source> AddFileSource(UString name);
+
+        /**
+         * Adding string source to source manager
+         * @param source Source code
+         * @return String source
+         */
+        ConstLRef<IO::GS_Source> AddStringSource(UString source);
+
+        /**
+         * Adding custom source to source manager
+         * @param source Source code
+         * @param name Source name
+         * @return Custom source
+         */
+        ConstLRef<IO::GS_Source> AddCustomSource(UString source,
+                                                 UString name);
 
         /**
          * Get source from source manager by source hash
          * @param sourceHash Source hash
-         * @return Source or nullptr
+         * @return Source
          */
-        IO::GSSourcePtr GetSource(U64 sourceHash) const;
+        ConstLRef<IO::GS_Source> GetSource(U64 sourceHash) const;
 
         /**
          * Get source from source manager by source name
          * @param sourceName Source name
-         * @return Source or nullptr
+         * @return Source
          */
-        IO::GSSourcePtr GetSource(IO::GS_SourceName sourceName) const;
+        ConstLRef<IO::GS_Source> GetSource(IO::GS_SourceName sourceName) const;
+
+        /**
+         * Get file source from source manager by file name
+         * @param fileName File name
+         * @return File source
+         */
+        ConstLRef<IO::GS_Source> GetFileSource(UString fileName) const;
+
+        /**
+         * Get custom source from source manager by source name
+         * @return Custom source
+         */
+        ConstLRef<IO::GS_Source> GetCustomSource(UString sourceName) const;
 
         /**
          * Getter for sources from source manager
          * @return Sources
          */
-        IO::GSSourcePtrArray GetSources() const;
+        ConstLRef<IO::GSSourcePtrArray> GetSources() const;
 
     public:
 
@@ -156,7 +164,7 @@ namespace GSLanguageCompiler::Driver {
          * @param message Message
          * @return
          */
-        Void Write(IO::GSMessagePtr message);
+        Void Write(IO::GS_Message message);
 
     public:
 

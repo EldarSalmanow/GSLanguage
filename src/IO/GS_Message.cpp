@@ -24,29 +24,29 @@ namespace GSLanguageCompiler::IO {
               _location(location) {}
 
     GS_Message GS_Message::Create(UString text,
-                                                   MessageLevel level,
-                                                   std::optional<GS_SourceLocation> location) {
+                                  MessageLevel level,
+                                  std::optional<GS_SourceLocation> location) {
         return GS_Message(std::move(text),
-                                            level,
-                                            location);
+                          level,
+                          location);
     }
 
     GS_Message GS_Message::Create(UString text,
-                                                   MessageLevel level,
-                                                   GS_SourceLocation location) {
+                                  MessageLevel level,
+                                  GS_SourceLocation location) {
         return GS_Message::Create(std::move(text),
                                   level,
                                   std::make_optional(location));
     }
 
     GS_Message GS_Message::Create(UString text,
-                                                   MessageLevel level) {
+                                  MessageLevel level) {
         return GS_Message::Create(std::move(text),
                                   level,
                                   std::nullopt);
     }
 
-    UString GS_Message::GetText() const {
+    ConstLRef<UString> GS_Message::GetText() const {
         return _text;
     }
 
@@ -70,29 +70,33 @@ namespace GSLanguageCompiler::IO {
     }
 
     Void GS_MessageHandler::Write(GS_Message message) {
-        auto messageText = message->GetText();
-        auto messageLevel = message->GetLevel();
-        auto messageLocation = message->GetLocation();
+        auto movedMessage = std::move(message);
 
-        auto &stream = _outputStream->GetOutStream();
+        auto &messageText = movedMessage.GetText();
+        auto messageLevel = movedMessage.GetLevel();
+        auto messageLocation = movedMessage.GetLocation();
 
-        stream << rang::style::bold;
+        _outputStream << rang::style::bold;
 
         switch (messageLevel) {
             case MessageLevel::Note:
-                stream << rang::fg::blue << "Note ";
+                _outputStream << rang::fg::blue
+                              << "Note ";
 
                 break;
             case MessageLevel::Warning:
-                stream << rang::fg::yellow << "Warning ";
+                _outputStream << rang::fg::yellow
+                              << "Warning ";
 
                 break;
             case MessageLevel::Error:
-                stream << rang::fg::red << "Error ";
+                _outputStream << rang::fg::red
+                              << "Error ";
 
                 break;
             case MessageLevel::Fatal:
-                stream << rang::fg::gray << "Fatal ";
+                _outputStream << rang::fg::gray
+                              << "Fatal ";
 
                 break;
         }
@@ -100,22 +104,22 @@ namespace GSLanguageCompiler::IO {
         if (messageLocation.has_value()) {
             auto location = messageLocation.value();
 
-            auto source = _sourceManager->GetSource(location.GetSourceHash());
+            auto source = _sourceManager.GetSource(location.GetSourceHash());
 
-            if (!source) {
-                UStringStream stringStream;
-
-                stringStream << "Can`t find source in context with source hash '"_us
-                             << location.GetSourceHash()
-                             << "' for printing error!"_us;
-
-                auto fatalMessage = GS_Message::Create(stringStream.String(),
-                                                       MessageLevel::Fatal);
-
-                Write(fatalMessage);
-
-                return;
-            }
+//            if (!source) {
+//                UStringStream stringStream;
+//
+//                stringStream << "Can`t find source in context with source hash '"_us
+//                             << location.GetSourceHash()
+//                             << "' for printing error!"_us;
+//
+//                auto fatalMessage = GS_Message::Create(stringStream.String(),
+//                                                       MessageLevel::Fatal);
+//
+//                Write(fatalMessage);
+//
+//                return;
+//            }
 
             auto fullSourceLocation = GS_FullSourceLocation::FromSourceLocation(location,
                                                                                 source);
@@ -123,23 +127,40 @@ namespace GSLanguageCompiler::IO {
             auto line = fullSourceLocation.GetStartLine();
             auto column = fullSourceLocation.GetStartColumn();
 
-            stream << "{ "
-                   << source->GetName().GetName()
-                   << " [ "
-                   << line
-                   << ":"
-                   << column
-                   << " ] "
-                   << " } ";
+            _outputStream << "{ "
+                          << source.GetName().GetName()
+                          << " [ "
+                          << line
+                          << ":"
+                          << column
+                          << " ] "
+                          << " } ";
         }
 
-        stream << ">> " << messageText << std::endl;
+        _outputStream << ">> "
+                      << messageText
+                      << std::endl;
 
-        stream << rang::style::reset << rang::fg::reset;
+        _outputStream << rang::style::reset
+                      << rang::fg::reset;
     }
 
-    Void GS_MessageHandler::Write(UString text, MessageLevel level) {
+    Void GS_MessageHandler::Write(UString text,
+                                  MessageLevel level,
+                                  GS_SourceLocation location) {
+        auto message = GS_Message::Create(std::move(text),
+                                          level,
+                                          location);
 
+        Write(message);
+    }
+
+    Void GS_MessageHandler::Write(UString text,
+                                  MessageLevel level) {
+        auto message = GS_Message::Create(std::move(text),
+                                          level);
+
+        Write(message);
     }
 
     LRef<std::ostream> GS_MessageHandler::GetOutputStream() {
