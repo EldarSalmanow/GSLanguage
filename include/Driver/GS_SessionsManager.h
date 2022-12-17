@@ -24,13 +24,13 @@ namespace GSLanguageCompiler::Driver {
          * @param sessions Sessions
          * @return Sessions manager ptr
          */
-        static std::shared_ptr<GS_SessionsManager> Create(GSSessionPtrArray sessions);
+        static std::unique_ptr<GS_SessionsManager> Create(GSSessionPtrArray sessions);
 
         /**
          * Creating sessions manager
          * @return Sessions manager ptr
          */
-        static std::shared_ptr<GS_SessionsManager> Create();
+        static std::unique_ptr<GS_SessionsManager> Create();
 
     public:
 
@@ -43,9 +43,9 @@ namespace GSLanguageCompiler::Driver {
         /**
          * Adding session
          * @param session Session
-         * @return
+         * @return Session
          */
-        Void AddSession(GSSessionPtr session);
+        ConstLRef<GS_Session> AddSession(GSSessionPtr session);
 
     public:
 
@@ -53,7 +53,7 @@ namespace GSLanguageCompiler::Driver {
          * Getter for sessions
          * @return Sessions
          */
-        GSSessionPtrArray GetSessions() const;
+        ConstLRef<GSSessionPtrArray> GetSessions() const;
 
     private:
 

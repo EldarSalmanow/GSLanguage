@@ -1,19 +1,13 @@
 #ifndef GSLANGUAGE_GS_CONTEXT_H
 #define GSLANGUAGE_GS_CONTEXT_H
 
-#include <IO/IO.h>
-
 #include <AST/AST.h>
 
 #include <Driver/GS_Arguments.h>
 
+#include <Driver/GS_GlobalContext.h>
+
 namespace GSLanguageCompiler::Driver {
-
-    class Ctx {
-    public:
-
-
-    };
 
     /**
      * Class for containing and manipulating constantly information about compiling process
@@ -127,29 +121,29 @@ namespace GSLanguageCompiler::Driver {
         /**
          * Get source from source manager by source hash
          * @param sourceHash Source hash
-         * @return Source
+         * @return Source or nullopt
          */
-        ConstLRef<IO::GS_Source> GetSource(U64 sourceHash) const;
+        std::optional<IO::GS_Source> GetSource(U64 sourceHash) const;
 
         /**
          * Get source from source manager by source name
          * @param sourceName Source name
-         * @return Source
+         * @return Source or nullopt
          */
-        ConstLRef<IO::GS_Source> GetSource(IO::GS_SourceName sourceName) const;
+        std::optional<IO::GS_Source> GetSource(IO::GS_SourceName sourceName) const;
 
         /**
          * Get file source from source manager by file name
          * @param fileName File name
-         * @return File source
+         * @return File source or nullopt
          */
-        ConstLRef<IO::GS_Source> GetFileSource(UString fileName) const;
+        std::optional<IO::GS_Source> GetFileSource(UString fileName) const;
 
         /**
          * Get custom source from source manager by source name
-         * @return Custom source
+         * @return Custom source or nullopt
          */
-        ConstLRef<IO::GS_Source> GetCustomSource(UString sourceName) const;
+        std::optional<IO::GS_Source> GetCustomSource(UString sourceName) const;
 
         /**
          * Getter for sources from source manager
@@ -172,19 +166,19 @@ namespace GSLanguageCompiler::Driver {
          * Getter for standard IO streams manager
          * @return Standard IO streams manager
          */
-        IO::GSStdIOStreamsManagerPtr GetStdIOStreamsManager() const;
+        ConstLRef<IO::GS_StdIOStreamsManager> GetStdIOStreamsManager() const;
 
         /**
          * Getter for source manager
          * @return Source manager
          */
-        IO::GSSourceManagerPtr GetSourceManager() const;
+        ConstLRef<IO::GS_SourceManager> GetSourceManager() const;
 
         /**
          * Getter for message handler
          * @return Message handler
          */
-        IO::GSMessageHandlerPtr GetMessageHandler() const;
+        ConstLRef<IO::GS_MessageHandler> GetMessageHandler() const;
 
     private:
 
@@ -207,7 +201,7 @@ namespace GSLanguageCompiler::Driver {
     /**
      * Context ptr type
      */
-    using GSContextPtr = std::shared_ptr<GS_Context>;
+    using GSContextPtr = std::unique_ptr<GS_Context>;
 
 }
 

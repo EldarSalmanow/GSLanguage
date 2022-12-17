@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include <optional>
+
 #include <GSCrossPlatform/CrossPlatform.h>
 
 namespace GSLanguageCompiler::IO {
@@ -660,13 +662,13 @@ namespace GSLanguageCompiler::IO {
          * @param sources Sources
          * @return Source manager ptr
          */
-        static std::shared_ptr<GS_SourceManager> Create(GSSourcePtrArray sources);
+        static std::unique_ptr<GS_SourceManager> Create(GSSourcePtrArray sources);
 
         /**
          * Creating source manager
          * @return Source manager ptr
          */
-        static std::shared_ptr<GS_SourceManager> Create();
+        static std::unique_ptr<GS_SourceManager> Create();
 
     public:
 
@@ -703,29 +705,29 @@ namespace GSLanguageCompiler::IO {
         /**
          * Get source from manager by source hash
          * @param sourceHash Source hash
-         * @return Source
+         * @return Source or nullopt
          */
-        ConstLRef<GS_Source> GetSource(U64 sourceHash) const; // TODO add optional ?
+        std::optional<GS_Source> GetSource(U64 sourceHash) const;
 
         /**
          * Get source from manager by source name
          * @param sourceName Source name
-         * @return Source
+         * @return Source or nullopt
          */
-        ConstLRef<GS_Source> GetSource(GS_SourceName sourceName) const;
+        std::optional<GS_Source> GetSource(GS_SourceName sourceName) const;
 
         /**
          * Get file source from manager by file name
          * @param fileName File name
-         * @return File source
+         * @return File source or nullopt
          */
-        ConstLRef<GS_Source> GetFileSource(UString fileName) const;
+        std::optional<GS_Source> GetFileSource(UString fileName) const;
 
         /**
          * Get custom source from manager by source name
-         * @return Custom source
+         * @return Custom source or nullopt
          */
-        ConstLRef<GS_Source> GetCustomSource(UString sourceName) const;
+        std::optional<GS_Source> GetCustomSource(UString sourceName) const;
 
     public:
 
@@ -733,7 +735,7 @@ namespace GSLanguageCompiler::IO {
          * Getter for sources
          * @return Sources
          */
-        ConstLRef<GSSourcePtrArray> GetSources() const; // TODO remove ?
+        ConstLRef<GSSourcePtrArray> GetSources() const;
 
     public:
 
@@ -746,7 +748,7 @@ namespace GSLanguageCompiler::IO {
     /**
      * Source manager ptr type
      */
-    using GSSourceManagerPtr = std::shared_ptr<GS_SourceManager>;
+    using GSSourceManagerPtr = std::unique_ptr<GS_SourceManager>;
 
 }
 

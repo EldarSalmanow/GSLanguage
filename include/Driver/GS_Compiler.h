@@ -26,13 +26,13 @@ namespace GSLanguageCompiler::Driver {
          * @param sessions Sessions
          * @return Compiler ptr
          */
-        static std::shared_ptr<GS_Compiler> Create(GSSessionPtrArray sessions);
+        static std::unique_ptr<GS_Compiler> Create(GSSessionPtrArray sessions);
 
         /**
          * Creating compiler
          * @return Compiler ptr
          */
-        static std::shared_ptr<GS_Compiler> Create();
+        static std::unique_ptr<GS_Compiler> Create();
 
     public:
 
@@ -41,7 +41,7 @@ namespace GSLanguageCompiler::Driver {
          * @param arguments Arguments for one session
          * @return Compiler ptr
          */
-        static std::shared_ptr<GS_Compiler> Create(GS_Arguments arguments);
+        static std::unique_ptr<GS_Compiler> Create(GS_Arguments arguments);
 
     public:
 
@@ -66,9 +66,9 @@ namespace GSLanguageCompiler::Driver {
         /**
          * Add session to compiler
          * @param session Session
-         * @return
+         * @return Session
          */
-        Void AddSession(GSSessionPtr session);
+        ConstLRef<GS_Session> AddSession(GSSessionPtr session);
 
     public:
 
@@ -76,7 +76,7 @@ namespace GSLanguageCompiler::Driver {
          * Getter for sessions
          * @return Sessions
          */
-        GSSessionPtrArray GetSessions() const;
+        ConstLRef<GSSessionPtrArray> GetSessions() const;
 
     private:
 
@@ -89,7 +89,7 @@ namespace GSLanguageCompiler::Driver {
     /**
      * Compiler ptr type
      */
-    using GSCompilerPtr = std::shared_ptr<GS_Compiler>;
+    using GSCompilerPtr = std::unique_ptr<GS_Compiler>;
 
 }
 

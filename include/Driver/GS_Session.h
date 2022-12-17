@@ -42,13 +42,13 @@ namespace GSLanguageCompiler {
              * @param context Context
              * @return Compiler session ptr
              */
-            static std::shared_ptr<GS_Session> Create(GSContextPtr context);
+            static std::unique_ptr<GS_Session> Create(GSContextPtr context);
 
             /**
              * Creating compiler session
              * @return Compiler session ptr
              */
-            static std::shared_ptr<GS_Session> Create();
+            static std::unique_ptr<GS_Session> Create();
 
         public:
 
@@ -61,56 +61,28 @@ namespace GSLanguageCompiler {
         public:
 
             /**
-             * Read string from standard input stream from standard IO streams manager
-             * @param string String for reading
-             * @return
-             */
-            Void In(LRef<UString> string);
-
-            /**
-             * Write string to standard output stream from standard IO streams manager
-             * @param string String for writing
-             * @return
-             */
-            Void Out(ConstLRef<UString> string);
-
-            /**
-             * Write string to standard error stream from standard IO streams manager
-             * @param string String for writing
-             * @return
-             */
-            Void Err(ConstLRef<UString> string);
-
-            /**
-             * Write string to standard logging stream from standard IO streams manager
-             * @param string String for writing
-             * @return
-             */
-            Void Log(ConstLRef<UString> string);
-
-            /**
-             * Getter for standard input stream from standard IO streams manager
+             * Getting standard input stream from standard IO streams manager for reading data from stream
              * @return Standard input stream
              */
-            IO::GSInStreamPtr GetStdInStream() const;
+            LRef<std::istream> In();
 
             /**
-             * Getter for standard output stream from standard IO streams manager
+             * Getting standard output stream from standard IO streams manager for writing data to stream
              * @return Standard output stream
              */
-            IO::GSOutStreamPtr GetStdOutStream() const;
+            LRef<std::ostream> Out();
 
             /**
-             * Getter for standard error stream from standard IO streams manager
+             * Getting standard error stream from standard IO streams manager for writing data to stream
              * @return Standard error stream
              */
-            IO::GSOutStreamPtr GetStdErrStream() const;
+            LRef<std::ostream> Err();
 
             /**
-             * Getter for standard logging stream from standard IO streams manager
+             * Getting standard logging stream from standard IO streams manager for writing data to stream
              * @return Standard logging stream
              */
-            IO::GSOutStreamPtr GetStdLogStream() const;
+            LRef<std::ostream> Log();
 
         public:
 
@@ -122,24 +94,60 @@ namespace GSLanguageCompiler {
             ConstLRef<IO::GS_Source> AddSource(IO::GSSourcePtr source);
 
             /**
+             * Adding file source to source manager
+             * @param name File name
+             * @return File source
+             */
+            ConstLRef<IO::GS_Source> AddFileSource(UString name);
+
+            /**
+             * Adding string source to source manager
+             * @param source Source code
+             * @return String source
+             */
+            ConstLRef<IO::GS_Source> AddStringSource(UString source);
+
+            /**
+             * Adding custom source to source manager
+             * @param source Source code
+             * @param name Source name
+             * @return Custom source
+             */
+            ConstLRef<IO::GS_Source> AddCustomSource(UString source,
+                                                     UString name);
+
+            /**
              * Get source from source manager by source hash
              * @param sourceHash Source hash
-             * @return Source or nullptr
+             * @return Source or nullopt
              */
-            IO::GSSourcePtr GetSource(U64 sourceHash) const;
+            std::optional<IO::GS_Source> GetSource(U64 sourceHash) const;
 
             /**
              * Get source from source manager by source name
              * @param sourceName Source name
-             * @return Source or nullptr
+             * @return Source or nullopt
              */
-            IO::GSSourcePtr GetSource(IO::GS_SourceName sourceName) const;
+            std::optional<IO::GS_Source> GetSource(IO::GS_SourceName sourceName) const;
+
+            /**
+             * Get file source from source manager by file name
+             * @param fileName File name
+             * @return File source or nullopt
+             */
+            std::optional<IO::GS_Source> GetFileSource(UString fileName) const;
+
+            /**
+             * Get custom source from source manager by source name
+             * @return Custom source or nullopt
+             */
+            std::optional<IO::GS_Source> GetCustomSource(UString sourceName) const;
 
             /**
              * Getter for sources from source manager
              * @return Sources
              */
-            IO::GSSourcePtrArray GetSources() const;
+            ConstLRef<IO::GSSourcePtrArray> GetSources() const;
 
         public:
 
@@ -148,7 +156,7 @@ namespace GSLanguageCompiler {
              * @param message Message
              * @return
              */
-            Void Write(IO::GSMessagePtr message);
+            Void Write(IO::GS_Message message);
 
         public:
 
@@ -156,19 +164,19 @@ namespace GSLanguageCompiler {
              * Getter for standard IO streams manager
              * @return Standard IO streams manager
              */
-            IO::GSStdIOStreamsManagerPtr GetStdIOStreamsManager() const;
+            ConstLRef<IO::GS_StdIOStreamsManager> GetStdIOStreamsManager() const;
 
             /**
              * Getter for source manager
              * @return Source manager
              */
-            IO::GSSourceManagerPtr GetSourceManager() const;
+            ConstLRef<IO::GS_SourceManager> GetSourceManager() const;
 
             /**
              * Getter for message handler
              * @return Message handler
              */
-            IO::GSMessageHandlerPtr GetMessageHandler() const;
+            ConstLRef<IO::GS_MessageHandler> GetMessageHandler() const;
 
         public:
 
@@ -176,19 +184,19 @@ namespace GSLanguageCompiler {
              * Getter for context
              * @return Context
              */
-            GSContextPtr GetContext() const;
+            ConstLRef<GS_Context> GetContext() const;
 
             /**
              * Getter for AST context
              * @return AST context
              */
-            AST::GSASTContextPtr GetASTContext() const;
+            ConstLRef<AST::GS_ASTContext> GetASTContext() const;
 
             /**
              * Getter for table of symbols
              * @return Table of symbols
              */
-            Semantic::GSTableOfSymbolsPtr GetTableOfSymbols() const;
+            ConstLRef<Semantic::GS_TableOfSymbols> GetTableOfSymbols() const;
 
         private:
 
@@ -211,7 +219,7 @@ namespace GSLanguageCompiler {
         /**
          * Session ptr type
          */
-        using GSSessionPtr = std::shared_ptr<GS_Session>;
+        using GSSessionPtr = std::unique_ptr<GS_Session>;
 
         /**
          * Session ptr array type

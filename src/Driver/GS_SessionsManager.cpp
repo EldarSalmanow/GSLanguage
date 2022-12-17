@@ -5,11 +5,11 @@ namespace GSLanguageCompiler::Driver {
     GS_SessionsManager::GS_SessionsManager(GSSessionPtrArray sessions)
             : _sessions(std::move(sessions)) {}
 
-    std::shared_ptr<GS_SessionsManager> GS_SessionsManager::Create(GSSessionPtrArray sessions) {
-        return std::make_shared<GS_SessionsManager>(std::move(sessions));
+    std::unique_ptr<GS_SessionsManager> GS_SessionsManager::Create(GSSessionPtrArray sessions) {
+        return std::make_unique<GS_SessionsManager>(std::move(sessions));
     }
 
-    std::shared_ptr<GS_SessionsManager> GS_SessionsManager::Create() {
+    std::unique_ptr<GS_SessionsManager> GS_SessionsManager::Create() {
         return GS_SessionsManager::Create(GSSessionPtrArray());
     }
 
@@ -25,11 +25,13 @@ namespace GSLanguageCompiler::Driver {
         return compilingResults;
     }
 
-    Void GS_SessionsManager::AddSession(GSSessionPtr session) {
+    ConstLRef<GS_Session> GS_SessionsManager::AddSession(GSSessionPtr session) {
         _sessions.emplace_back(std::move(session));
+
+        return *_sessions[_sessions.size() - 1];
     }
 
-    GSSessionPtrArray GS_SessionsManager::GetSessions() const {
+    ConstLRef<GSSessionPtrArray> GS_SessionsManager::GetSessions() const {
         return _sessions;
     }
 

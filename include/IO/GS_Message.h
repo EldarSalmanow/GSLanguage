@@ -195,7 +195,7 @@ namespace GSLanguageCompiler::IO {
     /**
      * Message handler ptr type
      */
-    using GSMessageHandlerPtr = std::shared_ptr<GS_MessageHandler>;
+    using GSMessageHandlerPtr = std::unique_ptr<GS_MessageHandler>;
 
 }
 

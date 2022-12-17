@@ -456,45 +456,33 @@ namespace GSLanguageCompiler::IO {
         return customSourceRef;
     }
 
-    ConstLRef<GS_Source> GS_SourceManager::GetSource(U64 sourceHash) const {
+    std::optional<GS_Source> GS_SourceManager::GetSource(U64 sourceHash) const {
         for (auto &source : _sources) {
             if (source->GetHash() == sourceHash) {
-                return *source;
+                return std::make_optional(*source);
             }
         }
 
-        UStringStream stringStream;
-
-        stringStream << "Can`t find source with source hash '"_us
-                     << sourceHash
-                     << "' in source manager!"_us;
-
-        Driver::GlobalContext().ErrAndExit(stringStream.String());
+        return std::nullopt;
     }
 
-    ConstLRef<GS_Source> GS_SourceManager::GetSource(GS_SourceName sourceName) const {
-        auto movedSourceName = std::move(sourceName); // TODO remove ?
+    std::optional<GS_Source> GS_SourceManager::GetSource(GS_SourceName sourceName) const {
+        auto movedSourceName = std::move(sourceName);
 
         for (auto &source : _sources) {
             if (source->GetName() == movedSourceName) {
-                return *source;
+                return std::make_optional(*source);
             }
         }
 
-        UStringStream stringStream;
-
-        stringStream << "Can`t find source with source name '"_us
-                     << movedSourceName.GetName()
-                     << "' in source manager!"_us;
-
-        Driver::GlobalContext().ErrAndExit(stringStream.String());
+        return std::nullopt;
     }
 
-    ConstLRef<GS_Source> GS_SourceManager::GetFileSource(UString fileName) const {
+    std::optional<GS_Source> GS_SourceManager::GetFileSource(UString fileName) const {
         return GetSource(GS_SourceName::CreateFile(std::move(fileName)));
     }
 
-    ConstLRef<GS_Source> GS_SourceManager::GetCustomSource(UString sourceName) const {
+    std::optional<GS_Source> GS_SourceManager::GetCustomSource(UString sourceName) const {
         return GetSource(GS_SourceName::CreateCustom(std::move(sourceName)));
     }
 
