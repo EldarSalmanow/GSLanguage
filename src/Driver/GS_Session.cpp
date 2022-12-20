@@ -108,27 +108,27 @@ namespace GSLanguageCompiler::Driver {
         _context->Write(std::move(message));
     }
 
-    ConstLRef<IO::GS_StdIOStreamsManager> GS_Session::GetStdIOStreamsManager() const {
+    LRef<IO::GS_StdIOStreamsManager> GS_Session::GetStdIOStreamsManager() {
         return _context->GetStdIOStreamsManager();
     }
 
-    ConstLRef<IO::GS_SourceManager> GS_Session::GetSourceManager() const {
+    LRef<IO::GS_SourceManager> GS_Session::GetSourceManager() {
         return _context->GetSourceManager();
     }
 
-    ConstLRef<IO::GS_MessageHandler> GS_Session::GetMessageHandler() const {
+    LRef<IO::GS_MessageHandler> GS_Session::GetMessageHandler() {
         return _context->GetMessageHandler();
     }
 
-    ConstLRef<GS_Context> GS_Session::GetContext() const {
+    LRef<GS_Context> GS_Session::GetContext() {
         return *_context;
     }
 
-    ConstLRef<AST::GS_ASTContext> GS_Session::GetASTContext() const {
+    LRef<AST::GS_ASTContext> GS_Session::GetASTContext() {
         return *_astContext;
     }
 
-    ConstLRef<Semantic::GS_TableOfSymbols> GS_Session::GetTableOfSymbols() const {
+    LRef<Semantic::GS_TableOfSymbols> GS_Session::GetTableOfSymbols() {
         return *_tableOfSymbols;
     }
 

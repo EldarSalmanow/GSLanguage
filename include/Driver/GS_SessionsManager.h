@@ -63,6 +63,11 @@ namespace GSLanguageCompiler::Driver {
         GSSessionPtrArray _sessions;
     };
 
+    /**
+     * Sessions manager ptr type
+     */
+    using GSSessionsManagerPtr = std::unique_ptr<GS_SessionsManager>;
+
 }
 
 #endif //GSLANGUAGE_GS_SESSIONSMANAGER_H

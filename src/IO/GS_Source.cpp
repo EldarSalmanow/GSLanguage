@@ -258,6 +258,22 @@ namespace GSLanguageCompiler::IO {
         return _source;
     }
 
+    Bool GS_SourceBuffer::operator==(ConstLRef<GS_SourceBuffer> sourceBuffer) const {
+        return _source == sourceBuffer.GetSource();
+    }
+
+    Bool GS_SourceBuffer::operator!=(ConstLRef<GS_SourceBuffer> sourceBuffer) const {
+        return !(*this == sourceBuffer);
+    }
+
+    LRef<USymbol> GS_SourceBuffer::operator[](ConstLRef<U64> index) {
+        return _source[index];
+    }
+
+    ConstLRef<USymbol> GS_SourceBuffer::operator[](ConstLRef<U64> index) const {
+        return _source[index];
+    }
+
     GS_SourceName::GS_SourceName(UString name,
                                  SourceNameType type)
             : _name(std::move(name)),
@@ -413,21 +429,29 @@ namespace GSLanguageCompiler::IO {
         return !(*this == source);
     }
 
+    LRef<USymbol> GS_Source::operator[](ConstLRef<U64> index) {
+        return _buffer[index];
+    }
+
+    ConstLRef<USymbol> GS_Source::operator[](ConstLRef<U64> index) const {
+        return _buffer[index];
+    }
+
     GS_SourceManager::GS_SourceManager(GSSourcePtrArray sources)
             : _sources(std::move(sources)) {}
 
-    std::shared_ptr<GS_SourceManager> GS_SourceManager::Create(GSSourcePtrArray sources) {
-        return std::make_shared<GS_SourceManager>(std::move(sources));
+    std::unique_ptr<GS_SourceManager> GS_SourceManager::Create(GSSourcePtrArray sources) {
+        return std::make_unique<GS_SourceManager>(std::move(sources));
     }
 
-    std::shared_ptr<GS_SourceManager> GS_SourceManager::Create() {
+    std::unique_ptr<GS_SourceManager> GS_SourceManager::Create() {
         return GS_SourceManager::Create(GSSourcePtrArray());
     }
 
     ConstLRef<GS_Source> GS_SourceManager::AddSource(GSSourcePtr source) {
         _sources.emplace_back(std::move(source));
 
-        return *_sources[_sources.size() - 1]; // TODO optimize
+        return *_sources[_sources.size() - 1]; // TODO check
     }
 
     ConstLRef<GS_Source> GS_SourceManager::AddFileSource(UString name) {

@@ -164,19 +164,19 @@ namespace GSLanguageCompiler {
              * Getter for standard IO streams manager
              * @return Standard IO streams manager
              */
-            ConstLRef<IO::GS_StdIOStreamsManager> GetStdIOStreamsManager() const;
+            LRef<IO::GS_StdIOStreamsManager> GetStdIOStreamsManager();
 
             /**
              * Getter for source manager
              * @return Source manager
              */
-            ConstLRef<IO::GS_SourceManager> GetSourceManager() const;
+            LRef<IO::GS_SourceManager> GetSourceManager();
 
             /**
              * Getter for message handler
              * @return Message handler
              */
-            ConstLRef<IO::GS_MessageHandler> GetMessageHandler() const;
+            LRef<IO::GS_MessageHandler> GetMessageHandler();
 
         public:
 
@@ -184,19 +184,19 @@ namespace GSLanguageCompiler {
              * Getter for context
              * @return Context
              */
-            ConstLRef<GS_Context> GetContext() const;
+            LRef<GS_Context> GetContext();
 
             /**
              * Getter for AST context
              * @return AST context
              */
-            ConstLRef<AST::GS_ASTContext> GetASTContext() const;
+            LRef<AST::GS_ASTContext> GetASTContext();
 
             /**
              * Getter for table of symbols
              * @return Table of symbols
              */
-            ConstLRef<Semantic::GS_TableOfSymbols> GetTableOfSymbols() const;
+            LRef<Semantic::GS_TableOfSymbols> GetTableOfSymbols();
 
         private:
 

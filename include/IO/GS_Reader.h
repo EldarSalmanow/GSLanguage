@@ -12,12 +12,24 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_Reader PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
          * Constructor for reader
          * @param stream Input stream
          */
         explicit GS_Reader(LRef<std::istream> stream);
 
     public:
+
+        /**
+         *
+         * GS_Reader PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating reader
@@ -29,6 +41,12 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_Reader PUBLIC STATIC METHODS
+         *
+         */
+
+        /**
          * Creating reader and reading text from stream
          * @param stream Stream
          * @return Text
@@ -38,12 +56,24 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_Reader PUBLIC METHODS
+         *
+         */
+
+        /**
          * Reading text from stream
          * @return Text
          */
         UString Read();
 
     private:
+
+        /**
+         *
+         * GS_Reader PRIVATE FIELDS
+         *
+         */
 
         /**
          * Stream for reading text

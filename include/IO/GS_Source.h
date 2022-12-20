@@ -9,9 +9,68 @@
 
 namespace GSLanguageCompiler::IO {
 
+    // TODO rename
     class GS_FullSourceLocation;
 
     class GS_Source;
+
+    class SourceLocation {
+    public:
+
+        SourceLocation(U64 sourceHash,
+                       U64 position);
+
+    public:
+
+        static SourceLocation Create(U64 sourceHash,
+                                     U64 position);
+
+        static SourceLocation Create(U64 position);
+
+        static SourceLocation Create();
+
+    public:
+
+        U64 GetSourceHash() const;
+
+        U64 GetPosition() const;
+
+    private:
+
+        U64 _sourceHash;
+
+        U64 _position;
+    };
+
+    class SourceRange {
+    public:
+
+        SourceRange(SourceLocation startLocation,
+                    SourceLocation endLocation);
+
+    public:
+
+        static SourceRange Create(SourceLocation startLocation,
+                                  SourceLocation endLocation);
+
+        static SourceRange CreateFromStart(SourceLocation startLocation);
+
+        static SourceRange CreateToEnd(SourceLocation endLocation);
+
+        static SourceRange Create();
+
+    public:
+
+        SourceLocation GetStartLocation() const;
+
+        SourceLocation GetEndLocation() const;
+
+    private:
+
+        SourceLocation _startLocation;
+
+        SourceLocation _endLocation;
+    };
 
     /**
      * Class for containing information about location in source
@@ -276,6 +335,12 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_SourceBuffer PUBLIC TYPES
+         *
+         */
+
+        /**
          * Iterator type
          */
         using Iterator = UString::Iterator;
@@ -288,12 +353,24 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_SourceBuffer PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
          * Constructor for source buffer
          * @param source Source code
          */
         explicit GS_SourceBuffer(UString source);
 
     public:
+
+        /**
+         *
+         * GS_SourceBuffer PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating source buffer
@@ -303,6 +380,24 @@ namespace GSLanguageCompiler::IO {
         static GS_SourceBuffer Create(UString source);
 
     public:
+
+        /**
+         *
+         * GS_SourceBuffer PUBLIC METHODS
+         *
+         */
+
+//        UString GetCodeInLocation(GS_SourceLocation location);
+
+        UString GetCodeInLocation(SourceRange range);
+
+    public:
+
+        /**
+         *
+         * GS_SourceBuffer PUBLIC ITERATOR METHODS
+         *
+         */
 
         /**
          * Getting begin source code iterator
@@ -343,18 +438,106 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_SourceBuffer PUBLIC GETTER METHODS
+         *
+         */
+
+        /**
          * Getting source code
          * @return Source code
          */
         ConstLRef<UString> GetSource() const;
 
+    public:
+
+        /**
+         *
+         * GS_SourceBuffer PUBLIC OPERATOR METHODS
+         *
+         */
+
+        /**
+         * Equality operator for source buffer
+         * @param sourceBuffer Source buffer
+         * @return Is equal source buffers
+         */
+        Bool operator==(ConstLRef<GS_SourceBuffer> sourceBuffer) const;
+
+        /**
+         * Not equality operator for source buffer
+         * @param sourceBuffer Source buffer
+         * @return Is not equal source buffers
+         */
+        Bool operator!=(ConstLRef<GS_SourceBuffer> sourceBuffer) const;
+
+        /**
+         * Index operator for source buffer
+         * @param index Index
+         * @return Symbol by index in source code
+         */
+        LRef<USymbol> operator[](ConstLRef<U64> index);
+
+        /**
+         * Index operator for source buffer
+         * @param index Index
+         * @return Symbol by index in source code
+         */
+        ConstLRef<USymbol> operator[](ConstLRef<U64> index) const;
+
     private:
+
+        /**
+         *
+         * GS_SourceBuffer PRIVATE FIELDS
+         *
+         */
 
         /**
          * Source code
          */
         UString _source;
     };
+
+    UString GetNameOfFunction(LRef<GS_SourceBuffer> buffer,
+                              SourceLocation functionLocation) {
+        auto iterator = buffer.begin();
+
+        // .....func name.....
+        // ^--->^--->^
+        // start += location - 1 (delete one from position) + 5 (skip 'func' keyword and space)
+        iterator += (functionLocation.GetPosition() - 1 + 5);
+
+        UString name;
+
+        USymbol symbol = *iterator;
+
+        while (symbol != '(') {
+            name += symbol;
+
+            ++iterator;
+
+            symbol = *iterator;
+        }
+
+        return name;
+    }
+
+    void f() {
+        auto buffer = GS_SourceBuffer::Create("func main() {}");
+
+        auto range = SourceRange::Create(SourceLocation::Create(6),
+                                         SourceLocation::Create(9));
+
+        auto slice = buffer.GetCodeInLocation(range);
+
+        slice == "main";
+
+        auto name = GetNameOfFunction(buffer,
+                                      SourceLocation::Create(6));
+
+        name == "main";
+    }
 
     /**
      * Source name type
@@ -372,6 +555,12 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_SourceName PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
          * Constructor for source name
          * @param name Source name
          * @param type Source name type
@@ -380,6 +569,12 @@ namespace GSLanguageCompiler::IO {
                       SourceNameType type);
 
     public:
+
+        /**
+         *
+         * GS_SourceName PUBLIC STATIC CREATION METHODS
+         *
+         */
 
         /**
          * Creating source name
@@ -413,6 +608,12 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_SourceName PUBLIC METHODS
+         *
+         */
+
+        /**
          * Is file source name
          * @return Is file source name
          */
@@ -431,6 +632,12 @@ namespace GSLanguageCompiler::IO {
         Bool IsCustom() const;
 
     public:
+
+        /**
+         *
+         * GS_SourceName PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for source name
@@ -453,6 +660,12 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_SourceName PUBLIC OPERATOR METHODS
+         *
+         */
+
+        /**
          * Equality operator for source name
          * @param name Source name
          * @return Is equal source names
@@ -467,6 +680,12 @@ namespace GSLanguageCompiler::IO {
         Bool operator!=(ConstLRef<GS_SourceName> name) const;
 
     private:
+
+        /**
+         *
+         * GS_SourceName PRIVATE FIELDS
+         *
+         */
 
         /**
          * Source name
@@ -491,6 +710,12 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_Source PUBLIC TYPES
+         *
+         */
+
+        /**
          * Iterator (const) type
          */
         using Iterator = GS_SourceBuffer::ConstIterator;
@@ -503,6 +728,12 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_Source PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
          * Constructor for source
          * @param buffer Source buffer
          * @param name Source name
@@ -511,6 +742,12 @@ namespace GSLanguageCompiler::IO {
                   GS_SourceName name);
 
     public:
+
+        /**
+         *
+         * GS_Source PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating source
@@ -547,13 +784,25 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_Source PUBLIC METHODS
+         *
+         */
+
+        /**
          * Getting code from source by source location
          * @param location Source location
          * @return Code in range [startPosition..endPosition]
          */
-        UString GetCodeByLocation(GS_SourceLocation location) const;
+        UString GetCodeByLocation(GS_SourceLocation location) const; // TODO add method to source buffer
 
     public:
+
+        /**
+         *
+         * GS_Source PUBLIC ITERATOR METHODS
+         *
+         */
 
         /**
          * Getting begin source buffer const iterator
@@ -582,6 +831,12 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_Source PUBLIC GETTER METHODS
+         *
+         */
+
+        /**
          * Getter for source buffer
          * @return Source buffer
          */
@@ -602,6 +857,12 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_Source PUBLIC OPERATOR METHODS
+         *
+         */
+
+        /**
          * Equality operator for source
          * @param source Source
          * @return Is equal sources
@@ -615,7 +876,27 @@ namespace GSLanguageCompiler::IO {
          */
         Bool operator!=(ConstLRef<GS_Source> source) const;
 
+        /**
+         * Index operator for source
+         * @param index Index
+         * @return Symbol by index in source buffer
+         */
+        LRef<USymbol> operator[](ConstLRef<U64> index);
+
+        /**
+         * Index operator for source
+         * @param index Index
+         * @return Symbol by index in source buffer
+         */
+        ConstLRef<USymbol> operator[](ConstLRef<U64> index) const;
+
     private:
+
+        /**
+         *
+         * GS_Source PRIVATE FIELDS
+         *
+         */
 
         /**
          * Source buffer
@@ -650,12 +931,24 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_SourceManager PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
          * Constructor for source manager
          * @param sources Sources
          */
         explicit GS_SourceManager(GSSourcePtrArray sources);
 
     public:
+
+        /**
+         *
+         * GS_SourceManager PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating source manager
@@ -671,6 +964,12 @@ namespace GSLanguageCompiler::IO {
         static std::unique_ptr<GS_SourceManager> Create();
 
     public:
+
+        /**
+         *
+         * GS_SourceManager PUBLIC METHODS
+         *
+         */
 
         /**
          * Adding source to manager
@@ -732,12 +1031,24 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_SourceManager PUBLIC GETTER METHODS
+         *
+         */
+
+        /**
          * Getter for sources
          * @return Sources
          */
         ConstLRef<GSSourcePtrArray> GetSources() const;
 
     public:
+
+        /**
+         *
+         * GS_SourceManager PRIVATE FIELDS
+         *
+         */
 
         /**
          * Sources

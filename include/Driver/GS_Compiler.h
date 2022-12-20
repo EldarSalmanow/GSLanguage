@@ -15,18 +15,18 @@ namespace GSLanguageCompiler::Driver {
 
         /**
          * Constructor for compiler
-         * @param sessions Sessions
+         * @param sessionsManager Sessions manager
          */
-        explicit GS_Compiler(GSSessionPtrArray sessions);
+        explicit GS_Compiler(GSSessionsManagerPtr sessionsManager);
 
     public:
 
         /**
          * Creating compiler
-         * @param sessions Sessions
+         * @param sessionsManager Sessions manager
          * @return Compiler ptr
          */
-        static std::unique_ptr<GS_Compiler> Create(GSSessionPtrArray sessions);
+        static std::unique_ptr<GS_Compiler> Create(GSSessionsManagerPtr sessionsManager);
 
         /**
          * Creating compiler
@@ -64,26 +64,32 @@ namespace GSLanguageCompiler::Driver {
     public:
 
         /**
-         * Add session to compiler
+         * Add session to sessions manager
          * @param session Session
          * @return Session
          */
         ConstLRef<GS_Session> AddSession(GSSessionPtr session);
 
-    public:
-
         /**
-         * Getter for sessions
+         * Getter for sessions from sessions manager
          * @return Sessions
          */
         ConstLRef<GSSessionPtrArray> GetSessions() const;
 
+    public:
+
+        /**
+         * Getter for sessions manager
+         * @return Sessions manager
+         */
+        ConstLRef<GS_SessionsManager> GetSessionsManager() const;
+
     private:
 
         /**
-         * Sessions
+         * Sessions manager
          */
-        GSSessionPtrArray _sessions;
+        GSSessionsManagerPtr _sessionsManager;
     };
 
     /**

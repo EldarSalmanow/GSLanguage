@@ -4,15 +4,15 @@
 
 namespace GSLanguageCompiler::Driver {
 
-    GS_Compiler::GS_Compiler(GSSessionPtrArray sessions)
-            : _sessions(std::move(sessions)) {}
+    GS_Compiler::GS_Compiler(GSSessionsManagerPtr sessionsManager)
+            : _sessionsManager(std::move(sessionsManager)) {}
 
-    std::unique_ptr<GS_Compiler> GS_Compiler::Create(GSSessionPtrArray sessions) {
-        return std::make_unique<GS_Compiler>(std::move(sessions));
+    std::unique_ptr<GS_Compiler> GS_Compiler::Create(GSSessionsManagerPtr sessionsManager) {
+        return std::make_unique<GS_Compiler>(std::move(sessionsManager));
     }
 
     std::unique_ptr<GS_Compiler> GS_Compiler::Create() {
-        return GS_Compiler::Create(GSSessionPtrArray());
+        return GS_Compiler::Create(GS_SessionsManager::Create());
     }
 
     std::unique_ptr<GS_Compiler> GS_Compiler::Create(GS_Arguments arguments) {
@@ -20,11 +20,11 @@ namespace GSLanguageCompiler::Driver {
 
         auto session = GS_Session::Create(std::move(context));
 
-        GSSessionPtrArray sessions;
+        auto sessionsManager = GS_SessionsManager::Create();
 
-        sessions.emplace_back(std::move(session));
+        sessionsManager->AddSession(std::move(session));
 
-        return GS_Compiler::Create(std::move(sessions));
+        return GS_Compiler::Create(std::move(sessionsManager));
     }
 
     CompilingResult GS_Compiler::Start(I32 argc, Ptr<Ptr<C>> argv) {
@@ -43,9 +43,7 @@ namespace GSLanguageCompiler::Driver {
 
     CompilingResult GS_Compiler::Run() {
         try {
-            auto sessionsManager = GS_SessionsManager::Create(std::move(_sessions));
-
-            auto compilingResults = sessionsManager->RunSessions();
+            auto compilingResults = _sessionsManager->RunSessions();
 
             for (auto &compilingResult : compilingResults) {
                 if (compilingResult != CompilingResult::Success) {
@@ -68,13 +66,15 @@ namespace GSLanguageCompiler::Driver {
     }
 
     ConstLRef<GS_Session> GS_Compiler::AddSession(GSSessionPtr session) {
-        _sessions.emplace_back(std::move(session));
-
-        return *_sessions[_sessions.size() - 1];
+        return _sessionsManager->AddSession(std::move(session));
     }
 
     ConstLRef<GSSessionPtrArray> GS_Compiler::GetSessions() const {
-        return _sessions;
+        return _sessionsManager->GetSessions();
+    }
+
+    ConstLRef<GS_SessionsManager> GS_Compiler::GetSessionsManager() const {
+        return *_sessionsManager;
     }
 
 }

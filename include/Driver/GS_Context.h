@@ -166,19 +166,19 @@ namespace GSLanguageCompiler::Driver {
          * Getter for standard IO streams manager
          * @return Standard IO streams manager
          */
-        ConstLRef<IO::GS_StdIOStreamsManager> GetStdIOStreamsManager() const;
+        LRef<IO::GS_StdIOStreamsManager> GetStdIOStreamsManager();
 
         /**
          * Getter for source manager
          * @return Source manager
          */
-        ConstLRef<IO::GS_SourceManager> GetSourceManager() const;
+        LRef<IO::GS_SourceManager> GetSourceManager();
 
         /**
          * Getter for message handler
          * @return Message handler
          */
-        ConstLRef<IO::GS_MessageHandler> GetMessageHandler() const;
+        LRef<IO::GS_MessageHandler> GetMessageHandler();
 
     private:
 

@@ -8,6 +8,8 @@
 
 namespace GSLanguageCompiler::IO {
 
+    // TODO delete or reorganise Streams API
+
     /**
      * Class for containing information about I/O stream
      */

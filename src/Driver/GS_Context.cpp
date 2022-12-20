@@ -114,15 +114,15 @@ namespace GSLanguageCompiler::Driver {
         _messageHandler->Write(std::move(message));
     }
 
-    ConstLRef<IO::GS_StdIOStreamsManager> GS_Context::GetStdIOStreamsManager() const {
+    LRef<IO::GS_StdIOStreamsManager> GS_Context::GetStdIOStreamsManager() {
         return *_stdIOStreamsManager;
     }
 
-    ConstLRef<IO::GS_SourceManager> GS_Context::GetSourceManager() const {
+    LRef<IO::GS_SourceManager> GS_Context::GetSourceManager() {
         return *_sourceManager;
     }
 
-    ConstLRef<IO::GS_MessageHandler> GS_Context::GetMessageHandler() const {
+    LRef<IO::GS_MessageHandler> GS_Context::GetMessageHandler() {
         return *_messageHandler;
     }
 

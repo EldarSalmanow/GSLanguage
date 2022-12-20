@@ -196,6 +196,8 @@ void g() {
 //    auto sum_func_scope = Scope::Create(compilation_unit_scope_2);
 }
 
+// TODO create Block System for code style
+
 /**
  * High level entry point for GSLanguageCompiler
  * @param argc Arguments counter
