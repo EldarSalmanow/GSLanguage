@@ -14,20 +14,55 @@ namespace GSLanguageCompiler::IO {
 
     class GS_Source;
 
-    class SourceLocation {
+    class LineColumnSourceLocation {
     public:
 
-        SourceLocation(U64 sourceHash,
-                       U64 position);
+        LineColumnSourceLocation(U64 sourceHash,
+                                 U64 line,
+                                 U64 column);
 
     public:
 
-        static SourceLocation Create(U64 sourceHash,
-                                     U64 position);
+        static LineColumnSourceLocation Create(U64 sourceHash,
+                                               U64 line,
+                                               U64 column);
 
-        static SourceLocation Create(U64 position);
+        static LineColumnSourceLocation Create(U64 line,
+                                               U64 column);
 
-        static SourceLocation Create();
+        static LineColumnSourceLocation Create();
+
+    public:
+
+        U64 GetSourceHash() const;
+
+        U64 GetLine() const;
+
+        U64 GetColumn() const;
+
+    private:
+
+        U64 _sourceHash;
+
+        U64 _line;
+
+        U64 _column;
+    };
+
+    class ByteSourceLocation {
+    public:
+
+        ByteSourceLocation(U64 sourceHash,
+                           U64 position);
+
+    public:
+
+        static ByteSourceLocation Create(U64 sourceHash,
+                                         U64 position);
+
+        static ByteSourceLocation Create(U64 position);
+
+        static ByteSourceLocation Create();
 
     public:
 
@@ -42,7 +77,12 @@ namespace GSLanguageCompiler::IO {
         U64 _position;
     };
 
+    template<typename SourceLocationT>
     class SourceRange {
+    public:
+
+        using SourceLocation = SourceLocationT;
+
     public:
 
         SourceRange(SourceLocation startLocation,
@@ -71,6 +111,10 @@ namespace GSLanguageCompiler::IO {
 
         SourceLocation _endLocation;
     };
+
+    using ByteSourceRange = SourceRange<ByteSourceLocation>;
+
+    using LineColumnSourceRange = SourceRange<LineColumnSourceLocation>;
 
     /**
      * Class for containing information about location in source
@@ -389,7 +433,8 @@ namespace GSLanguageCompiler::IO {
 
 //        UString GetCodeInLocation(GS_SourceLocation location);
 
-        UString GetCodeInLocation(SourceRange range);
+        template<typename SourceLocationT>
+        UString GetCodeInLocation(SourceRange<SourceLocationT> range);
 
     public:
 
@@ -500,7 +545,7 @@ namespace GSLanguageCompiler::IO {
     };
 
     UString GetNameOfFunction(LRef<GS_SourceBuffer> buffer,
-                              SourceLocation functionLocation) {
+                              ByteSourceLocation functionLocation) {
         auto iterator = buffer.begin();
 
         // .....func name.....
@@ -526,15 +571,15 @@ namespace GSLanguageCompiler::IO {
     void f() {
         auto buffer = GS_SourceBuffer::Create("func main() {}");
 
-        auto range = SourceRange::Create(SourceLocation::Create(6),
-                                         SourceLocation::Create(9));
+        auto range = ByteSourceRange::Create(ByteSourceLocation::Create(6),
+                                             ByteSourceLocation::Create(9));
 
         auto slice = buffer.GetCodeInLocation(range);
 
         slice == "main";
 
         auto name = GetNameOfFunction(buffer,
-                                      SourceLocation::Create(6));
+                                      ByteSourceLocation::Create(6));
 
         name == "main";
     }
