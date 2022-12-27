@@ -9,368 +9,381 @@
 
 namespace GSLanguageCompiler::IO {
 
-    // TODO rename
-    class GS_FullSourceLocation;
+    // TODO add converting methods for locations
+    // TODO add equality operators overloading for source range ?
+    // TODO check GS_Source.cpp: ConstLRef<GS_Source> GS_SourceManager::AddSource(GSSourcePtr source) { 3 }
+    // TODO add getting code by line column source location range ? GS_Source.h: UString GetCodeInRange(GSByteSourceRange range) const
+    //                                                                           UString GetCodeByLocation(GSByteSourceRange range) const
 
-    class GS_Source;
+    /**
+     * Invalid hash constant
+     */
+    inline constexpr U64 InvalidHash = 0;
 
-    class LineColumnSourceLocation {
+    /**
+     * Invalid source position constant
+     */
+    inline constexpr U64 InvalidPosition = 0;
+
+    /**
+     * Class for containing information about source location in byte form
+     */
+    class GS_ByteSourceLocation {
     public:
 
-        LineColumnSourceLocation(U64 sourceHash,
-                                 U64 line,
-                                 U64 column);
+        /**
+         *
+         * GS_ByteSourceLocation PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
+         * Constructor for byte source location
+         * @param sourceHash Source hash
+         * @param position Byte position
+         */
+        GS_ByteSourceLocation(U64 sourceHash,
+                              U64 position);
 
     public:
 
-        static LineColumnSourceLocation Create(U64 sourceHash,
-                                               U64 line,
-                                               U64 column);
+        /**
+         *
+         * GS_ByteSourceLocation PUBLIC STATIC CREATE METHODS
+         *
+         */
 
-        static LineColumnSourceLocation Create(U64 line,
-                                               U64 column);
+        /**
+         * Creating byte source location
+         * @param sourceHash Source hash
+         * @param position Byte position
+         * @return Byte source location
+         */
+        static GS_ByteSourceLocation Create(U64 sourceHash,
+                                            U64 position);
 
-        static LineColumnSourceLocation Create();
+        /**
+         * Creating byte source location
+         * @param position Byte position
+         * @return Byte source location
+         */
+        static GS_ByteSourceLocation Create(U64 position);
+
+        /**
+         * Creating byte source location
+         * @return Byte source location
+         */
+        static GS_ByteSourceLocation Create();
 
     public:
 
+        /**
+         *
+         * GS_ByteSourceLocation PUBLIC GETTER METHODS
+         *
+         */
+
+        /**
+         * Getter for source hash
+         * @return Source hash
+         */
         U64 GetSourceHash() const;
 
-        U64 GetLine() const;
-
-        U64 GetColumn() const;
-
-    private:
-
-        U64 _sourceHash;
-
-        U64 _line;
-
-        U64 _column;
-    };
-
-    class ByteSourceLocation {
-    public:
-
-        ByteSourceLocation(U64 sourceHash,
-                           U64 position);
-
-    public:
-
-        static ByteSourceLocation Create(U64 sourceHash,
-                                         U64 position);
-
-        static ByteSourceLocation Create(U64 position);
-
-        static ByteSourceLocation Create();
-
-    public:
-
-        U64 GetSourceHash() const;
-
+        /**
+         * Getter for byte position
+         * @return Byte position
+         */
         U64 GetPosition() const;
 
+    public:
+
+        /**
+         *
+         * GS_ByteSourceLocation PUBLIC OPERATOR METHODS
+         *
+         */
+
+        /**
+         * Equality operator for byte source location
+         * @param sourceLocation Byte source location
+         * @return Is equal byte source locations
+         */
+        Bool operator==(ConstLRef<GS_ByteSourceLocation> sourceLocation) const;
+
+        /**
+         * Not equality operator for byte source location
+         * @param sourceLocation Byte source location
+         * @return Is not equal byte source locations
+         */
+        Bool operator!=(ConstLRef<GS_ByteSourceLocation> sourceLocation) const;
+
     private:
 
+        /**
+         *
+         * GS_ByteSourceLocation PRIVATE FIELDS
+         *
+         */
+
+        /**
+         * Source hash
+         */
         U64 _sourceHash;
 
+        /**
+         * Byte position
+         */
         U64 _position;
     };
 
-    template<typename SourceLocationT>
-    class SourceRange {
+    /**
+     * Class for containing information about source location in line column form
+     */
+    class GS_LineColumnSourceLocation {
     public:
 
+        /**
+         *
+         * GS_LineColumnSourceLocation PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
+         * Constructor for line column source location
+         * @param sourceHash Source hash
+         * @param line Line
+         * @param column Column
+         */
+        GS_LineColumnSourceLocation(U64 sourceHash,
+                                    U64 line,
+                                    U64 column);
+
+    public:
+
+        /**
+         *
+         * GS_LineColumnSourceLocation PUBLIC STATIC CREATE METHODS
+         *
+         */
+
+        /**
+         * Creating line column source location
+         * @param sourceHash Source hash
+         * @param line Line
+         * @param column Column
+         * @return Line column source location
+         */
+        static GS_LineColumnSourceLocation Create(U64 sourceHash,
+                                                  U64 line,
+                                                  U64 column);
+
+        /**
+         * Creating line column source location
+         * @param line Line
+         * @param column Column
+         * @return Line column source location
+         */
+        static GS_LineColumnSourceLocation Create(U64 line,
+                                                  U64 column);
+
+        /**
+         * Creating line column source location
+         * @return Line column source location
+         */
+        static GS_LineColumnSourceLocation Create();
+
+    public:
+
+        /**
+         *
+         * GS_LineColumnSourceLocation PUBLIC GETTER METHODS
+         *
+         */
+
+        /**
+         * Getter for source hash
+         * @return Source hash
+         */
+        U64 GetSourceHash() const;
+
+        /**
+         * Getter for line
+         * @return Line
+         */
+        U64 GetLine() const;
+
+        /**
+         * Getter for column
+         * @return Column
+         */
+        U64 GetColumn() const;
+
+    public:
+
+        /**
+         *
+         * GS_LineColumnSourceLocation PUBLIC OPERATOR METHODS
+         *
+         */
+
+        /**
+         * Equality operator for line column source location
+         * @param sourceLocation Line column source location
+         * @return Is equal line column source locations
+         */
+        Bool operator==(ConstLRef<GS_LineColumnSourceLocation> sourceLocation) const;
+
+        /**
+         * Not equality operator for line column source location
+         * @param sourceLocation Line column source location
+         * @return Is not equal line column source locations
+         */
+        Bool operator!=(ConstLRef<GS_LineColumnSourceLocation> sourceLocation) const;
+
+    private:
+
+        /**
+         *
+         * GS_LineColumnSourceLocation PRIVATE FIELDS
+         *
+         */
+
+        /**
+         * Source hash
+         */
+        U64 _sourceHash;
+
+        /**
+         * Line
+         */
+        U64 _line;
+
+        /**
+         * Column
+         */
+        U64 _column;
+    };
+
+    /**
+     * Class for containing source location range
+     * @tparam SourceLocationT Source location type
+     */
+    template<typename SourceLocationT>
+    class GS_SourceRange {
+    public:
+
+        /**
+         *
+         * GS_SourceRange PUBLIC TYPES
+         *
+         */
+
+        /**
+         * Source location type
+         */
         using SourceLocation = SourceLocationT;
 
     public:
 
-        SourceRange(SourceLocation startLocation,
-                    SourceLocation endLocation);
+        /**
+         *
+         * GS_SourceRange PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
+         * Constructor for source location range [startLocation..endLocation]
+         * @param startLocation Start source location
+         * @param endLocation End source location
+         */
+        GS_SourceRange(SourceLocation startLocation,
+                       SourceLocation endLocation);
 
     public:
 
-        static SourceRange Create(SourceLocation startLocation,
-                                  SourceLocation endLocation);
+        /**
+         *
+         * GS_SourceRange PUBLIC STATIC CREATE METHODS
+         *
+         */
 
-        static SourceRange CreateFromStart(SourceLocation startLocation);
+        /**
+         * Creating source location range
+         * @param startLocation Start source location
+         * @param endLocation End source location
+         * @return Source location range [startLocation..endLocation]
+         */
+        static GS_SourceRange Create(SourceLocation startLocation,
+                                     SourceLocation endLocation);
 
-        static SourceRange CreateToEnd(SourceLocation endLocation);
+        /**
+         * Creating source location range
+         * @param startLocation Start source location
+         * @return Source location range [startLocation..0(end)]
+         */
+        static GS_SourceRange CreateFromStart(SourceLocation startLocation);
 
-        static SourceRange Create();
+        /**
+         * Creating source location range
+         * @param endLocation End source location
+         * @return Source location range [0(start)..endLocation]
+         */
+        static GS_SourceRange CreateToEnd(SourceLocation endLocation);
+
+        /**
+         * Creating source location range
+         * @return Source location range [-1(invalid)..-1(invalid)]
+         */
+        static GS_SourceRange Create();
 
     public:
 
+        /**
+         *
+         * GS_SourceRange PUBLIC GETTER METHODS
+         *
+         */
+
+        /**
+         * Getter for start source location
+         * @return Start source location
+         */
         SourceLocation GetStartLocation() const;
 
+        /**
+         * Getter for end source location
+         * @return End source location
+         */
         SourceLocation GetEndLocation() const;
 
     private:
 
+        /**
+         *
+         * GS_SourceRange PRIVATE FIELDS
+         *
+         */
+
+        /**
+         * Start source location
+         */
         SourceLocation _startLocation;
 
+        /**
+         * End source location
+         */
         SourceLocation _endLocation;
     };
 
-    using ByteSourceRange = SourceRange<ByteSourceLocation>;
-
-    using LineColumnSourceRange = SourceRange<LineColumnSourceLocation>;
+    /**
+     * Byte source location range type
+     */
+    using GSByteSourceRange = GS_SourceRange<GS_ByteSourceLocation>;
 
     /**
-     * Class for containing information about location in source
+     * Line column source location range type
      */
-    class GS_SourceLocation {
-    public:
-
-        /**
-         * Constructor for source location
-         * @param sourceHash Source hash
-         * @param startPosition Start position
-         * @param endPosition End position
-         */
-        GS_SourceLocation(U64 sourceHash,
-                          U64 startPosition,
-                          U64 endPosition);
-
-    public:
-
-        /**
-         * Creating source location
-         * @param sourceHash Source hash
-         * @param startPosition Start position
-         * @param endPosition End position
-         * @return Source location
-         */
-        static GS_SourceLocation Create(U64 sourceHash,
-                                        U64 startPosition,
-                                        U64 endPosition);
-
-        /**
-         * Creating source location
-         * @param sourceHash Source hash
-         * @param endPosition End position
-         * @return Source location
-         */
-        static GS_SourceLocation Create(U64 sourceHash,
-                                        U64 endPosition);
-
-        /**
-         * Creating source location without source hash
-         * @param startPosition Start position
-         * @param endPosition End position
-         * @return Source location
-         */
-        static GS_SourceLocation CreateWithoutHash(U64 startPosition,
-                                                   U64 endPosition);
-
-        /**
-         * Creating source location without source hash
-         * @param endPosition End position
-         * @return Source location
-         */
-        static GS_SourceLocation CreateWithoutHash(U64 endPosition);
-
-        /**
-         * Creating source location
-         * @return Source location
-         */
-        static GS_SourceLocation Create();
-
-    public:
-
-        /**
-         * Creating source location from ful source location
-         * @param fullSourceLocation Full source location
-         * @param source Source
-         * @return Source location
-         */
-        static GS_SourceLocation FromFullSourceLocation(GS_FullSourceLocation fullSourceLocation,
-                                                        ConstLRef<GS_Source> source);
-
-    public:
-
-        /**
-         * Getter for source hash
-         * @return Source hash
-         */
-        U64 GetSourceHash() const;
-
-        /**
-         * Getter for start position
-         * @return Start position
-         */
-        U64 GetStartPosition() const;
-
-        /**
-         * Getter for end position
-         * @return End position
-         */
-        U64 GetEndPosition() const;
-
-    private:
-
-        /**
-         * Source hash
-         */
-        U64 _sourceHash;
-
-        /**
-         * Start position
-         */
-        U64 _startPosition;
-
-        /**
-         * End position
-         */
-        U64 _endPosition;
-    };
-
-    /**
-     * Class for containing full information about location in source
-     */
-    class GS_FullSourceLocation {
-    public:
-
-        /**
-         * Constructor for full source location
-         * @param sourceHash Source hash
-         * @param startLine Start line
-         * @param startColumn Start column
-         * @param endLine End line
-         * @param endColumn End column
-         */
-        GS_FullSourceLocation(U64 sourceHash,
-                              U64 startLine,
-                              U64 startColumn,
-                              U64 endLine,
-                              U64 endColumn);
-
-    public:
-
-        /**
-         * Creating full source location
-         * @param sourceHash Source hash
-         * @param startLine Start line
-         * @param startColumn Start column
-         * @param endLine End line
-         * @param endColumn End column
-         * @return Full source location
-         */
-        static GS_FullSourceLocation Create(U64 sourceHash,
-                                            U64 startLine,
-                                            U64 startColumn,
-                                            U64 endLine,
-                                            U64 endColumn);
-
-        /**
-         * Creating full source location
-         * @param sourceHash Source hash
-         * @param endLine End line
-         * @param endColumn End column
-         * @return Full source location
-         */
-        static GS_FullSourceLocation Create(U64 sourceHash,
-                                            U64 endLine,
-                                            U64 endColumn);
-
-        /**
-         * Creating full source location without source hash
-         * @param startLine Start line
-         * @param startColumn Start column
-         * @param endLine End line
-         * @param endColumn End column
-         * @return Full source location
-         */
-        static GS_FullSourceLocation CreateWithoutHash(U64 startLine,
-                                                       U64 startColumn,
-                                                       U64 endLine,
-                                                       U64 endColumn);
-
-        /**
-         * Creating full source location without source hash
-         * @param endLine End line
-         * @param endColumn End column
-         * @return Full source location
-         */
-        static GS_FullSourceLocation CreateWithoutHash(U64 endLine,
-                                                       U64 endColumn);
-
-        /**
-         * Creating full source location
-         * @return Full source location
-         */
-        static GS_FullSourceLocation Create();
-
-    public:
-
-        /**
-         * Creating full source location from source location
-         * @param sourceLocation Source location
-         * @param source Source
-         * @return Full source location
-         */
-        static GS_FullSourceLocation FromSourceLocation(GS_SourceLocation sourceLocation,
-                                                        ConstLRef<GS_Source> source);
-
-    public:
-
-        /**
-         * Getter for source hash
-         * @return Source hash
-         */
-        U64 GetSourceHash() const;
-
-        /**
-         * Getter for start line
-         * @return Start line
-         */
-        U64 GetStartLine() const;
-
-        /**
-         * Getter for start column
-         * @return Start column
-         */
-        U64 GetStartColumn() const;
-
-        /**
-         * Getter for end line
-         * @return End line
-         */
-        U64 GetEndLine() const;
-
-        /**
-         * Getter for end column
-         * @return End column
-         */
-        U64 GetEndColumn() const;
-
-    private:
-
-        /**
-         * Source hash
-         */
-        U64 _sourceHash;
-
-        /**
-         * Start line
-         */
-        U64 _startLine;
-
-        /**
-         * Start column
-         */
-        U64 _startColumn;
-
-        /**
-         * End line
-         */
-        U64 _endLine;
-
-        /**
-         * End column
-         */
-        U64 _endColumn;
-    };
+    using GSLineColumnSourceRange = GS_SourceRange<GS_LineColumnSourceLocation>;
 
     /**
      * Buffer for containing source code
@@ -431,10 +444,12 @@ namespace GSLanguageCompiler::IO {
          *
          */
 
-//        UString GetCodeInLocation(GS_SourceLocation location);
-
-        template<typename SourceLocationT>
-        UString GetCodeInLocation(SourceRange<SourceLocationT> range);
+        /**
+         * Getting code from source buffer in source location range
+         * @param range Byte source location range
+         * @return Code in range [startLocation..endLocation]
+         */
+        UString GetCodeInRange(GSByteSourceRange range) const;
 
     public:
 
@@ -543,46 +558,6 @@ namespace GSLanguageCompiler::IO {
          */
         UString _source;
     };
-
-    UString GetNameOfFunction(LRef<GS_SourceBuffer> buffer,
-                              ByteSourceLocation functionLocation) {
-        auto iterator = buffer.begin();
-
-        // .....func name.....
-        // ^--->^--->^
-        // start += location - 1 (delete one from position) + 5 (skip 'func' keyword and space)
-        iterator += (functionLocation.GetPosition() - 1 + 5);
-
-        UString name;
-
-        USymbol symbol = *iterator;
-
-        while (symbol != '(') {
-            name += symbol;
-
-            ++iterator;
-
-            symbol = *iterator;
-        }
-
-        return name;
-    }
-
-    void f() {
-        auto buffer = GS_SourceBuffer::Create("func main() {}");
-
-        auto range = ByteSourceRange::Create(ByteSourceLocation::Create(6),
-                                             ByteSourceLocation::Create(9));
-
-        auto slice = buffer.GetCodeInLocation(range);
-
-        slice == "main";
-
-        auto name = GetNameOfFunction(buffer,
-                                      ByteSourceLocation::Create(6));
-
-        name == "main";
-    }
 
     /**
      * Source name type
@@ -835,11 +810,11 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Getting code from source by source location
-         * @param location Source location
-         * @return Code in range [startPosition..endPosition]
+         * Getting code from source by source location range
+         * @param range Byte source location range
+         * @return Code in range [startLocation..endLocation]
          */
-        UString GetCodeByLocation(GS_SourceLocation location) const; // TODO add method to source buffer
+        UString GetCodeByLocation(GSByteSourceRange range) const;
 
     public:
 

@@ -6,221 +6,131 @@
 
 namespace GSLanguageCompiler::IO {
 
-    GS_SourceLocation::GS_SourceLocation(U64 sourceHash,
-                                         U64 startPosition,
-                                         U64 endPosition)
+    GS_ByteSourceLocation::GS_ByteSourceLocation(U64 sourceHash,
+                                                 U64 position)
             : _sourceHash(sourceHash),
-              _startPosition(startPosition),
-              _endPosition(endPosition) {}
+              _position(position) {}
 
-    GS_SourceLocation GS_SourceLocation::Create(U64 sourceHash,
-                                                U64 startPosition,
-                                                U64 endPosition) {
-        return GS_SourceLocation(sourceHash,
-                                 startPosition,
-                                 endPosition);
+    GS_ByteSourceLocation GS_ByteSourceLocation::Create(U64 sourceHash,
+                                                        U64 position) {
+        return GS_ByteSourceLocation(sourceHash,
+                                     position);
     }
 
-    GS_SourceLocation GS_SourceLocation::Create(U64 sourceHash,
-                                                U64 endPosition) {
-        return GS_SourceLocation::Create(sourceHash,
-                                         1,
-                                         endPosition);
+    GS_ByteSourceLocation GS_ByteSourceLocation::Create(U64 position) {
+        return GS_ByteSourceLocation::Create(InvalidHash,
+                                             position);
     }
 
-    GS_SourceLocation GS_SourceLocation::CreateWithoutHash(U64 startPosition,
-                                                           U64 endPosition) {
-        return GS_SourceLocation::Create(0,
-                                         startPosition,
-                                         endPosition);
+    GS_ByteSourceLocation GS_ByteSourceLocation::Create() {
+        return GS_ByteSourceLocation::Create(InvalidPosition);
     }
 
-    GS_SourceLocation GS_SourceLocation::CreateWithoutHash(U64 endPosition) {
-        return GS_SourceLocation::CreateWithoutHash(1,
-                                                    endPosition);
-    }
-
-    GS_SourceLocation GS_SourceLocation::Create() {
-        return GS_SourceLocation::Create(0,
-                                         0,
-                                         0);
-    }
-
-    GS_SourceLocation GS_SourceLocation::FromFullSourceLocation(GS_FullSourceLocation fullSourceLocation,
-                                                                ConstLRef<GS_Source> source) {
-        auto sourceHash = fullSourceLocation.GetSourceHash();
-        auto startLine = fullSourceLocation.GetStartLine();
-        auto startColumn = fullSourceLocation.GetStartColumn();
-        auto endLine = fullSourceLocation.GetEndLine();
-        auto endColumn = fullSourceLocation.GetEndColumn();
-
-        // todo add check source hash
-        auto stringSource = source.GetBuffer().GetSource();
-
-        U64 startPosition = 0;
-
-        for (U64 index = 0, lineCount = 1;; ++index, ++startPosition) {
-            if (stringSource[index] == '\n') {
-                ++lineCount;
-            }
-
-            if (lineCount == startLine) {
-                break;
-            }
-        }
-
-        // todo add validating line and column position
-        startPosition += startColumn;
-
-        U64 endPosition = 0;
-
-        for (U64 index = 0, lineCount = 1;; ++index, ++endPosition) {
-            if (stringSource[index] == '\n') {
-                ++lineCount;
-            }
-
-            if (lineCount == endLine) {
-                break;
-            }
-        }
-
-        endPosition += endColumn;
-
-        return GS_SourceLocation::Create(sourceHash,
-                                         startPosition,
-                                         endPosition);
-    }
-
-    U64 GS_SourceLocation::GetSourceHash() const {
+    U64 GS_ByteSourceLocation::GetSourceHash() const {
         return _sourceHash;
     }
 
-    U64 GS_SourceLocation::GetStartPosition() const {
-        return _startPosition;
+    U64 GS_ByteSourceLocation::GetPosition() const {
+        return _position;
     }
 
-    U64 GS_SourceLocation::GetEndPosition() const {
-        return _endPosition;
+    Bool GS_ByteSourceLocation::operator==(ConstLRef<GS_ByteSourceLocation> sourceLocation) const {
+        return _sourceHash == sourceLocation.GetSourceHash()
+            && _position == sourceLocation.GetPosition();
     }
 
-    GS_FullSourceLocation::GS_FullSourceLocation(U64 sourceHash,
-                                                 U64 startLine,
-                                                 U64 startColumn,
-                                                 U64 endLine,
-                                                 U64 endColumn)
+    Bool GS_ByteSourceLocation::operator!=(ConstLRef<GS_ByteSourceLocation> sourceLocation) const {
+        return !(*this == sourceLocation);
+    }
+
+    GS_LineColumnSourceLocation::GS_LineColumnSourceLocation(U64 sourceHash,
+                                                             U64 line,
+                                                             U64 column)
             : _sourceHash(sourceHash),
-              _startLine(startLine),
-              _startColumn(startColumn),
-              _endLine(endLine),
-              _endColumn(endColumn) {}
+              _line(line),
+              _column(column) {}
 
-    GS_FullSourceLocation GS_FullSourceLocation::Create(U64 sourceHash,
-                                                        U64 startLine,
-                                                        U64 startColumn,
-                                                        U64 endLine,
-                                                        U64 endColumn) {
-        return GS_FullSourceLocation(sourceHash,
-                                     startLine,
-                                     startColumn,
-                                     endLine,
-                                     endColumn);
+    GS_LineColumnSourceLocation GS_LineColumnSourceLocation::Create(U64 sourceHash,
+                                                                    U64 line,
+                                                                    U64 column) {
+        return GS_LineColumnSourceLocation(sourceHash,
+                                           line,
+                                           column);
     }
 
-    GS_FullSourceLocation GS_FullSourceLocation::Create(U64 sourceHash,
-                                                        U64 endLine,
-                                                        U64 endColumn) {
-        return GS_FullSourceLocation::Create(sourceHash,
-                                             1,
-                                             1,
-                                             endLine,
-                                             endColumn);
+    GS_LineColumnSourceLocation GS_LineColumnSourceLocation::Create(U64 line,
+                                                                    U64 column) {
+        return GS_LineColumnSourceLocation::Create(InvalidHash,
+                                                   line,
+                                                   column);
     }
 
-    GS_FullSourceLocation GS_FullSourceLocation::CreateWithoutHash(U64 startLine,
-                                                                   U64 startColumn,
-                                                                   U64 endLine,
-                                                                   U64 endColumn) {
-        return GS_FullSourceLocation::Create(0,
-                                             startLine,
-                                             startColumn,
-                                             endLine,
-                                             endColumn);
+    GS_LineColumnSourceLocation GS_LineColumnSourceLocation::Create() {
+        return GS_LineColumnSourceLocation::Create(InvalidPosition,
+                                                   InvalidPosition);
     }
 
-    GS_FullSourceLocation GS_FullSourceLocation::CreateWithoutHash(U64 endLine,
-                                                                   U64 endColumn) {
-        return GS_FullSourceLocation::CreateWithoutHash(1,
-                                                        1,
-                                                        endLine,
-                                                        endColumn);
-    }
-
-    GS_FullSourceLocation GS_FullSourceLocation::Create() {
-        return GS_FullSourceLocation::Create(0,
-                                             0,
-                                             0,
-                                             0,
-                                             0);
-    }
-
-    GS_FullSourceLocation GS_FullSourceLocation::FromSourceLocation(GS_SourceLocation sourceLocation,
-                                                                    ConstLRef<GS_Source> source) {
-        auto sourceHash = sourceLocation.GetSourceHash();
-        auto startPosition = sourceLocation.GetStartPosition();
-        auto endPosition = sourceLocation.GetEndPosition();
-
-        // todo add check source hash
-        auto stringSource = source.GetBuffer().GetSource();
-
-        U64 startLine = 1, startColumn = 0;
-
-        for (U64 index = 0; index < startPosition; ++index) {
-            if (stringSource[index] == '\n') {
-                ++startLine;
-
-                startColumn = 0;
-            } else {
-                ++startColumn;
-            }
-        }
-
-        U64 endLine = 1, endColumn = 0;
-
-        for (U64 index = 0; index < endPosition; ++index) {
-            if (stringSource[index] == '\n') {
-                ++endLine;
-
-                endColumn = 0;
-            } else {
-                ++endColumn;
-            }
-        }
-
-        return GS_FullSourceLocation::Create(sourceHash,
-                                             startLine,
-                                             startColumn,
-                                             endLine,
-                                             endColumn);
-    }
-
-    U64 GS_FullSourceLocation::GetSourceHash() const {
+    U64 GS_LineColumnSourceLocation::GetSourceHash() const {
         return _sourceHash;
     }
 
-    U64 GS_FullSourceLocation::GetStartLine() const {
-        return _startLine;
+    U64 GS_LineColumnSourceLocation::GetLine() const {
+        return _line;
     }
 
-    U64 GS_FullSourceLocation::GetStartColumn() const {
-        return _startColumn;
+    U64 GS_LineColumnSourceLocation::GetColumn() const {
+        return _column;
     }
 
-    U64 GS_FullSourceLocation::GetEndLine() const {
-        return _endLine;
+    Bool GS_LineColumnSourceLocation::operator==(ConstLRef<GS_LineColumnSourceLocation> sourceLocation) const {
+        return _sourceHash == sourceLocation.GetSourceHash()
+            && _line == sourceLocation.GetLine()
+            && _column == sourceLocation.GetColumn();
     }
 
-    U64 GS_FullSourceLocation::GetEndColumn() const {
-        return _endColumn;
+    Bool GS_LineColumnSourceLocation::operator!=(ConstLRef<GS_LineColumnSourceLocation> sourceLocation) const {
+        return !(*this == sourceLocation);
+    }
+
+    template<typename SourceLocationT>
+    GS_SourceRange<SourceLocationT>::GS_SourceRange(SourceLocation startLocation,
+                                                    SourceLocation endLocation)
+            : _startLocation(std::move(startLocation)),
+              _endLocation(std::move(endLocation)) {}
+
+    template<typename SourceLocationT>
+    GS_SourceRange<SourceLocationT> GS_SourceRange<SourceLocationT>::Create(SourceLocation startLocation,
+                                                                            SourceLocation endLocation) {
+        return GS_SourceRange<SourceLocation>(std::move(startLocation),
+                                              std::move(endLocation));
+    }
+
+    template<typename SourceLocationT>
+    GS_SourceRange<SourceLocationT> GS_SourceRange<SourceLocationT>::CreateFromStart(SourceLocation startLocation) {
+        return GS_SourceRange<SourceLocation>::Create(std::move(startLocation),
+                                                      SourceLocation::Create());
+    }
+
+    template<typename SourceLocationT>
+    GS_SourceRange<SourceLocationT> GS_SourceRange<SourceLocationT>::CreateToEnd(SourceLocation endLocation) {
+        return GS_SourceRange<SourceLocation>::Create(SourceLocation::Create(),
+                                                      std::move(endLocation));
+    }
+
+    template<typename SourceLocationT>
+    GS_SourceRange<SourceLocationT> GS_SourceRange<SourceLocationT>::Create() {
+        return GS_SourceRange<SourceLocation>::Create(SourceLocation::Create(),
+                                                      SourceLocation::Create());
+    }
+
+    template<typename SourceLocationT>
+    typename GS_SourceRange<SourceLocationT>::SourceLocation GS_SourceRange<SourceLocationT>::GetStartLocation() const {
+        return _startLocation;
+    }
+
+    template<typename SourceLocationT>
+    typename GS_SourceRange<SourceLocationT>::SourceLocation GS_SourceRange<SourceLocationT>::GetEndLocation() const {
+        return _endLocation;
     }
 
     GS_SourceBuffer::GS_SourceBuffer(UString source)
@@ -228,6 +138,19 @@ namespace GSLanguageCompiler::IO {
 
     GS_SourceBuffer GS_SourceBuffer::Create(UString source) {
         return GS_SourceBuffer(std::move(source));
+    }
+
+    UString GS_SourceBuffer::GetCodeInRange(GSByteSourceRange range) const {
+        auto startLocation = range.GetStartLocation();
+        auto endLocation = range.GetEndLocation();
+
+        UString code;
+
+        for (U64 index = startLocation.GetPosition() - 1; index < endLocation.GetPosition(); ++index) {
+            code += _source[index];
+        }
+
+        return code;
     }
 
     GS_SourceBuffer::Iterator GS_SourceBuffer::begin() {
@@ -278,7 +201,7 @@ namespace GSLanguageCompiler::IO {
                                  SourceNameType type)
             : _name(std::move(name)),
               _type(type),
-              _hash(0) {
+              _hash(InvalidHash) {
         std::hash<std::string> nameHasher;
 
         _hash = nameHasher(_name.AsUTF8());
@@ -353,7 +276,7 @@ namespace GSLanguageCompiler::IO {
                          GS_SourceName name)
             : _buffer(std::move(buffer)),
               _name(std::move(name)),
-              _hash(0) {
+              _hash(InvalidHash) {
         std::hash<std::string> sourceHasher;
 
         _hash = sourceHasher(_buffer.GetSource().AsUTF8());
@@ -399,14 +322,8 @@ namespace GSLanguageCompiler::IO {
                                  GS_SourceName::CreateCustom(std::move(name)));
     }
 
-    UString GS_Source::GetCodeByLocation(GS_SourceLocation location) const {
-        UString code;
-
-        for (U64 index = location.GetStartPosition() - 1; index < location.GetEndPosition(); ++index) {
-            code += _buffer.GetSource()[index];
-        }
-
-        return code;
+    UString GS_Source::GetCodeByLocation(GSByteSourceRange range) const {
+        return _buffer.GetCodeInRange(range);
     }
 
     ConstLRef<GS_SourceBuffer> GS_Source::GetBuffer() const {
@@ -451,7 +368,7 @@ namespace GSLanguageCompiler::IO {
     ConstLRef<GS_Source> GS_SourceManager::AddSource(GSSourcePtr source) {
         _sources.emplace_back(std::move(source));
 
-        return *_sources[_sources.size() - 1]; // TODO check
+        return *_sources[_sources.size() - 1];
     }
 
     ConstLRef<GS_Source> GS_SourceManager::AddFileSource(UString name) {
