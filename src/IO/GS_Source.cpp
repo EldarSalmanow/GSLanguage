@@ -92,6 +92,33 @@ namespace GSLanguageCompiler::IO {
         return !(*this == sourceLocation);
     }
 
+    GS_ByteSourceLocation ToByteLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
+                                         ConstLRef<GS_Source> source) {
+        auto sourceHash = lineColumnSourceLocation.GetSourceHash();
+        auto line = lineColumnSourceLocation.GetLine();
+        auto column = lineColumnSourceLocation.GetColumn();
+
+        U64 position = 1;
+
+        for (U64 lineIndex = 1; lineIndex != line; ++position) {
+            if (source[position - 1] == '\n') {
+                ++lineIndex;
+
+//                ++position; ?
+            }
+        }
+
+        position += column - 1; // ?
+
+        return GS_ByteSourceLocation::Create(sourceHash,
+                                             position);
+    }
+
+    GS_LineColumnSourceLocation ToLineColumnLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
+                                                     ConstLRef<GS_Source> source) {
+
+    }
+
     template<typename SourceLocationT>
     GS_SourceRange<SourceLocationT>::GS_SourceRange(SourceLocation startLocation,
                                                     SourceLocation endLocation)
@@ -138,19 +165,6 @@ namespace GSLanguageCompiler::IO {
 
     GS_SourceBuffer GS_SourceBuffer::Create(UString source) {
         return GS_SourceBuffer(std::move(source));
-    }
-
-    UString GS_SourceBuffer::GetCodeInRange(GSByteSourceRange range) const {
-        auto startLocation = range.GetStartLocation();
-        auto endLocation = range.GetEndLocation();
-
-        UString code;
-
-        for (U64 index = startLocation.GetPosition() - 1; index < endLocation.GetPosition(); ++index) {
-            code += _source[index];
-        }
-
-        return code;
     }
 
     GS_SourceBuffer::Iterator GS_SourceBuffer::begin() {
@@ -322,8 +336,20 @@ namespace GSLanguageCompiler::IO {
                                  GS_SourceName::CreateCustom(std::move(name)));
     }
 
-    UString GS_Source::GetCodeByLocation(GSByteSourceRange range) const {
-        return _buffer.GetCodeInRange(range);
+    GS_Source::ConstIterator GS_Source::begin() const {
+        return _buffer.begin();
+    }
+
+    GS_Source::ConstIterator GS_Source::end() const {
+        return _buffer.end();
+    }
+
+    GS_Source::ConstIterator GS_Source::cbegin() const {
+        return _buffer.cbegin();
+    }
+
+    GS_Source::ConstIterator GS_Source::cend() const {
+        return _buffer.cend();
     }
 
     ConstLRef<GS_SourceBuffer> GS_Source::GetBuffer() const {

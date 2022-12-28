@@ -9,7 +9,10 @@
 
 namespace GSLanguageCompiler::IO {
 
-    // TODO add converting methods for locations
+    // TODO realise converting to line column source location function
+    // TODO add template methods for getting iterator by source location in GS_SourceBuffer and GS_Source
+    // TODO check converting location functions and getting iterator by location methods in GS_SourceBuffer and getting code in range method
+    // TODO add checks in getting iterator by location methods and getting code in range method
     // TODO add equality operators overloading for source range ?
     // TODO check GS_Source.cpp: ConstLRef<GS_Source> GS_SourceManager::AddSource(GSSourcePtr source) { 3 }
     // TODO add getting code by line column source location range ? GS_Source.h: UString GetCodeInRange(GSByteSourceRange range) const
@@ -265,6 +268,29 @@ namespace GSLanguageCompiler::IO {
     };
 
     /**
+     * Declaring source class for location converting functions
+     */
+    class GS_Source;
+
+    /**
+     * Converting line column source location to byte source location
+     * @param lineColumnSourceLocation Line column source location
+     * @param source Source
+     * @return Byte source location
+     */
+    GS_ByteSourceLocation ToByteLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
+                                         ConstLRef<GS_Source> source);
+
+    /**
+     * Converting byte source location to line column source location
+     * @param byteSourceLocation Byte source location
+     * @param source Source
+     * @return Line column source location
+     */
+    GS_LineColumnSourceLocation ToLineColumnLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
+                                                     ConstLRef<GS_Source> source);
+
+    /**
      * Class for containing source location range
      * @tparam SourceLocationT Source location type
      */
@@ -444,12 +470,86 @@ namespace GSLanguageCompiler::IO {
          *
          */
 
+        Iterator GetIteratorByLocation(GS_ByteSourceLocation sourceLocation) {
+            auto position = sourceLocation.GetPosition();
+
+            auto index = position - 1;
+
+            return _source.begin() + index;
+        }
+
+        ConstIterator GetIteratorByLocation(GS_ByteSourceLocation sourceLocation) const {
+            auto position = sourceLocation.GetPosition();
+
+            auto index = position - 1;
+
+            return _source.begin() + index;
+        }
+
+        Iterator GetIteratorByLocation(GS_LineColumnSourceLocation sourceLocation) {
+            auto line = sourceLocation.GetLine();
+            auto column = sourceLocation.GetColumn();
+
+            U64 index = 0;
+
+            for (U64 lineIndex = 1;; ++index) {
+                if (lineIndex == line) {
+                    break;
+                }
+
+                if (_source[index] == '\n') {
+                    ++lineIndex;
+                }
+            }
+
+            index += (column - 1);
+
+            return _source.begin() + index;
+        }
+
+        ConstIterator GetIteratorByLocation(GS_LineColumnSourceLocation sourceLocation) const {
+            auto line = sourceLocation.GetLine();
+            auto column = sourceLocation.GetColumn();
+
+            U64 index = 0;
+
+            for (U64 lineIndex = 1;; ++index) {
+                if (lineIndex == line) {
+                    break;
+                }
+
+                if (_source[index] == '\n') {
+                    ++lineIndex;
+                }
+            }
+
+            index += (column - 1);
+
+            return _source.begin() + index;
+        }
+
         /**
          * Getting code from source buffer in source location range
-         * @param range Byte source location range
+         * @tparam SourceLocationT Source location type
+         * @param range Source location range
          * @return Code in range [startLocation..endLocation]
          */
-        UString GetCodeInRange(GSByteSourceRange range) const;
+        template<typename SourceLocationT>
+        UString GetCodeInRange(GS_SourceRange<SourceLocationT> range) const {
+            auto startLocation = range.GetStartLocation();
+            auto endLocation = range.GetEndLocation();
+
+            auto startIterator = GetIteratorByLocation(startLocation);
+            auto endIterator = GetIteratorByLocation(endLocation);
+
+            UString code;
+
+            for (; startIterator != endIterator; ++startIterator) {
+                code += *startIterator;
+            }
+
+            return code;
+        }
 
     public:
 
@@ -810,11 +910,15 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Getting code from source by source location range
-         * @param range Byte source location range
+         * Getting code from source in source location range
+         * @tparam SourceLocationT Source location type
+         * @param range Source location range
          * @return Code in range [startLocation..endLocation]
          */
-        UString GetCodeByLocation(GSByteSourceRange range) const;
+        template<typename SourceLocationT>
+        UString GetCodeInRange(GS_SourceRange<SourceLocationT> range) const {
+            return _buffer.GetCodeInRange(range);
+        }
 
     public:
 
