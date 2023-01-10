@@ -211,11 +211,21 @@ Result GSMain(I32 argc, Ptr<Ptr<C>> argv) {
         return Result::Err;
     }
 
-    auto compilingResult = Driver::GS_Compiler::Start(argc, argv);
+    auto sourceBuffer = IO::GS_SourceBuffer::Create("func main() {\r\n    print(\"Hello, Eldar!\")\r\n}");
 
-    if (compilingResult != Driver::CompilingResult::Success) {
-        return Result::Err;
+    auto iterator = sourceBuffer.GetIteratorByLocation(IO::GS_ByteSourceLocation::Create(1));
+
+    if (iterator == sourceBuffer.begin()) {
+        Driver::GlobalContext().Out("Eq!");
+    } else {
+        Driver::GlobalContext().Out("Not Eq!");
     }
+
+//    auto compilingResult = Driver::GS_Compiler::Start(argc, argv);
+//
+//    if (compilingResult != Driver::CompilingResult::Success) {
+//        return Result::Err;
+//    }
 
     return Result::Ok;
 }

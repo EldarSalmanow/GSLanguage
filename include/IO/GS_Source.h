@@ -13,7 +13,6 @@ namespace GSLanguageCompiler::IO {
     // TODO add template methods for getting iterator by source location in GS_SourceBuffer and GS_Source
     // TODO check converting location functions and getting iterator by location methods in GS_SourceBuffer and getting code in range method
     // TODO add checks in getting iterator by location methods and getting code in range method
-    // TODO add equality operators overloading for source range ?
     // TODO check GS_Source.cpp: ConstLRef<GS_Source> GS_SourceManager::AddSource(GSSourcePtr source) { 3 }
     // TODO add getting code by line column source location range ? GS_Source.h: UString GetCodeInRange(GSByteSourceRange range) const
     //                                                                           UString GetCodeByLocation(GSByteSourceRange range) const
@@ -382,6 +381,28 @@ namespace GSLanguageCompiler::IO {
          */
         SourceLocation GetEndLocation() const;
 
+    public:
+
+        /**
+         *
+         * GS_SourceRange PUBLIC OPERATOR METHODS
+         *
+         */
+
+        /**
+         * Equality operator for source location range
+         * @param locationRange Source location range
+         * @return Is equal source location ranges
+         */
+        Bool operator==(ConstLRef<GS_SourceRange<SourceLocationT>> locationRange) const;
+
+        /**
+         * Not equality operator for source location range
+         * @param locationRange Source location range
+         * @return Is not equal source location ranges
+         */
+        Bool operator!=(ConstLRef<GS_SourceRange<SourceLocationT>> locationRange) const;
+
     private:
 
         /**
@@ -531,13 +552,13 @@ namespace GSLanguageCompiler::IO {
         /**
          * Getting code from source buffer in source location range
          * @tparam SourceLocationT Source location type
-         * @param range Source location range
+         * @param locationRange Source location range
          * @return Code in range [startLocation..endLocation]
          */
         template<typename SourceLocationT>
-        UString GetCodeInRange(GS_SourceRange<SourceLocationT> range) const {
-            auto startLocation = range.GetStartLocation();
-            auto endLocation = range.GetEndLocation();
+        UString GetCodeInRange(GS_SourceRange<SourceLocationT> locationRange) const {
+            auto startLocation = locationRange.GetStartLocation();
+            auto endLocation = locationRange.GetEndLocation();
 
             auto startIterator = GetIteratorByLocation(startLocation);
             auto endIterator = GetIteratorByLocation(endLocation);
@@ -912,12 +933,12 @@ namespace GSLanguageCompiler::IO {
         /**
          * Getting code from source in source location range
          * @tparam SourceLocationT Source location type
-         * @param range Source location range
+         * @param locationRange Source location range
          * @return Code in range [startLocation..endLocation]
          */
         template<typename SourceLocationT>
-        UString GetCodeInRange(GS_SourceRange<SourceLocationT> range) const {
-            return _buffer.GetCodeInRange(range);
+        UString GetCodeInRange(GS_SourceRange<SourceLocationT> locationRange) const {
+            return _buffer.GetCodeInRange(locationRange);
         }
 
     public:

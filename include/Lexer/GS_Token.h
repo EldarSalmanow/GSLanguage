@@ -22,11 +22,11 @@ namespace GSLanguageCompiler::Lexer {
          * Constructor for token
          * @param type Type
          * @param value Value
-         * @param location Location
+         * @param locationRange Source location range
          */
         GS_Token(TokenType type,
                  UString value,
-                 IO::GS_SourceLocation location);
+                 IO::GSByteSourceRange locationRange);
 
     public:
 
@@ -34,12 +34,12 @@ namespace GSLanguageCompiler::Lexer {
          * Create token
          * @param type Type
          * @param value Value
-         * @param location Location
+         * @param locationRange Source location range
          * @return Token
          */
         static GS_Token Create(TokenType type,
                                UString value,
-                               IO::GS_SourceLocation location);
+                               IO::GSByteSourceRange locationRange);
 
         /**
          * Creating token
@@ -53,11 +53,11 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Creating token
          * @param type Type
-         * @param location Location
+         * @param locationRange Source location range
          * @return Token
          */
         static GS_Token Create(TokenType type,
-                               IO::GS_SourceLocation location);
+                               IO::GSByteSourceRange locationRange);
 
         /**
          * Creating token
@@ -87,10 +87,10 @@ namespace GSLanguageCompiler::Lexer {
         ConstLRef<UString> GetValue() const;
 
         /**
-         * Getter for location
-         * @return Location
+         * Getter for source location range
+         * @return Source location range
          */
-        IO::GS_SourceLocation GetLocation() const;
+        IO::GSByteSourceRange GetLocationRange() const;
 
     private:
 
@@ -105,9 +105,9 @@ namespace GSLanguageCompiler::Lexer {
         UString _value;
 
         /**
-         * Token location
+         * Token source location range
          */
-        IO::GS_SourceLocation _location;
+        IO::GSByteSourceRange _locationRange;
     };
 
     /**

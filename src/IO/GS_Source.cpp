@@ -160,6 +160,17 @@ namespace GSLanguageCompiler::IO {
         return _endLocation;
     }
 
+    template<typename SourceLocationT>
+    Bool GS_SourceRange<SourceLocationT>::operator==(ConstLRef<GS_SourceRange<SourceLocationT>> locationRange) const {
+        return _startLocation == locationRange.GetStartLocation()
+            && _endLocation == locationRange.GetEndLocation();
+    }
+
+    template<typename SourceLocationT>
+    Bool GS_SourceRange<SourceLocationT>::operator!=(ConstLRef<GS_SourceRange<SourceLocationT>> locationRange) const {
+        return !(*this == locationRange);
+    }
+
     GS_SourceBuffer::GS_SourceBuffer(UString source)
             : _source(std::move(source)) {}
 

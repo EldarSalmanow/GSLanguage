@@ -16,19 +16,19 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for variable using expression
          * @param name Variable name
-         * @param nameLocation Variable name location
+         * @param nameLocationRange Variable name source location range
          */
-        GS_VariableUsingExpression(UString name, IO::GS_SourceLocation nameLocation);
+        GS_VariableUsingExpression(UString name, IO::GSByteSourceRange nameLocationRange);
 
     public:
 
         /**
          * Creating variable using expression ptr
          * @param name Variable name
-         * @param nameLocation Variable name location
+         * @param nameLocation Variable name source location range
          * @return Variable using expression ptr
          */
-        static std::shared_ptr<GS_VariableUsingExpression> Create(UString name, IO::GS_SourceLocation nameLocation);
+        static std::shared_ptr<GS_VariableUsingExpression> Create(UString name, IO::GSByteSourceRange nameLocationRange);
 
         /**
          * Creating variable using expression ptr
@@ -46,10 +46,10 @@ namespace GSLanguageCompiler::AST {
         LRef<UString> GetName();
 
         /**
-         * Getter for variable name location
-         * @return Variable name location
+         * Getter for variable name source location range
+         * @return Variable name source location range
          */
-        IO::GS_SourceLocation GetNameLocation() const;
+        IO::GSByteSourceRange GetNameLocationRange() const;
 
     public:
 
@@ -67,9 +67,9 @@ namespace GSLanguageCompiler::AST {
         UString _name;
 
         /**
-         * Variable name location
+         * Variable name source location range
          */
-        IO::GS_SourceLocation _nameLocation;
+        IO::GSByteSourceRange _nameLocationRange;
     };
 
 }

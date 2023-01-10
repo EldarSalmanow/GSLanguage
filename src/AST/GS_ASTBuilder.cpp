@@ -229,8 +229,8 @@ namespace GSLanguageCompiler::AST {
         return GS_VariableUsingExpression::Create(std::move(name));
     }
 
-    NodePtr<GS_VariableUsingExpression> GS_ASTBuilder::CreateVariableUsingExpression(UString name, IO::GS_SourceLocation nameLocation) {
-        return GS_VariableUsingExpression::Create(std::move(name), nameLocation);
+    NodePtr<GS_VariableUsingExpression> GS_ASTBuilder::CreateVariableUsingExpression(UString name, IO::GSByteSourceRange nameLocationRange) {
+        return GS_VariableUsingExpression::Create(std::move(name), nameLocationRange);
     }
 
     NodePtr<GS_FunctionCallingExpression> GS_ASTBuilder::CreateFunctionCallingExpression(UString name, GSExpressionPtrArray params) {

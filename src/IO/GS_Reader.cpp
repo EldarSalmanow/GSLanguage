@@ -32,6 +32,7 @@ namespace GSLanguageCompiler::IO {
             text += symbol;
         }
 
+        // adding EOF symbol
         text += USymbol();
 
         return text;

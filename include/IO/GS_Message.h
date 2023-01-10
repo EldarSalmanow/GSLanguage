@@ -3,11 +3,12 @@
 
 #include <optional>
 
-#include <IO/GS_Stream.h>
-
 #include <IO/GS_Source.h>
 
 namespace GSLanguageCompiler::IO {
+
+    // TODO location or location range in message ?
+    // TODO update message rendering in message handler
 
     /**
      * Level of messages
@@ -26,38 +27,50 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_Message PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
          * Constructor for message
          * @param text Message text
          * @param level Message level
-         * @param location Message location
+         * @param locationRange Message byte source location range
          */
         GS_Message(UString text,
                    MessageLevel level,
-                   std::optional<GS_SourceLocation> location);
+                   std::optional<GSByteSourceRange> locationRange);
 
     public:
 
         /**
-         * Creating message
-         * @param text Message text
-         * @param level Message level
-         * @param location Message location
-         * @return Message ptr
+         *
+         * GS_Message PUBLIC STATIC CREATE METHODS
+         *
          */
-        static GS_Message Create(UString text,
-                                 MessageLevel level,
-                                 std::optional<GS_SourceLocation> location);
 
         /**
          * Creating message
          * @param text Message text
          * @param level Message level
-         * @param location Message location
+         * @param locationRange Message byte source location range
          * @return Message ptr
          */
         static GS_Message Create(UString text,
                                  MessageLevel level,
-                                 GS_SourceLocation location);
+                                 std::optional<GSByteSourceRange> locationRange);
+
+        /**
+         * Creating message
+         * @param text Message text
+         * @param level Message level
+         * @param locationRange Message byte source location range
+         * @return Message ptr
+         */
+        static GS_Message Create(UString text,
+                                 MessageLevel level,
+                                 GSByteSourceRange locationRange);
 
         /**
          * Creating message
@@ -69,6 +82,12 @@ namespace GSLanguageCompiler::IO {
                                  MessageLevel level);
 
     public:
+
+        /**
+         *
+         * GS_Message PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for message text
@@ -83,12 +102,18 @@ namespace GSLanguageCompiler::IO {
         MessageLevel GetLevel() const;
 
         /**
-         * Getter for message location
-         * @return Message location
+         * Getter for message byte source location range
+         * @return Message byte source location range
          */
-        std::optional<GS_SourceLocation> GetLocation() const;
+        std::optional<GSByteSourceRange> GetLocationRange() const;
 
     private:
+
+        /**
+         *
+         * GS_Message PRIVATE FIELDS
+         *
+         */
 
         /**
          * Message text
@@ -101,9 +126,9 @@ namespace GSLanguageCompiler::IO {
         MessageLevel _level;
 
         /**
-         * Message location
+         * Message byte source location range
          */
-        std::optional<GS_SourceLocation> _location;
+        std::optional<GSByteSourceRange> _locationRange;
     };
 
     /**
@@ -111,11 +136,43 @@ namespace GSLanguageCompiler::IO {
      */
     using GSMessageArray = std::vector<GS_Message>;
 
+    Void Write(GS_Message message,
+               LRef<GS_SourceManager> sourceManager) {
+        auto movedMessage = std::move(message);
+
+        auto &messageText = movedMessage.GetText(); // Missed ')'!
+        auto messageLevel = movedMessage.GetLevel(); // Error
+        auto messageLocationRange = movedMessage.GetLocationRange().value(); // main.gs hash, 2.26, 2.26
+
+        auto source = sourceManager.GetSource(messageLocationRange.GetStartLocation().GetSourceHash());
+        auto code = source->GetCodeInRange(messageLocationRange);
+
+        /**
+         *
+         * main.gs
+         *
+         * func main() {
+         *     print("Hello, Eldar!"
+         * }
+         *
+         * > main.gs[2:26] >> print("Hello, Eldar!"
+         * >                                       ^
+         * > Error: Missed ')'!
+         *
+         */
+    }
+
     /**
      * Class for handling messages and writing to output stream
      */
     class GS_MessageHandler {
     public:
+
+        /**
+         *
+         * GS_MessageHandler PUBLIC CONSTRUCTORS
+         *
+         */
 
         /**
          * Constructor for message handler
@@ -126,6 +183,12 @@ namespace GSLanguageCompiler::IO {
                           LRef<GS_SourceManager> sourceManager);
 
     public:
+
+        /**
+         *
+         * GS_MessageHandler PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating message handler
@@ -139,6 +202,12 @@ namespace GSLanguageCompiler::IO {
     public:
 
         /**
+         *
+         * GS_MessageHandler PUBLIC METHODS
+         *
+         */
+
+        /**
          * Writing message to output stream
          * @param message Message
          * @return
@@ -149,12 +218,12 @@ namespace GSLanguageCompiler::IO {
          * Writing message to output stream
          * @param text Message text
          * @param level Message level
-         * @param location Message location
+         * @param locationRange Message byte source location range
          * @return
          */
         Void Write(UString text,
                    MessageLevel level,
-                   GS_SourceLocation location);
+                   GSByteSourceRange locationRange);
 
         /**
          * Writing message to output stream
@@ -166,6 +235,12 @@ namespace GSLanguageCompiler::IO {
                    MessageLevel level);
 
     public:
+
+        /**
+         *
+         * GS_MessageHandler PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for output stream
@@ -180,6 +255,12 @@ namespace GSLanguageCompiler::IO {
         LRef<GS_SourceManager> GetSourceManager();
 
     private:
+
+        /**
+         *
+         * GS_MessageHandler PRIVATE FIELDS
+         *
+         */
 
         /**
          * Output stream

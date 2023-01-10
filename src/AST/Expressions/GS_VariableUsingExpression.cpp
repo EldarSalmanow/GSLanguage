@@ -2,23 +2,23 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_VariableUsingExpression::GS_VariableUsingExpression(UString name, IO::GS_SourceLocation nameLocation)
-            : _name(std::move(name)), _nameLocation(nameLocation) {}
+    GS_VariableUsingExpression::GS_VariableUsingExpression(UString name, IO::GSByteSourceRange nameLocationRange)
+            : _name(std::move(name)), _nameLocationRange(nameLocationRange) {}
 
-    std::shared_ptr<GS_VariableUsingExpression> GS_VariableUsingExpression::Create(UString name, IO::GS_SourceLocation nameLocation) {
-        return std::make_shared<GS_VariableUsingExpression>(std::move(name), nameLocation);
+    std::shared_ptr<GS_VariableUsingExpression> GS_VariableUsingExpression::Create(UString name, IO::GSByteSourceRange nameLocationRange) {
+        return std::make_shared<GS_VariableUsingExpression>(std::move(name), nameLocationRange);
     }
 
     std::shared_ptr<GS_VariableUsingExpression> GS_VariableUsingExpression::Create(UString name) {
-        return GS_VariableUsingExpression::Create(std::move(name), IO::GS_SourceLocation::Create());
+        return GS_VariableUsingExpression::Create(std::move(name), IO::GSByteSourceRange::Create());
     }
 
     LRef<UString> GS_VariableUsingExpression::GetName() {
         return _name;
     }
 
-    IO::GS_SourceLocation GS_VariableUsingExpression::GetNameLocation() const {
-        return _nameLocation;
+    IO::GSByteSourceRange GS_VariableUsingExpression::GetNameLocationRange() const {
+        return _nameLocationRange;
     }
 
     ExpressionType GS_VariableUsingExpression::GetExpressionType() const {
