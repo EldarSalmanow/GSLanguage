@@ -39,8 +39,15 @@ namespace GSLanguageCompiler::IO {
             && _position == sourceLocation.GetPosition();
     }
 
-    Bool GS_ByteSourceLocation::operator!=(ConstLRef<GS_ByteSourceLocation> sourceLocation) const {
-        return !(*this == sourceLocation);
+    std::partial_ordering GS_ByteSourceLocation::operator<=>(ConstLRef<GS_ByteSourceLocation> sourceLocation) const {
+        auto position = sourceLocation.GetPosition();
+
+        if (_position == InvalidPosition
+         || position == InvalidPosition) {
+            return std::partial_ordering::unordered;
+        }
+
+        return _position <=> position;
     }
 
     GS_LineColumnSourceLocation::GS_LineColumnSourceLocation(U64 sourceHash,
@@ -87,88 +94,98 @@ namespace GSLanguageCompiler::IO {
             && _line == sourceLocation.GetLine()
             && _column == sourceLocation.GetColumn();
     }
-
-    Bool GS_LineColumnSourceLocation::operator!=(ConstLRef<GS_LineColumnSourceLocation> sourceLocation) const {
-        return !(*this == sourceLocation);
+    
+    std::partial_ordering GS_LineColumnSourceLocation::operator<=>(ConstLRef<GS_LineColumnSourceLocation> sourceLocation) const {
+        auto line = sourceLocation.GetLine();
+        auto column = sourceLocation.GetColumn();
+        
+        if (_line == InvalidPosition
+         || line == InvalidPosition) {
+            return std::partial_ordering::unordered;
+        }
+        
+        if (_line == line) {
+            if (_column == InvalidPosition
+             || column == InvalidPosition) {
+                return std::partial_ordering::unordered;
+            }
+            
+            return _column <=> column;
+        }
+        
+        return _line <=> line;
     }
 
-    GS_ByteSourceLocation ToByteLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
-                                         ConstLRef<GS_Source> source) {
+    GS_ByteSourceLocation ToByteSourceLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
+                                               ConstLRef<GS_Source> source) {
         auto sourceHash = lineColumnSourceLocation.GetSourceHash();
         auto line = lineColumnSourceLocation.GetLine();
         auto column = lineColumnSourceLocation.GetColumn();
 
+        if (sourceHash != InvalidHash
+         && sourceHash != source.GetHash()) {
+            Driver::GlobalContext().Exit();
+        }
+
         U64 position = 1;
 
-        for (U64 lineIndex = 1; lineIndex != line; ++position) {
+        auto sourceSize = source.GetBuffer().GetSource().Size();
+
+        for (U64 lineIndex = 1; lineIndex < line; ++position) {
+            if (position > sourceSize) {
+                Driver::GlobalContext().Exit();
+            }
+
             if (source[position - 1] == '\n') {
                 ++lineIndex;
-
-//                ++position; ?
             }
         }
 
-        position += column - 1; // ?
+        for (U64 columnIndex = 1; columnIndex < column; ++position) {
+            if (position > sourceSize) {
+                Driver::GlobalContext().Exit();
+            }
+
+            if (source[position - 1] == '\n') {
+                Driver::GlobalContext().Exit();
+            }
+        }
 
         return GS_ByteSourceLocation::Create(sourceHash,
                                              position);
     }
 
-    GS_LineColumnSourceLocation ToLineColumnLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
-                                                     ConstLRef<GS_Source> source) {
+    GS_LineColumnSourceLocation ToLineColumnSourceLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
+                                                           ConstLRef<GS_Source> source) {
+        auto sourceHash = byteSourceLocation.GetSourceHash();
+        auto position = byteSourceLocation.GetPosition();
 
-    }
+        if (sourceHash != InvalidHash
+         && sourceHash != source.GetHash()) {
+            Driver::GlobalContext().Exit();
+        }
 
-    template<typename SourceLocationT>
-    GS_SourceRange<SourceLocationT>::GS_SourceRange(SourceLocation startLocation,
-                                                    SourceLocation endLocation)
-            : _startLocation(std::move(startLocation)),
-              _endLocation(std::move(endLocation)) {}
+        if (position > source.GetBuffer().GetSource().Size()) {
+            Driver::GlobalContext().Exit();
+        }
 
-    template<typename SourceLocationT>
-    GS_SourceRange<SourceLocationT> GS_SourceRange<SourceLocationT>::Create(SourceLocation startLocation,
-                                                                            SourceLocation endLocation) {
-        return GS_SourceRange<SourceLocation>(std::move(startLocation),
-                                              std::move(endLocation));
-    }
+        U64 line = 1, column = 1;
 
-    template<typename SourceLocationT>
-    GS_SourceRange<SourceLocationT> GS_SourceRange<SourceLocationT>::CreateFromStart(SourceLocation startLocation) {
-        return GS_SourceRange<SourceLocation>::Create(std::move(startLocation),
-                                                      SourceLocation::Create());
-    }
+        for (U64 positionIndex = 1; positionIndex < position; ++positionIndex) {
+            if (source[positionIndex - 1] == '\n') {
+                ++line;
 
-    template<typename SourceLocationT>
-    GS_SourceRange<SourceLocationT> GS_SourceRange<SourceLocationT>::CreateToEnd(SourceLocation endLocation) {
-        return GS_SourceRange<SourceLocation>::Create(SourceLocation::Create(),
-                                                      std::move(endLocation));
-    }
+                column = 1;
 
-    template<typename SourceLocationT>
-    GS_SourceRange<SourceLocationT> GS_SourceRange<SourceLocationT>::Create() {
-        return GS_SourceRange<SourceLocation>::Create(SourceLocation::Create(),
-                                                      SourceLocation::Create());
-    }
+                continue;
+            }
 
-    template<typename SourceLocationT>
-    typename GS_SourceRange<SourceLocationT>::SourceLocation GS_SourceRange<SourceLocationT>::GetStartLocation() const {
-        return _startLocation;
-    }
+            ++column;
+        }
 
-    template<typename SourceLocationT>
-    typename GS_SourceRange<SourceLocationT>::SourceLocation GS_SourceRange<SourceLocationT>::GetEndLocation() const {
-        return _endLocation;
-    }
-
-    template<typename SourceLocationT>
-    Bool GS_SourceRange<SourceLocationT>::operator==(ConstLRef<GS_SourceRange<SourceLocationT>> locationRange) const {
-        return _startLocation == locationRange.GetStartLocation()
-            && _endLocation == locationRange.GetEndLocation();
-    }
-
-    template<typename SourceLocationT>
-    Bool GS_SourceRange<SourceLocationT>::operator!=(ConstLRef<GS_SourceRange<SourceLocationT>> locationRange) const {
-        return !(*this == locationRange);
+        return GS_LineColumnSourceLocation::Create(sourceHash,
+                                                   line,
+                                                   column);
     }
 
     GS_SourceBuffer::GS_SourceBuffer(UString source)
@@ -176,6 +193,73 @@ namespace GSLanguageCompiler::IO {
 
     GS_SourceBuffer GS_SourceBuffer::Create(UString source) {
         return GS_SourceBuffer(std::move(source));
+    }
+
+    U64 GetIndexByLocation(GS_ByteSourceLocation sourceLocation,
+                           ConstLRef<GS_SourceBuffer> sourceBuffer) {
+        auto position = sourceLocation.GetPosition();
+
+        if (position > sourceBuffer.GetSource().Size()) {
+            Driver::GlobalContext().Exit();
+        }
+
+        auto index = position - 1;
+
+        return index;
+    }
+
+    U64 GetIndexByLocation(GS_LineColumnSourceLocation sourceLocation,
+                           ConstLRef<GS_SourceBuffer> sourceBuffer) {
+        auto line = sourceLocation.GetLine();
+        auto column = sourceLocation.GetColumn();
+
+        U64 position = 1;
+
+        auto sourceSize = sourceBuffer.GetSource().Size();
+
+        for (U64 lineIndex = 1; lineIndex < line; ++position) {
+            if (position > sourceSize) {
+                Driver::GlobalContext().Exit();
+            }
+
+            if (sourceBuffer[position - 1] == '\n') {
+                ++lineIndex;
+            }
+        }
+
+        for (U64 columnIndex = 1; columnIndex < column; ++position) {
+            if (position > sourceSize) {
+                Driver::GlobalContext().Exit();
+            }
+
+            if (sourceBuffer[position - 1] == '\n') {
+                Driver::GlobalContext().Exit();
+            }
+        }
+
+        auto index = position - 1;
+
+        return index;
+    }
+
+    GS_SourceBuffer::Iterator GS_SourceBuffer::GetIteratorByLocation(GS_ByteSourceLocation sourceLocation) {
+        return _source.begin() + GetIndexByLocation(sourceLocation,
+                                                    *this);
+    }
+
+    GS_SourceBuffer::ConstIterator GS_SourceBuffer::GetIteratorByLocation(GS_ByteSourceLocation sourceLocation) const {
+        return _source.cbegin() + GetIndexByLocation(sourceLocation,
+                                                     *this);
+    }
+
+    GS_SourceBuffer::Iterator GS_SourceBuffer::GetIteratorByLocation(GS_LineColumnSourceLocation sourceLocation) {
+        return _source.begin() + GetIndexByLocation(sourceLocation,
+                                                    *this);
+    }
+
+    GS_SourceBuffer::ConstIterator GS_SourceBuffer::GetIteratorByLocation(GS_LineColumnSourceLocation sourceLocation) const {
+        return _source.cbegin() + GetIndexByLocation(sourceLocation,
+                                                     *this);
     }
 
     GS_SourceBuffer::Iterator GS_SourceBuffer::begin() {
@@ -208,10 +292,6 @@ namespace GSLanguageCompiler::IO {
 
     Bool GS_SourceBuffer::operator==(ConstLRef<GS_SourceBuffer> sourceBuffer) const {
         return _source == sourceBuffer.GetSource();
-    }
-
-    Bool GS_SourceBuffer::operator!=(ConstLRef<GS_SourceBuffer> sourceBuffer) const {
-        return !(*this == sourceBuffer);
     }
 
     LRef<USymbol> GS_SourceBuffer::operator[](ConstLRef<U64> index) {
@@ -252,7 +332,9 @@ namespace GSLanguageCompiler::IO {
 
         UStringStream stringStream;
 
-        stringStream << "<string_"_us << id << ">"_us;
+        stringStream << "<string_"_us
+                     << id
+                     << ">"_us;
 
         ++id;
 
@@ -293,10 +375,6 @@ namespace GSLanguageCompiler::IO {
         return _hash == name.GetHash();
     }
 
-    Bool GS_SourceName::operator!=(ConstLRef<GS_SourceName> name) const {
-        return !(*this == name);
-    }
-
     GS_Source::GS_Source(GS_SourceBuffer buffer,
                          GS_SourceName name)
             : _buffer(std::move(buffer)),
@@ -319,13 +397,15 @@ namespace GSLanguageCompiler::IO {
         std::ifstream fileStream(name.AsUTF8());
 
         if (!fileStream.is_open()) {
-            UStringStream stringStream;
+            Driver::GlobalContext().Exit();
 
-            stringStream << "Can`t open file with name '"_us
-                         << name
-                         << "'!"_us;
-
-            Driver::GlobalContext().ErrAndExit(stringStream.String());
+//            UStringStream stringStream;
+//
+//            stringStream << "Can`t open file with name '"_us
+//                         << name
+//                         << "'!"_us;
+//
+//            Driver::GlobalContext().ErrAndExit(stringStream.String());
         }
 
         auto reader = IO::GS_Reader::Create(fileStream);
@@ -377,10 +457,6 @@ namespace GSLanguageCompiler::IO {
 
     Bool GS_Source::operator==(ConstLRef<GS_Source> source) const {
         return _hash == source.GetHash();
-    }
-
-    Bool GS_Source::operator!=(ConstLRef<GS_Source> source) const {
-        return !(*this == source);
     }
 
     LRef<USymbol> GS_Source::operator[](ConstLRef<U64> index) {

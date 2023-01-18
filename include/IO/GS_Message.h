@@ -7,8 +7,7 @@
 
 namespace GSLanguageCompiler::IO {
 
-    // TODO location or location range in message ?
-    // TODO update message rendering in message handler
+    // TODO create error messages standard
 
     /**
      * Level of messages
@@ -136,31 +135,31 @@ namespace GSLanguageCompiler::IO {
      */
     using GSMessageArray = std::vector<GS_Message>;
 
-    Void Write(GS_Message message,
-               LRef<GS_SourceManager> sourceManager) {
-        auto movedMessage = std::move(message);
-
-        auto &messageText = movedMessage.GetText(); // Missed ')'!
-        auto messageLevel = movedMessage.GetLevel(); // Error
-        auto messageLocationRange = movedMessage.GetLocationRange().value(); // main.gs hash, 2.26, 2.26
-
-        auto source = sourceManager.GetSource(messageLocationRange.GetStartLocation().GetSourceHash());
-        auto code = source->GetCodeInRange(messageLocationRange);
-
-        /**
-         *
-         * main.gs
-         *
-         * func main() {
-         *     print("Hello, Eldar!"
-         * }
-         *
-         * > main.gs[2:26] >> print("Hello, Eldar!"
-         * >                                       ^
-         * > Error: Missed ')'!
-         *
-         */
-    }
+//    Void Write(GS_Message message,
+//               LRef<GS_SourceManager> sourceManager) {
+//        auto movedMessage = std::move(message);
+//
+//        auto &messageText = movedMessage.GetText(); // Missed ')'!
+//        auto messageLevel = movedMessage.GetLevel(); // Error
+//        auto messageLocationRange = movedMessage.GetLocationRange().value(); // main.gs hash, 2.26, 2.26
+//
+//        auto source = sourceManager.GetSource(messageLocationRange.GetStartLocation().GetSourceHash());
+//        auto code = source->GetCodeInRange(messageLocationRange);
+//
+//        /**
+//         *
+//         * main.gs
+//         *
+//         * func main() {
+//         *     print("Hello, Eldar!"
+//         * }
+//         *
+//         * > main.gs[2:26] >> print("Hello, Eldar!"
+//         * >                                       ^
+//         * > Error: Missed ')'!
+//         *
+//         */
+//    }
 
     /**
      * Class for handling messages and writing to output stream

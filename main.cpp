@@ -4,80 +4,80 @@
 
 using namespace GSLanguageCompiler;
 
-class ArithmeticOptimizingVisitor : public AST::GS_Transformer {
-public:
-
-    /*
-     *
-     * + ( expression )   -> expression
-     *
-     * - ( - expression ) -> expression
-     *
-     */
-    AST::GSNodePtr TransformUnaryExpression(AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression,
-                                            LRef<Driver::GS_Session> session) override {
-        unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(SuperUnaryExpression(unaryExpression, session));
-
-        auto &secondExpression = unaryExpression->GetExpression();
-
-        if (auto secondUnaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(secondExpression)) {
-            auto firstOperation = unaryExpression->GetUnaryOperation();
-            auto secondOperation = secondUnaryExpression->GetUnaryOperation();
-
-            AST::GSExpressionPtr resultExpression;
-
-            switch (firstOperation) {
-
-                // - ( secondUnaryExpression )
-                case AST::UnaryOperation::Minus:
-                    switch (secondOperation) {
-
-                        // - ( - expression ) -> expression
-                        case AST::UnaryOperation::Minus:
-                            resultExpression = secondUnaryExpression->GetExpression();
-
-                            break;
-                    }
-
-                    break;
-            }
-
-            return resultExpression;
-        }
-
-        return unaryExpression;
-    }
-};
-
-class ArithmeticOptimizingPass : public AST::GS_TransformPass<ArithmeticOptimizingVisitor> {};
-
-AST::GSPassPtr CreateArithmeticOptimizingPass() {
-    return std::make_shared<ArithmeticOptimizingPass>();
-}
-
-I32 Test() {
-    auto Session = Driver::GS_Session::Create();
-
-    auto Builder = AST::GS_ASTBuilder::Create();
-
-    auto Expression = Builder->CreateUnaryExpression(AST::UnaryOperation::Minus,
-                                                     Builder->CreateUnaryExpression(AST::UnaryOperation::Minus,
-                                                                                    Builder->CreateConstantExpression(1)));
-
-    AST::GSExpressionPtrArray Expressions = { Expression };
-
-    auto PM = AST::GS_PassManager::Create();
-
-    PM->AddPass(CreateArithmeticOptimizingPass());
-
-    Debug::DumpAST(Expressions[0], *Session);
-
-    PM->Run(Expressions, *Session);
-
-    Debug::DumpAST(Expressions[0], *Session);
-
-    return 0;
-}
+//class ArithmeticOptimizingVisitor : public AST::GS_Transformer {
+//public:
+//
+//    /*
+//     *
+//     * + ( expression )   -> expression
+//     *
+//     * - ( - expression ) -> expression
+//     *
+//     */
+//    AST::GSNodePtr TransformUnaryExpression(AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression,
+//                                            LRef<Driver::GS_Session> session) override {
+//        unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(SuperUnaryExpression(unaryExpression, session));
+//
+//        auto &secondExpression = unaryExpression->GetExpression();
+//
+//        if (auto secondUnaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(secondExpression)) {
+//            auto firstOperation = unaryExpression->GetUnaryOperation();
+//            auto secondOperation = secondUnaryExpression->GetUnaryOperation();
+//
+//            AST::GSExpressionPtr resultExpression;
+//
+//            switch (firstOperation) {
+//
+//                // - ( secondUnaryExpression )
+//                case AST::UnaryOperation::Minus:
+//                    switch (secondOperation) {
+//
+//                        // - ( - expression ) -> expression
+//                        case AST::UnaryOperation::Minus:
+//                            resultExpression = secondUnaryExpression->GetExpression();
+//
+//                            break;
+//                    }
+//
+//                    break;
+//            }
+//
+//            return resultExpression;
+//        }
+//
+//        return unaryExpression;
+//    }
+//};
+//
+//class ArithmeticOptimizingPass : public AST::GS_TransformPass<ArithmeticOptimizingVisitor> {};
+//
+//AST::GSPassPtr CreateArithmeticOptimizingPass() {
+//    return std::make_shared<ArithmeticOptimizingPass>();
+//}
+//
+//I32 Test() {
+//    auto Session = Driver::GS_Session::Create();
+//
+//    auto Builder = AST::GS_ASTBuilder::Create();
+//
+//    auto Expression = Builder->CreateUnaryExpression(AST::UnaryOperation::Minus,
+//                                                     Builder->CreateUnaryExpression(AST::UnaryOperation::Minus,
+//                                                                                    Builder->CreateConstantExpression(1)));
+//
+//    AST::GSExpressionPtrArray Expressions = { Expression };
+//
+//    auto PM = AST::GS_PassManager::Create();
+//
+//    PM->AddPass(CreateArithmeticOptimizingPass());
+//
+//    Debug::DumpAST(Expressions[0], *Session);
+//
+//    PM->Run(Expressions, *Session);
+//
+//    Debug::DumpAST(Expressions[0], *Session);
+//
+//    return 0;
+//}
 
 //class Scope;
 //
@@ -209,16 +209,6 @@ Result GSMain(I32 argc, Ptr<Ptr<C>> argv) {
 
     if (globalContextInitializingResult != Result::Ok) {
         return Result::Err;
-    }
-
-    auto sourceBuffer = IO::GS_SourceBuffer::Create("func main() {\r\n    print(\"Hello, Eldar!\")\r\n}");
-
-    auto iterator = sourceBuffer.GetIteratorByLocation(IO::GS_ByteSourceLocation::Create(1));
-
-    if (iterator == sourceBuffer.begin()) {
-        Driver::GlobalContext().Out("Eq!");
-    } else {
-        Driver::GlobalContext().Out("Not Eq!");
     }
 
 //    auto compilingResult = Driver::GS_Compiler::Start(argc, argv);

@@ -9,13 +9,7 @@
 
 namespace GSLanguageCompiler::IO {
 
-    // TODO realise converting to line column source location function
-    // TODO add template methods for getting iterator by source location in GS_SourceBuffer and GS_Source
-    // TODO check converting location functions and getting iterator by location methods in GS_SourceBuffer and getting code in range method
-    // TODO add checks in getting iterator by location methods and getting code in range method
-    // TODO check GS_Source.cpp: ConstLRef<GS_Source> GS_SourceManager::AddSource(GSSourcePtr source) { 3 }
-    // TODO add getting code by line column source location range ? GS_Source.h: UString GetCodeInRange(GSByteSourceRange range) const
-    //                                                                           UString GetCodeByLocation(GSByteSourceRange range) const
+    // TODO add error message printing in GS_SourceRange<SourceLocationT> constructor
 
     /**
      * Invalid hash constant
@@ -113,11 +107,11 @@ namespace GSLanguageCompiler::IO {
         Bool operator==(ConstLRef<GS_ByteSourceLocation> sourceLocation) const;
 
         /**
-         * Not equality operator for byte source location
+         * Comparison operator for byte source location
          * @param sourceLocation Byte source location
-         * @return Is not equal byte source locations
+         * @return Partial comparison ordering
          */
-        Bool operator!=(ConstLRef<GS_ByteSourceLocation> sourceLocation) const;
+        std::partial_ordering operator<=>(ConstLRef<GS_ByteSourceLocation> sourceLocation) const;
 
     private:
 
@@ -236,11 +230,11 @@ namespace GSLanguageCompiler::IO {
         Bool operator==(ConstLRef<GS_LineColumnSourceLocation> sourceLocation) const;
 
         /**
-         * Not equality operator for line column source location
+         * Comparison operator for line column source location
          * @param sourceLocation Line column source location
-         * @return Is not equal line column source locations
+         * @return Partial comparison ordering
          */
-        Bool operator!=(ConstLRef<GS_LineColumnSourceLocation> sourceLocation) const;
+        std::partial_ordering operator<=>(ConstLRef<GS_LineColumnSourceLocation> sourceLocation) const;
 
     private:
 
@@ -277,8 +271,8 @@ namespace GSLanguageCompiler::IO {
      * @param source Source
      * @return Byte source location
      */
-    GS_ByteSourceLocation ToByteLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
-                                         ConstLRef<GS_Source> source);
+    GS_ByteSourceLocation ToByteSourceLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
+                                               ConstLRef<GS_Source> source);
 
     /**
      * Converting byte source location to line column source location
@@ -286,8 +280,8 @@ namespace GSLanguageCompiler::IO {
      * @param source Source
      * @return Line column source location
      */
-    GS_LineColumnSourceLocation ToLineColumnLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
-                                                     ConstLRef<GS_Source> source);
+    GS_LineColumnSourceLocation ToLineColumnSourceLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
+                                                           ConstLRef<GS_Source> source);
 
     /**
      * Class for containing source location range
@@ -322,7 +316,13 @@ namespace GSLanguageCompiler::IO {
          * @param endLocation End source location
          */
         GS_SourceRange(SourceLocation startLocation,
-                       SourceLocation endLocation);
+                       SourceLocation endLocation)
+                : _startLocation(std::move(startLocation)),
+                  _endLocation(std::move(endLocation)) {
+            if (_startLocation > _endLocation) {
+
+            }
+        }
 
     public:
 
@@ -339,27 +339,39 @@ namespace GSLanguageCompiler::IO {
          * @return Source location range [startLocation..endLocation]
          */
         static GS_SourceRange Create(SourceLocation startLocation,
-                                     SourceLocation endLocation);
+                                     SourceLocation endLocation) {
+            return GS_SourceRange<SourceLocation>(std::move(startLocation),
+                                                  std::move(endLocation));
+        }
 
         /**
          * Creating source location range
          * @param startLocation Start source location
          * @return Source location range [startLocation..0(end)]
          */
-        static GS_SourceRange CreateFromStart(SourceLocation startLocation);
+        static GS_SourceRange CreateFromStart(SourceLocation startLocation) {
+            return GS_SourceRange<SourceLocation>::Create(std::move(startLocation),
+                                                          SourceLocation::Create());
+        }
 
         /**
          * Creating source location range
          * @param endLocation End source location
          * @return Source location range [0(start)..endLocation]
          */
-        static GS_SourceRange CreateToEnd(SourceLocation endLocation);
+        static GS_SourceRange CreateToEnd(SourceLocation endLocation) {
+            return GS_SourceRange<SourceLocation>::Create(SourceLocation::Create(),
+                                                          std::move(endLocation));
+        }
 
         /**
          * Creating source location range
          * @return Source location range [-1(invalid)..-1(invalid)]
          */
-        static GS_SourceRange Create();
+        static GS_SourceRange Create() {
+            return GS_SourceRange<SourceLocation>::Create(SourceLocation::Create(),
+                                                          SourceLocation::Create());
+        }
 
     public:
 
@@ -373,13 +385,17 @@ namespace GSLanguageCompiler::IO {
          * Getter for start source location
          * @return Start source location
          */
-        SourceLocation GetStartLocation() const;
+        SourceLocation GetStartLocation() const {
+            return _startLocation;
+        }
 
         /**
          * Getter for end source location
          * @return End source location
          */
-        SourceLocation GetEndLocation() const;
+        SourceLocation GetEndLocation() const {
+            return _endLocation;
+        }
 
     public:
 
@@ -394,14 +410,10 @@ namespace GSLanguageCompiler::IO {
          * @param locationRange Source location range
          * @return Is equal source location ranges
          */
-        Bool operator==(ConstLRef<GS_SourceRange<SourceLocationT>> locationRange) const;
-
-        /**
-         * Not equality operator for source location range
-         * @param locationRange Source location range
-         * @return Is not equal source location ranges
-         */
-        Bool operator!=(ConstLRef<GS_SourceRange<SourceLocationT>> locationRange) const;
+        Bool operator==(ConstLRef<GS_SourceRange<SourceLocationT>> locationRange) const {
+            return _startLocation == locationRange.GetStartLocation()
+                && _endLocation == locationRange.GetEndLocation();
+        }
 
     private:
 
@@ -491,63 +503,33 @@ namespace GSLanguageCompiler::IO {
          *
          */
 
-        Iterator GetIteratorByLocation(GS_ByteSourceLocation sourceLocation) {
-            auto position = sourceLocation.GetPosition();
+        /**
+         * Getting source code iterator by byte source location
+         * @param sourceLocation Byte source location
+         * @return Source code iterator
+         */
+        Iterator GetIteratorByLocation(GS_ByteSourceLocation sourceLocation);
 
-            auto index = position - 1;
+        /**
+         * Getting source code iterator by byte source location
+         * @param sourceLocation Byte source location
+         * @return Source code iterator
+         */
+        ConstIterator GetIteratorByLocation(GS_ByteSourceLocation sourceLocation) const;
 
-            return _source.begin() + index;
-        }
+        /**
+         * Getting source code iterator by line column source location
+         * @param sourceLocation Line column source location
+         * @return Source code iterator
+         */
+        Iterator GetIteratorByLocation(GS_LineColumnSourceLocation sourceLocation);
 
-        ConstIterator GetIteratorByLocation(GS_ByteSourceLocation sourceLocation) const {
-            auto position = sourceLocation.GetPosition();
-
-            auto index = position - 1;
-
-            return _source.begin() + index;
-        }
-
-        Iterator GetIteratorByLocation(GS_LineColumnSourceLocation sourceLocation) {
-            auto line = sourceLocation.GetLine();
-            auto column = sourceLocation.GetColumn();
-
-            U64 index = 0;
-
-            for (U64 lineIndex = 1;; ++index) {
-                if (lineIndex == line) {
-                    break;
-                }
-
-                if (_source[index] == '\n') {
-                    ++lineIndex;
-                }
-            }
-
-            index += (column - 1);
-
-            return _source.begin() + index;
-        }
-
-        ConstIterator GetIteratorByLocation(GS_LineColumnSourceLocation sourceLocation) const {
-            auto line = sourceLocation.GetLine();
-            auto column = sourceLocation.GetColumn();
-
-            U64 index = 0;
-
-            for (U64 lineIndex = 1;; ++index) {
-                if (lineIndex == line) {
-                    break;
-                }
-
-                if (_source[index] == '\n') {
-                    ++lineIndex;
-                }
-            }
-
-            index += (column - 1);
-
-            return _source.begin() + index;
-        }
+        /**
+         * Getting source code iterator by line column source location
+         * @param sourceLocation Line column source location
+         * @return Source code iterator
+         */
+        ConstIterator GetIteratorByLocation(GS_LineColumnSourceLocation sourceLocation) const;
 
         /**
          * Getting code from source buffer in source location range
@@ -644,13 +626,6 @@ namespace GSLanguageCompiler::IO {
          * @return Is equal source buffers
          */
         Bool operator==(ConstLRef<GS_SourceBuffer> sourceBuffer) const;
-
-        /**
-         * Not equality operator for source buffer
-         * @param sourceBuffer Source buffer
-         * @return Is not equal source buffers
-         */
-        Bool operator!=(ConstLRef<GS_SourceBuffer> sourceBuffer) const;
 
         /**
          * Index operator for source buffer
@@ -813,13 +788,6 @@ namespace GSLanguageCompiler::IO {
          */
         Bool operator==(ConstLRef<GS_SourceName> name) const;
 
-        /**
-         * Not equality operator for source name
-         * @param name Source name
-         * @return Is not equal source names
-         */
-        Bool operator!=(ConstLRef<GS_SourceName> name) const;
-
     private:
 
         /**
@@ -931,6 +899,28 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
+         * Getting source code iterator by source location
+         * @tparam SourceLocationT Source location type
+         * @param sourceLocation Source location
+         * @return Source code iterator
+         */
+        template<typename SourceLocationT>
+        Iterator GetIteratorByLocation(SourceLocationT sourceLocation) {
+            return _buffer.GetIteratorByLocation(sourceLocation);
+        }
+
+        /**
+         * Getting source code iterator by source location
+         * @tparam SourceLocationT Source location type
+         * @param sourceLocation Source location
+         * @return Source code iterator
+         */
+        template<typename SourceLocationT>
+        ConstIterator GetIteratorByLocation(SourceLocationT sourceLocation) const {
+            return _buffer.GetIteratorByLocation(sourceLocation);
+        }
+
+        /**
          * Getting code from source in source location range
          * @tparam SourceLocationT Source location type
          * @param locationRange Source location range
@@ -1013,13 +1003,6 @@ namespace GSLanguageCompiler::IO {
          * @return Is equal sources
          */
         Bool operator==(ConstLRef<GS_Source> source) const;
-
-        /**
-         * Not equality operator for source
-         * @param source Source
-         * @return Is not equal sources
-         */
-        Bool operator!=(ConstLRef<GS_Source> source) const;
 
         /**
          * Index operator for source

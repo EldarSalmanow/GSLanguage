@@ -123,8 +123,8 @@ namespace GSLanguageCompiler::IO {
 
             auto source = optionalSource.value();
 
-            auto startLineColumnSourceLocation = ToLineColumnLocation(locationRange.GetStartLocation(),
-                                                           source);
+            auto startLineColumnSourceLocation = ToLineColumnSourceLocation(locationRange.GetStartLocation(),
+                                                                            source);
 
             auto line = startLineColumnSourceLocation.GetLine();
             auto column = startLineColumnSourceLocation.GetColumn();

@@ -73,32 +73,28 @@ namespace GSLanguageCompiler::Driver {
     public:
 
         /**
-         * Read string from standard input stream from standard IO streams manager
-         * @param string String for reading
-         * @return
+         * Getting standard input stream from standard IO streams manager
+         * @return Standard input stream
          */
-        Void In(LRef<UString> string);
+        LRef<std::istream> In();
 
         /**
-         * Write string to standard output stream from standard IO streams manager
-         * @param string String for writing
-         * @return
+         * Getting standard output stream from standard IO streams manager
+         * @return Standard output stream
          */
-        Void Out(ConstLRef<UString> string);
+        LRef<std::ostream> Out();
 
         /**
-         * Write string to standard error stream from standard IO streams manager
-         * @param string String for writing
-         * @return
+         * Getting standard error stream from standard IO streams manager
+         * @return Standard error stream
          */
-        Void Err(ConstLRef<UString> string);
+        LRef<std::ostream> Err();
 
         /**
-         * Write string to standard logging stream from standard IO streams manager
-         * @param string String for writing
-         * @return
+         * Getting standard logging stream from standard IO streams manager
+         * @return Standard logging stream
          */
-        Void Log(ConstLRef<UString> string);
+        LRef<std::ostream> Log();
 
     public:
 
@@ -111,38 +107,14 @@ namespace GSLanguageCompiler::Driver {
          */
         [[noreturn]] Void Exit(I32 exitCode);
 
+        [[noreturn]] Void Exit();
+
         // TODO comment
 
         [[noreturn]] Void ErrAndExit(ConstLRef<UString> string,
                                      I32 exitCode);
 
         [[noreturn]] Void ErrAndExit(ConstLRef<UString> string);
-
-    public:
-
-        /**
-         * Getter for standard input stream from standard IO streams manager
-         * @return Standard input stream
-         */
-        IO::GSInStreamPtr GetStdInStream() const;
-
-        /**
-         * Getter for standard output stream from standard IO streams manager
-         * @return Standard output stream
-         */
-        IO::GSOutStreamPtr GetStdOutStream() const;
-
-        /**
-         * Getter for standard error stream from standard IO streams manager
-         * @return Standard error stream
-         */
-        IO::GSOutStreamPtr GetStdErrStream() const;
-
-        /**
-         * Getter for standard logging stream from standard IO streams manager
-         * @return Standard logging stream
-         */
-        IO::GSOutStreamPtr GetStdLogStream() const;
 
     public:
 

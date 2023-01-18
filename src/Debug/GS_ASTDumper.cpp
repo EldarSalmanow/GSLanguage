@@ -330,15 +330,13 @@ namespace GSLanguageCompiler::Debug {
     private:
 
         Void Print(ConstLRef<UString> message, LRef<Driver::GS_Session> session) {
-            auto outputStream = session.GetStdOutStream();
-
-            auto &stdOutputStream = outputStream->GetOutStream();
+            auto &outputStream = session.Out();
 
             for (U64 i = 0; i < _tabsNumber; ++i) {
-                stdOutputStream << "  "_us;
+                outputStream << "  "_us;
             }
 
-            stdOutputStream << message << "\n"_us;
+            outputStream << message << "\n"_us;
         }
 
         Void IncTab() {

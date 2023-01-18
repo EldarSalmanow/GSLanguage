@@ -59,7 +59,7 @@ namespace GSLanguageCompiler::Driver {
                          << UString(exception.what())
                          << "\"\n"_us;
 
-            GlobalContext().Err(stringStream.String());
+            GlobalContext().Err() << stringStream.String(); // TODO add stream overloading operator for UStringStream ?
 
             return CompilingResult::Failure;
         }

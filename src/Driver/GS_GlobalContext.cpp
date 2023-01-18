@@ -30,7 +30,7 @@ namespace GSLanguageCompiler::Driver {
 
         stringStream << "\n"_us;
 
-        GlobalContext().Err(stringStream.String());
+        GlobalContext().Err() << stringStream.String();
 
         GlobalContext().Exit(StaticCast<I32>(Result::Err));
     }
@@ -75,20 +75,20 @@ namespace GSLanguageCompiler::Driver {
                           DefaultSignalHandler);
     }
 
-    Void GS_GlobalContext::In(LRef<UString> string) {
-        _stdIOStreamsManager->In(string);
+    LRef<std::istream> GS_GlobalContext::In() {
+        return _stdIOStreamsManager->In();
     }
 
-    Void GS_GlobalContext::Out(ConstLRef<UString> string) {
-        _stdIOStreamsManager->Out(string);
+    LRef<std::ostream> GS_GlobalContext::Out() {
+        return _stdIOStreamsManager->Out();
     }
 
-    Void GS_GlobalContext::Err(ConstLRef<UString> string) {
-        _stdIOStreamsManager->Err(string);
+    LRef<std::ostream> GS_GlobalContext::Err() {
+        return _stdIOStreamsManager->Err();
     }
 
-    Void GS_GlobalContext::Log(ConstLRef<UString> string) {
-        _stdIOStreamsManager->Log(string);
+    LRef<std::ostream> GS_GlobalContext::Log() {
+        return _stdIOStreamsManager->Log();
     }
 
     Void GS_GlobalContext::Exit(I32 exitCode) {
@@ -97,8 +97,12 @@ namespace GSLanguageCompiler::Driver {
         std::exit(exitCode);
     }
 
+    Void GS_GlobalContext::Exit() {
+        Exit(StaticCast<I32>(Result::Err));
+    }
+
     Void GS_GlobalContext::ErrAndExit(ConstLRef<UString> string, I32 exitCode) {
-        Err(string);
+        Err() << string;
 
         Exit(exitCode);
     }
@@ -108,25 +112,11 @@ namespace GSLanguageCompiler::Driver {
                    StaticCast<I32>(Result::Err));
     }
 
-    IO::GSInStreamPtr GS_GlobalContext::GetStdInStream() const {
-        return _stdIOStreamsManager->GetStdInStream();
-    }
-
-    IO::GSOutStreamPtr GS_GlobalContext::GetStdOutStream() const {
-        return _stdIOStreamsManager->GetStdOutStream();
-    }
-
-    IO::GSOutStreamPtr GS_GlobalContext::GetStdErrStream() const {
-        return _stdIOStreamsManager->GetStdErrStream();
-    }
-
-    IO::GSOutStreamPtr GS_GlobalContext::GetStdLogStream() const {
-        return _stdIOStreamsManager->GetStdLogStream();
-    }
-
     GS_GlobalContext::GS_GlobalContext()
             : _stdIOStreamsManager(nullptr) {}
 
+    GS_GlobalContext GS_GlobalContext::_context = GS_GlobalContext();
+    
     LRef<GS_GlobalContext> GlobalContext() {
         return GS_GlobalContext::GetInstance();
     }
