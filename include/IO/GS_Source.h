@@ -445,7 +445,7 @@ namespace GSLanguageCompiler::IO {
     using GSLineColumnSourceRange = GS_SourceRange<GS_LineColumnSourceLocation>;
 
     /**
-     * Buffer for containing source code
+     * Class for containing source code
      */
     class GS_SourceBuffer {
     public:
@@ -1132,27 +1132,27 @@ namespace GSLanguageCompiler::IO {
         /**
          * Get source from manager by source hash
          * @param sourceHash Source hash
-         * @return Source or nullopt
+         * @return Source or null
          */
         std::optional<GS_Source> GetSource(U64 sourceHash) const;
 
         /**
          * Get source from manager by source name
          * @param sourceName Source name
-         * @return Source or nullopt
+         * @return Source or null
          */
         std::optional<GS_Source> GetSource(GS_SourceName sourceName) const;
 
         /**
          * Get file source from manager by file name
          * @param fileName File name
-         * @return File source or nullopt
+         * @return File source or null
          */
         std::optional<GS_Source> GetFileSource(UString fileName) const;
 
         /**
          * Get custom source from manager by source name
-         * @return Custom source or nullopt
+         * @return Custom source or null
          */
         std::optional<GS_Source> GetCustomSource(UString sourceName) const;
 

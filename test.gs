@@ -27,3 +27,12 @@ Message = text message + message type (+ message location)
 | -                                            ^
 \
  |--------------------------------------------------
+
+ |--------------------------------------------------
+/
+| MessageLevel: MessageText
+| > file:[location]
+| - code in location
+| -       ^ (location)
+\
+ |--------------------------------------------------

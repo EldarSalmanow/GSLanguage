@@ -40,8 +40,8 @@ namespace GSLanguageCompiler::Lexer {
          * @param source Source
          * @return Tokens
          */
-        static GS_TokensBuffer Run(LRef<Driver::GS_Session> session,
-                                   ConstLRef<IO::GS_Source> source);
+        static GS_TokenBuffer Run(LRef<Driver::GS_Session> session,
+                                  ConstLRef<IO::GS_Source> source);
 
     public:
 
@@ -49,7 +49,7 @@ namespace GSLanguageCompiler::Lexer {
          * Tokenizing code from source
          * @return Tokens
          */
-        GS_TokensBuffer Tokenize();
+        GS_TokenBuffer Tokenize();
 
     private:
 

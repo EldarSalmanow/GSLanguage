@@ -77,7 +77,7 @@ namespace GSLanguageCompiler::Parser {
          * @param tokensBuffer Tokens buffer
          */
         GS_Parser(LRef<Driver::GS_Session> session,
-                  ConstLRef<Lexer::GS_TokensBuffer> tokensBuffer);
+                  ConstLRef<Lexer::GS_TokenBuffer> tokensBuffer);
 
     public:
 
@@ -88,7 +88,7 @@ namespace GSLanguageCompiler::Parser {
          * @return Parser
          */
         static GS_Parser Create(LRef<Driver::GS_Session> session,
-                                ConstLRef<Lexer::GS_TokensBuffer> tokensBuffer);
+                                ConstLRef<Lexer::GS_TokenBuffer> tokensBuffer);
 
     public:
 
@@ -100,7 +100,7 @@ namespace GSLanguageCompiler::Parser {
          * @return Translation unit declaration
          */
         static AST::GSTranslationUnitDeclarationPtr Run(LRef<Driver::GS_Session> session,
-                                                        ConstLRef<Lexer::GS_TokensBuffer> tokensBuffer,
+                                                        ConstLRef<Lexer::GS_TokenBuffer> tokensBuffer,
                                                         UString translationUnitName);
 
     public:
@@ -196,9 +196,9 @@ namespace GSLanguageCompiler::Parser {
 
 //        IO::GSMessagePtrArray _messages;
 
-        ConstLRef<Lexer::GS_TokensBuffer> _tokensBuffer;
+        ConstLRef<Lexer::GS_TokenBuffer> _tokensBuffer;
 
-        Lexer::GS_TokensBuffer::ConstIterator _tokensIterator;
+        Lexer::GS_TokenBuffer::ConstIterator _tokensIterator;
 
         AST::GSASTBuilderPtr _builder;
     };

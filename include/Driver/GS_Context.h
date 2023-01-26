@@ -19,11 +19,11 @@ namespace GSLanguageCompiler::Driver {
          * Creating context
          * @param stdIOStreamsManager Standard IO streams manager
          * @param sourceManager Source manager
-         * @param messageHandler Message handler
+         * @param messageRenderer Message renderer
          */
         GS_Context(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
                    IO::GSSourceManagerPtr sourceManager,
-                   IO::GSMessageHandlerPtr messageHandler);
+                   IO::GSMessageRendererPtr messageRenderer);
 
     public:
 
@@ -31,12 +31,12 @@ namespace GSLanguageCompiler::Driver {
          * Creating context
          * @param stdIOStreamsManager Standard IO streams manager
          * @param sourceManager Source manager
-         * @param messageHandler Message handler
+         * @param messageRenderer Message renderer
          * @return Context ptr
          */
         static std::unique_ptr<GS_Context> Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
                                                   IO::GSSourceManagerPtr sourceManager,
-                                                  IO::GSMessageHandlerPtr messageHandler);
+                                                  IO::GSMessageRendererPtr messageRenderer);
 
         /**
          * Creating context
@@ -121,27 +121,27 @@ namespace GSLanguageCompiler::Driver {
         /**
          * Get source from source manager by source hash
          * @param sourceHash Source hash
-         * @return Source or nullopt
+         * @return Source or null
          */
         std::optional<IO::GS_Source> GetSource(U64 sourceHash) const;
 
         /**
          * Get source from source manager by source name
          * @param sourceName Source name
-         * @return Source or nullopt
+         * @return Source or null
          */
         std::optional<IO::GS_Source> GetSource(IO::GS_SourceName sourceName) const;
 
         /**
          * Get file source from source manager by file name
          * @param fileName File name
-         * @return File source or nullopt
+         * @return File source or null
          */
         std::optional<IO::GS_Source> GetFileSource(UString fileName) const;
 
         /**
          * Get custom source from source manager by source name
-         * @return Custom source or nullopt
+         * @return Custom source or null
          */
         std::optional<IO::GS_Source> GetCustomSource(UString sourceName) const;
 
@@ -154,11 +154,11 @@ namespace GSLanguageCompiler::Driver {
     public:
 
         /**
-         * Writing message to message handler
+         * Render message to message handler
          * @param message Message
          * @return
          */
-        Void Write(IO::GS_Message message);
+        Void Render(IO::GS_Message message);
 
     public:
 
@@ -175,10 +175,12 @@ namespace GSLanguageCompiler::Driver {
         LRef<IO::GS_SourceManager> GetSourceManager();
 
         /**
-         * Getter for message handler
-         * @return Message handler
+         * Getter for message renderer
+         * @return Message renderer
          */
-        LRef<IO::GS_MessageHandler> GetMessageHandler();
+        LRef<IO::GS_MessageRenderer> GetMessageRenderer();
+
+        LRef<IO::GS_MessageBuilder> CreateError();
 
     private:
 
@@ -193,9 +195,9 @@ namespace GSLanguageCompiler::Driver {
         IO::GSSourceManagerPtr _sourceManager;
 
         /**
-         * Message handler
+         * Message renderer
          */
-        IO::GSMessageHandlerPtr _messageHandler;
+        IO::GSMessageRendererPtr _messageRenderer;
     };
 
     /**

@@ -118,7 +118,7 @@ namespace GSLanguageCompiler::Lexer {
     /**
      * Class for containing tokens
      */
-    class GS_TokensBuffer {
+    class GS_TokenBuffer {
     public:
 
         /**
@@ -134,55 +134,55 @@ namespace GSLanguageCompiler::Lexer {
     public:
 
         /**
-         * Constructor for tokens buffer
+         * Constructor for token buffer
          * @param tokens Tokens
          */
-        explicit GS_TokensBuffer(GSTokenArray tokens);
+        explicit GS_TokenBuffer(GSTokenArray tokens);
 
     public:
 
         /**
-         * Creating tokens buffer
+         * Creating token buffer
          * @param tokens Tokens
-         * @return Tokens buffer
+         * @return Token buffer
          */
-        static GS_TokensBuffer Create(GSTokenArray tokens);
+        static GS_TokenBuffer Create(GSTokenArray tokens);
 
     public:
 
         /**
-         * Getting begin tokens buffer iterator
-         * @return Begin tokens buffer iterator
+         * Getting begin token buffer iterator
+         * @return Begin token buffer iterator
          */
         Iterator begin();
 
         /**
-         * Getting end tokens buffer iterator
-         * @return End tokens buffer iterator
+         * Getting end token buffer iterator
+         * @return End token buffer iterator
          */
         Iterator end();
 
         /**
-         * Getting begin tokens buffer const iterator
-         * @return Begin tokens buffer const iterator
+         * Getting begin token buffer const iterator
+         * @return Begin token buffer const iterator
          */
         ConstIterator begin() const;
 
         /**
-         * Getting end tokens buffer const iterator
-         * @return End tokens buffer const iterator
+         * Getting end token buffer const iterator
+         * @return End token buffer const iterator
          */
         ConstIterator end() const;
 
         /**
-         * Getting begin tokens buffer const iterator
-         * @return Begin tokens buffer const iterator
+         * Getting begin token buffer const iterator
+         * @return Begin token buffer const iterator
          */
         ConstIterator cbegin() const;
 
         /**
-         * Getting end tokens buffer const iterator
-         * @return End tokens buffer const iterator
+         * Getting end token buffer const iterator
+         * @return End token buffer const iterator
          */
         ConstIterator cend() const;
 
