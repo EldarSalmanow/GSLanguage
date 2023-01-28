@@ -23,7 +23,7 @@ namespace GSLanguageCompiler::IO {
     class GS_Message {
     public:
 
-        /**
+        /*
          *
          * GS_Message PUBLIC CONSTRUCTORS
          *
@@ -41,7 +41,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_Message PUBLIC STATIC CREATE METHODS
          *
@@ -91,7 +91,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_Message PUBLIC GETTER METHODS
          *
@@ -115,9 +115,24 @@ namespace GSLanguageCompiler::IO {
          */
         std::optional<GSByteSourceRange> GetLocationRange() const;
 
-    private:
+    public:
+
+        /*
+         *
+         * GS_Message PUBLIC OPERATOR METHODS
+         *
+         */
 
         /**
+         * Equality operator for message
+         * @param message Message
+         * @return Is equal messages
+         */
+        Bool operator==(ConstLRef<GS_Message> message) const;
+
+    private:
+
+        /*
          *
          * GS_Message PRIVATE FIELDS
          *
@@ -150,7 +165,7 @@ namespace GSLanguageCompiler::IO {
     class GS_MessageBuffer {
     public:
 
-        /**
+        /*
          *
          * GS_MessageBuffer PUBLIC TYPES
          *
@@ -168,7 +183,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_MessageBuffer PUBLIC CONSTRUCTORS
          *
@@ -182,7 +197,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_MessageBuffer PUBLIC STATIC CREATE METHODS
          *
@@ -203,7 +218,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_MessageBuffer PUBLIC ITERATOR METHODS
          *
@@ -247,7 +262,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_MessageBuffer PUBLIC GETTER METHODS
          *
@@ -261,7 +276,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_MessageBuffer PUBLIC OPERATOR METHODS
          *
@@ -290,7 +305,7 @@ namespace GSLanguageCompiler::IO {
 
     private:
 
-        /**
+        /*
          *
          * GS_MessageBuffer PRIVATE FIELDS
          *
@@ -308,7 +323,7 @@ namespace GSLanguageCompiler::IO {
     class GS_MessageBuilder {
     public:
 
-        /**
+        /*
          *
          * GS_MessageBuilder PUBLIC CONSTRUCTORS
          *
@@ -316,16 +331,63 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Constructor for message builder
+         * @param messageText Message text
+         * @param messageLevel Message level
+         * @param messageLocationRange Message byte source location range
          */
-        GS_MessageBuilder();
+        GS_MessageBuilder(UString messageText,
+                          MessageLevel messageLevel,
+                          std::optional<GSByteSourceRange> messageLocationRange);
 
     public:
 
-        /**
+        /*
          *
          * GS_MessageBuilder PUBLIC STATIC CREATE METHODS
          *
          */
+
+        /**
+         * Creating message builder
+         * @param messageText Message text
+         * @param messageLevel Message level
+         * @param messageLocationRange Message byte source location range
+         * @return Message builder
+         */
+        static GS_MessageBuilder Create(UString messageText,
+                                        MessageLevel messageLevel,
+                                        std::optional<GSByteSourceRange> messageLocationRange);
+
+        /**
+         *
+         * @param messageText Message text
+         * @param messageLevel Message level
+         * @param messageLocationRange Message byte source location range
+         * @return Message builder
+         */
+        static GS_MessageBuilder Create(UString messageText,
+                                        MessageLevel messageLevel,
+                                        GSByteSourceRange messageLocationRange);
+
+        /**
+         *
+         * @param messageText Message text
+         * @param messageLevel Message level
+         * @param messageSourceLocation Message byte source location [sourceLocation, sourceLocation + 1] (one symbol)
+         * @return Message builder
+         */
+        static GS_MessageBuilder Create(UString messageText,
+                                        MessageLevel messageLevel,
+                                        GS_ByteSourceLocation messageSourceLocation);
+
+        /**
+         * Creating message builder
+         * @param messageText Message text
+         * @param messageLevel Message level
+         * @return Message builder
+         */
+        static GS_MessageBuilder Create(UString messageText,
+                                        MessageLevel messageLevel);
 
         /**
          * Creating message builder
@@ -335,7 +397,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_MessageBuilder PUBLIC METHODS
          *
@@ -343,17 +405,17 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Setting message text in message
-         * @param text Message text
+         * @param messageText Message text
          * @return Message builder
          */
-        LRef<GS_MessageBuilder> Text(UString text);
+        LRef<GS_MessageBuilder> Text(UString messageText);
 
         /**
          * Setting message level in message
-         * @param level Message level
+         * @param messageLevel Message level
          * @return Message builder
          */
-        LRef<GS_MessageBuilder> Level(MessageLevel level);
+        LRef<GS_MessageBuilder> Level(MessageLevel messageLevel);
 
         /**
          * Setting message level in message to 'note'
@@ -381,17 +443,17 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Setting message source location range in message
-         * @param locationRange Message byte source location range
+         * @param messageLocationRange Message byte source location range
          * @return Message builder
          */
-        LRef<GS_MessageBuilder> Location(GSByteSourceRange locationRange);
+        LRef<GS_MessageBuilder> Location(GSByteSourceRange messageLocationRange);
 
         /**
          * Setting message source location range in message to [sourceLocation, sourceLocation + 1] (one symbol)
-         * @param sourceLocation Message byte source location
+         * @param messageSourceLocation Message byte source location
          * @return Message builder
          */
-        LRef<GS_MessageBuilder> Location(GS_ByteSourceLocation sourceLocation);
+        LRef<GS_MessageBuilder> Location(GS_ByteSourceLocation messageSourceLocation);
 
         /**
          * Creating message
@@ -401,7 +463,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_MessageBuilder PUBLIC GETTER METHODS
          *
@@ -423,11 +485,11 @@ namespace GSLanguageCompiler::IO {
          * Getter for message byte source location range
          * @return Message byte source location range
          */
-        ConstLRef<GSByteSourceRange> GetMessageLocationRange() const;
+        std::optional<GSByteSourceRange> GetMessageLocationRange() const;
 
     private:
 
-        /**
+        /*
          *
          * GS_MessageBuilder PRIVATE FIELDS
          *
@@ -436,297 +498,89 @@ namespace GSLanguageCompiler::IO {
         /**
          * Message text
          */
-        UString _text;
+        UString _messageText;
 
         /**
          * Message level
          */
-        MessageLevel _level;
+        MessageLevel _messageLevel;
 
         /**
          * Message byte source location range
          */
-        std::optional<GSByteSourceRange> _locationRange;
+        std::optional<GSByteSourceRange> _messageLocationRange;
     };
 
     /**
-     * Class for rendering message in output stream
+     * Message handler type
      */
-    class GS_MessageRenderer {
-    public:
-
-        /**
-         *
-         * GS_MessageRenderer PUBLIC CONSTRUCTORS
-         *
-         */
-
-        /**
-         * Constructor for message renderer
-         * @param outputStream Output stream
-         * @param sourceManager Source manager
-         */
-        GS_MessageRenderer(LRef<std::ostream> outputStream,
-                           LRef<GS_SourceManager> sourceManager);
-
-    public:
-
-        /**
-         *
-         * GS_MessageRenderer PUBLIC STATIC CREATE METHODS
-         *
-         */
-
-        /**
-         * Creating message renderer
-         * @param outputStream Output stream
-         * @param sourceManager Source manager
-         * @return Message renderer ptr
-         */
-        static std::unique_ptr<GS_MessageRenderer> Create(LRef<std::ostream> outputStream,
-                                                          LRef<GS_SourceManager> sourceManager);
-
-        /**
-         * Creating message renderer
-         * @param sourceManager Source manager
-         * @return Message renderer ptr
-         */
-        static std::unique_ptr<GS_MessageRenderer> Create(LRef<GS_SourceManager> sourceManager);
-
-    public:
-
-        /**
-         *
-         * GS_MessageRenderer PUBLIC METHODS
-         *
-         */
-
-        /**
-         * Render message in output stream
-         * @param message Message
-         * @return
-         */
-        Void Render(GS_Message message);
-
-    public:
-
-        // add getters ?
-
-    private:
-
-        /**
-         *
-         * GS_MessageRenderer PRIVATE FIELDS
-         *
-         */
-
-        /**
-         * Output stream
-         */
-        LRef<std::ostream> _outputStream;
-
-        /**
-         * Source manager
-         */
-        LRef<GS_SourceManager> _sourceManager;
-    };
+    using GSMessageHandler = std::ostream;
 
     /**
-     * Message renderer ptr type
+     * Class for rendering and writing compiler messages in message handler
      */
-    using GSMessageRendererPtr = std::unique_ptr<GS_MessageRenderer>; // delete ?
-
     class GS_MessageStream {
     public:
 
-        GS_MessageStream(GS_MessageRenderer renderer);
-
-    public:
-
-        static GS_MessageStream Create(GS_MessageRenderer renderer);
-
-        static GS_MessageStream Create(LRef<std::ostream> outputStream,
-                                       LRef<GS_SourceManager> sourceManager);
-
-        static GS_MessageStream Create(LRef<std::ostream> outputStream);
-
-        static GS_MessageStream Create(LRef<GS_SourceManager> sourceManager);
-
-        static GS_MessageStream Create();
-
-    public:
-
-        Void Write(ConstLRef<GS_Message> message);
-
-    public:
-
-        LRef<GS_MessageStream> operator<<(ConstLRef<GS_Message> message);
-
-        LRef<GS_MessageStream> operator<<(ConstLRef<GS_MessageBuilder> builder);
-
-    private:
-
-        GS_MessageRenderer _renderer;
-    };
-
-    class GS_MessageStreamsManager {
-    public:
-
-        GS_MessageStreamsManager(GS_MessageStream messageOut,
-                                 GS_MessageStream messageErr,
-                                 GS_MessageStream messageLog);
-
-    public:
-
-        static std::unique_ptr<GS_MessageStreamsManager> Create(GS_MessageStream messageOut,
-                                                                GS_MessageStream messageErr,
-                                                                GS_MessageStream messageLog);
-
-        static std::unique_ptr<GS_MessageStreamsManager> Create(LRef<GS_StdIOStreamsManager> stdIOStreamsManager);
-
-        static std::unique_ptr<GS_MessageStreamsManager> Create();
-
-    public:
-
-        LRef<GS_MessageStream> Out();
-
-        LRef<GS_MessageStream> Err();
-
-        LRef<GS_MessageStream> Log();
-
-    private:
-
-        GS_MessageStream _messageOut;
-
-        GS_MessageStream _messageErr;
-
-        GS_MessageStream _messageLog;
-    };
-
-    using GSMessageStreamsManagerPtr = std::unique_ptr<GS_MessageStreamsManager>;
-
-    Void ErrorExample() {
-        auto sourceManager = GS_SourceManager::Create();
-        auto messageRenderer = GS_MessageRenderer::Create(*sourceManager);
-
-        sourceManager->AddCustomSource("func main() {\r\n    println(\"Hello, World!\"\r\n}",
-                                       "main.gs");
-
-        auto message = GS_MessageBuilder::Create().Text("Missed ')' in function calling expression!")
-                                                  .Error()
-                                                  .Location(GS_ByteSourceLocation::Create(41))
-                                                  .Message();
-
-        messageRenderer->Render(message);
-    }
-
-    using MessageHandler = std::ostream;
-
-    class GS_IOContext {
-    public:
-
-        GS_IOContext(GSStdIOStreamsManagerPtr stdIOStreamsManager,
-                     GSSourceManagerPtr sourceManager,
-                     GSMessageStreamsManagerPtr messageStreamsManager);
-
-    public:
-
-        static std::unique_ptr<GS_IOContext> Create();
-
-    private:
-
-        GSStdIOStreamsManagerPtr _stdIOStreamsManager;
-
-        GSSourceManagerPtr _sourceManager;
-
-        GSMessageStreamsManagerPtr _messageStreamsManager;
-    };
-
-    /**
-     * Class for handling messages and writing to output stream
-     */
-    class GS_MessageHandler {
-    public:
-
-        /**
+        /*
          *
-         * GS_MessageHandler PUBLIC CONSTRUCTORS
+         * GS_MessageStream PUBLIC CONSTRUCTORS
          *
          */
 
         /**
-         * Constructor for message handler
-         * @param outputStream Output stream
+         * Constructor for message stream
+         * @param messageHandler Message handler
          * @param sourceManager Source manager
          */
-        GS_MessageHandler(LRef<std::ostream> outputStream,
-                          LRef<GS_SourceManager> sourceManager);
+        GS_MessageStream(LRef<GSMessageHandler> messageHandler,
+                         LRef<GS_SourceManager> sourceManager);
 
     public:
 
-        /**
+        /*
          *
-         * GS_MessageHandler PUBLIC STATIC CREATE METHODS
+         * GS_MessageStream PUBLIC STATIC CREATE METHODS
          *
          */
 
         /**
-         * Creating message handler
-         * @param outputStream Output stream
+         * Creating message stream
+         * @param messageHandler Message handler
          * @param sourceManager Source manager
-         * @return Message handler ptr
+         * @return Message stream ptr
          */
-        static std::unique_ptr<GS_MessageHandler> Create(LRef<std::ostream> outputStream,
-                                                         LRef<GS_SourceManager> sourceManager);
+        static std::unique_ptr<GS_MessageStream> Create(LRef<GSMessageHandler> messageHandler,
+                                                        LRef<GS_SourceManager> sourceManager);
 
     public:
 
-        /**
+        /*
          *
-         * GS_MessageHandler PUBLIC METHODS
+         * GS_MessageStream PUBLIC METHODS
          *
          */
 
         /**
-         * Writing message to output stream
+         * Writing message in message handler
          * @param message Message
          * @return
          */
         Void Write(GS_Message message);
 
-        /**
-         * Writing message to output stream
-         * @param text Message text
-         * @param level Message level
-         * @param locationRange Message byte source location range
-         * @return
-         */
-        Void Write(UString text,
-                   MessageLevel level,
-                   GSByteSourceRange locationRange);
-
-        /**
-         * Writing message to output stream
-         * @param text Message text
-         * @param level Message level
-         * @return
-         */
-        Void Write(UString text,
-                   MessageLevel level);
-
     public:
 
-        /**
+        /*
          *
-         * GS_MessageHandler PUBLIC GETTER METHODS
+         * GS_MessageStream PUBLIC GETTER METHODS
          *
          */
 
         /**
-         * Getter for output stream
-         * @return Output stream
+         * Getter for message handler
+         * @return Message handler
          */
-        LRef<std::ostream> GetOutputStream();
+        LRef<GSMessageHandler> GetMessageHandler();
 
         /**
          * Getter for source manager
@@ -734,18 +588,40 @@ namespace GSLanguageCompiler::IO {
          */
         LRef<GS_SourceManager> GetSourceManager();
 
+    public:
+
+        /*
+         *
+         * GS_MessageStream PUBLIC OPERATOR METHODS
+         *
+         */
+
+        /**
+         * Stream operator for writing message in message handler
+         * @param message Message
+         * @return Message stream
+         */
+        LRef<GS_MessageStream> operator<<(ConstLRef<GS_Message> message);
+
+        /**
+         * Stream operator for writing message from message builder in message handler
+         * @param builder Message builder
+         * @return Message stream
+         */
+        LRef<GS_MessageStream> operator<<(LRef<GS_MessageBuilder> builder);
+
     private:
 
-        /**
+        /*
          *
-         * GS_MessageHandler PRIVATE FIELDS
+         * GS_MessageStream PRIVATE FIELDS
          *
          */
 
         /**
-         * Output stream
+         * Message handler
          */
-        LRef<std::ostream> _outputStream;
+        LRef<GSMessageHandler> _messageHandler;
 
         /**
          * Source manager
@@ -754,9 +630,130 @@ namespace GSLanguageCompiler::IO {
     };
 
     /**
-     * Message handler ptr type
+     * Message stream ptr type
      */
-    using GSMessageHandlerPtr = std::unique_ptr<GS_MessageHandler>;
+    using GSMessageStreamPtr = std::unique_ptr<GS_MessageStream>;
+
+    /**
+     * Class for containing and managing message streams
+     */
+    class GS_MessageStreamsManager {
+    public:
+
+        /*
+         *
+         * GS_MessageStreamsManager PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
+         * Constructor for message streams manager
+         * @param messageOut Output message stream
+         * @param messageErr Error message stream
+         * @param messageLog Logging message stream
+         */
+        GS_MessageStreamsManager(GSMessageStreamPtr messageOut,
+                                 GSMessageStreamPtr messageErr,
+                                 GSMessageStreamPtr messageLog);
+
+    public:
+
+        /*
+         *
+         * GS_MessageStreamsManager PUBLIC STATIC CREATE METHODS
+         *
+         */
+
+        /**
+         * Creating message streams manager
+         * @param messageOut Output message stream
+         * @param messageErr Error message stream
+         * @param messageLog Logging message stream
+         * @return Message streams manager ptr
+         */
+        static std::unique_ptr<GS_MessageStreamsManager> Create(GSMessageStreamPtr messageOut,
+                                                                GSMessageStreamPtr messageErr,
+                                                                GSMessageStreamPtr messageLog);
+
+        /**
+         * Creating message streams manager
+         * @param stdIOStreamsManager Standard IO streams manager
+         * @param sourceManager Source manager
+         * @return Message streams manager ptr
+         */
+        static std::unique_ptr<GS_MessageStreamsManager> Create(LRef<GS_StdIOStreamsManager> stdIOStreamsManager,
+                                                                LRef<GS_SourceManager> sourceManager);
+
+    public:
+
+        /*
+         *
+         * GS_MessageStreamsManager PUBLIC METHODS
+         *
+         */
+
+        /**
+         * Getting output message stream for writing message in stream
+         * @return Output message stream
+         */
+        LRef<GS_MessageStream> Out();
+
+        /**
+         * Getting error message stream for writing message in stream
+         * @return Error message stream
+         */
+        LRef<GS_MessageStream> Err();
+
+        /**
+         * Getting logging message stream for writing message in stream
+         * @return Logging message stream
+         */
+        LRef<GS_MessageStream> Log();
+
+    private:
+
+        /*
+         *
+         * GS_MessageStreamsManager PRIVATE FIELDS
+         *
+         */
+
+        /**
+         * Output message stream
+         */
+        GSMessageStreamPtr _messageOut;
+
+        /**
+         * Error message stream
+         */
+        GSMessageStreamPtr _messageErr;
+
+        /**
+         * Logging message stream
+         */
+        GSMessageStreamPtr _messageLog;
+    };
+
+    /**
+     * Message streams manager ptr type
+     */
+    using GSMessageStreamsManagerPtr = std::unique_ptr<GS_MessageStreamsManager>;
+
+    Void ErrorExample() {
+        auto StdStreams = GS_StdIOStreamsManager::Create();
+        auto SM = GS_SourceManager::Create();
+        auto MSM = GS_MessageStreamsManager::Create(*StdStreams, *SM);
+
+        SM->AddCustomSource("func main() {\r\n    println(\"Hello, World!\"\r\n}",
+                            "main.gs");
+
+        auto SH = SM->GetCustomSource("main.gs")->GetHash();
+
+        MSM->Out() << GS_MessageBuilder::Create().Text("Missed ')' in function calling expression!")
+                                                 .Error()
+                                                 .Location(GS_ByteSourceLocation::Create(41, SH))
+                                                 .Message();
+    }
 
 }
 

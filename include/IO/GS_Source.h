@@ -27,7 +27,7 @@ namespace GSLanguageCompiler::IO {
     class GS_ByteSourceLocation {
     public:
 
-        /**
+        /*
          *
          * GS_ByteSourceLocation PUBLIC CONSTRUCTORS
          *
@@ -43,7 +43,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_ByteSourceLocation PUBLIC STATIC CREATE METHODS
          *
@@ -73,7 +73,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_ByteSourceLocation PUBLIC GETTER METHODS
          *
@@ -93,7 +93,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_ByteSourceLocation PUBLIC OPERATOR METHODS
          *
@@ -115,7 +115,7 @@ namespace GSLanguageCompiler::IO {
 
     private:
 
-        /**
+        /*
          *
          * GS_ByteSourceLocation PRIVATE FIELDS
          *
@@ -138,7 +138,7 @@ namespace GSLanguageCompiler::IO {
     class GS_LineColumnSourceLocation {
     public:
 
-        /**
+        /*
          *
          * GS_LineColumnSourceLocation PUBLIC CONSTRUCTORS
          *
@@ -156,7 +156,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_LineColumnSourceLocation PUBLIC STATIC CREATE METHODS
          *
@@ -190,7 +190,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_LineColumnSourceLocation PUBLIC GETTER METHODS
          *
@@ -216,7 +216,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_LineColumnSourceLocation PUBLIC OPERATOR METHODS
          *
@@ -238,7 +238,7 @@ namespace GSLanguageCompiler::IO {
 
     private:
 
-        /**
+        /*
          *
          * GS_LineColumnSourceLocation PRIVATE FIELDS
          *
@@ -291,7 +291,7 @@ namespace GSLanguageCompiler::IO {
     class GS_SourceRange {
     public:
 
-        /**
+        /*
          *
          * GS_SourceRange PUBLIC TYPES
          *
@@ -304,7 +304,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceRange PUBLIC CONSTRUCTORS
          *
@@ -326,7 +326,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceRange PUBLIC STATIC CREATE METHODS
          *
@@ -375,7 +375,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceRange PUBLIC GETTER METHODS
          *
@@ -399,7 +399,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceRange PUBLIC OPERATOR METHODS
          *
@@ -417,7 +417,7 @@ namespace GSLanguageCompiler::IO {
 
     private:
 
-        /**
+        /*
          *
          * GS_SourceRange PRIVATE FIELDS
          *
@@ -450,7 +450,7 @@ namespace GSLanguageCompiler::IO {
     class GS_SourceBuffer {
     public:
 
-        /**
+        /*
          *
          * GS_SourceBuffer PUBLIC TYPES
          *
@@ -468,7 +468,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceBuffer PUBLIC CONSTRUCTORS
          *
@@ -482,7 +482,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceBuffer PUBLIC STATIC CREATE METHODS
          *
@@ -497,7 +497,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceBuffer PUBLIC METHODS
          *
@@ -556,7 +556,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceBuffer PUBLIC ITERATOR METHODS
          *
@@ -600,7 +600,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceBuffer PUBLIC GETTER METHODS
          *
@@ -614,7 +614,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceBuffer PUBLIC OPERATOR METHODS
          *
@@ -643,7 +643,7 @@ namespace GSLanguageCompiler::IO {
 
     private:
 
-        /**
+        /*
          *
          * GS_SourceBuffer PRIVATE FIELDS
          *
@@ -670,7 +670,7 @@ namespace GSLanguageCompiler::IO {
     class GS_SourceName {
     public:
 
-        /**
+        /*
          *
          * GS_SourceName PUBLIC CONSTRUCTORS
          *
@@ -686,7 +686,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceName PUBLIC STATIC CREATION METHODS
          *
@@ -723,7 +723,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceName PUBLIC METHODS
          *
@@ -749,7 +749,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceName PUBLIC GETTER METHODS
          *
@@ -775,7 +775,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceName PUBLIC OPERATOR METHODS
          *
@@ -790,7 +790,7 @@ namespace GSLanguageCompiler::IO {
 
     private:
 
-        /**
+        /*
          *
          * GS_SourceName PRIVATE FIELDS
          *
@@ -818,7 +818,7 @@ namespace GSLanguageCompiler::IO {
     class GS_Source {
     public:
 
-        /**
+        /*
          *
          * GS_Source PUBLIC TYPES
          *
@@ -836,7 +836,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_Source PUBLIC CONSTRUCTORS
          *
@@ -852,7 +852,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_Source PUBLIC STATIC CREATE METHODS
          *
@@ -892,7 +892,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_Source PUBLIC METHODS
          *
@@ -933,7 +933,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_Source PUBLIC ITERATOR METHODS
          *
@@ -965,7 +965,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_Source PUBLIC GETTER METHODS
          *
@@ -991,7 +991,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_Source PUBLIC OPERATOR METHODS
          *
@@ -1020,7 +1020,7 @@ namespace GSLanguageCompiler::IO {
 
     private:
 
-        /**
+        /*
          *
          * GS_Source PRIVATE FIELDS
          *
@@ -1058,7 +1058,7 @@ namespace GSLanguageCompiler::IO {
     class GS_SourceManager {
     public:
 
-        /**
+        /*
          *
          * GS_SourceManager PUBLIC CONSTRUCTORS
          *
@@ -1072,7 +1072,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceManager PUBLIC STATIC CREATE METHODS
          *
@@ -1093,7 +1093,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceManager PUBLIC METHODS
          *
@@ -1158,7 +1158,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceManager PUBLIC GETTER METHODS
          *
@@ -1172,7 +1172,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_SourceManager PRIVATE FIELDS
          *

@@ -11,7 +11,7 @@ namespace GSLanguageCompiler::IO {
     class GS_Reader {
     public:
 
-        /**
+        /*
          *
          * GS_Reader PUBLIC CONSTRUCTORS
          *
@@ -25,7 +25,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_Reader PUBLIC STATIC CREATE METHODS
          *
@@ -40,7 +40,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_Reader PUBLIC STATIC METHODS
          *
@@ -55,7 +55,7 @@ namespace GSLanguageCompiler::IO {
 
     public:
 
-        /**
+        /*
          *
          * GS_Reader PUBLIC METHODS
          *
@@ -69,7 +69,7 @@ namespace GSLanguageCompiler::IO {
 
     private:
 
-        /**
+        /*
          *
          * GS_Reader PRIVATE FIELDS
          *

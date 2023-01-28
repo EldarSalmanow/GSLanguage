@@ -554,19 +554,19 @@ namespace GSLanguageCompiler::IO {
         LRef<std::istream> In();
 
         /**
-         * Getting standard output stream for writing data to stream
+         * Getting standard output stream for writing data in stream
          * @return Standard output stream
          */
         LRef<std::ostream> Out();
 
         /**
-         * Getting standard error stream for writing data to stream
+         * Getting standard error stream for writing data in stream
          * @return Standard error stream
          */
         LRef<std::ostream> Err();
 
         /**
-         * Getting standard logging stream for writing data to stream
+         * Getting standard logging stream for writing data in stream
          * @return Standard logging stream
          */
         LRef<std::ostream> Log();
