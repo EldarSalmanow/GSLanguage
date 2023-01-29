@@ -82,54 +82,54 @@ namespace GSLanguageCompiler::IO {
             && _locationRange == message.GetLocationRange();
     }
 
-    GS_MessageBuffer::GS_MessageBuffer(GSMessageArray messages)
+    GS_MessagesBuffer::GS_MessagesBuffer(GSMessageArray messages)
             : _messages(std::move(messages)) {}
 
-    GS_MessageBuffer GS_MessageBuffer::Create(GSMessageArray messages) {
-        return GS_MessageBuffer(std::move(messages));
+    GS_MessagesBuffer GS_MessagesBuffer::Create(GSMessageArray messages) {
+        return GS_MessagesBuffer(std::move(messages));
     }
 
-    GS_MessageBuffer GS_MessageBuffer::Create() {
-        return GS_MessageBuffer::Create(GSMessageArray());
+    GS_MessagesBuffer GS_MessagesBuffer::Create() {
+        return GS_MessagesBuffer::Create(GSMessageArray());
     }
 
-    GS_MessageBuffer::Iterator GS_MessageBuffer::begin() {
+    GS_MessagesBuffer::Iterator GS_MessagesBuffer::begin() {
         return _messages.begin();
     }
 
-    GS_MessageBuffer::Iterator GS_MessageBuffer::end() {
+    GS_MessagesBuffer::Iterator GS_MessagesBuffer::end() {
         return _messages.end();
     }
 
-    GS_MessageBuffer::ConstIterator GS_MessageBuffer::begin() const {
+    GS_MessagesBuffer::ConstIterator GS_MessagesBuffer::begin() const {
         return _messages.begin();
     }
 
-    GS_MessageBuffer::ConstIterator GS_MessageBuffer::end() const {
+    GS_MessagesBuffer::ConstIterator GS_MessagesBuffer::end() const {
         return _messages.end();
     }
 
-    GS_MessageBuffer::ConstIterator GS_MessageBuffer::cbegin() const {
+    GS_MessagesBuffer::ConstIterator GS_MessagesBuffer::cbegin() const {
         return _messages.cbegin();
     }
 
-    GS_MessageBuffer::ConstIterator GS_MessageBuffer::cend() const {
+    GS_MessagesBuffer::ConstIterator GS_MessagesBuffer::cend() const {
         return _messages.cend();
     }
 
-    ConstLRef<GSMessageArray> GS_MessageBuffer::GetMessages() const {
+    ConstLRef<GSMessageArray> GS_MessagesBuffer::GetMessages() const {
         return _messages;
     }
 
-    Bool GS_MessageBuffer::operator==(ConstLRef<GS_MessageBuffer> messageBuffer) const {
-        return _messages == messageBuffer.GetMessages();
+    Bool GS_MessagesBuffer::operator==(ConstLRef<GS_MessagesBuffer> messagesBuffer) const {
+        return _messages == messagesBuffer.GetMessages();
     }
 
-    LRef<GS_Message> GS_MessageBuffer::operator[](ConstLRef<U64> index) {
+    LRef<GS_Message> GS_MessagesBuffer::operator[](ConstLRef<U64> index) {
         return _messages[index];
     }
 
-    ConstLRef<GS_Message> GS_MessageBuffer::operator[](ConstLRef<U64> index) const {
+    ConstLRef<GS_Message> GS_MessagesBuffer::operator[](ConstLRef<U64> index) const {
         return _messages[index];
     }
 
@@ -265,13 +265,15 @@ namespace GSLanguageCompiler::IO {
             : _messageHandler(messageHandler),
               _sourceManager(sourceManager) {}
 
-    std::unique_ptr<GS_MessageStream> GS_MessageStream::Create(LRef<GSMessageHandler> messageHandler,
-                                                               LRef<GS_SourceManager> sourceManager) {
-        return std::make_unique<GS_MessageStream>(messageHandler,
-                                                  sourceManager);
+    GS_MessageStream GS_MessageStream::Create(LRef<GSMessageHandler> messageHandler,
+                                              LRef<GS_SourceManager> sourceManager) {
+        return GS_MessageStream(messageHandler,
+                                sourceManager);
     }
 
     Void GS_MessageStream::Write(GS_Message message) {
+        auto movedMessage = std::move(message);
+
         // TODO realize
     }
 
@@ -289,6 +291,14 @@ namespace GSLanguageCompiler::IO {
         return *this;
     }
 
+    LRef<GS_MessageStream> GS_MessageStream::operator<<(ConstLRef<GS_MessagesBuffer> messagesBuffer) {
+        for (auto &message : messagesBuffer) {
+            *this << message;
+        }
+
+        return *this;
+    }
+
     LRef<GS_MessageStream> GS_MessageStream::operator<<(LRef<GS_MessageBuilder> builder) {
         auto message = builder.Message();
 
@@ -297,19 +307,19 @@ namespace GSLanguageCompiler::IO {
         return *this;
     }
 
-    GS_MessageStreamsManager::GS_MessageStreamsManager(GSMessageStreamPtr messageOut,
-                                                       GSMessageStreamPtr messageErr,
-                                                       GSMessageStreamPtr messageLog)
-            : _messageOut(std::move(messageOut)),
-              _messageErr(std::move(messageErr)),
-              _messageLog(std::move(messageLog)) {}
+    GS_MessageStreamsManager::GS_MessageStreamsManager(GS_MessageStream messageOut,
+                                                       GS_MessageStream messageErr,
+                                                       GS_MessageStream messageLog)
+            : _messageOut(messageOut),
+              _messageErr(messageErr),
+              _messageLog(messageLog) {}
 
-    std::unique_ptr<GS_MessageStreamsManager> GS_MessageStreamsManager::Create(GSMessageStreamPtr messageOut,
-                                                                               GSMessageStreamPtr messageErr,
-                                                                               GSMessageStreamPtr messageLog) {
-        return std::make_unique<GS_MessageStreamsManager>(std::move(messageOut),
-                                                          std::move(messageErr),
-                                                          std::move(messageLog));
+    std::unique_ptr<GS_MessageStreamsManager> GS_MessageStreamsManager::Create(GS_MessageStream messageOut,
+                                                                               GS_MessageStream messageErr,
+                                                                               GS_MessageStream messageLog) {
+        return std::make_unique<GS_MessageStreamsManager>(messageOut,
+                                                          messageErr,
+                                                          messageLog);
     }
 
     std::unique_ptr<GS_MessageStreamsManager> GS_MessageStreamsManager::Create(LRef<GS_StdIOStreamsManager> stdIOStreamsManager,
@@ -325,21 +335,21 @@ namespace GSLanguageCompiler::IO {
         auto messageLog = GS_MessageStream::Create(standardLog,
                                                    sourceManager);
 
-        return GS_MessageStreamsManager::Create(std::move(messageOut),
-                                                std::move(messageErr),
-                                                std::move(messageLog));
+        return GS_MessageStreamsManager::Create(messageOut,
+                                                messageErr,
+                                                messageLog);
     }
 
     LRef<GS_MessageStream> GS_MessageStreamsManager::Out() {
-        return *_messageOut;
+        return _messageOut;
     }
 
     LRef<GS_MessageStream> GS_MessageStreamsManager::Err() {
-        return *_messageErr;
+        return _messageErr;
     }
 
     LRef<GS_MessageStream> GS_MessageStreamsManager::Log() {
-        return *_messageLog;
+        return _messageLog;
     }
 
 //    GS_MessageHandler::GS_MessageHandler(LRef<std::ostream> outputStream,

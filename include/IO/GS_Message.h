@@ -162,12 +162,12 @@ namespace GSLanguageCompiler::IO {
     /**
      * Class for containing messages
      */
-    class GS_MessageBuffer {
+    class GS_MessagesBuffer {
     public:
 
         /*
          *
-         * GS_MessageBuffer PUBLIC TYPES
+         * GS_MessagesBuffer PUBLIC TYPES
          *
          */
 
@@ -185,78 +185,78 @@ namespace GSLanguageCompiler::IO {
 
         /*
          *
-         * GS_MessageBuffer PUBLIC CONSTRUCTORS
+         * GS_MessagesBuffer PUBLIC CONSTRUCTORS
          *
          */
 
         /**
-         * Constructor for message buffer
+         * Constructor for messages buffer
          * @param messages Messages
          */
-        explicit GS_MessageBuffer(GSMessageArray messages);
+        explicit GS_MessagesBuffer(GSMessageArray messages);
 
     public:
 
         /*
          *
-         * GS_MessageBuffer PUBLIC STATIC CREATE METHODS
+         * GS_MessagesBuffer PUBLIC STATIC CREATE METHODS
          *
          */
 
         /**
-         * Creating message buffer
+         * Creating messages buffer
          * @param messages Messages
-         * @return Message buffer
+         * @return Messages buffer
          */
-        static GS_MessageBuffer Create(GSMessageArray messages);
+        static GS_MessagesBuffer Create(GSMessageArray messages);
 
         /**
-         * Creating message buffer
-         * @return Message buffer
+         * Creating messages buffer
+         * @return Messages buffer
          */
-        static GS_MessageBuffer Create();
+        static GS_MessagesBuffer Create();
 
     public:
 
         /*
          *
-         * GS_MessageBuffer PUBLIC ITERATOR METHODS
+         * GS_MessagesBuffer PUBLIC ITERATOR METHODS
          *
          */
 
         /**
-         * Getting begin message buffer iterator
-         * @return Begin message buffer iterator
+         * Getting begin messages buffer iterator
+         * @return Begin messages buffer iterator
          */
         Iterator begin();
 
         /**
-         * Getting end message buffer iterator
-         * @return End message buffer iterator
+         * Getting end messages buffer iterator
+         * @return End messages buffer iterator
          */
         Iterator end();
 
         /**
-         * Getting begin message buffer const iterator
-         * @return Begin message buffer const iterator
+         * Getting begin messages buffer const iterator
+         * @return Begin messages buffer const iterator
          */
         ConstIterator begin() const;
 
         /**
-         * Getting end message buffer const iterator
-         * @return End message buffer const iterator
+         * Getting end messages buffer const iterator
+         * @return End messages buffer const iterator
          */
         ConstIterator end() const;
 
         /**
-         * Getting begin message buffer const iterator
-         * @return Begin message buffer const iterator
+         * Getting begin messages buffer const iterator
+         * @return Begin messages buffer const iterator
          */
         ConstIterator cbegin() const;
 
         /**
-         * Getting end message buffer const iterator
-         * @return End message buffer const iterator
+         * Getting end messages buffer const iterator
+         * @return End messages buffer const iterator
          */
         ConstIterator cend() const;
 
@@ -264,7 +264,7 @@ namespace GSLanguageCompiler::IO {
 
         /*
          *
-         * GS_MessageBuffer PUBLIC GETTER METHODS
+         * GS_MessagesBuffer PUBLIC GETTER METHODS
          *
          */
 
@@ -278,26 +278,26 @@ namespace GSLanguageCompiler::IO {
 
         /*
          *
-         * GS_MessageBuffer PUBLIC OPERATOR METHODS
+         * GS_MessagesBuffer PUBLIC OPERATOR METHODS
          *
          */
 
         /**
-         * Equality operator for message buffer
-         * @param messageBuffer Message buffer
-         * @return Is equal message buffers
+         * Equality operator for messages buffer
+         * @param messagesBuffer Messages buffer
+         * @return Is equal messages buffers
          */
-        Bool operator==(ConstLRef<GS_MessageBuffer> messageBuffer) const;
+        Bool operator==(ConstLRef<GS_MessagesBuffer> messagesBuffer) const;
 
         /**
-         * Index operator for message buffer
+         * Index operator for messages buffer
          * @param index Index
          * @return Message by index in messages
          */
         LRef<GS_Message> operator[](ConstLRef<U64> index);
 
         /**
-         * Index operator for message buffer
+         * Index operator for messages buffer
          * @param index Index
          * @return Message by index in messages
          */
@@ -307,7 +307,7 @@ namespace GSLanguageCompiler::IO {
 
         /*
          *
-         * GS_MessageBuffer PRIVATE FIELDS
+         * GS_MessagesBuffer PRIVATE FIELDS
          *
          */
 
@@ -550,8 +550,8 @@ namespace GSLanguageCompiler::IO {
          * @param sourceManager Source manager
          * @return Message stream ptr
          */
-        static std::unique_ptr<GS_MessageStream> Create(LRef<GSMessageHandler> messageHandler,
-                                                        LRef<GS_SourceManager> sourceManager);
+        static GS_MessageStream Create(LRef<GSMessageHandler> messageHandler,
+                                       LRef<GS_SourceManager> sourceManager);
 
     public:
 
@@ -604,6 +604,13 @@ namespace GSLanguageCompiler::IO {
         LRef<GS_MessageStream> operator<<(ConstLRef<GS_Message> message);
 
         /**
+         * Stream operator for writing messages buffer in message handler
+         * @param messagesBuffer Messages buffer
+         * @return Message stream
+         */
+        LRef<GS_MessageStream> operator<<(ConstLRef<GS_MessagesBuffer> messagesBuffer);
+
+        /**
          * Stream operator for writing message from message builder in message handler
          * @param builder Message builder
          * @return Message stream
@@ -630,11 +637,6 @@ namespace GSLanguageCompiler::IO {
     };
 
     /**
-     * Message stream ptr type
-     */
-    using GSMessageStreamPtr = std::unique_ptr<GS_MessageStream>;
-
-    /**
      * Class for containing and managing message streams
      */
     class GS_MessageStreamsManager {
@@ -652,9 +654,9 @@ namespace GSLanguageCompiler::IO {
          * @param messageErr Error message stream
          * @param messageLog Logging message stream
          */
-        GS_MessageStreamsManager(GSMessageStreamPtr messageOut,
-                                 GSMessageStreamPtr messageErr,
-                                 GSMessageStreamPtr messageLog);
+        GS_MessageStreamsManager(GS_MessageStream messageOut,
+                                 GS_MessageStream messageErr,
+                                 GS_MessageStream messageLog);
 
     public:
 
@@ -671,9 +673,9 @@ namespace GSLanguageCompiler::IO {
          * @param messageLog Logging message stream
          * @return Message streams manager ptr
          */
-        static std::unique_ptr<GS_MessageStreamsManager> Create(GSMessageStreamPtr messageOut,
-                                                                GSMessageStreamPtr messageErr,
-                                                                GSMessageStreamPtr messageLog);
+        static std::unique_ptr<GS_MessageStreamsManager> Create(GS_MessageStream messageOut,
+                                                                GS_MessageStream messageErr,
+                                                                GS_MessageStream messageLog);
 
         /**
          * Creating message streams manager
@@ -721,17 +723,17 @@ namespace GSLanguageCompiler::IO {
         /**
          * Output message stream
          */
-        GSMessageStreamPtr _messageOut;
+        GS_MessageStream _messageOut;
 
         /**
          * Error message stream
          */
-        GSMessageStreamPtr _messageErr;
+        GS_MessageStream _messageErr;
 
         /**
          * Logging message stream
          */
-        GSMessageStreamPtr _messageLog;
+        GS_MessageStream _messageLog;
     };
 
     /**
