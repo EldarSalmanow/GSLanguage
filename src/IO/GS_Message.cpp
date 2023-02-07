@@ -274,7 +274,92 @@ namespace GSLanguageCompiler::IO {
     Void GS_MessageStream::Write(GS_Message message) {
         auto movedMessage = std::move(message);
 
-        // TODO realize
+        auto &messageText = movedMessage.GetText();
+        auto messageLevel = movedMessage.GetLevel();
+        auto optionalMessageLocationRange = movedMessage.GetLocationRange();
+
+        UString textMessageLevel;
+
+        switch (messageLevel) {
+            case MessageLevel::Note: {
+                textMessageLevel = "Note";
+
+                break;
+            }
+            case MessageLevel::Warning: {
+                textMessageLevel = "Warning";
+
+                break;
+            }
+            case MessageLevel::Error: {
+                textMessageLevel = "Error";
+
+                break;
+            }
+            case MessageLevel::Fatal: {
+                textMessageLevel = "Fatal";
+
+                break;
+            }
+            default: {
+                textMessageLevel = "<invalid>";
+
+                break;
+            }
+        }
+
+        _messageHandler << " |--------------------------------------------------"_us << std::endl
+                        << "/"_us << std::endl;
+
+        _messageHandler << "| "_us << textMessageLevel << ": " << messageText << std::endl;
+
+        if (optionalMessageLocationRange.has_value()) {
+            auto &messageLocationRange = optionalMessageLocationRange.value();
+
+            auto startByteLocation = messageLocationRange.GetStartLocation();
+
+            auto sourceHash = startByteLocation.GetSourceHash();
+
+            if (sourceHash == InvalidHash) {
+//                Driver::GlobalContext().Exit();
+            }
+
+            auto optionalSource = _sourceManager.GetSource(sourceHash);
+
+            if (!optionalSource.has_value()) {
+//                Driver::GlobalContext().Exit();
+            }
+
+            auto &source = optionalSource.value();
+
+            auto startLineColumnLocation = ToSourceLocation<GS_LineColumnSourceLocation>(startByteLocation,
+                                                                                         source);
+
+            auto sourceName = source.GetName();
+            auto line = startLineColumnLocation.GetLine();
+            auto column = startLineColumnLocation.GetColumn();
+
+            UString lineCode;
+
+            for (auto iterator = source.GetIteratorByLocation(GS_LineColumnSourceLocation::Create(line, 1)); *iterator != '\n'; ++iterator) {
+                lineCode += *iterator;
+            }
+
+            UString whitespaces;
+
+            for (U64 index = 0; index < column - 2; ++index) {
+                whitespaces += ' ';
+            }
+
+            _messageHandler << "| "_us << "> "_us << sourceName.GetName() << ":" << "[" << line << "." << column << "]" << std::endl;
+
+            _messageHandler << "| "_us << lineCode <<  std::endl;
+
+            _messageHandler << "| "_us << whitespaces << "^" << std::endl;
+        }
+
+        _messageHandler << "\\"_us << std::endl
+                        << " |--------------------------------------------------"_us << std::endl;
     }
 
     LRef<GSMessageHandler> GS_MessageStream::GetMessageHandler() {

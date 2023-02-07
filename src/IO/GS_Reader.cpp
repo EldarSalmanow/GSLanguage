@@ -2,14 +2,14 @@
 
 namespace GSLanguageCompiler::IO {
 
-    GS_Reader::GS_Reader(LRef<std::istream> stream)
+    GS_Reader::GS_Reader(LRef<InputStream> stream)
             : _stream(stream) {}
 
-    GS_Reader GS_Reader::Create(LRef<std::istream> stream) {
+    GS_Reader GS_Reader::Create(LRef<InputStream> stream) {
         return GS_Reader(stream);
     }
 
-    UString GS_Reader::Run(LRef<std::istream> stream) {
+    UString GS_Reader::Run(LRef<InputStream> stream) {
         auto reader = GS_Reader::Create(stream);
 
         auto text = reader.Read();

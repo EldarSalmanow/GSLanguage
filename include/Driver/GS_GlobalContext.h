@@ -3,7 +3,8 @@
 
 #include <GSCrossPlatform/UException.h>
 
-#include <IO/IO.h>
+// TODO rename file
+#include <IO/GS_Stream.h>
 
 namespace GSLanguageCompiler::Driver {
 

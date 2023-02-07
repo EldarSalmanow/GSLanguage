@@ -1,4 +1,4 @@
-#include <Debug/Debug.h>
+//#include <Debug/Debug.h>
 
 #include <Driver/Driver.h>
 
@@ -196,6 +196,40 @@ void g() {
 //    auto sum_func_scope = Scope::Create(compilation_unit_scope_2);
 }
 
+Void ErrorExample() {
+    auto StdStreams = IO::GS_StdIOStreamsManager::Create();
+    auto SM = IO::GS_SourceManager::Create();
+    auto MSM = IO::GS_MessageStreamsManager::Create(*StdStreams, *SM);
+
+    auto &source = SM->AddCustomSource("func main() {\n"
+                                       "    1 + 1\n"
+                                       "\n"
+                                       "    var string String = input()\n"
+                                       "\n"
+                                       "    var iterator: Iterator = Iterate(string\n"
+                                       "\n"
+                                       "    var array: [I32, 10] = [1, 2, 3, 4, 5]\n"
+                                       "\n"
+                                       "    print(iterator)\n"
+                                       "}",
+                                       "main.gs");
+
+    MSM->Out() << IO::GS_MessageBuilder::Create().Text("missed ':' in variable declaration statement")
+                                                 .Error()
+                                                 .Location(IO::ToSourceLocation<IO::GS_ByteSourceLocation>(IO::GS_LineColumnSourceLocation::Create(source.GetHash(), 4, 16), *SM))
+                                                 .Message();
+
+    auto &source_ = SM->AddCustomSource("func main() {\n    println(\"Hello, World!\"\n}",
+                                        "test.gs");
+
+    auto SH = SM->GetCustomSource("test.gs")->GetHash();
+
+    MSM->Out() << IO::GS_MessageBuilder::Create().Text("Missed ')' in function calling expression!")
+                                                 .Error()
+                                                 .Location(IO::ToSourceLocation<IO::GS_ByteSourceLocation>(IO::GS_LineColumnSourceLocation::Create(SH, 2, 27), source_))
+                                                 .Message();
+}
+
 // TODO create Block System for code style
 
 /**
@@ -210,6 +244,8 @@ Result GSMain(I32 argc, Ptr<Ptr<C>> argv) {
     if (globalContextInitializingResult != Result::Ok) {
         return Result::Err;
     }
+
+    ErrorExample();
 
 //    auto compilingResult = Driver::GS_Compiler::Start(argc, argv);
 //

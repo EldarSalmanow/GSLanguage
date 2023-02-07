@@ -5,11 +5,9 @@
 
 #include <optional>
 
-#include <GSCrossPlatform/CrossPlatform.h>
+#include <Driver/GS_GlobalContext.h>
 
 namespace GSLanguageCompiler::IO {
-
-    // TODO add error message printing in GS_SourceRange<SourceLocationT> constructor
 
     /**
      * Invalid hash constant
@@ -35,11 +33,11 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Constructor for byte source location
-         * @param sourceHash Source hash
          * @param position Byte position
+         * @param sourceHash Source hash
          */
-        GS_ByteSourceLocation(U64 sourceHash,
-                              U64 position);
+        GS_ByteSourceLocation(U64 position,
+                              U64 sourceHash);
 
     public:
 
@@ -51,22 +49,22 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Creating byte source location
-         * @param sourceHash Source hash
          * @param position Byte position
+         * @param sourceHash Source hash
          * @return Byte source location
          */
-        static GS_ByteSourceLocation Create(U64 sourceHash,
-                                            U64 position);
+        static GS_ByteSourceLocation Create(U64 position,
+                                            U64 sourceHash);
 
         /**
-         * Creating byte source location
+         * Creating byte source location without source hash
          * @param position Byte position
          * @return Byte source location
          */
         static GS_ByteSourceLocation Create(U64 position);
 
         /**
-         * Creating byte source location
+         * Creating invalid byte source location
          * @return Byte source location
          */
         static GS_ByteSourceLocation Create();
@@ -80,16 +78,16 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Getter for source hash
-         * @return Source hash
-         */
-        U64 GetSourceHash() const;
-
-        /**
          * Getter for byte position
          * @return Byte position
          */
         U64 GetPosition() const;
+
+        /**
+         * Getter for source hash
+         * @return Source hash
+         */
+        U64 GetSourceHash() const;
 
     public:
 
@@ -122,14 +120,14 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Source hash
-         */
-        U64 _sourceHash;
-
-        /**
          * Byte position
          */
         U64 _position;
+
+        /**
+         * Source hash
+         */
+        U64 _sourceHash;
     };
 
     /**
@@ -146,13 +144,13 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Constructor for line column source location
-         * @param sourceHash Source hash
          * @param line Line
          * @param column Column
+         * @param sourceHash Source hash
          */
-        GS_LineColumnSourceLocation(U64 sourceHash,
-                                    U64 line,
-                                    U64 column);
+        GS_LineColumnSourceLocation(U64 line,
+                                    U64 column,
+                                    U64 sourceHash);
 
     public:
 
@@ -164,17 +162,17 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Creating line column source location
-         * @param sourceHash Source hash
          * @param line Line
          * @param column Column
+         * @param sourceHash Source hash
          * @return Line column source location
          */
-        static GS_LineColumnSourceLocation Create(U64 sourceHash,
-                                                  U64 line,
-                                                  U64 column);
+        static GS_LineColumnSourceLocation Create(U64 line,
+                                                  U64 column,
+                                                  U64 sourceHash);
 
         /**
-         * Creating line column source location
+         * Creating line column source location without source hash
          * @param line Line
          * @param column Column
          * @return Line column source location
@@ -183,7 +181,7 @@ namespace GSLanguageCompiler::IO {
                                                   U64 column);
 
         /**
-         * Creating line column source location
+         * Creating invalid line column source location
          * @return Line column source location
          */
         static GS_LineColumnSourceLocation Create();
@@ -197,12 +195,6 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Getter for source hash
-         * @return Source hash
-         */
-        U64 GetSourceHash() const;
-
-        /**
          * Getter for line
          * @return Line
          */
@@ -213,6 +205,12 @@ namespace GSLanguageCompiler::IO {
          * @return Column
          */
         U64 GetColumn() const;
+
+        /**
+         * Getter for source hash
+         * @return Source hash
+         */
+        U64 GetSourceHash() const;
 
     public:
 
@@ -245,11 +243,6 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Source hash
-         */
-        U64 _sourceHash;
-
-        /**
          * Line
          */
         U64 _line;
@@ -258,6 +251,11 @@ namespace GSLanguageCompiler::IO {
          * Column
          */
         U64 _column;
+
+        /**
+         * Source hash
+         */
+        U64 _sourceHash;
     };
 
     /**
@@ -266,22 +264,50 @@ namespace GSLanguageCompiler::IO {
     class GS_Source;
 
     /**
-     * Converting line column source location to byte source location
+     * Declaring source manager class for location converting functions
+     */
+    class GS_SourceManager;
+
+    /**
+     * Converting ToSourceLocationT to FromSourceLocationT with source
+     * @tparam ToSourceLocationT To source location type
+     * @tparam FromSourceLocationT From source location type
+     * @param sourceLocation Source location
+     * @param source Source
+     * @return Converted source location
+     */
+    template<typename ToSourceLocationT,
+             typename FromSourceLocationT>
+    ToSourceLocationT ToSourceLocation(ConstLRef<FromSourceLocationT> sourceLocation,
+                                       ConstLRef<GS_Source> source) {
+        Driver::GlobalContext().Exit();
+    }
+
+    template<typename SourceLocationT>
+    SourceLocationT ToSourceLocation(ConstLRef<SourceLocationT> sourceLocation,
+                                     ConstLRef<GS_Source> source) {
+        return sourceLocation;
+    }
+
+    /**
+     * Converting line column source location to byte source location with source
      * @param lineColumnSourceLocation Line column source location
      * @param source Source
-     * @return Byte source location
+     * @return Converted byte source location
      */
-    GS_ByteSourceLocation ToByteSourceLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
-                                               ConstLRef<GS_Source> source);
+    template<>
+    GS_ByteSourceLocation ToSourceLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
+                                           ConstLRef<GS_Source> source);
 
     /**
      * Converting byte source location to line column source location
      * @param byteSourceLocation Byte source location
      * @param source Source
-     * @return Line column source location
+     * @return Converted line column source location
      */
-    GS_LineColumnSourceLocation ToLineColumnSourceLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
-                                                           ConstLRef<GS_Source> source);
+    template<>
+    GS_LineColumnSourceLocation ToSourceLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
+                                                 ConstLRef<GS_Source> source);
 
     /**
      * Class for containing source location range
@@ -320,7 +346,7 @@ namespace GSLanguageCompiler::IO {
                 : _startLocation(std::move(startLocation)),
                   _endLocation(std::move(endLocation)) {
             if (_startLocation > _endLocation) {
-
+                Driver::GlobalContext().Exit();
             }
         }
 
@@ -1188,6 +1214,100 @@ namespace GSLanguageCompiler::IO {
      * Source manager ptr type
      */
     using GSSourceManagerPtr = std::unique_ptr<GS_SourceManager>;
+
+    /**
+     * Converting ToSourceLocationT to FromSourceLocationT with source manager
+     * @tparam ToSourceLocationT To source location type
+     * @tparam FromSourceLocationT From source location type
+     * @param sourceLocation Source location
+     * @param sourceManager Source manager
+     * @return Converted source location
+     */
+    template<typename ToSourceLocationT,
+            typename FromSourceLocationT>
+    ToSourceLocationT ToSourceLocation(ConstLRef<FromSourceLocationT> sourceLocation,
+                                       ConstLRef<GS_SourceManager> sourceManager) {
+        auto sourceHash = sourceLocation.GetSourceHash();
+
+        if (sourceHash == InvalidHash) {
+            Driver::GlobalContext().Exit();
+        }
+
+        auto optionalSource = sourceManager.GetSource(sourceHash);
+
+        if (!optionalSource.has_value()) {
+            Driver::GlobalContext().Exit();
+        }
+
+        auto &source = optionalSource.value();
+
+        return ToSourceLocation<ToSourceLocationT>(sourceLocation,
+                                                   source);
+    }
+
+    /**
+     * Converting source range with FromSourceRangeLocationT to source range with ToSourceRangeLocationT with source
+     * @tparam ToSourceRangeLocationT To source range location type
+     * @tparam FromSourceRangeLocationT From source range location type
+     * @param locationRange Source location range
+     * @param source Source
+     * @return Converted source location range
+     */
+    template<typename ToSourceRangeLocationT,
+            typename FromSourceRangeLocationT>
+    GS_SourceRange<ToSourceRangeLocationT> ToSourceRange(ConstLRef<GS_SourceRange<FromSourceRangeLocationT>> locationRange,
+                                                         ConstLRef<GS_Source> source) {
+        auto startLocation = locationRange.GetStartLocation();
+        auto endLocation = locationRange.GetEndLocation();
+
+        auto convertedStartLocation = ToSourceLocation<ToSourceRangeLocationT>(startLocation,
+                                                                               source);
+        auto convertedEndLocation = ToSourceLocation<ToSourceRangeLocationT>(endLocation,
+                                                                             source);
+
+        auto convertedSourceRange = GS_SourceRange<ToSourceRangeLocationT>::Create(convertedStartLocation,
+                                                                                   convertedEndLocation);
+
+        return convertedSourceRange;
+    }
+
+    template<typename SourceRangeLocationT>
+    GS_SourceRange<SourceRangeLocationT> ToSourceRange(ConstLRef<GS_SourceRange<SourceRangeLocationT>> locationRange,
+                                                       ConstLRef<GS_Source> source) {
+        return locationRange;
+    }
+
+    /**
+     * Converting source range with FromSourceRangeLocationT to source range with ToSourceRangeLocationT with source manager
+     * @tparam ToSourceRangeLocationT To source range location type
+     * @tparam FromSourceRangeLocationT From source range location type
+     * @param locationRange Location range
+     * @param sourceManager Source manager
+     * @return Converted source location range
+     */
+    template<typename ToSourceRangeLocationT,
+            typename FromSourceRangeLocationT>
+    GS_SourceRange<ToSourceRangeLocationT> ToSourceRange(ConstLRef<GS_SourceRange<FromSourceRangeLocationT>> locationRange,
+                                                         ConstLRef<GS_SourceManager> sourceManager) {
+        auto startLocation = locationRange.GetStartLocation();
+
+        auto sourceHash = startLocation.GetSourceHash();
+
+        if (sourceHash == InvalidHash) {
+            Driver::GlobalContext().Exit();
+        }
+
+        auto optionalSource = sourceManager.GetSource(sourceHash);
+
+        if (!optionalSource.has_value()) {
+            Driver::GlobalContext().Exit();
+        }
+
+        auto &source = optionalSource.value();
+
+        return ToSourceRange<ToSourceRangeLocationT>(locationRange,
+                                                     source);
+    }
 
 }
 

@@ -1,8 +1,6 @@
 #ifndef GSLANGUAGE_GS_MESSAGE_H
 #define GSLANGUAGE_GS_MESSAGE_H
 
-#include <optional>
-
 #include <IO/GS_Source.h>
 
 namespace GSLanguageCompiler::IO {
@@ -514,7 +512,7 @@ namespace GSLanguageCompiler::IO {
     /**
      * Message handler type
      */
-    using GSMessageHandler = std::ostream;
+    using GSMessageHandler = OutputStream;
 
     /**
      * Class for rendering and writing compiler messages in message handler
@@ -565,6 +563,7 @@ namespace GSLanguageCompiler::IO {
          * Writing message in message handler
          * @param message Message
          * @return
+         * @todo Realize
          */
         Void Write(GS_Message message);
 
@@ -740,22 +739,6 @@ namespace GSLanguageCompiler::IO {
      * Message streams manager ptr type
      */
     using GSMessageStreamsManagerPtr = std::unique_ptr<GS_MessageStreamsManager>;
-
-    Void ErrorExample() {
-        auto StdStreams = GS_StdIOStreamsManager::Create();
-        auto SM = GS_SourceManager::Create();
-        auto MSM = GS_MessageStreamsManager::Create(*StdStreams, *SM);
-
-        SM->AddCustomSource("func main() {\r\n    println(\"Hello, World!\"\r\n}",
-                            "main.gs");
-
-        auto SH = SM->GetCustomSource("main.gs")->GetHash();
-
-        MSM->Out() << GS_MessageBuilder::Create().Text("Missed ')' in function calling expression!")
-                                                 .Error()
-                                                 .Location(GS_ByteSourceLocation::Create(41, SH))
-                                                 .Message();
-    }
 
 }
 
