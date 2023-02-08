@@ -1,9 +1,6 @@
 #ifndef GSLANGUAGE_GS_GLOBALCONTEXT_H
 #define GSLANGUAGE_GS_GLOBALCONTEXT_H
 
-#include <GSCrossPlatform/UException.h>
-
-// TODO rename file
 #include <IO/GS_Stream.h>
 
 namespace GSLanguageCompiler::Driver {

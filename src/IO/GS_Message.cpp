@@ -42,8 +42,6 @@ namespace GSLanguageCompiler::IO {
     GS_Message GS_Message::Create(UString text,
                                   MessageLevel level,
                                   GS_ByteSourceLocation sourceLocation) {
-        // TODO check
-
         auto sourceHash = sourceLocation.GetSourceHash();
         auto position = sourceLocation.GetPosition();
 
@@ -159,8 +157,6 @@ namespace GSLanguageCompiler::IO {
     GS_MessageBuilder GS_MessageBuilder::Create(UString messageText,
                                                 MessageLevel messageLevel,
                                                 GS_ByteSourceLocation messageSourceLocation) {
-        // TODO check
-
         auto messageSourceHash = messageSourceLocation.GetSourceHash();
         auto messagePosition = messageSourceLocation.GetPosition();
 
@@ -222,8 +218,6 @@ namespace GSLanguageCompiler::IO {
     }
 
     LRef<GS_MessageBuilder> GS_MessageBuilder::Location(GS_ByteSourceLocation messageSourceLocation) {
-        // TODO check
-
         auto messageSourceHash = messageSourceLocation.GetSourceHash();
         auto messagePosition = messageSourceLocation.GetPosition();
 
@@ -321,13 +315,13 @@ namespace GSLanguageCompiler::IO {
             auto sourceHash = startByteLocation.GetSourceHash();
 
             if (sourceHash == InvalidHash) {
-//                Driver::GlobalContext().Exit();
+                Driver::GlobalContext().Exit();
             }
 
             auto optionalSource = _sourceManager.GetSource(sourceHash);
 
             if (!optionalSource.has_value()) {
-//                Driver::GlobalContext().Exit();
+                Driver::GlobalContext().Exit();
             }
 
             auto &source = optionalSource.value();

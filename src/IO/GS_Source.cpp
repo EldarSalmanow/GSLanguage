@@ -40,8 +40,6 @@ namespace GSLanguageCompiler::IO {
     }
 
     std::partial_ordering GS_ByteSourceLocation::operator<=>(ConstLRef<GS_ByteSourceLocation> sourceLocation) const {
-        // TODO check
-
         auto position = sourceLocation.GetPosition();
 
         if (_position == InvalidPosition
@@ -98,8 +96,6 @@ namespace GSLanguageCompiler::IO {
     }
     
     std::partial_ordering GS_LineColumnSourceLocation::operator<=>(ConstLRef<GS_LineColumnSourceLocation> sourceLocation) const {
-        // TODO check
-
         auto line = sourceLocation.GetLine();
         auto column = sourceLocation.GetColumn();
         
@@ -118,80 +114,6 @@ namespace GSLanguageCompiler::IO {
         }
         
         return _line <=> line;
-    }
-
-    template<>
-    GS_ByteSourceLocation ToSourceLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
-                                           ConstLRef<GS_Source> source) {
-        auto line = lineColumnSourceLocation.GetLine();
-        auto column = lineColumnSourceLocation.GetColumn();
-        auto sourceHash = lineColumnSourceLocation.GetSourceHash();
-
-        if (sourceHash != InvalidHash
-         && sourceHash != source.GetHash()) {
-            Driver::GlobalContext().Exit();
-        }
-
-        U64 position = 1;
-
-        auto sourceSize = source.GetBuffer().GetSource().Size();
-
-        for (U64 lineIndex = 1; lineIndex < line; ++position) {
-            if (position > sourceSize) {
-                Driver::GlobalContext().Exit();
-            }
-
-            if (source[position - 1] == '\n') {
-                ++lineIndex;
-            }
-        }
-
-        for (U64 columnIndex = 1; columnIndex < column; ++position, ++columnIndex) {
-            if (position > sourceSize) {
-                Driver::GlobalContext().Exit();
-            }
-
-            if (source[position - 1] == '\n') {
-                Driver::GlobalContext().Exit();
-            }
-        }
-
-        return GS_ByteSourceLocation::Create(position,
-                                             sourceHash);
-    }
-
-    template<>
-    GS_LineColumnSourceLocation ToSourceLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
-                                                 ConstLRef<GS_Source> source) {
-        auto position = byteSourceLocation.GetPosition();
-        auto sourceHash = byteSourceLocation.GetSourceHash();
-
-        if (position > source.GetBuffer().GetSource().Size()) {
-            Driver::GlobalContext().Exit();
-        }
-
-        if (sourceHash != InvalidHash
-         && sourceHash != source.GetHash()) {
-            Driver::GlobalContext().Exit();
-        }
-
-        U64 line = 1, column = 1;
-
-        for (U64 positionIndex = 1; positionIndex < position; ++positionIndex) {
-            if (source[positionIndex - 1] == '\n') {
-                ++line;
-
-                column = 1;
-
-                continue;
-            }
-
-            ++column;
-        }
-
-        return GS_LineColumnSourceLocation::Create(line,
-                                                   column,
-                                                   sourceHash);
     }
 
     GS_SourceBuffer::GS_SourceBuffer(UString source)
@@ -404,14 +326,6 @@ namespace GSLanguageCompiler::IO {
 
         if (!fileStream.is_open()) {
             Driver::GlobalContext().Exit();
-
-//            UStringStream stringStream;
-//
-//            stringStream << "Can`t open file with name '"_us
-//                         << name
-//                         << "'!"_us;
-//
-//            Driver::GlobalContext().ErrAndExit(stringStream.String());
         }
 
         auto reader = IO::GS_Reader::Create(fileStream);
@@ -548,6 +462,80 @@ namespace GSLanguageCompiler::IO {
 
     ConstLRef<GSSourcePtrArray> GS_SourceManager::GetSources() const {
         return _sources;
+    }
+
+    template<>
+    GS_ByteSourceLocation ToSourceLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
+                                           ConstLRef<GS_Source> source) {
+        auto line = lineColumnSourceLocation.GetLine();
+        auto column = lineColumnSourceLocation.GetColumn();
+        auto sourceHash = lineColumnSourceLocation.GetSourceHash();
+
+        if (sourceHash != InvalidHash
+            && sourceHash != source.GetHash()) {
+            Driver::GlobalContext().Exit();
+        }
+
+        U64 position = 1;
+
+        auto sourceSize = source.GetBuffer().GetSource().Size();
+
+        for (U64 lineIndex = 1; lineIndex < line; ++position) {
+            if (position > sourceSize) {
+                Driver::GlobalContext().Exit();
+            }
+
+            if (source[position - 1] == '\n') {
+                ++lineIndex;
+            }
+        }
+
+        for (U64 columnIndex = 1; columnIndex < column; ++position, ++columnIndex) {
+            if (position > sourceSize) {
+                Driver::GlobalContext().Exit();
+            }
+
+            if (source[position - 1] == '\n') {
+                Driver::GlobalContext().Exit();
+            }
+        }
+
+        return GS_ByteSourceLocation::Create(position,
+                                             sourceHash);
+    }
+
+    template<>
+    GS_LineColumnSourceLocation ToSourceLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
+                                                 ConstLRef<GS_Source> source) {
+        auto position = byteSourceLocation.GetPosition();
+        auto sourceHash = byteSourceLocation.GetSourceHash();
+
+        if (position > source.GetBuffer().GetSource().Size()) {
+            Driver::GlobalContext().Exit();
+        }
+
+        if (sourceHash != InvalidHash
+            && sourceHash != source.GetHash()) {
+            Driver::GlobalContext().Exit();
+        }
+
+        U64 line = 1, column = 1;
+
+        for (U64 positionIndex = 1; positionIndex < position; ++positionIndex) {
+            if (source[positionIndex - 1] == '\n') {
+                ++line;
+
+                column = 1;
+
+                continue;
+            }
+
+            ++column;
+        }
+
+        return GS_LineColumnSourceLocation::Create(line,
+                                                   column,
+                                                   sourceHash);
     }
 
 }

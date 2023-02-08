@@ -108,6 +108,7 @@ namespace GSLanguageCompiler::IO {
          * Comparison operator for byte source location
          * @param sourceLocation Byte source location
          * @return Partial comparison ordering
+         * @todo Check
          */
         std::partial_ordering operator<=>(ConstLRef<GS_ByteSourceLocation> sourceLocation) const;
 
@@ -231,6 +232,7 @@ namespace GSLanguageCompiler::IO {
          * Comparison operator for line column source location
          * @param sourceLocation Line column source location
          * @return Partial comparison ordering
+         * @todo Check
          */
         std::partial_ordering operator<=>(ConstLRef<GS_LineColumnSourceLocation> sourceLocation) const;
 
@@ -259,59 +261,9 @@ namespace GSLanguageCompiler::IO {
     };
 
     /**
-     * Declaring source class for location converting functions
-     */
-    class GS_Source;
-
-    /**
-     * Declaring source manager class for location converting functions
-     */
-    class GS_SourceManager;
-
-    /**
-     * Converting ToSourceLocationT to FromSourceLocationT with source
-     * @tparam ToSourceLocationT To source location type
-     * @tparam FromSourceLocationT From source location type
-     * @param sourceLocation Source location
-     * @param source Source
-     * @return Converted source location
-     */
-    template<typename ToSourceLocationT,
-             typename FromSourceLocationT>
-    ToSourceLocationT ToSourceLocation(ConstLRef<FromSourceLocationT> sourceLocation,
-                                       ConstLRef<GS_Source> source) {
-        Driver::GlobalContext().Exit();
-    }
-
-    template<typename SourceLocationT>
-    SourceLocationT ToSourceLocation(ConstLRef<SourceLocationT> sourceLocation,
-                                     ConstLRef<GS_Source> source) {
-        return sourceLocation;
-    }
-
-    /**
-     * Converting line column source location to byte source location with source
-     * @param lineColumnSourceLocation Line column source location
-     * @param source Source
-     * @return Converted byte source location
-     */
-    template<>
-    GS_ByteSourceLocation ToSourceLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
-                                           ConstLRef<GS_Source> source);
-
-    /**
-     * Converting byte source location to line column source location
-     * @param byteSourceLocation Byte source location
-     * @param source Source
-     * @return Converted line column source location
-     */
-    template<>
-    GS_LineColumnSourceLocation ToSourceLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
-                                                 ConstLRef<GS_Source> source);
-
-    /**
      * Class for containing source location range
      * @tparam SourceLocationT Source location type
+     * @todo Check all
      */
     template<typename SourceLocationT>
     class GS_SourceRange {
@@ -392,7 +344,7 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Creating source location range
-         * @return Source location range [-1(invalid)..-1(invalid)]
+         * @return Source location range [0(start)..0(end)]
          */
         static GS_SourceRange Create() {
             return GS_SourceRange<SourceLocation>::Create(SourceLocation::Create(),
@@ -530,6 +482,10 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
+         * @todo Check methods
+         */
+
+        /**
          * Getting source code iterator by byte source location
          * @param sourceLocation Byte source location
          * @return Source code iterator
@@ -561,7 +517,7 @@ namespace GSLanguageCompiler::IO {
          * Getting code from source buffer in source location range
          * @tparam SourceLocationT Source location type
          * @param locationRange Source location range
-         * @return Code in range [startLocation..endLocation]
+         * @return Code in range [startLocation..endLocation)
          */
         template<typename SourceLocationT>
         UString GetCodeInRange(GS_SourceRange<SourceLocationT> locationRange) const {
@@ -950,7 +906,7 @@ namespace GSLanguageCompiler::IO {
          * Getting code from source in source location range
          * @tparam SourceLocationT Source location type
          * @param locationRange Source location range
-         * @return Code in range [startLocation..endLocation]
+         * @return Code in range [startLocation..endLocation)
          */
         template<typename SourceLocationT>
         UString GetCodeInRange(GS_SourceRange<SourceLocationT> locationRange) const {
@@ -1216,15 +1172,59 @@ namespace GSLanguageCompiler::IO {
     using GSSourceManagerPtr = std::unique_ptr<GS_SourceManager>;
 
     /**
+     * Converting ToSourceLocationT to FromSourceLocationT with source
+     * @tparam ToSourceLocationT To source location type
+     * @tparam FromSourceLocationT From source location type
+     * @param sourceLocation Source location
+     * @param source Source
+     * @return Converted source location
+     */
+    template<typename ToSourceLocationT,
+             typename FromSourceLocationT>
+    ToSourceLocationT ToSourceLocation(ConstLRef<FromSourceLocationT> sourceLocation,
+                                       ConstLRef<GS_Source> source) {
+        Driver::GlobalContext().Exit();
+    }
+
+    template<typename SourceLocationT>
+    SourceLocationT ToSourceLocation(ConstLRef<SourceLocationT> sourceLocation,
+                                     ConstLRef<GS_Source> source) {
+        return sourceLocation;
+    }
+
+    /**
+     * Converting line column source location to byte source location with source
+     * @param lineColumnSourceLocation Line column source location
+     * @param source Source
+     * @return Converted byte source location
+     * @todo Check
+     */
+    template<>
+    GS_ByteSourceLocation ToSourceLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
+                                           ConstLRef<GS_Source> source);
+
+    /**
+     * Converting byte source location to line column source location
+     * @param byteSourceLocation Byte source location
+     * @param source Source
+     * @return Converted line column source location
+     * @todo Check
+     */
+    template<>
+    GS_LineColumnSourceLocation ToSourceLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
+                                                 ConstLRef<GS_Source> source);
+
+    /**
      * Converting ToSourceLocationT to FromSourceLocationT with source manager
      * @tparam ToSourceLocationT To source location type
      * @tparam FromSourceLocationT From source location type
      * @param sourceLocation Source location
      * @param sourceManager Source manager
      * @return Converted source location
+     * @todo Check
      */
     template<typename ToSourceLocationT,
-            typename FromSourceLocationT>
+             typename FromSourceLocationT>
     ToSourceLocationT ToSourceLocation(ConstLRef<FromSourceLocationT> sourceLocation,
                                        ConstLRef<GS_SourceManager> sourceManager) {
         auto sourceHash = sourceLocation.GetSourceHash();
@@ -1252,9 +1252,10 @@ namespace GSLanguageCompiler::IO {
      * @param locationRange Source location range
      * @param source Source
      * @return Converted source location range
+     * @todo Check
      */
     template<typename ToSourceRangeLocationT,
-            typename FromSourceRangeLocationT>
+             typename FromSourceRangeLocationT>
     GS_SourceRange<ToSourceRangeLocationT> ToSourceRange(ConstLRef<GS_SourceRange<FromSourceRangeLocationT>> locationRange,
                                                          ConstLRef<GS_Source> source) {
         auto startLocation = locationRange.GetStartLocation();
@@ -1284,9 +1285,10 @@ namespace GSLanguageCompiler::IO {
      * @param locationRange Location range
      * @param sourceManager Source manager
      * @return Converted source location range
+     * @todo Check
      */
     template<typename ToSourceRangeLocationT,
-            typename FromSourceRangeLocationT>
+             typename FromSourceRangeLocationT>
     GS_SourceRange<ToSourceRangeLocationT> ToSourceRange(ConstLRef<GS_SourceRange<FromSourceRangeLocationT>> locationRange,
                                                          ConstLRef<GS_SourceManager> sourceManager) {
         auto startLocation = locationRange.GetStartLocation();
