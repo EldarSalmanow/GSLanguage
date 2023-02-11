@@ -2,6 +2,8 @@
 
 #include <Driver/Driver.h>
 
+#include <IO/IO.h>
+
 using namespace GSLanguageCompiler;
 
 //class ArithmeticOptimizingVisitor : public AST::GS_Transformer {
@@ -196,41 +198,339 @@ void g() {
 //    auto sum_func_scope = Scope::Create(compilation_unit_scope_2);
 }
 
-Void ErrorExample() {
-    auto StdStreams = IO::GS_StdIOStreamsManager::Create();
-    auto SM = IO::GS_SourceManager::Create();
-    auto MSM = IO::GS_MessageStreamsManager::Create(*StdStreams, *SM);
+//Void ErrorExample() {
+//    auto StdStreams = IO::GS_StdIOStreamsManager::Create();
+//    auto SM = IO::GS_SourceManager::Create();
+//    auto MSM = IO::GS_MessageStreamsManager::Create(*StdStreams, *SM);
+//
+//    auto &source = SM->AddCustomSource("func main() {\n"
+//                                       "    1 + 1\n"
+//                                       "\n"
+//                                       "    var string String = input()\n"
+//                                       "\n"
+//                                       "    var iterator: Iterator = Iterate(string\n"
+//                                       "\n"
+//                                       "    var array: [I32, 10] = [1, 2, 3, 4, 5]\n"
+//                                       "\n"
+//                                       "    print(iterator)\n"
+//                                       "}",
+//                                       "main.gs");
+//
+//    MSM->Out() << IO::GS_MessageBuilder::Create().Text("missed ':' in variable declaration statement")
+//                                                 .Error()
+//                                                 .Location(IO::ToSourceLocation<IO::GS_ByteSourceLocation>(IO::GS_LineColumnSourceLocation::Create(source.GetHash(), 4, 16), *SM))
+//                                                 .Message();
+//
+//    auto &source_ = SM->AddCustomSource("func main() {\n    println(\"Hello, World!\"\n}",
+//                                        "test.gs");
+//
+//    auto SH = SM->GetCustomSource("test.gs")->GetHash();
+//
+//    MSM->Out() << IO::GS_MessageBuilder::Create().Text("Missed ')' in function calling expression!")
+//                                                 .Error()
+//                                                 .Location(IO::ToSourceLocation<IO::GS_ByteSourceLocation>(IO::GS_LineColumnSourceLocation::Create(SH, 2, 27), source_))
+//                                                 .Message();
+//}
 
-    auto &source = SM->AddCustomSource("func main() {\n"
-                                       "    1 + 1\n"
-                                       "\n"
-                                       "    var string String = input()\n"
-                                       "\n"
-                                       "    var iterator: Iterator = Iterate(string\n"
-                                       "\n"
-                                       "    var array: [I32, 10] = [1, 2, 3, 4, 5]\n"
-                                       "\n"
-                                       "    print(iterator)\n"
-                                       "}",
-                                       "main.gs");
+#include <cassert>
 
-    MSM->Out() << IO::GS_MessageBuilder::Create().Text("missed ':' in variable declaration statement")
-                                                 .Error()
-                                                 .Location(IO::ToSourceLocation<IO::GS_ByteSourceLocation>(IO::GS_LineColumnSourceLocation::Create(source.GetHash(), 4, 16), *SM))
-                                                 .Message();
+Void CheckByteSourceLocationComparing() {
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create();
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create();
 
-    auto &source_ = SM->AddCustomSource("func main() {\n    println(\"Hello, World!\"\n}",
-                                        "test.gs");
+        assert(byteSourceLocation1 == byteSourceLocation2);
+    }
 
-    auto SH = SM->GetCustomSource("test.gs")->GetHash();
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create(1);
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create(1);
 
-    MSM->Out() << IO::GS_MessageBuilder::Create().Text("Missed ')' in function calling expression!")
-                                                 .Error()
-                                                 .Location(IO::ToSourceLocation<IO::GS_ByteSourceLocation>(IO::GS_LineColumnSourceLocation::Create(SH, 2, 27), source_))
-                                                 .Message();
+        assert(byteSourceLocation1 == byteSourceLocation2);
+    }
+
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create(1, 123);
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create(1, 123);
+
+        assert(byteSourceLocation1 == byteSourceLocation2);
+    }
+
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create(1);
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create();
+
+        assert(byteSourceLocation1 != byteSourceLocation2);
+    }
+
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create();
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create(1);
+
+        assert(byteSourceLocation1 != byteSourceLocation2);
+    }
+
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create(2);
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create(1);
+
+        assert(byteSourceLocation1 != byteSourceLocation2);
+    }
+
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create(2, 123);
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create(1);
+
+        assert(byteSourceLocation1 != byteSourceLocation2);
+    }
+
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create(2, 123);
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create(1, 234);
+
+        assert(byteSourceLocation1 != byteSourceLocation2);
+    }
+
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create(1, 123);
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create(1, 234);
+
+        assert(byteSourceLocation1 != byteSourceLocation2);
+    }
+
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create();
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create();
+
+        assert(!(byteSourceLocation1 < byteSourceLocation2));
+        assert(!(byteSourceLocation1 <= byteSourceLocation2));
+        assert(!(byteSourceLocation1 > byteSourceLocation2));
+        assert(!(byteSourceLocation1 >= byteSourceLocation2));
+    }
+
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create(1);
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create();
+
+        assert(!(byteSourceLocation1 < byteSourceLocation2));
+        assert(!(byteSourceLocation1 <= byteSourceLocation2));
+        assert(!(byteSourceLocation1 > byteSourceLocation2));
+        assert(!(byteSourceLocation1 >= byteSourceLocation2));
+    }
+
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create(1);
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create(1);
+
+        assert(!(byteSourceLocation1 < byteSourceLocation2));
+        assert(byteSourceLocation1 <= byteSourceLocation2);
+        assert(!(byteSourceLocation1 > byteSourceLocation2));
+        assert(byteSourceLocation1 >= byteSourceLocation2);
+    }
+
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create(1);
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create(2);
+
+        assert(byteSourceLocation1 < byteSourceLocation2);
+        assert(byteSourceLocation1 <= byteSourceLocation2);
+        assert(!(byteSourceLocation1 > byteSourceLocation2));
+        assert(!(byteSourceLocation1 >= byteSourceLocation2));
+    }
+
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create(1, 123);
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create(2);
+
+        assert(byteSourceLocation1 < byteSourceLocation2);
+        assert(byteSourceLocation1 <= byteSourceLocation2);
+        assert(!(byteSourceLocation1 > byteSourceLocation2));
+        assert(!(byteSourceLocation1 >= byteSourceLocation2));
+    }
+
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create(1, 123);
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create(2, 234);
+
+        assert(byteSourceLocation1 < byteSourceLocation2);
+        assert(byteSourceLocation1 <= byteSourceLocation2);
+        assert(!(byteSourceLocation1 > byteSourceLocation2));
+        assert(!(byteSourceLocation1 >= byteSourceLocation2));
+    }
+
+    {
+        auto byteSourceLocation1 = IO::GS_ByteSourceLocation::Create(1, 123);
+        auto byteSourceLocation2 = IO::GS_ByteSourceLocation::Create(2, 123);
+
+        assert(byteSourceLocation1 < byteSourceLocation2);
+        assert(byteSourceLocation1 <= byteSourceLocation2);
+        assert(!(byteSourceLocation1 > byteSourceLocation2));
+        assert(!(byteSourceLocation1 >= byteSourceLocation2));
+    }
 }
 
-// TODO create Block System for code style
+Void CheckLineColumnSourceLocationComparing() {
+    {
+        auto lineColumnSourceLocation1 = IO::GS_LineColumnSourceLocation::Create();
+        auto lineColumnSourceLocation2 = IO::GS_LineColumnSourceLocation::Create();
+
+        assert(lineColumnSourceLocation1 == lineColumnSourceLocation2);
+    }
+
+    {
+        auto lineColumnSourceLocation1 = IO::GS_LineColumnSourceLocation::Create(1, 1);
+        auto lineColumnSourceLocation2 = IO::GS_LineColumnSourceLocation::Create();
+
+        assert(lineColumnSourceLocation1 != lineColumnSourceLocation2);
+    }
+
+    {
+        auto lineColumnSourceLocation1 = IO::GS_LineColumnSourceLocation::Create(1, 1);
+        auto lineColumnSourceLocation2 = IO::GS_LineColumnSourceLocation::Create(1, 1);
+
+        assert(lineColumnSourceLocation1 == lineColumnSourceLocation2);
+    }
+
+    {
+        auto lineColumnSourceLocation1 = IO::GS_LineColumnSourceLocation::Create(1, 1, 1);
+        auto lineColumnSourceLocation2 = IO::GS_LineColumnSourceLocation::Create(1, 1, 1);
+
+        assert(lineColumnSourceLocation1 == lineColumnSourceLocation2);
+    }
+
+    {
+        auto lineColumnSourceLocation1 = IO::GS_LineColumnSourceLocation::Create(1, 1, 2);
+        auto lineColumnSourceLocation2 = IO::GS_LineColumnSourceLocation::Create(1, 1, 3);
+
+        assert(lineColumnSourceLocation1 != lineColumnSourceLocation2);
+    }
+
+    {
+        auto lineColumnSourceLocation1 = IO::GS_LineColumnSourceLocation::Create(1, 1, 12);
+        auto lineColumnSourceLocation2 = IO::GS_LineColumnSourceLocation::Create(1, 1);
+
+        assert(!(lineColumnSourceLocation1 < lineColumnSourceLocation2));
+        assert(!(lineColumnSourceLocation1 <= lineColumnSourceLocation2));
+        assert(!(lineColumnSourceLocation1 > lineColumnSourceLocation2));
+        assert(!(lineColumnSourceLocation1 >= lineColumnSourceLocation2));
+    }
+
+    {
+        auto lineColumnSourceLocation1 = IO::GS_LineColumnSourceLocation::Create(1, 1);
+        auto lineColumnSourceLocation2 = IO::GS_LineColumnSourceLocation::Create(1, 1);
+
+        assert(!(lineColumnSourceLocation1 < lineColumnSourceLocation2));
+        assert(lineColumnSourceLocation1 <= lineColumnSourceLocation2);
+        assert(!(lineColumnSourceLocation1 > lineColumnSourceLocation2));
+        assert(lineColumnSourceLocation1 >= lineColumnSourceLocation2);
+    }
+
+    {
+        auto lineColumnSourceLocation1 = IO::GS_LineColumnSourceLocation::Create(1, 1);
+        auto lineColumnSourceLocation2 = IO::GS_LineColumnSourceLocation::Create(1, 2);
+
+        assert(lineColumnSourceLocation1 < lineColumnSourceLocation2);
+        assert(lineColumnSourceLocation1 <= lineColumnSourceLocation2);
+        assert(!(lineColumnSourceLocation1 > lineColumnSourceLocation2));
+        assert(!(lineColumnSourceLocation1 >= lineColumnSourceLocation2));
+    }
+
+    {
+        auto lineColumnSourceLocation1 = IO::GS_LineColumnSourceLocation::Create(1, 1);
+        auto lineColumnSourceLocation2 = IO::GS_LineColumnSourceLocation::Create(2, 1);
+
+        assert(lineColumnSourceLocation1 < lineColumnSourceLocation2);
+        assert(lineColumnSourceLocation1 <= lineColumnSourceLocation2);
+        assert(!(lineColumnSourceLocation1 > lineColumnSourceLocation2));
+        assert(!(lineColumnSourceLocation1 >= lineColumnSourceLocation2));
+    }
+
+    {
+        auto lineColumnSourceLocation1 = IO::GS_LineColumnSourceLocation::Create(1, 2);
+        auto lineColumnSourceLocation2 = IO::GS_LineColumnSourceLocation::Create(2, 1);
+
+        assert(lineColumnSourceLocation1 < lineColumnSourceLocation2);
+        assert(lineColumnSourceLocation1 <= lineColumnSourceLocation2);
+        assert(!(lineColumnSourceLocation1 > lineColumnSourceLocation2));
+        assert(!(lineColumnSourceLocation1 >= lineColumnSourceLocation2));
+    }
+
+    {
+        auto lineColumnSourceLocation1 = IO::GS_LineColumnSourceLocation::Create(1, IO::InvalidPosition);
+        auto lineColumnSourceLocation2 = IO::GS_LineColumnSourceLocation::Create(2, IO::InvalidPosition);
+
+        assert(lineColumnSourceLocation1 < lineColumnSourceLocation2);
+        assert(lineColumnSourceLocation1 <= lineColumnSourceLocation2);
+        assert(!(lineColumnSourceLocation1 > lineColumnSourceLocation2));
+        assert(!(lineColumnSourceLocation1 >= lineColumnSourceLocation2));
+    }
+
+    {
+        auto lineColumnSourceLocation1 = IO::GS_LineColumnSourceLocation::Create(1, 1);
+        auto lineColumnSourceLocation2 = IO::GS_LineColumnSourceLocation::Create(IO::InvalidPosition, 2);
+
+        assert(!(lineColumnSourceLocation1 < lineColumnSourceLocation2));
+        assert(!(lineColumnSourceLocation1 <= lineColumnSourceLocation2));
+        assert(!(lineColumnSourceLocation1 > lineColumnSourceLocation2));
+        assert(!(lineColumnSourceLocation1 >= lineColumnSourceLocation2));
+    }
+}
+
+Void CheckGetCodeInRange() {
+    {
+        auto sourceBuffer = IO::GS_SourceBuffer::Create("func main() {\n"
+                                                        "    1 + 1\n"
+                                                        "\n"
+                                                        "    var string String = input()\n"
+                                                        "}");
+
+        auto code = sourceBuffer.GetCodeInRange(IO::GSByteSourceRange::Create(IO::GS_ByteSourceLocation::Create(19),
+                                                                              IO::GS_ByteSourceLocation::Create(24)));
+
+        assert(code == "1 + 1"_us);
+    }
+
+    {
+        auto sourceBuffer = IO::GS_SourceBuffer::Create("func main() {\n"
+                                                        "    1 + 1\n"
+                                                        "\n"
+                                                        "    var string String = input()\n"
+                                                        "}");
+
+        auto code = sourceBuffer.GetCodeInRange(IO::GSLineColumnSourceRange::Create(IO::GS_LineColumnSourceLocation::Create(2, 5),
+                                                                                    IO::GS_LineColumnSourceLocation::Create(2, 10)));
+
+        assert(code == "1 + 1"_us);
+    }
+}
+
+Void CheckMessageLocation() {
+    {
+        auto SS = IO::GS_StdIOStreamsManager::Create();
+        auto SM = IO::GS_SourceManager::Create();
+        auto MSM = IO::GS_MessageStreamsManager::Create(*SS,
+                                                        *SM);
+
+        auto &source_ = SM->AddCustomSource("func main() {\n"
+                                            "    println(\"Hello, World!\"\n"
+                                            "}",
+                                            "test.gs");
+
+        auto SH = SM->GetCustomSource("test.gs")->GetHash();
+
+        MSM->Out() << IO::GS_MessageBuilder::Create().Text("Missed ')' in function calling expression!")
+                                                     .Error()
+                                                     .Location(IO::ToSourceLocation<IO::GS_ByteSourceLocation>(IO::GS_LineColumnSourceLocation::Create(2, 28, SH), source_))
+                                                     .Message();
+    }
+}
+
+Void Checks() {
+    CheckByteSourceLocationComparing();
+    CheckLineColumnSourceLocationComparing();
+    CheckGetCodeInRange();
+    CheckMessageLocation();
+}
 
 /**
  * High level entry point for GSLanguageCompiler
@@ -245,7 +545,7 @@ Result GSMain(I32 argc, Ptr<Ptr<C>> argv) {
         return Result::Err;
     }
 
-    ErrorExample();
+    Checks();
 
 //    auto compilingResult = Driver::GS_Compiler::Start(argc, argv);
 //

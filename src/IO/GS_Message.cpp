@@ -45,8 +45,8 @@ namespace GSLanguageCompiler::IO {
         auto sourceHash = sourceLocation.GetSourceHash();
         auto position = sourceLocation.GetPosition();
 
-        auto endSourceLocation = GS_ByteSourceLocation::Create(sourceHash,
-                                                               position + 1);
+        auto endSourceLocation = GS_ByteSourceLocation::Create(position + 1,
+                                                               sourceHash);
 
         auto locationRange = GSByteSourceRange::Create(sourceLocation, endSourceLocation);
 
@@ -160,8 +160,8 @@ namespace GSLanguageCompiler::IO {
         auto messageSourceHash = messageSourceLocation.GetSourceHash();
         auto messagePosition = messageSourceLocation.GetPosition();
 
-        auto endSourceLocation = GS_ByteSourceLocation::Create(messageSourceHash,
-                                                               messagePosition + 1);
+        auto endSourceLocation = GS_ByteSourceLocation::Create(messagePosition + 1,
+                                                               messageSourceHash);
 
         auto locationRange = GSByteSourceRange::Create(messageSourceLocation, endSourceLocation);
 
@@ -221,8 +221,8 @@ namespace GSLanguageCompiler::IO {
         auto messageSourceHash = messageSourceLocation.GetSourceHash();
         auto messagePosition = messageSourceLocation.GetPosition();
 
-        auto endMessageSourceLocation = GS_ByteSourceLocation::Create(messageSourceHash,
-                                                                      messagePosition + 1);
+        auto endMessageSourceLocation = GS_ByteSourceLocation::Create(messagePosition + 1,
+                                                                      messageSourceHash);
 
         auto messageLocationRange = GSByteSourceRange::Create(messageSourceLocation,
                                                               endMessageSourceLocation);
@@ -266,6 +266,14 @@ namespace GSLanguageCompiler::IO {
     }
 
     Void GS_MessageStream::Write(GS_Message message) {
+        auto SetColor = [this] (rang::fg color) {
+            _messageHandler << color;
+        };
+
+        auto SetStyle = [this] (rang::style style) {
+            _messageHandler << style;
+        };
+
         auto movedMessage = std::move(message);
 
         auto &messageText = movedMessage.GetText();
@@ -273,39 +281,54 @@ namespace GSLanguageCompiler::IO {
         auto optionalMessageLocationRange = movedMessage.GetLocationRange();
 
         UString textMessageLevel;
+        rang::fg messageColor;
 
         switch (messageLevel) {
             case MessageLevel::Note: {
                 textMessageLevel = "Note";
+                messageColor = rang::fg::blue;
 
                 break;
             }
             case MessageLevel::Warning: {
                 textMessageLevel = "Warning";
+                messageColor = rang::fg::yellow;
 
                 break;
             }
             case MessageLevel::Error: {
                 textMessageLevel = "Error";
+                messageColor = rang::fg::red;
 
                 break;
             }
             case MessageLevel::Fatal: {
                 textMessageLevel = "Fatal";
+                messageColor = rang::fg::black;
 
                 break;
             }
             default: {
                 textMessageLevel = "<invalid>";
+                messageColor = rang::fg::gray;
 
                 break;
             }
         }
 
+        SetStyle(rang::style::bold);
+        SetColor(rang::fg::reset);
+
+        SetColor(messageColor);
+
         _messageHandler << " |--------------------------------------------------"_us << std::endl
                         << "/"_us << std::endl;
 
-        _messageHandler << "| "_us << textMessageLevel << ": " << messageText << std::endl;
+        _messageHandler << "| "_us << textMessageLevel;
+
+        SetColor(rang::fg::reset);
+
+        _messageHandler << ": " << messageText << std::endl;
 
         if (optionalMessageLocationRange.has_value()) {
             auto &messageLocationRange = optionalMessageLocationRange.value();
@@ -345,15 +368,46 @@ namespace GSLanguageCompiler::IO {
                 whitespaces += ' ';
             }
 
-            _messageHandler << "| "_us << "> "_us << sourceName.GetName() << ":" << "[" << line << "." << column << "]" << std::endl;
+            SetColor(messageColor);
 
-            _messageHandler << "| "_us << lineCode <<  std::endl;
+            _messageHandler << "| "_us << "> "_us;
 
-            _messageHandler << "| "_us << whitespaces << "^" << std::endl;
+            SetColor(rang::fg::reset);
+
+            _messageHandler << sourceName.GetName() << ":" << "[" << line << "." << column << "]" << std::endl;
+
+            SetColor(messageColor);
+
+            _messageHandler << "| "_us;
+
+            SetColor(rang::fg::reset);
+
+            _messageHandler << lineCode <<  std::endl;
+
+            SetColor(messageColor);
+
+            _messageHandler << "| "_us;
+
+            SetColor(rang::fg::reset);
+
+            _messageHandler << whitespaces;
+
+            SetColor(messageColor);
+
+            _messageHandler << "^" << std::endl;
+
+            SetColor(rang::fg::reset);
         }
+
+        SetColor(messageColor);
 
         _messageHandler << "\\"_us << std::endl
                         << " |--------------------------------------------------"_us << std::endl;
+
+        SetColor(rang::fg::reset);
+
+        SetStyle(rang::style::reset);
+        SetColor(rang::fg::reset);
     }
 
     LRef<GSMessageHandler> GS_MessageStream::GetMessageHandler() {

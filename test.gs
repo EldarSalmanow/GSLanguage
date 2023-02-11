@@ -15,18 +15,18 @@ Message = text message + message type (+ message location)
  |--------------------------------------------------
 /
 | Error: missed ':' in variable declaration statement
-| > main.gs:[4.16]
+| > main.gs:[4.14]
 | -     var string String = input()
-| -               ^
+| -              ^
 \
  |--------------------------------------------------
 
  |--------------------------------------------------
 /
 | Error: missed ')' in function calling expression
-| > main.gs:[6.44]
+| > main.gs:[6.43]
 | -     var iterator: Iterator = Iterate(string
-| -                                            ^
+| -                                           ^
 \
  |--------------------------------------------------
 

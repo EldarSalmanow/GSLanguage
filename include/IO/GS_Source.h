@@ -48,7 +48,7 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Creating byte source location
+         * Creating concrete byte source location
          * @param position Byte position
          * @param sourceHash Source hash
          * @return Byte source location
@@ -68,6 +68,20 @@ namespace GSLanguageCompiler::IO {
          * @return Byte source location
          */
         static GS_ByteSourceLocation Create();
+
+    public:
+
+        /*
+         *
+         * GS_ByteSourceLocation PUBLIC METHODS
+         *
+         */
+
+        /**
+         * Is invalid byte source location
+         * @return Is invalid byte source location
+         */
+        Bool IsInvalid() const;
 
     public:
 
@@ -108,7 +122,6 @@ namespace GSLanguageCompiler::IO {
          * Comparison operator for byte source location
          * @param sourceLocation Byte source location
          * @return Partial comparison ordering
-         * @todo Check
          */
         std::partial_ordering operator<=>(ConstLRef<GS_ByteSourceLocation> sourceLocation) const;
 
@@ -191,6 +204,20 @@ namespace GSLanguageCompiler::IO {
 
         /*
          *
+         * GS_LineColumnSourceLocation PUBLIC METHODS
+         *
+         */
+
+        /**
+         * Is invalid line column source location
+         * @return Is invalid line column source location
+         */
+        Bool IsInvalid() const;
+
+    public:
+
+        /*
+         *
          * GS_LineColumnSourceLocation PUBLIC GETTER METHODS
          *
          */
@@ -232,7 +259,6 @@ namespace GSLanguageCompiler::IO {
          * Comparison operator for line column source location
          * @param sourceLocation Line column source location
          * @return Partial comparison ordering
-         * @todo Check
          */
         std::partial_ordering operator<=>(ConstLRef<GS_LineColumnSourceLocation> sourceLocation) const;
 
@@ -263,7 +289,6 @@ namespace GSLanguageCompiler::IO {
     /**
      * Class for containing source location range
      * @tparam SourceLocationT Source location type
-     * @todo Check all
      */
     template<typename SourceLocationT>
     class GS_SourceRange {
@@ -292,13 +317,20 @@ namespace GSLanguageCompiler::IO {
          * Constructor for source location range [startLocation..endLocation]
          * @param startLocation Start source location
          * @param endLocation End source location
+         * @todo Rewrite
          */
         GS_SourceRange(SourceLocation startLocation,
                        SourceLocation endLocation)
                 : _startLocation(std::move(startLocation)),
                   _endLocation(std::move(endLocation)) {
-            if (_startLocation > _endLocation) {
+            if (_startLocation.GetSourceHash() != _endLocation.GetSourceHash()) {
                 Driver::GlobalContext().Exit();
+            }
+
+            if (!_startLocation.IsInvalid() && !_endLocation.IsInvalid()) {
+                if (_startLocation > _endLocation) {
+                    Driver::GlobalContext().Exit();
+                }
             }
         }
 
@@ -323,32 +355,28 @@ namespace GSLanguageCompiler::IO {
         }
 
         /**
-         * Creating source location range
-         * @param startLocation Start source location
-         * @return Source location range [startLocation..0(end)]
-         */
-        static GS_SourceRange CreateFromStart(SourceLocation startLocation) {
-            return GS_SourceRange<SourceLocation>::Create(std::move(startLocation),
-                                                          SourceLocation::Create());
-        }
-
-        /**
-         * Creating source location range
-         * @param endLocation End source location
-         * @return Source location range [0(start)..endLocation]
-         */
-        static GS_SourceRange CreateToEnd(SourceLocation endLocation) {
-            return GS_SourceRange<SourceLocation>::Create(SourceLocation::Create(),
-                                                          std::move(endLocation));
-        }
-
-        /**
-         * Creating source location range
-         * @return Source location range [0(start)..0(end)]
+         * Creating invalid source location range
+         * @return Source location range
          */
         static GS_SourceRange Create() {
             return GS_SourceRange<SourceLocation>::Create(SourceLocation::Create(),
                                                           SourceLocation::Create());
+        }
+
+    public:
+
+        /*
+         *
+         * GS_SourceRange PUBLIC METHODS
+         *
+         */
+
+        /**
+         * Is invalid source location range
+         * @return Is invalid source location range
+         */
+        Bool IsInvalid() const {
+            return _startLocation.IsInvalid() && _endLocation.IsInvalid();
         }
 
     public:
@@ -479,10 +507,6 @@ namespace GSLanguageCompiler::IO {
          *
          * GS_SourceBuffer PUBLIC METHODS
          *
-         */
-
-        /**
-         * @todo Check methods
          */
 
         /**
@@ -1197,7 +1221,7 @@ namespace GSLanguageCompiler::IO {
      * @param lineColumnSourceLocation Line column source location
      * @param source Source
      * @return Converted byte source location
-     * @todo Check
+     * @todo Rewrite
      */
     template<>
     GS_ByteSourceLocation ToSourceLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
@@ -1208,7 +1232,7 @@ namespace GSLanguageCompiler::IO {
      * @param byteSourceLocation Byte source location
      * @param source Source
      * @return Converted line column source location
-     * @todo Check
+     * @todo Rewrite
      */
     template<>
     GS_LineColumnSourceLocation ToSourceLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
@@ -1221,7 +1245,7 @@ namespace GSLanguageCompiler::IO {
      * @param sourceLocation Source location
      * @param sourceManager Source manager
      * @return Converted source location
-     * @todo Check
+     * @todo Rewrite
      */
     template<typename ToSourceLocationT,
              typename FromSourceLocationT>
@@ -1245,6 +1269,18 @@ namespace GSLanguageCompiler::IO {
                                                    source);
     }
 
+    /*
+     *
+     * (1, 1, 123) - (3, 5, 123) -> (1, 123) - (20, 123)
+     * (1, 1, 0) - (3, 5, 0) -> (1, 0) - (20, 0)
+     * (0, 0, 0) - (0, 0, 0) -> (0, 0) - (0, 0)
+     *
+     * (1, 123) - (20, 123) -> (1, 1, 123) - (3, 5, 123)
+     * (1, 0) - (20, 0) -> (1, 1, 0) - (3, 5, 0)
+     * (0, 0) - (0, 0) -> (0, 0, 0) - (0, 0, 0)
+     *
+     */
+
     /**
      * Converting source range with FromSourceRangeLocationT to source range with ToSourceRangeLocationT with source
      * @tparam ToSourceRangeLocationT To source range location type
@@ -1252,7 +1288,6 @@ namespace GSLanguageCompiler::IO {
      * @param locationRange Source location range
      * @param source Source
      * @return Converted source location range
-     * @todo Check
      */
     template<typename ToSourceRangeLocationT,
              typename FromSourceRangeLocationT>
@@ -1278,6 +1313,16 @@ namespace GSLanguageCompiler::IO {
         return locationRange;
     }
 
+    /*
+     *
+     * (1, 1, 123) - (3, 5, 123) -> (1, 123) - (20, 123)
+     * (0, 0, 0) - (0, 0, 0) -> (0, 0) - (0, 0)
+     *
+     * (1, 123) - (20, 123) -> (1, 1, 123) - (3, 5, 123)
+     * (0, 0) - (0, 0) -> (0, 0, 0) - (0, 0, 0)
+     *
+     */
+
     /**
      * Converting source range with FromSourceRangeLocationT to source range with ToSourceRangeLocationT with source manager
      * @tparam ToSourceRangeLocationT To source range location type
@@ -1285,7 +1330,7 @@ namespace GSLanguageCompiler::IO {
      * @param locationRange Location range
      * @param sourceManager Source manager
      * @return Converted source location range
-     * @todo Check
+     * @todo Rewrite
      */
     template<typename ToSourceRangeLocationT,
              typename FromSourceRangeLocationT>

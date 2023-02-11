@@ -26,6 +26,11 @@ namespace GSLanguageCompiler::IO {
         return GS_ByteSourceLocation::Create(InvalidPosition);
     }
 
+    Bool GS_ByteSourceLocation::IsInvalid() const {
+        return _position == InvalidPosition
+            && _sourceHash == InvalidHash;
+    }
+
     U64 GS_ByteSourceLocation::GetPosition() const {
         return _position;
     }
@@ -42,8 +47,7 @@ namespace GSLanguageCompiler::IO {
     std::partial_ordering GS_ByteSourceLocation::operator<=>(ConstLRef<GS_ByteSourceLocation> sourceLocation) const {
         auto position = sourceLocation.GetPosition();
 
-        if (_position == InvalidPosition
-         || position == InvalidPosition) {
+        if (IsInvalid() || sourceLocation.IsInvalid()) {
             return std::partial_ordering::unordered;
         }
 
@@ -77,6 +81,12 @@ namespace GSLanguageCompiler::IO {
                                                    InvalidPosition);
     }
 
+    Bool GS_LineColumnSourceLocation::IsInvalid() const {
+        return _line == InvalidPosition
+            && _column == InvalidPosition
+            && _sourceHash == InvalidHash;
+    }
+
     U64 GS_LineColumnSourceLocation::GetLine() const {
         return _line;
     }
@@ -98,7 +108,12 @@ namespace GSLanguageCompiler::IO {
     std::partial_ordering GS_LineColumnSourceLocation::operator<=>(ConstLRef<GS_LineColumnSourceLocation> sourceLocation) const {
         auto line = sourceLocation.GetLine();
         auto column = sourceLocation.GetColumn();
-        
+        auto sourceHash = sourceLocation.GetSourceHash();
+
+        if (_sourceHash != sourceHash) {
+            return std::partial_ordering::unordered;
+        }
+
         if (_line == InvalidPosition
          || line == InvalidPosition) {
             return std::partial_ordering::unordered;
@@ -127,6 +142,10 @@ namespace GSLanguageCompiler::IO {
                            ConstLRef<GS_SourceBuffer> sourceBuffer) {
         auto position = sourceLocation.GetPosition();
 
+        if (sourceLocation.IsInvalid()) {
+            return 0;
+        }
+
         if (position > sourceBuffer.GetSource().Size()) {
             Driver::GlobalContext().Exit();
         }
@@ -140,6 +159,10 @@ namespace GSLanguageCompiler::IO {
                            ConstLRef<GS_SourceBuffer> sourceBuffer) {
         auto line = sourceLocation.GetLine();
         auto column = sourceLocation.GetColumn();
+
+        if (sourceLocation.IsInvalid()) {
+            return 0;
+        }
 
         U64 position = 1;
 
@@ -155,7 +178,7 @@ namespace GSLanguageCompiler::IO {
             }
         }
 
-        for (U64 columnIndex = 1; columnIndex < column; ++position) {
+        for (U64 columnIndex = 1; columnIndex < column; ++columnIndex, ++position) {
             if (position > sourceSize) {
                 Driver::GlobalContext().Exit();
             }
@@ -472,7 +495,7 @@ namespace GSLanguageCompiler::IO {
         auto sourceHash = lineColumnSourceLocation.GetSourceHash();
 
         if (sourceHash != InvalidHash
-            && sourceHash != source.GetHash()) {
+         && sourceHash != source.GetHash()) {
             Driver::GlobalContext().Exit();
         }
 
@@ -490,7 +513,7 @@ namespace GSLanguageCompiler::IO {
             }
         }
 
-        for (U64 columnIndex = 1; columnIndex < column; ++position, ++columnIndex) {
+        for (U64 columnIndex = 1; columnIndex < column; ++columnIndex, ++position) {
             if (position > sourceSize) {
                 Driver::GlobalContext().Exit();
             }
@@ -515,7 +538,7 @@ namespace GSLanguageCompiler::IO {
         }
 
         if (sourceHash != InvalidHash
-            && sourceHash != source.GetHash()) {
+         && sourceHash != source.GetHash()) {
             Driver::GlobalContext().Exit();
         }
 
