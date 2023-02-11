@@ -10,12 +10,12 @@ set(GS_DRIVER_SOURCE
 #        ${DRIVER_DIR}/GS_SessionsManager.cpp
 #        ${DRIVER_DIR}/GS_Session.cpp
 
-#        ${DRIVER_DIR}/GS_Context.cpp
+        ${DRIVER_DIR}/GS_Context.cpp
 
 #        ${DRIVER_DIR}/GS_Toolchains.cpp
 
-#        ${DRIVER_DIR}/GS_Arguments.cpp)
-        )
+        ${DRIVER_DIR}/GS_Arguments.cpp)
+
 add_library(
 #       Library name
         ${PROJECT_NAME}

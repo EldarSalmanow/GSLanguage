@@ -59,7 +59,7 @@ namespace GSLanguageCompiler::Driver {
 
         /*
          *
-         * GS_GlobalContext PUBLIC INITIALIZING METHODS
+         * GS_GlobalContext PUBLIC METHODS
          *
          */
 
@@ -92,14 +92,6 @@ namespace GSLanguageCompiler::Driver {
          */
         Result Initialize();
 
-    public:
-
-        /*
-         *
-         * GS_GlobalContext PUBLIC IO METHODS
-         *
-         */
-
         /**
          * Getting standard input stream from standard IO streams manager
          * @return Standard input stream
@@ -123,14 +115,6 @@ namespace GSLanguageCompiler::Driver {
          * @return Standard logging stream
          */
         LRef<std::ostream> Log();
-
-    public:
-
-        /*
-         *
-         * GS_GlobalContext PUBLIC EXIT METHODS
-         *
-         */
 
         /**
          * Exiting from program

@@ -18,20 +18,16 @@ namespace GSLanguageCompiler::Driver {
     }
 
     GS_Arguments GS_Arguments::Create(std::vector<UString> inputFileNames) {
-        // TODO: replace output name to ?
-
         return GS_Arguments::Create(std::move(inputFileNames),
                                     "a.exe"_us);
     }
 
-//    GS_Arguments GS_Arguments::Create() {
-//        return GS_Arguments::Create(std::vector<UString>(),
-//                                    UString());
-//    }
+    GS_Arguments GS_Arguments::Create() {
+        return GS_Arguments::Create(std::vector<UString>(),
+                                    UString());
+    }
 
     std::optional<GS_Arguments> GS_Arguments::Create(I32 argc, Ptr<Ptr<C>> argv) {
-        // TODO add checking file extensions
-
         args::ArgumentParser parser("GSLanguageCompiler - Compiler for GSLanguage");
         args::HelpFlag helpFlag(parser,
                                 "help",
@@ -55,7 +51,7 @@ namespace GSLanguageCompiler::Driver {
 
             stringStream << parser.Help();
 
-            GS_GlobalContext::Out(stringStream.String());
+            GlobalContext().Out() << stringStream.String();
 
             return std::nullopt;
         } catch (LRef<args::Error> error) {
@@ -65,7 +61,7 @@ namespace GSLanguageCompiler::Driver {
                          << "\n\n"_us
                          << parser.Help();
 
-            GS_GlobalContext::Out(stringStream.String());
+            GlobalContext().Out() << stringStream.String();
 
             return std::nullopt;
         }

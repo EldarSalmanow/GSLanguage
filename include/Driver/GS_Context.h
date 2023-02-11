@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_CONTEXT_H
 #define GSLANGUAGE_GS_CONTEXT_H
 
+#include <IO/IO.h>
+
 #include <AST/AST.h>
 
 #include <Driver/GS_Arguments.h>
@@ -15,28 +17,40 @@ namespace GSLanguageCompiler::Driver {
     class GS_Context {
     public:
 
+        /*
+         *
+         * GS_Context PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Creating context
          * @param stdIOStreamsManager Standard IO streams manager
          * @param sourceManager Source manager
-         * @param messageRenderer Message renderer
+         * @param messageStreamsManager Message streams manager
          */
         GS_Context(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
                    IO::GSSourceManagerPtr sourceManager,
-                   IO::GSMessageRendererPtr messageRenderer);
+                   IO::GSMessageStreamsManagerPtr messageStreamsManager);
 
     public:
+
+        /*
+         *
+         * GS_Context PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating context
          * @param stdIOStreamsManager Standard IO streams manager
          * @param sourceManager Source manager
-         * @param messageRenderer Message renderer
+         * @param messageStreamsManager Message streams manager
          * @return Context ptr
          */
         static std::unique_ptr<GS_Context> Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
                                                   IO::GSSourceManagerPtr sourceManager,
-                                                  IO::GSMessageRendererPtr messageRenderer);
+                                                  IO::GSMessageStreamsManagerPtr messageStreamsManager);
 
         /**
          * Creating context
@@ -51,8 +65,6 @@ namespace GSLanguageCompiler::Driver {
          */
         static std::unique_ptr<GS_Context> Create();
 
-    public:
-
         /**
          * Creating context from arguments
          * @param arguments Arguments
@@ -62,31 +74,35 @@ namespace GSLanguageCompiler::Driver {
 
     public:
 
+        /*
+         *
+         * GS_Context PUBLIC METHODS
+         *
+         */
+
         /**
          * Getting standard input stream from standard IO streams manager for reading data from stream
          * @return Standard input stream
          */
-        LRef<std::istream> In();
+        LRef<std::istream> StdIn();
 
         /**
          * Getting standard output stream from standard IO streams manager for writing data to stream
          * @return Standard output stream
          */
-        LRef<std::ostream> Out();
+        LRef<std::ostream> StdOut();
 
         /**
          * Getting standard error stream from standard IO streams manager for writing data to stream
          * @return Standard error stream
          */
-        LRef<std::ostream> Err();
+        LRef<std::ostream> StdErr();
 
         /**
          * Getting standard logging stream from standard IO streams manager for writing data to stream
          * @return Standard logging stream
          */
-        LRef<std::ostream> Log();
-
-    public:
+        LRef<std::ostream> StdLog();
 
         /**
          * Add source to source manager
@@ -146,21 +162,36 @@ namespace GSLanguageCompiler::Driver {
         std::optional<IO::GS_Source> GetCustomSource(UString sourceName) const;
 
         /**
-         * Getter for sources from source manager
+         * Get sources from source manager
          * @return Sources
          */
         ConstLRef<IO::GSSourcePtrArray> GetSources() const;
 
-    public:
+        /**
+         * Getting output message stream for writing message in stream from message streams manager
+         * @return Output message stream
+         */
+        LRef<IO::GS_MessageStream> Out();
 
         /**
-         * Render message to message handler
-         * @param message Message
+         * Getting error message stream for writing message in stream from message streams manager
          * @return
          */
-        Void Render(IO::GS_Message message);
+        LRef<IO::GS_MessageStream> Err();
+
+        /**
+         * Getting logging message stream for writing message in stream from message streams manager
+         * @return Loging message stream
+         */
+        LRef<IO::GS_MessageStream> Log();
 
     public:
+
+        /*
+         *
+         * GS_Context PUBLIC GETTERS
+         *
+         */
 
         /**
          * Getter for standard IO streams manager
@@ -175,14 +206,18 @@ namespace GSLanguageCompiler::Driver {
         LRef<IO::GS_SourceManager> GetSourceManager();
 
         /**
-         * Getter for message renderer
-         * @return Message renderer
+         * Getter for message streams manager
+         * @return Message streams manager
          */
-        LRef<IO::GS_MessageRenderer> GetMessageRenderer();
-
-        LRef<IO::GS_MessageBuilder> CreateError();
+        LRef<IO::GS_MessageStreamsManager> GetMessageStreamsManager();
 
     private:
+
+        /*
+         *
+         * GS_Context PRIVATE FIELDS
+         *
+         */
 
         /**
          * Standard IO streams manager
@@ -195,9 +230,9 @@ namespace GSLanguageCompiler::Driver {
         IO::GSSourceManagerPtr _sourceManager;
 
         /**
-         * Message renderer
+         * Message streams manager
          */
-        IO::GSMessageRendererPtr _messageRenderer;
+        IO::GSMessageStreamsManagerPtr _messageStreamsManager;
     };
 
     /**

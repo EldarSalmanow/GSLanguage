@@ -15,6 +15,12 @@ namespace GSLanguageCompiler::Driver {
     class GS_Arguments {
     public:
 
+        /*
+         *
+         * GS_Arguments PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for arguments
          * @param inputFileNames Input file names
@@ -24,6 +30,12 @@ namespace GSLanguageCompiler::Driver {
                      UString outputFileName);
 
     public:
+
+        /*
+         *
+         * GS_Arguments PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating arguments
@@ -38,26 +50,33 @@ namespace GSLanguageCompiler::Driver {
          * Creating arguments
          * @param inputFileNames Input file names
          * @return Arguments
+         * @todo Replace output name to?
          */
         static GS_Arguments Create(std::vector<UString> inputFileNames);
 
         /**
          * Creating arguments
          * @return Arguments
+         * @todo Remove?
          */
-//        static GS_Arguments Create();
-
-    public:
+        static GS_Arguments Create();
 
         /**
          * Creating and parsing arguments
          * @param argc Arguments counter
          * @param argv Arguments values
          * @return Arguments
+         * @todo Rewrite
          */
         static std::optional<GS_Arguments> Create(I32 argc, Ptr<Ptr<C>> argv);
 
     public:
+
+        /*
+         *
+         * GS_Arguments PUBLIC GETTERS
+         *
+         */
 
         /**
          * Getter for input file names
@@ -72,6 +91,12 @@ namespace GSLanguageCompiler::Driver {
         ConstLRef<UString> GetOutputFileName() const;
 
     private:
+
+        /*
+         *
+         * GS_Arguments PRIVATE FIELDS
+         *
+         */
 
         /**
          * Input file names

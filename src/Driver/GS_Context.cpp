@@ -4,38 +4,38 @@ namespace GSLanguageCompiler::Driver {
 
     GS_Context::GS_Context(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
                            IO::GSSourceManagerPtr sourceManager,
-                           IO::GSMessageRendererPtr messageRenderer)
+                           IO::GSMessageStreamsManagerPtr messageStreamsManager)
             : _stdIOStreamsManager(std::move(stdIOStreamsManager)),
               _sourceManager(std::move(sourceManager)),
-              _messageRenderer(std::move(messageRenderer)) {}
+              _messageStreamsManager(std::move(messageStreamsManager)) {}
 
     std::unique_ptr<GS_Context> GS_Context::Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
                                                    IO::GSSourceManagerPtr sourceManager,
-                                                   IO::GSMessageRendererPtr messageRenderer) {
+                                                   IO::GSMessageStreamsManagerPtr messageStreamsManager) {
         return std::make_unique<GS_Context>(std::move(stdIOStreamsManager),
                                             std::move(sourceManager),
-                                            std::move(messageRenderer));
+                                            std::move(messageStreamsManager));
     }
 
     std::unique_ptr<GS_Context> GS_Context::Create(IO::GSSourceManagerPtr sourceManager) {
         auto stdIOStreamsManager = IO::GS_StdIOStreamsManager::Create();
-        auto messageRenderer = IO::GS_MessageRenderer::Create(stdIOStreamsManager->Out(),
-                                                              *sourceManager);
+        auto messageStreamsManager = IO::GS_MessageStreamsManager::Create(*stdIOStreamsManager,
+                                                                          *sourceManager);
 
         return GS_Context::Create(std::move(stdIOStreamsManager),
                                   std::move(sourceManager),
-                                  std::move(messageRenderer));
+                                  std::move(messageStreamsManager));
     }
 
     std::unique_ptr<GS_Context> GS_Context::Create() {
         auto stdIOStreamsManager = IO::GS_StdIOStreamsManager::Create();
         auto sourceManager = IO::GS_SourceManager::Create();
-        auto messageRenderer = IO::GS_MessageRenderer::Create(stdIOStreamsManager->Out(),
-                                                              *sourceManager);
+        auto messageStreamsManager = IO::GS_MessageStreamsManager::Create(*stdIOStreamsManager,
+                                                                          *sourceManager);
 
         return GS_Context::Create(std::move(stdIOStreamsManager),
                                   std::move(sourceManager),
-                                  std::move(messageRenderer));
+                                  std::move(messageStreamsManager));
     }
 
     std::unique_ptr<GS_Context> GS_Context::Create(GS_Arguments arguments) {
@@ -46,8 +46,8 @@ namespace GSLanguageCompiler::Driver {
 
         auto stdIOStreamsManager = IO::GS_StdIOStreamsManager::Create();
         auto sourceManager = IO::GS_SourceManager::Create();
-        auto messageRenderer = IO::GS_MessageRenderer::Create(stdIOStreamsManager->Out(),
-                                                              *sourceManager);
+        auto messageStreamsManager = IO::GS_MessageStreamsManager::Create(*stdIOStreamsManager,
+                                                                          *sourceManager);
 
         for (auto &inputFileName : inputFileNames) {
             sourceManager->AddFileSource(inputFileName);
@@ -55,22 +55,22 @@ namespace GSLanguageCompiler::Driver {
 
         return GS_Context::Create(std::move(stdIOStreamsManager),
                                   std::move(sourceManager),
-                                  std::move(messageRenderer));
+                                  std::move(messageStreamsManager));
     }
 
-    LRef<std::istream> GS_Context::In() {
+    LRef<std::istream> GS_Context::StdIn() {
         return _stdIOStreamsManager->In();
     }
 
-    LRef<std::ostream> GS_Context::Out() {
+    LRef<std::ostream> GS_Context::StdOut() {
         return _stdIOStreamsManager->Out();
     }
 
-    LRef<std::ostream> GS_Context::Err() {
+    LRef<std::ostream> GS_Context::StdErr() {
         return _stdIOStreamsManager->Err();
     }
 
-    LRef<std::ostream> GS_Context::Log() {
+    LRef<std::ostream> GS_Context::StdLog() {
         return _stdIOStreamsManager->Log();
     }
 
@@ -110,8 +110,16 @@ namespace GSLanguageCompiler::Driver {
         return _sourceManager->GetSources();
     }
 
-    Void GS_Context::Render(IO::GS_Message message) {
-        _messageRenderer->Render(std::move(message));
+    LRef<IO::GS_MessageStream> GS_Context::Out() {
+        return _messageStreamsManager->Out();
+    }
+
+    LRef<IO::GS_MessageStream> GS_Context::Err() {
+        return _messageStreamsManager->Err();
+    }
+
+    LRef<IO::GS_MessageStream> GS_Context::Log() {
+        return _messageStreamsManager->Log();
     }
 
     LRef<IO::GS_StdIOStreamsManager> GS_Context::GetStdIOStreamsManager() {
@@ -122,8 +130,8 @@ namespace GSLanguageCompiler::Driver {
         return *_sourceManager;
     }
 
-    LRef<IO::GS_MessageRenderer> GS_Context::GetMessageRenderer() {
-        return *_messageRenderer;
+    LRef<IO::GS_MessageStreamsManager> GS_Context::GetMessageStreamsManager() {
+        return *_messageStreamsManager;
     }
 
 }
