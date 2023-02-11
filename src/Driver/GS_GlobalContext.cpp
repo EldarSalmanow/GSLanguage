@@ -30,9 +30,10 @@ namespace GSLanguageCompiler::Driver {
 
         stringStream << "\n"_us;
 
+        // TODO add ErrAndExit (?) function
         GlobalContext().Err() << stringStream.String();
 
-        GlobalContext().Exit(StaticCast<I32>(Result::Err));
+        GlobalContext().Exit();
     }
 
     LRef<GS_GlobalContext> GS_GlobalContext::GetInstance() {
@@ -92,24 +93,13 @@ namespace GSLanguageCompiler::Driver {
     }
 
     Void GS_GlobalContext::Exit(I32 exitCode) {
-        // TODO add cleanup ?
-
         std::exit(exitCode);
     }
 
     Void GS_GlobalContext::Exit() {
-        Exit(StaticCast<I32>(Result::Err));
-    }
-
-    Void GS_GlobalContext::ErrAndExit(ConstLRef<UString> string, I32 exitCode) {
-        Err() << string;
+        auto exitCode = StaticCast<I32>(Result::Err);
 
         Exit(exitCode);
-    }
-
-    Void GS_GlobalContext::ErrAndExit(ConstLRef<UString> string) {
-        ErrAndExit(string,
-                   StaticCast<I32>(Result::Err));
     }
 
     GS_GlobalContext::GS_GlobalContext()

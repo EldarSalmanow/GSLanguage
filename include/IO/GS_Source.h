@@ -80,6 +80,7 @@ namespace GSLanguageCompiler::IO {
         /**
          * Is invalid byte source location
          * @return Is invalid byte source location
+         * @todo Delete or update
          */
         Bool IsInvalid() const;
 
@@ -211,6 +212,7 @@ namespace GSLanguageCompiler::IO {
         /**
          * Is invalid line column source location
          * @return Is invalid line column source location
+         * @todo Delete or update
          */
         Bool IsInvalid() const;
 
@@ -374,6 +376,7 @@ namespace GSLanguageCompiler::IO {
         /**
          * Is invalid source location range
          * @return Is invalid source location range
+         * @todo Delete or update
          */
         Bool IsInvalid() const {
             return _startLocation.IsInvalid() && _endLocation.IsInvalid();

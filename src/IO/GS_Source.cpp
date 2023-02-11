@@ -138,6 +138,9 @@ namespace GSLanguageCompiler::IO {
         return GS_SourceBuffer(std::move(source));
     }
 
+    /**
+     * @todo Rewrite
+     */
     U64 GetIndexByLocation(GS_ByteSourceLocation sourceLocation,
                            ConstLRef<GS_SourceBuffer> sourceBuffer) {
         auto position = sourceLocation.GetPosition();
@@ -155,6 +158,9 @@ namespace GSLanguageCompiler::IO {
         return index;
     }
 
+    /**
+     * @todo Rewrite
+     */
     U64 GetIndexByLocation(GS_LineColumnSourceLocation sourceLocation,
                            ConstLRef<GS_SourceBuffer> sourceBuffer) {
         auto line = sourceLocation.GetLine();

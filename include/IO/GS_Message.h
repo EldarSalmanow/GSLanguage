@@ -73,7 +73,6 @@ namespace GSLanguageCompiler::IO {
          * @param level Message level
          * @param sourceLocation Message byte source location [sourceLocation, sourceLocation + 1) (one symbol)
          * @return Message
-         * @todo Check
          */
         static GS_Message Create(UString text,
                                  MessageLevel level,
@@ -374,7 +373,6 @@ namespace GSLanguageCompiler::IO {
          * @param messageLevel Message level
          * @param messageSourceLocation Message byte source location [sourceLocation, sourceLocation + 1) (one symbol)
          * @return Message builder
-         * @todo Check
          */
         static GS_MessageBuilder Create(UString messageText,
                                         MessageLevel messageLevel,
@@ -452,7 +450,6 @@ namespace GSLanguageCompiler::IO {
          * Setting message source location range in message to [sourceLocation, sourceLocation + 1) (one symbol)
          * @param messageSourceLocation Message byte source location
          * @return Message builder
-         * @todo Check
          */
         LRef<GS_MessageBuilder> Location(GS_ByteSourceLocation messageSourceLocation);
 
@@ -566,7 +563,7 @@ namespace GSLanguageCompiler::IO {
          * Writing message in message handler
          * @param message Message
          * @return
-         * @todo Check
+         * @todo Rewrite
          */
         Void Write(GS_Message message);
 

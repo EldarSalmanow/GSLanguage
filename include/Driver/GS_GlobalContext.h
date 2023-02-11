@@ -3,6 +3,12 @@
 
 #include <IO/GS_Stream.h>
 
+// TODO move macros to GSCrossPlatform library
+
+#define GS_ATTRIBUTE(name) [[name]]
+
+#define GS_NORETURN GS_ATTRIBUTE(noreturn)
+
 namespace GSLanguageCompiler::Driver {
 
     /**
@@ -13,15 +19,21 @@ namespace GSLanguageCompiler::Driver {
     /**
      * Default signal handler function
      * @param signal Signal
-     * @return
+     * @return No return
      */
-    Void DefaultSignalHandler(I32 signal);
+    GS_NORETURN Void DefaultSignalHandler(I32 signal);
 
     /**
      * Global compiler context for containing and manipulating information and operation system
      */
     class GS_GlobalContext {
     public:
+
+        /*
+         *
+         * GS_GlobalContext PUBLIC CONSTRUCTORS
+         *
+         */
 
         /**
          * Delete copy constructor for global context
@@ -31,6 +43,12 @@ namespace GSLanguageCompiler::Driver {
 
     public:
 
+        /*
+         *
+         * GS_GlobalContext PUBLIC STATIC METHODS
+         *
+         */
+
         /**
          * Getting global context instance
          * @return Global context instance
@@ -38,6 +56,12 @@ namespace GSLanguageCompiler::Driver {
         static LRef<GS_GlobalContext> GetInstance();
 
     public:
+
+        /*
+         *
+         * GS_GlobalContext PUBLIC INITIALIZING METHODS
+         *
+         */
 
         /**
          * Initializing global IO streams
@@ -70,6 +94,12 @@ namespace GSLanguageCompiler::Driver {
 
     public:
 
+        /*
+         *
+         * GS_GlobalContext PUBLIC IO METHODS
+         *
+         */
+
         /**
          * Getting standard input stream from standard IO streams manager
          * @return Standard input stream
@@ -96,25 +126,32 @@ namespace GSLanguageCompiler::Driver {
 
     public:
 
-        // TODO add GS_NORETURN macro
+        /*
+         *
+         * GS_GlobalContext PUBLIC EXIT METHODS
+         *
+         */
 
         /**
          * Exiting from program
          * @param exitCode Exit code
-         * @return
+         * @return No return
          */
-        [[noreturn]] Void Exit(I32 exitCode);
+        GS_NORETURN Void Exit(I32 exitCode);
 
-        [[noreturn]] Void Exit();
-
-        // TODO comment
-
-        [[noreturn]] Void ErrAndExit(ConstLRef<UString> string,
-                                     I32 exitCode);
-
-        [[noreturn]] Void ErrAndExit(ConstLRef<UString> string);
+        /**
+         * Exiting from program with exit code 1
+         * @return No return
+         */
+        GS_NORETURN Void Exit();
 
     public:
+
+        /*
+         *
+         * GS_GlobalContext PUBLIC OPERATORS
+         *
+         */
 
         /**
          * Delete assignment operator for global context
@@ -125,6 +162,12 @@ namespace GSLanguageCompiler::Driver {
 
     private:
 
+        /*
+         *
+         * GS_GlobalContext PRIVATE CONSTRUCTORS
+         *
+         */
+
         /**
          * Default constructor for global context
          */
@@ -132,12 +175,24 @@ namespace GSLanguageCompiler::Driver {
 
     private:
 
+        /*
+         *
+         * GS_GlobalContext PRIVATE STATIC FIELDS
+         *
+         */
+
         /**
          * Global context instance
          */
         static GS_GlobalContext _context;
 
     private:
+
+        /*
+         *
+         * GS_GlobalContext PRIVATE FIELDS
+         *
+         */
 
         /**
          * Standard IO streams manager
