@@ -11,6 +11,12 @@ namespace GSLanguageCompiler::Driver {
     class GS_SessionsManager {
     public:
 
+        /*
+         *
+         * GS_SessionsManager PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Creating sessions manager
          * @param sessions Compiler sessions
@@ -18,6 +24,12 @@ namespace GSLanguageCompiler::Driver {
         explicit GS_SessionsManager(GSSessionPtrArray sessions);
 
     public:
+
+        /*
+         *
+         * GS_SessionsManager PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating sessions manager
@@ -34,6 +46,12 @@ namespace GSLanguageCompiler::Driver {
 
     public:
 
+        /*
+         *
+         * GS_SessionsManager PUBLIC METHODS
+         *
+         */
+
         /**
          * Running compiler sessions
          * @return Compiling results
@@ -49,6 +67,12 @@ namespace GSLanguageCompiler::Driver {
 
     public:
 
+        /*
+         *
+         * GS_SessionsManager PUBLIC GETTERS
+         *
+         */
+
         /**
          * Getter for sessions
          * @return Sessions
@@ -56,6 +80,12 @@ namespace GSLanguageCompiler::Driver {
         ConstLRef<GSSessionPtrArray> GetSessions() const;
 
     private:
+
+        /*
+         *
+         * GS_SessionsManager PRIVATE FIELDS
+         *
+         */
 
         /**
          * Sessions

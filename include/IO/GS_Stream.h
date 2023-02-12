@@ -32,7 +32,7 @@ namespace GSLanguageCompiler::IO {
          * @param standardIn Standard input stream
          * @param standardOut Standard output stream
          * @param standardErr Standard error stream
-         * @param standardLog Standard logging stream
+         * @param standardLog Standard logger stream
          */
         GS_StdIOStreamsManager(LRef<InputStream> standardIn,
                                LRef<OutputStream> standardOut,
@@ -52,7 +52,7 @@ namespace GSLanguageCompiler::IO {
          * @param standardIn Standard input stream
          * @param standardOut Standard output stream
          * @param standardErr Standard error stream
-         * @param standardLog Standard logging stream
+         * @param standardLog Standard logger stream
          * @return Standard IO streams manager ptr
          */
         static std::unique_ptr<GS_StdIOStreamsManager> Create(LRef<InputStream> standardIn,
@@ -93,8 +93,8 @@ namespace GSLanguageCompiler::IO {
         LRef<OutputStream> Err();
 
         /**
-         * Getting standard logging stream for writing data in stream
-         * @return Standard logging stream
+         * Getting standard logger stream for writing data in stream
+         * @return Standard logger stream
          */
         LRef<OutputStream> Log();
 
@@ -122,7 +122,7 @@ namespace GSLanguageCompiler::IO {
         LRef<OutputStream> _standardErr;
 
         /**
-         * Standard logging stream
+         * Standard logger stream
          */
         LRef<OutputStream> _standardLog;
     };

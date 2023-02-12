@@ -5,12 +5,10 @@ set(DRIVER_DIR ${SOURCE_DIR}/Driver)
 set(GS_DRIVER_SOURCE
         ${DRIVER_DIR}/GS_GlobalContext.cpp
 
-#        ${DRIVER_DIR}/GS_Compiler.cpp
+        ${DRIVER_DIR}/GS_Compiler.cpp
 
-#        ${DRIVER_DIR}/GS_SessionsManager.cpp
-#        ${DRIVER_DIR}/GS_Session.cpp
-
-        ${DRIVER_DIR}/GS_Context.cpp
+        ${DRIVER_DIR}/GS_SessionsManager.cpp
+        ${DRIVER_DIR}/GS_Session.cpp
 
 #        ${DRIVER_DIR}/GS_Toolchains.cpp
 

@@ -651,7 +651,7 @@ namespace GSLanguageCompiler::IO {
          * Constructor for message streams manager
          * @param messageOut Output message stream
          * @param messageErr Error message stream
-         * @param messageLog Logging message stream
+         * @param messageLog Logger message stream
          */
         GS_MessageStreamsManager(GS_MessageStream messageOut,
                                  GS_MessageStream messageErr,
@@ -669,7 +669,7 @@ namespace GSLanguageCompiler::IO {
          * Creating message streams manager
          * @param messageOut Output message stream
          * @param messageErr Error message stream
-         * @param messageLog Logging message stream
+         * @param messageLog Logger message stream
          * @return Message streams manager ptr
          */
         static std::unique_ptr<GS_MessageStreamsManager> Create(GS_MessageStream messageOut,
@@ -706,8 +706,8 @@ namespace GSLanguageCompiler::IO {
         LRef<GS_MessageStream> Err();
 
         /**
-         * Getting logging message stream for writing message in stream
-         * @return Logging message stream
+         * Getting logger message stream for writing message in stream
+         * @return Logger message stream
          */
         LRef<GS_MessageStream> Log();
 
@@ -730,7 +730,7 @@ namespace GSLanguageCompiler::IO {
         GS_MessageStream _messageErr;
 
         /**
-         * Logging message stream
+         * Logger message stream
          */
         GS_MessageStream _messageLog;
     };

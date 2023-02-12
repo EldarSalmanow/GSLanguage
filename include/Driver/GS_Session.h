@@ -1,14 +1,22 @@
 #ifndef GSLANGUAGE_GS_SESSION_H
 #define GSLANGUAGE_GS_SESSION_H
 
-#include <Driver/GS_Context.h>
+#include <IO/IO.h>
+
+#include <AST/AST.h>
 
 namespace GSLanguageCompiler {
 
     namespace Semantic {
 
+        /**
+         * Declaring table of symbols for compiler session
+         */
         class GS_TableOfSymbols;
 
+        /**
+         * Declaring table of symbols ptr type for compiler session
+         */
         using GSTableOfSymbolsPtr = std::shared_ptr<GS_TableOfSymbols>;
 
     }
@@ -24,25 +32,55 @@ namespace GSLanguageCompiler {
         };
 
         /**
-         * Class for representation compiler sessions
+         * Class for creating one compilation unit (one output file) and controlling compilation process
          */
         class GS_Session {
         public:
 
+            /*
+             *
+             * GS_Session PUBLIC CONSTRUCTORS
+             *
+             */
+
             /**
              * Constructor for compiler session
-             * @param context Context
+             * @param stdIOStreamsManager Standard IO streams manager
+             * @param sourceManager Source manager
+             * @param messageStreamsManager Message streams manager
+             * @param astContext AST context
+             * @param tableOfSymbols Table of symbols
              */
-            explicit GS_Session(GSContextPtr context);
+            GS_Session(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+                       IO::GSSourceManagerPtr sourceManager,
+                       IO::GSMessageStreamsManagerPtr messageStreamsManager,
+                       AST::GSASTContextPtr astContext,
+                       Semantic::GSTableOfSymbolsPtr tableOfSymbols);
 
         public:
 
+            /*
+             *
+             * GS_Session PUBLIC STATIC CREATE METHODS
+             * TODO Add Create methods
+             * TODO Add Create method from arguments ?
+             *
+             */
+
             /**
              * Creating compiler session
-             * @param context Context
+             * @param stdIOStreamsManager Standard IO streams manager
+             * @param sourceManager Source manager
+             * @param messageStreamsManager Message streams manager
+             * @param astContext AST context
+             * @param tableOfSymbols Table of symbols
              * @return Compiler session ptr
              */
-            static std::unique_ptr<GS_Session> Create(GSContextPtr context);
+            static std::unique_ptr<GS_Session> Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+                                                      IO::GSSourceManagerPtr sourceManager,
+                                                      IO::GSMessageStreamsManagerPtr messageStreamsManager,
+                                                      AST::GSASTContextPtr astContext,
+                                                      Semantic::GSTableOfSymbolsPtr tableOfSymbols);
 
             /**
              * Creating compiler session
@@ -52,39 +90,42 @@ namespace GSLanguageCompiler {
 
         public:
 
+            /*
+             *
+             * GS_Session PUBLIC METHODS
+             *
+             */
+
             /**
              * Run compiler session
              * @return Compiling result
+             * @todo Update
              */
             CompilingResult Run();
-
-        public:
 
             /**
              * Getting standard input stream from standard IO streams manager for reading data from stream
              * @return Standard input stream
              */
-            LRef<std::istream> In();
+            LRef<std::istream> StdIn();
 
             /**
-             * Getting standard output stream from standard IO streams manager for writing data to stream
+             * Getting standard output stream from standard IO streams manager for writing data in stream
              * @return Standard output stream
              */
-            LRef<std::ostream> Out();
+            LRef<std::ostream> StdOut();
 
             /**
-             * Getting standard error stream from standard IO streams manager for writing data to stream
+             * Getting standard error stream from standard IO streams manager for writing data in stream
              * @return Standard error stream
              */
-            LRef<std::ostream> Err();
+            LRef<std::ostream> StdErr();
 
             /**
-             * Getting standard logging stream from standard IO streams manager for writing data to stream
-             * @return Standard logging stream
+             * Getting standard logger stream from standard IO streams manager for writing data in stream
+             * @return Standard logger stream
              */
-            LRef<std::ostream> Log();
-
-        public:
+            LRef<std::ostream> StdLog();
 
             /**
              * Add source to source manager
@@ -119,27 +160,27 @@ namespace GSLanguageCompiler {
             /**
              * Get source from source manager by source hash
              * @param sourceHash Source hash
-             * @return Source or nullopt
+             * @return Source or null
              */
             std::optional<IO::GS_Source> GetSource(U64 sourceHash) const;
 
             /**
              * Get source from source manager by source name
              * @param sourceName Source name
-             * @return Source or nullopt
+             * @return Source or null
              */
             std::optional<IO::GS_Source> GetSource(IO::GS_SourceName sourceName) const;
 
             /**
              * Get file source from source manager by file name
              * @param fileName File name
-             * @return File source or nullopt
+             * @return File source or null
              */
             std::optional<IO::GS_Source> GetFileSource(UString fileName) const;
 
             /**
              * Get custom source from source manager by source name
-             * @return Custom source or nullopt
+             * @return Custom source or null
              */
             std::optional<IO::GS_Source> GetCustomSource(UString sourceName) const;
 
@@ -149,16 +190,31 @@ namespace GSLanguageCompiler {
              */
             ConstLRef<IO::GSSourcePtrArray> GetSources() const;
 
-        public:
+            /**
+             * Getting output message stream from message streams manager for writing message in stream
+             * @return Output message stream
+             */
+            LRef<IO::GS_MessageStream> Out();
 
             /**
-             * Writing message to message handler
-             * @param message Message
-             * @return
+             * Getting error message stream from message streams manager for writing message in stream
+             * @return Error message stream
              */
-            Void Write(IO::GS_Message message);
+            LRef<IO::GS_MessageStream> Err();
+
+            /**
+             * Getting logger message stream from message streams manager for writing message in stream
+             * @return Logger message stream
+             */
+            LRef<IO::GS_MessageStream> Log();
 
         public:
+
+            /*
+             *
+             * GS_Session PUBLIC GETTERS
+             *
+             */
 
             /**
              * Getter for standard IO streams manager
@@ -173,18 +229,10 @@ namespace GSLanguageCompiler {
             LRef<IO::GS_SourceManager> GetSourceManager();
 
             /**
-             * Getter for message handler
-             * @return Message handler
+             * Getter for message streams manager
+             * @return Message streams manager
              */
-            LRef<IO::GS_MessageHandler> GetMessageHandler();
-
-        public:
-
-            /**
-             * Getter for context
-             * @return Context
-             */
-            LRef<GS_Context> GetContext();
+            LRef<IO::GS_MessageStreamsManager> GetMessageStreamsManager();
 
             /**
              * Getter for AST context
@@ -200,10 +248,26 @@ namespace GSLanguageCompiler {
 
         private:
 
-            /**
-             * Context
+            /*
+             *
+             * GS_Session PRIVATE FIELDS
+             *
              */
-            GSContextPtr _context;
+
+            /**
+             * Standard IO streams manager
+             */
+            IO::GSStdIOStreamsManagerPtr _stdIOStreamsManager;
+
+            /**
+             * Source manager
+             */
+            IO::GSSourceManagerPtr _sourceManager;
+
+            /**
+             * Message streams manager
+             */
+            IO::GSMessageStreamsManagerPtr _messageStreamsManager;
 
             /**
              * AST context

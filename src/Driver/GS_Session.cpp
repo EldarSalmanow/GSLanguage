@@ -1,29 +1,55 @@
 #include <Parser/Parser.h>
+
 #include <Optimizer/Optimizer.h>
+
 #include <Semantic/Semantic.h>
+
 #include <Debug/Debug.h>
 
 #include <GS_Session.h>
 
 namespace GSLanguageCompiler::Driver {
 
-    GS_Session::GS_Session(GSContextPtr context)
-            : _context(std::move(context)),
-              _astContext(AST::GS_ASTContext::Create()),
-              _tableOfSymbols(Semantic::GS_TableOfSymbols::Create()) {}
+    GS_Session::GS_Session(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+                           IO::GSSourceManagerPtr sourceManager,
+                           IO::GSMessageStreamsManagerPtr messageStreamsManager,
+                           AST::GSASTContextPtr astContext,
+                           Semantic::GSTableOfSymbolsPtr tableOfSymbols)
+            : _stdIOStreamsManager(std::move(stdIOStreamsManager)),
+              _sourceManager(std::move(sourceManager)),
+              _messageStreamsManager(std::move(messageStreamsManager)),
+              _astContext(std::move(astContext)),
+              _tableOfSymbols(std::move(tableOfSymbols)) {}
 
-    std::unique_ptr<GS_Session> GS_Session::Create(GSContextPtr context) {
-        return std::make_unique<GS_Session>(std::move(context));
+    std::unique_ptr<GS_Session> GS_Session::Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+                                                   IO::GSSourceManagerPtr sourceManager,
+                                                   IO::GSMessageStreamsManagerPtr messageStreamsManager,
+                                                   AST::GSASTContextPtr astContext,
+                                                   Semantic::GSTableOfSymbolsPtr tableOfSymbols) {
+        return std::make_unique<GS_Session>(std::move(stdIOStreamsManager),
+                                            std::move(sourceManager),
+                                            std::move(messageStreamsManager),
+                                            std::move(astContext),
+                                            std::move(tableOfSymbols));
     }
 
     std::unique_ptr<GS_Session> GS_Session::Create() {
-        return GS_Session::Create(GS_Context::Create());
+        auto stdIOStreamsManager = IO::GS_StdIOStreamsManager::Create();
+        auto sourceManager = IO::GS_SourceManager::Create();
+        auto messageStreamsManager = IO::GS_MessageStreamsManager::Create(*stdIOStreamsManager,
+                                                                          *sourceManager);
+        auto astContext = AST::GS_ASTContext::Create();
+        auto tableOfSymbols = Semantic::GS_TableOfSymbols::Create();
+
+        return GS_Session::Create(std::move(stdIOStreamsManager),
+                                  std::move(sourceManager),
+                                  std::move(messageStreamsManager),
+                                  std::move(astContext),
+                                  std::move(tableOfSymbols));
     }
 
     CompilingResult GS_Session::Run() {
         auto &sources = GetSources();
-
-        // TODO update
 
         AST::GSTranslationUnitDeclarationPtrArray translationUnitDeclarations;
 
@@ -42,7 +68,6 @@ namespace GSLanguageCompiler::Driver {
 
             Debug::DumpTableOfSymbols(_tableOfSymbols);
 
-            // todo add flag for debug compiler mode
             Debug::DumpAST(translationUnitDeclaration, *this);
 
             translationUnitDeclarations.emplace_back(translationUnitDeclaration);
@@ -51,77 +76,81 @@ namespace GSLanguageCompiler::Driver {
         return CompilingResult::Success;
     }
 
-    LRef<std::istream> GS_Session::In() {
-        return _context->In();
+    LRef<std::istream> GS_Session::StdIn() {
+        return _stdIOStreamsManager->In();
     }
 
-    LRef<std::ostream> GS_Session::Out() {
-        return _context->Out();
+    LRef<std::ostream> GS_Session::StdOut() {
+        return _stdIOStreamsManager->Out();
     }
 
-    LRef<std::ostream> GS_Session::Err() {
-        return _context->Err();
+    LRef<std::ostream> GS_Session::StdErr() {
+        return _stdIOStreamsManager->Err();
     }
 
-    LRef<std::ostream> GS_Session::Log() {
-        return _context->Log();
+    LRef<std::ostream> GS_Session::StdLog() {
+        return _stdIOStreamsManager->Log();
     }
 
     ConstLRef<IO::GS_Source> GS_Session::AddSource(IO::GSSourcePtr source) {
-        return _context->AddSource(std::move(source));
+        return _sourceManager->AddSource(std::move(source));
     }
 
     ConstLRef<IO::GS_Source> GS_Session::AddFileSource(UString name) {
-        return _context->AddFileSource(std::move(name));
+        return _sourceManager->AddFileSource(std::move(name));
     }
 
     ConstLRef<IO::GS_Source> GS_Session::AddStringSource(UString source) {
-        return _context->AddStringSource(std::move(source));
+        return _sourceManager->AddStringSource(std::move(source));
     }
 
     ConstLRef<IO::GS_Source> GS_Session::AddCustomSource(UString source, UString name) {
-        return _context->AddCustomSource(std::move(source),
-                                         std::move(name));
+        return _sourceManager->AddCustomSource(std::move(source),
+                                               std::move(name));
     }
 
     std::optional<IO::GS_Source> GS_Session::GetSource(U64 sourceHash) const {
-        return _context->GetSource(sourceHash);
+        return _sourceManager->GetSource(sourceHash);
     }
 
     std::optional<IO::GS_Source> GS_Session::GetSource(IO::GS_SourceName sourceName) const {
-        return _context->GetSource(std::move(sourceName));
+        return _sourceManager->GetSource(std::move(sourceName));
     }
 
     std::optional<IO::GS_Source> GS_Session::GetFileSource(UString fileName) const {
-        return _context->GetFileSource(std::move(fileName));
+        return _sourceManager->GetFileSource(std::move(fileName));
     }
 
     std::optional<IO::GS_Source> GS_Session::GetCustomSource(UString sourceName) const {
-        return _context->GetCustomSource(std::move(sourceName));
+        return _sourceManager->GetCustomSource(std::move(sourceName));
     }
 
     ConstLRef<IO::GSSourcePtrArray> GS_Session::GetSources() const {
-        return _context->GetSources();
+        return _sourceManager->GetSources();
     }
 
-    Void GS_Session::Write(IO::GS_Message message) {
-        _context->Write(std::move(message));
+    LRef<IO::GS_MessageStream> GS_Session::Out() {
+        return _messageStreamsManager->Out();
+    }
+
+    LRef<IO::GS_MessageStream> GS_Session::Err() {
+        return _messageStreamsManager->Err();
+    }
+
+    LRef<IO::GS_MessageStream> GS_Session::Log() {
+        return _messageStreamsManager->Log();
     }
 
     LRef<IO::GS_StdIOStreamsManager> GS_Session::GetStdIOStreamsManager() {
-        return _context->GetStdIOStreamsManager();
+        return *_stdIOStreamsManager;
     }
 
     LRef<IO::GS_SourceManager> GS_Session::GetSourceManager() {
-        return _context->GetSourceManager();
+        return *_sourceManager;
     }
 
-    LRef<IO::GS_MessageHandler> GS_Session::GetMessageHandler() {
-        return _context->GetMessageHandler();
-    }
-
-    LRef<GS_Context> GS_Session::GetContext() {
-        return *_context;
+    LRef<IO::GS_MessageStreamsManager> GS_Session::GetMessageStreamsManager() {
+        return *_messageStreamsManager;
     }
 
     LRef<AST::GS_ASTContext> GS_Session::GetASTContext() {

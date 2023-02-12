@@ -50,14 +50,14 @@ namespace GSLanguageCompiler::Driver {
          * Creating arguments
          * @param inputFileNames Input file names
          * @return Arguments
-         * @todo Replace output name to?
+         * @todo Replace output name to ?
          */
         static GS_Arguments Create(std::vector<UString> inputFileNames);
 
         /**
          * Creating arguments
          * @return Arguments
-         * @todo Remove?
+         * @todo Remove ?
          */
         static GS_Arguments Create();
 
