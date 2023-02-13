@@ -10,6 +10,19 @@
 
 namespace GSLanguageCompiler::Driver {
 
+    Result ToResult(CompilingResult compilingResult) {
+        switch (compilingResult) {
+            case CompilingResult::Success:
+                return Result::Ok;
+            case CompilingResult::Failure:
+                return Result::Err;
+        }
+    }
+
+    I32 ToExitCode(CompilingResult compilingResult) {
+        return StaticCast<I32>(compilingResult);
+    }
+
     GS_Session::GS_Session(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
                            IO::GSSourceManagerPtr sourceManager,
                            IO::GSMessageStreamsManagerPtr messageStreamsManager,
@@ -46,6 +59,21 @@ namespace GSLanguageCompiler::Driver {
                                   std::move(messageStreamsManager),
                                   std::move(astContext),
                                   std::move(tableOfSymbols));
+    }
+
+    std::unique_ptr<GS_Session> GS_Session::Create(GS_Arguments arguments) {
+        auto movedArguments = std::move(arguments);
+
+        auto &inputFileNames = movedArguments.GetInputFileNames();
+        auto &outputFileName = movedArguments.GetOutputFileName();
+
+        auto session = GS_Session::Create();
+
+        for (auto &inputFileName : inputFileNames) {
+            session->AddFileSource(inputFileName);
+        }
+
+        return session;
     }
 
     CompilingResult GS_Session::Run() {

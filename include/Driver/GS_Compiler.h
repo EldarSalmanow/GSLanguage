@@ -5,13 +5,17 @@
 
 namespace GSLanguageCompiler::Driver {
 
-    // todo use session manager ?
-
     /**
      * Class for startup and manage GSLanguageCompiler
      */
     class GS_Compiler {
     public:
+
+        /*
+         *
+         * GS_Compiler PUBLIC CONSTRUCTORS
+         *
+         */
 
         /**
          * Constructor for compiler
@@ -20,6 +24,12 @@ namespace GSLanguageCompiler::Driver {
         explicit GS_Compiler(GSSessionsManagerPtr sessionsManager);
 
     public:
+
+        /*
+         *
+         * GS_Compiler PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating compiler
@@ -34,8 +44,6 @@ namespace GSLanguageCompiler::Driver {
          */
         static std::unique_ptr<GS_Compiler> Create();
 
-    public:
-
         /**
          * Creating compiler with one session, created on arguments
          * @param arguments Arguments for one session
@@ -44,6 +52,12 @@ namespace GSLanguageCompiler::Driver {
         static std::unique_ptr<GS_Compiler> Create(GS_Arguments arguments);
 
     public:
+
+        /*
+         *
+         * GS_Compiler PUBLIC STATIC METHODS
+         *
+         */
 
         /**
          * Start compiler with one session, created on arguments
@@ -55,13 +69,17 @@ namespace GSLanguageCompiler::Driver {
 
     public:
 
+        /*
+         *
+         * GS_Compiler PUBLIC METHODS
+         *
+         */
+
         /**
          * Run sessions in compiler
          * @return Sessions compiling result
          */
         CompilingResult Run();
-
-    public:
 
         /**
          * Add session to sessions manager
@@ -78,6 +96,12 @@ namespace GSLanguageCompiler::Driver {
 
     public:
 
+        /*
+         *
+         * GS_Compiler PUBLIC GETTERS
+         *
+         */
+
         /**
          * Getter for sessions manager
          * @return Sessions manager
@@ -85,6 +109,12 @@ namespace GSLanguageCompiler::Driver {
         ConstLRef<GS_SessionsManager> GetSessionsManager() const;
 
     private:
+
+        /*
+         *
+         * GS_Compiler PRIVATE FIELDS
+         *
+         */
 
         /**
          * Sessions manager

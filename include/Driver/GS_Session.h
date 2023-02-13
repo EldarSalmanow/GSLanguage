@@ -5,6 +5,8 @@
 
 #include <AST/AST.h>
 
+#include <Driver/GS_Arguments.h>
+
 namespace GSLanguageCompiler {
 
     namespace Semantic {
@@ -30,6 +32,20 @@ namespace GSLanguageCompiler {
             Success = 0,
             Failure = 1
         };
+
+        /**
+         * Converting compiling result to result
+         * @param compilingResult Compiling result
+         * @return Result
+         */
+        Result ToResult(CompilingResult compilingResult);
+
+        /**
+         * Converting compiling result to exit code
+         * @param compilingResult Compiling result
+         * @return Exit code
+         */
+        I32 ToExitCode(CompilingResult compilingResult);
 
         /**
          * Class for creating one compilation unit (one output file) and controlling compilation process
@@ -63,7 +79,6 @@ namespace GSLanguageCompiler {
              *
              * GS_Session PUBLIC STATIC CREATE METHODS
              * TODO Add Create methods
-             * TODO Add Create method from arguments ?
              *
              */
 
@@ -87,6 +102,13 @@ namespace GSLanguageCompiler {
              * @return Compiler session ptr
              */
             static std::unique_ptr<GS_Session> Create();
+
+            /**
+             * Creating compiler session on arguments
+             * @return Compiler session ptr
+             * @todo Use output file name
+             */
+            static std::unique_ptr<GS_Session> Create(GS_Arguments arguments);
 
         public:
 

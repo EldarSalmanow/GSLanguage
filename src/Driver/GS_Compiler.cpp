@@ -16,9 +16,7 @@ namespace GSLanguageCompiler::Driver {
     }
 
     std::unique_ptr<GS_Compiler> GS_Compiler::Create(GS_Arguments arguments) {
-        auto context = GS_Context::Create(std::move(arguments));
-
-        auto session = GS_Session::Create(std::move(context));
+        auto session = GS_Session::Create(std::move(arguments));
 
         auto sessionsManager = GS_SessionsManager::Create();
 
@@ -55,11 +53,11 @@ namespace GSLanguageCompiler::Driver {
         } catch (LRef<std::exception> exception) {
             UStringStream stringStream;
 
-            stringStream << "Internal GSLanguageCompiler error: \""_us
+            stringStream << "Internal GSLanguageCompiler error: "_us
                          << UString(exception.what())
-                         << "\"\n"_us;
+                         << "\n"_us;
 
-            GlobalContext().Err() << stringStream.String(); // TODO add stream overloading operator for UStringStream ?
+            GlobalContext().Err() << stringStream.String();
 
             return CompilingResult::Failure;
         }

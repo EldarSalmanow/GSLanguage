@@ -504,6 +504,8 @@ Void CheckMessageLocation() {
 }
 
 Void Checks() {
+    // TODO move checks to tests
+
     CheckByteSourceLocationComparing();
     CheckLineColumnSourceLocationComparing();
     CheckGetCodeInRange();
@@ -523,15 +525,11 @@ Result GSMain(I32 argc, Ptr<Ptr<C>> argv) {
         return Result::Err;
     }
 
-    Checks();
+    auto compilingResult = Driver::GS_Compiler::Start(argc, argv);
 
-//    auto compilingResult = Driver::GS_Compiler::Start(argc, argv);
-//
-//    if (compilingResult != Driver::CompilingResult::Success) {
-//        return Result::Err;
-//    }
+    auto result = Driver::ToResult(compilingResult);
 
-    return Result::Ok;
+    return result;
 }
 
 /**
@@ -543,6 +541,7 @@ Result GSMain(I32 argc, Ptr<Ptr<C>> argv) {
 I32 main(I32 argc, Ptr<Ptr<C>> argv) {
     auto compilerResult = GSMain(argc, argv);
 
+    // TODO add ToExitCode function in GSCrossPlatform
     auto exitCode = StaticCast<I32>(compilerResult);
 
     return exitCode;
