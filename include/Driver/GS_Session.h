@@ -230,6 +230,80 @@ namespace GSLanguageCompiler {
              */
             LRef<IO::GS_MessageStream> Log();
 
+            /**
+             * Creating message builder for creating message
+             * @param messageText Message text
+             * @param messageLevel Message level
+             * @param messageLocationRange Optional message byte source location range
+             * @return Message builder
+             */
+            IO::GS_MessageBuilder Message(UString messageText,
+                                          IO::MessageLevel messageLevel,
+                                          std::optional<IO::GSByteSourceRange> messageLocationRange) const;
+
+            /**
+             * Creating message builder for creating message
+             * @param messageText Message text
+             * @param messageLevel Message level
+             * @param messageLocationRange Message byte source location range
+             * @return Message builder
+             */
+            IO::GS_MessageBuilder Message(UString messageText,
+                                          IO::MessageLevel messageLevel,
+                                          IO::GSByteSourceRange messageLocationRange) const;
+
+            /**
+             * Creating message builder for creating message
+             * @param messageText Message text
+             * @param messageLevel Message level
+             * @param messageSourceLocation Message byte source location [sourceLocation, sourceLocation + 1) (one symbol)
+             * @return Message builder
+             */
+            IO::GS_MessageBuilder Message(UString messageText,
+                                          IO::MessageLevel messageLevel,
+                                          IO::GS_ByteSourceLocation messageSourceLocation) const;
+
+            /**
+             * Creating message builder for creating message
+             * @param messageText Message text
+             * @param messageLevel Message level
+             * @return Message builder
+             */
+            IO::GS_MessageBuilder Message(UString messageText,
+                                          IO::MessageLevel messageLevel) const;
+
+            /**
+             * Creating message builder for creating message
+             * @return Message builder
+             */
+            IO::GS_MessageBuilder Message() const;
+
+            // TODO Add new message Create or printing message methods ?
+
+            /**
+             * Creating message builder for creating 'note' message
+             * @return Message builder
+             */
+            IO::GS_MessageBuilder NoteMessage() const;
+
+            /**
+             * Creating message builder for creating 'warning' message
+             * @return Message builder
+             */
+            IO::GS_MessageBuilder WarningMessage() const;
+
+            /**
+             * Creating message builder for creating 'error' message
+             * @return Message builder
+             */
+            IO::GS_MessageBuilder ErrorMessage() const;
+
+            /**
+             * Creating message builder for creating 'fatal' message
+             * @return Message builder
+             */
+            IO::GS_MessageBuilder FatalMessage() const;
+
         public:
 
             /*

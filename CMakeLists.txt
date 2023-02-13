@@ -35,7 +35,7 @@ add_definitions(${LLVM_DEFINITIONS_LIST})
 set(PROJECT_LIBRARIES
         GSDriverLibrary
         GSIOLibrary
-#        GSLexerLibrary
+        GSLexerLibrary
 #        GSParserLibrary
 #        GSASTLibrary
 #        GSOptimizerLibrary
@@ -56,7 +56,7 @@ include_directories(${INCLUDE_DIR})
 
 add_subdirectory(${INCLUDE_DIR}/Driver)
 add_subdirectory(${INCLUDE_DIR}/IO)
-#add_subdirectory(${INCLUDE_DIR}/Lexer)
+add_subdirectory(${INCLUDE_DIR}/Lexer)
 #add_subdirectory(${INCLUDE_DIR}/Parser)
 #add_subdirectory(${INCLUDE_DIR}/AST)
 #add_subdirectory(${INCLUDE_DIR}/Optimizer)

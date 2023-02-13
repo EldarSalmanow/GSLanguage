@@ -169,6 +169,56 @@ namespace GSLanguageCompiler::Driver {
         return _messageStreamsManager->Log();
     }
 
+    IO::GS_MessageBuilder GS_Session::Message(UString messageText,
+                                              IO::MessageLevel messageLevel,
+                                              std::optional<IO::GSByteSourceRange> messageLocationRange) const {
+        return IO::GS_MessageBuilder::Create(std::move(messageText),
+                                             messageLevel,
+                                             messageLocationRange);
+    }
+
+    IO::GS_MessageBuilder GS_Session::Message(UString messageText,
+                                              IO::MessageLevel messageLevel,
+                                              IO::GSByteSourceRange messageLocationRange) const {
+        return IO::GS_MessageBuilder::Create(std::move(messageText),
+                                             messageLevel,
+                                             messageLocationRange);
+    }
+
+    IO::GS_MessageBuilder GS_Session::Message(UString messageText,
+                                              IO::MessageLevel messageLevel,
+                                              IO::GS_ByteSourceLocation messageSourceLocation) const {
+        return IO::GS_MessageBuilder::Create(std::move(messageText),
+                                             messageLevel,
+                                             messageSourceLocation);
+    }
+
+    IO::GS_MessageBuilder GS_Session::Message(UString messageText,
+                                              IO::MessageLevel messageLevel) const {
+        return IO::GS_MessageBuilder::Create(std::move(messageText),
+                                             messageLevel);
+    }
+
+    IO::GS_MessageBuilder GS_Session::Message() const {
+        return IO::GS_MessageBuilder::Create();
+    }
+
+    IO::GS_MessageBuilder GS_Session::NoteMessage() const {
+        return IO::GS_MessageBuilder::Create().Note();
+    }
+
+    IO::GS_MessageBuilder GS_Session::WarningMessage() const {
+        return IO::GS_MessageBuilder::Create().Warning();
+    }
+
+    IO::GS_MessageBuilder GS_Session::ErrorMessage() const {
+        return IO::GS_MessageBuilder::Create().Error();
+    }
+
+    IO::GS_MessageBuilder GS_Session::FatalMessage() const {
+        return IO::GS_MessageBuilder::Create().Fatal();
+    }
+
     LRef<IO::GS_StdIOStreamsManager> GS_Session::GetStdIOStreamsManager() {
         return *_stdIOStreamsManager;
     }

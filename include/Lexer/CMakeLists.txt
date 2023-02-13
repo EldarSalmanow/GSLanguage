@@ -3,9 +3,9 @@ project(GSLexerLibrary)
 set(LEXER_DIR ${SOURCE_DIR}/Lexer)
 
 set(GS_LEXER_SOURCE
-        ${LEXER_DIR}/GS_Lexer.cpp
+        ${LEXER_DIR}/GS_Token.cpp
 
-        ${LEXER_DIR}/GS_Token.cpp)
+        ${LEXER_DIR}/GS_Lexer.cpp)
 
 add_library(
 #       Library name

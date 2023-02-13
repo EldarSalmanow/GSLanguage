@@ -55,38 +55,38 @@ namespace GSLanguageCompiler::Lexer {
         return _locationRange;
     }
 
-    GS_TokensBuffer::GS_TokensBuffer(GSTokenArray tokens)
+    GS_TokenBuffer::GS_TokenBuffer(GSTokenArray tokens)
             : _tokens(std::move(tokens)) {}
 
-    GS_TokensBuffer GS_TokensBuffer::Create(GSTokenArray tokens) {
-        return GS_TokensBuffer(std::move(tokens));
+    GS_TokenBuffer GS_TokenBuffer::Create(GSTokenArray tokens) {
+        return GS_TokenBuffer(std::move(tokens));
     }
 
-    GS_TokensBuffer::Iterator GS_TokensBuffer::begin() {
+    GS_TokenBuffer::Iterator GS_TokenBuffer::begin() {
         return _tokens.begin();
     }
 
-    GS_TokensBuffer::Iterator GS_TokensBuffer::end() {
+    GS_TokenBuffer::Iterator GS_TokenBuffer::end() {
         return _tokens.end();
     }
 
-    GS_TokensBuffer::ConstIterator GS_TokensBuffer::begin() const {
+    GS_TokenBuffer::ConstIterator GS_TokenBuffer::begin() const {
         return _tokens.begin();
     }
 
-    GS_TokensBuffer::ConstIterator GS_TokensBuffer::end() const {
+    GS_TokenBuffer::ConstIterator GS_TokenBuffer::end() const {
         return _tokens.end();
     }
 
-    GS_TokensBuffer::ConstIterator GS_TokensBuffer::cbegin() const {
+    GS_TokenBuffer::ConstIterator GS_TokenBuffer::cbegin() const {
         return _tokens.cbegin();
     }
 
-    GS_TokensBuffer::ConstIterator GS_TokensBuffer::cend() const {
+    GS_TokenBuffer::ConstIterator GS_TokenBuffer::cend() const {
         return _tokens.cend();
     }
 
-    ConstLRef<GSTokenArray> GS_TokensBuffer::GetTokens() const {
+    ConstLRef<GSTokenArray> GS_TokenBuffer::GetTokens() const {
         return _tokens;
     }
 

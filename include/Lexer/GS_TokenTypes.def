@@ -3,12 +3,12 @@
 #endif
 
 /**
- * Unknown (error)
+ * Unknown ( error )
  */
 GS_TOKENTYPE(Unknown),
 
 /**
- * End of file
+ * End of file ( EOF )
  */
 GS_TOKENTYPE(EndOfFile),
 

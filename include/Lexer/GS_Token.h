@@ -18,6 +18,12 @@ namespace GSLanguageCompiler::Lexer {
     class GS_Token {
     public:
 
+        /*
+         *
+         * GS_Token PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for token
          * @param type Type
@@ -29,6 +35,12 @@ namespace GSLanguageCompiler::Lexer {
                  IO::GSByteSourceRange locationRange);
 
     public:
+
+        /*
+         *
+         * GS_Token PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Create token
@@ -74,6 +86,12 @@ namespace GSLanguageCompiler::Lexer {
 
     public:
 
+        /*
+         *
+         * GS_Token PUBLIC GETTERS
+         *
+         */
+
         /**
          * Getter for type
          * @return Type
@@ -93,6 +111,12 @@ namespace GSLanguageCompiler::Lexer {
         IO::GSByteSourceRange GetLocationRange() const;
 
     private:
+
+        /*
+         *
+         * GS_Token PRIVATE FIELDS
+         *
+         */
 
         /**
          * Token type
@@ -121,6 +145,12 @@ namespace GSLanguageCompiler::Lexer {
     class GS_TokenBuffer {
     public:
 
+        /*
+         *
+         * GS_TokenBuffer PUBLIC TYPES
+         *
+         */
+
         /**
          * Iterator type
          */
@@ -133,6 +163,12 @@ namespace GSLanguageCompiler::Lexer {
 
     public:
 
+        /*
+         *
+         * GS_TokenBuffer PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for token buffer
          * @param tokens Tokens
@@ -140,6 +176,12 @@ namespace GSLanguageCompiler::Lexer {
         explicit GS_TokenBuffer(GSTokenArray tokens);
 
     public:
+
+        /*
+         *
+         * GS_TokenBuffer PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating token buffer
@@ -149,6 +191,12 @@ namespace GSLanguageCompiler::Lexer {
         static GS_TokenBuffer Create(GSTokenArray tokens);
 
     public:
+
+        /*
+         *
+         * GS_TokenBuffer PUBLIC ITERATOR METHODS
+         *
+         */
 
         /**
          * Getting begin token buffer iterator
@@ -188,6 +236,12 @@ namespace GSLanguageCompiler::Lexer {
 
     public:
 
+        /*
+         *
+         * GS_TokenBuffer PUBLIC GETTERS
+         *
+         */
+
         /**
          * Getter for tokens
          * @return Tokens
@@ -195,6 +249,12 @@ namespace GSLanguageCompiler::Lexer {
         ConstLRef<GSTokenArray> GetTokens() const;
 
     private:
+
+        /*
+         *
+         * GS_TokenBuffer PRIVATE FIELDS
+         *
+         */
 
         /**
          * Tokens

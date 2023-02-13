@@ -9,19 +9,33 @@ namespace GSLanguageCompiler::Lexer {
 
     /**
      * Class for tokenizing source code
+     * @todo Update all
      */
     class GS_Lexer {
     public:
+
+        /*
+         *
+         * GS_Lexer PUBLIC CONSTRUCTORS
+         *
+         */
 
         /**
          * Constructor for lexer
          * @param session Session
          * @param source Source
+         * @todo Add source check (is source from this session)
          */
         GS_Lexer(LRef<Driver::GS_Session> session,
                  ConstLRef<IO::GS_Source> source);
 
     public:
+
+        /*
+         *
+         * GS_Lexer PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating lexer
@@ -34,32 +48,49 @@ namespace GSLanguageCompiler::Lexer {
 
     public:
 
+        /*
+         *
+         * GS_Lexer PUBLIC STATIC METHODS
+         *
+         */
+
         /**
          * Creating lexer and tokenizing source
          * @param session Session
          * @param source Source
-         * @return Tokens
+         * @return Token buffer
          */
         static GS_TokenBuffer Run(LRef<Driver::GS_Session> session,
                                   ConstLRef<IO::GS_Source> source);
 
     public:
 
+        /*
+         *
+         * GS_Lexer PUBLIC METHODS
+         *
+         */
+
         /**
          * Tokenizing code from source
-         * @return Tokens
+         * @return Token buffer
+         * @todo Lexing space symbol in token ?
          */
         GS_TokenBuffer Tokenize();
 
     private:
+
+        /*
+         *
+         * GS_Lexer PRIVATE METHODS
+         *
+         */
 
         /**
          * Tokenizing one token
          * @return Token
          */
         GS_Token GetToken();
-
-    private:
 
         /**
          * Getting current symbol from cursor
@@ -82,25 +113,6 @@ namespace GSLanguageCompiler::Lexer {
     private:
 
         /**
-         * Creating text message
-         * @param message Message
-         * @param messageLevel Message level
-         * @return
-         */
-//        Void Message(UString message, IO::MessageLevel messageLevel);
-
-        /**
-         * Creating located text message
-         * @param message Message
-         * @param messageLevel Message level
-         * @param messageLocation Message location
-         * @return
-         */
-//        Void LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation messageLocation);
-
-    private:
-
-        /**
          * Session
          */
         LRef<Driver::GS_Session> _session;
@@ -108,7 +120,7 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Messages
          */
-//        IO::GSMessagePtrArray _messages;
+        IO::GSMessageArray _messages;
 
         /**
          * Source
@@ -116,12 +128,12 @@ namespace GSLanguageCompiler::Lexer {
         ConstLRef<IO::GS_Source> _source;
 
         /**
-         * Source buffer iterator
+         * Source buffer iterator (cursor)
          */
         IO::GS_Source::ConstIterator _sourceIterator;
 
         /**
-         * Current position in source
+         * Current position in source (cursor position)
          */
         I64 _currentPosition;
     };

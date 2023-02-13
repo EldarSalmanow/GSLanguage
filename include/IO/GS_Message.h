@@ -31,7 +31,7 @@ namespace GSLanguageCompiler::IO {
          * Constructor for message
          * @param text Message text
          * @param level Message level
-         * @param locationRange Message byte source location range
+         * @param locationRange Optional message byte source location range
          */
         GS_Message(UString text,
                    MessageLevel level,
@@ -49,7 +49,7 @@ namespace GSLanguageCompiler::IO {
          * Creating message
          * @param text Message text
          * @param level Message level
-         * @param locationRange Message byte source location range
+         * @param locationRange Optional message byte source location range
          * @return Message
          */
         static GS_Message Create(UString text,
@@ -108,8 +108,8 @@ namespace GSLanguageCompiler::IO {
         MessageLevel GetLevel() const;
 
         /**
-         * Getter for message byte source location range
-         * @return Message byte source location range
+         * Getter for optional message byte source location range
+         * @return Optional message byte source location range
          */
         std::optional<GSByteSourceRange> GetLocationRange() const;
 
@@ -147,7 +147,7 @@ namespace GSLanguageCompiler::IO {
         MessageLevel _level;
 
         /**
-         * Message byte source location range
+         * Optional message byte source location range
          */
         std::optional<GSByteSourceRange> _locationRange;
     };
@@ -331,7 +331,7 @@ namespace GSLanguageCompiler::IO {
          * Constructor for message builder
          * @param messageText Message text
          * @param messageLevel Message level
-         * @param messageLocationRange Message byte source location range
+         * @param messageLocationRange Optional message byte source location range
          */
         GS_MessageBuilder(UString messageText,
                           MessageLevel messageLevel,
@@ -349,7 +349,7 @@ namespace GSLanguageCompiler::IO {
          * Creating message builder
          * @param messageText Message text
          * @param messageLevel Message level
-         * @param messageLocationRange Message byte source location range
+         * @param messageLocationRange Optional message byte source location range
          * @return Message builder
          */
         static GS_MessageBuilder Create(UString messageText,
@@ -357,7 +357,7 @@ namespace GSLanguageCompiler::IO {
                                         std::optional<GSByteSourceRange> messageLocationRange);
 
         /**
-         *
+         * Creating message builder
          * @param messageText Message text
          * @param messageLevel Message level
          * @param messageLocationRange Message byte source location range
@@ -368,7 +368,7 @@ namespace GSLanguageCompiler::IO {
                                         GSByteSourceRange messageLocationRange);
 
         /**
-         *
+         * Creating message builder
          * @param messageText Message text
          * @param messageLevel Message level
          * @param messageSourceLocation Message byte source location [sourceLocation, sourceLocation + 1) (one symbol)
@@ -480,8 +480,8 @@ namespace GSLanguageCompiler::IO {
         MessageLevel GetMessageLevel() const;
 
         /**
-         * Getter for message byte source location range
-         * @return Message byte source location range
+         * Getter for optional message byte source location range
+         * @return Optional message byte source location range
          */
         std::optional<GSByteSourceRange> GetMessageLocationRange() const;
 
@@ -504,7 +504,7 @@ namespace GSLanguageCompiler::IO {
         MessageLevel _messageLevel;
 
         /**
-         * Message byte source location range
+         * Optional message byte source location range
          */
         std::optional<GSByteSourceRange> _messageLocationRange;
     };
