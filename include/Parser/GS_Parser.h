@@ -74,33 +74,33 @@ namespace GSLanguageCompiler::Parser {
         /**
          * Constructor for parser
          * @param session Session
-         * @param tokensBuffer Tokens buffer
+         * @param tokenBuffer Token buffer
          */
         GS_Parser(LRef<Driver::GS_Session> session,
-                  ConstLRef<Lexer::GS_TokenBuffer> tokensBuffer);
+                  ConstLRef<Lexer::GS_TokenBuffer> tokenBuffer);
 
     public:
 
         /**
          * Creating parser
          * @param session Session
-         * @param tokensBuffer Tokens buffer
+         * @param tokenBuffer Token buffer
          * @return Parser
          */
         static GS_Parser Create(LRef<Driver::GS_Session> session,
-                                ConstLRef<Lexer::GS_TokenBuffer> tokensBuffer);
+                                ConstLRef<Lexer::GS_TokenBuffer> tokenBuffer);
 
     public:
 
         /**
          * Creating parser and parsing tokens
          * @param session Session
-         * @param tokensBuffer Tokens buffer
+         * @param tokenBuffer Token buffer
          * @param translationUnitName Translation unit name
          * @return Translation unit declaration
          */
         static AST::GSTranslationUnitDeclarationPtr Run(LRef<Driver::GS_Session> session,
-                                                        ConstLRef<Lexer::GS_TokenBuffer> tokensBuffer,
+                                                        ConstLRef<Lexer::GS_TokenBuffer> tokenBuffer,
                                                         UString translationUnitName);
 
     public:
@@ -155,14 +155,14 @@ namespace GSLanguageCompiler::Parser {
         inline T TryParse(T (GS_Parser::*method)()) {
 //            auto messages = _messages;
 
-            auto tokensIterator = _tokensIterator;
+            auto tokenIterator = _tokenIterator;
 
             auto result = (this->*method)();
 
             if (!result) {
 //                _messages = messages;
 
-                _tokensIterator = tokensIterator;
+                _tokenIterator = tokenIterator;
 
                 return nullptr;
             }
@@ -182,13 +182,13 @@ namespace GSLanguageCompiler::Parser {
 
         UString TokenValue();
 
-        IO::GS_SourceLocation TokenLocation();
+        IO::GSByteSourceRange TokenLocation();
 
         Void NextToken();
 
         Void Message(UString message, IO::MessageLevel messageLevel);
 
-        Void LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation messageLocation);
+        Void LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GSByteSourceRange locationRange);
 
     private:
 
@@ -196,9 +196,9 @@ namespace GSLanguageCompiler::Parser {
 
 //        IO::GSMessagePtrArray _messages;
 
-        ConstLRef<Lexer::GS_TokenBuffer> _tokensBuffer;
+        ConstLRef<Lexer::GS_TokenBuffer> _tokenBuffer;
 
-        Lexer::GS_TokenBuffer::ConstIterator _tokensIterator;
+        Lexer::GS_TokenBuffer::ConstIterator _tokenIterator;
 
         AST::GSASTBuilderPtr _builder;
     };

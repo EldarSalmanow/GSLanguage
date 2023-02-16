@@ -12,22 +12,22 @@ namespace GSLanguageCompiler::Parser {
     };
 
     GS_Parser::GS_Parser(LRef<Driver::GS_Session> session,
-                         ConstLRef<Lexer::GS_TokensBuffer> tokensBuffer)
+                         ConstLRef<Lexer::GS_TokenBuffer> tokenBuffer)
             : _session(session),
 //              _messages(IO::GSMessagePtrArray()),
-              _tokensBuffer(tokensBuffer),
-              _tokensIterator(_tokensBuffer.cbegin()),
+              _tokenBuffer(tokenBuffer),
+              _tokenIterator(_tokenBuffer.cbegin()),
               _builder(AST::GS_ASTBuilder::Create(_session.GetASTContext())) {}
 
     GS_Parser GS_Parser::Create(LRef<Driver::GS_Session> session,
-                                ConstLRef<Lexer::GS_TokensBuffer> tokensBuffer) {
-        return GS_Parser(session, tokensBuffer);
+                                ConstLRef<Lexer::GS_TokenBuffer> tokenBuffer) {
+        return GS_Parser(session, tokenBuffer);
     }
 
     AST::GSTranslationUnitDeclarationPtr GS_Parser::Run(LRef<Driver::GS_Session> session,
-                                                        ConstLRef<Lexer::GS_TokensBuffer> tokensBuffer,
+                                                        ConstLRef<Lexer::GS_TokenBuffer> tokenBuffer,
                                                         UString translationUnitName) {
-        auto parser = GS_Parser::Create(session, tokensBuffer);
+        auto parser = GS_Parser::Create(session, tokenBuffer);
 
         auto translationUnitDeclaration = parser.ParseProgram(std::move(translationUnitName));
 
@@ -703,7 +703,7 @@ namespace GSLanguageCompiler::Parser {
     }
 
     Lexer::GS_Token GS_Parser::CurrentToken() {
-        return *_tokensIterator;
+        return *_tokenIterator;
     }
 
     Lexer::TokenType GS_Parser::TokenType() {
@@ -714,32 +714,20 @@ namespace GSLanguageCompiler::Parser {
         return CurrentToken().GetValue();
     }
 
-    IO::GS_SourceLocation GS_Parser::TokenLocation() {
+    IO::GSByteSourceRange GS_Parser::TokenLocation() {
         return CurrentToken().GetLocationRange();
     }
 
     Void GS_Parser::NextToken() {
-        ++_tokensIterator;
-    }
-
-    Void GS_Parser::Message(UString message, IO::MessageLevel messageLevel) {
-//        auto textMessage = IO::GS_Message::Create(std::move(message), messageLevel);
-//
-//        _messages.emplace_back(textMessage);
-    }
-
-    Void GS_Parser::LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GS_SourceLocation messageLocation) {
-//        auto locatedTextMessage = IO::GS_Message::Create(std::move(message), messageLevel, messageLocation);
-//
-//        _messages.emplace_back(locatedTextMessage);
+        ++_tokenIterator;
     }
 
     AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_Session> session, ConstLRef<IO::GS_Source> source) {
-        auto tokensBuffer = Lexer::GS_Lexer::Run(session,
-                                                 source);
+        auto tokenBuffer = Lexer::GS_Lexer::Run(session,
+                                                source);
 
         auto program = Parser::GS_Parser::Run(session,
-                                              tokensBuffer,
+                                              tokenBuffer,
                                               source.GetName().GetName());
 
         return program;
