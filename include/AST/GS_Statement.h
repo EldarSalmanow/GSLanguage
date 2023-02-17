@@ -20,12 +20,24 @@ namespace GSLanguageCompiler::AST {
     class GS_Statement : public GS_Node {
     public:
 
+        /*
+         *
+         * GS_Statement PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for statement
          */
         GS_Statement();
 
     public:
+
+        /*
+         *
+         * GS_Statement PUBLIC OVERRIDE METHODS
+         *
+         */
 
         /**
          * Is statement
@@ -34,6 +46,12 @@ namespace GSLanguageCompiler::AST {
         Bool IsStatement() const override;
 
     public:
+
+        /*
+         *
+         * GS_Statement PUBLIC VIRTUAL METHODS
+         *
+         */
 
         /**
          * Getter for statement type
@@ -55,12 +73,12 @@ namespace GSLanguageCompiler::AST {
     /**
      * Casting to statement if node is statement
      * @param node Node
-     * @return Statement or nullptr
+     * @return Statement or null
      */
     GSStatementPtr ToStatement(ConstLRef<GSNodePtr> node);
 
     /**
-     * Declaring for cast function
+     * Declaring statements for cast function
      */
     class GS_VariableDeclarationStatement;
     class GS_AssignmentStatement;
@@ -70,11 +88,12 @@ namespace GSLanguageCompiler::AST {
      * Casting to any type of statement if node is statement
      * @tparam T Type of statement
      * @param node Node
-     * @return Statement or nullptr
+     * @return Statement or null
      */
     template<typename T>
     inline NodePtr<T> ToStatement(ConstLRef<GSNodePtr> node) {
-        static_assert(std::is_base_of_v<GS_Statement, T>, "Type for casting must be inherited from GS_Statement!");
+        static_assert(std::is_base_of_v<GS_Statement, T>,
+                      "Type for casting must be inherited from GS_Statement!");
 
         auto statement = ToStatement(node);
 

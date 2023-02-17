@@ -23,12 +23,24 @@ namespace GSLanguageCompiler::AST {
     class GS_Expression : public GS_Node {
     public:
 
+        /*
+         *
+         * GS_Expression PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for expression
          */
         GS_Expression();
 
     public:
+
+        /*
+         *
+         * GS_Expression PUBLIC OVERRIDE METHODS
+         *
+         */
 
         /**
          * Is expression
@@ -37,6 +49,12 @@ namespace GSLanguageCompiler::AST {
         Bool IsExpression() const override;
 
     public:
+
+        /*
+         *
+         * GS_Expression PUBLIC VIRTUAL METHODS
+         *
+         */
 
         /**
          * Getter for expression type
@@ -58,12 +76,12 @@ namespace GSLanguageCompiler::AST {
     /**
      * Casting to expression if node is expression
      * @param node Node
-     * @return Expression or nullptr
+     * @return Expression or null
      */
     GSExpressionPtr ToExpression(ConstLRef<GSNodePtr> node);
 
     /**
-     * Declaring for cast function
+     * Declaring expressions for cast function
      */
     class GS_ConstantExpression;
     class GS_UnaryExpression;
@@ -76,11 +94,12 @@ namespace GSLanguageCompiler::AST {
      * Casting to any type of expression if node is expression
      * @tparam T Type of expression
      * @param node Node
-     * @return Expression or nullptr
+     * @return Expression or null
      */
     template<typename T>
     inline NodePtr<T> ToExpression(ConstLRef<GSNodePtr> node) {
-        static_assert(std::is_base_of_v<GS_Expression, T>, "Type for casting must be inherited from GS_Expression!");
+        static_assert(std::is_base_of_v<GS_Expression, T>,
+                      "Type for casting must be inherited from GS_Expression!");
 
         auto expression = ToExpression(node);
 

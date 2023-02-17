@@ -50,7 +50,15 @@ namespace GSLanguageCompiler::Lexer {
               _messages(IO::GSMessageArray()),
               _source(source),
               _sourceIterator(_source.cbegin()),
-              _currentPosition(1) {}
+              _currentPosition(1) {
+        auto sourceHash = _source.GetHash();
+
+        auto optionalSource = _session.GetSource(sourceHash);
+
+        if (!optionalSource.has_value()) {
+            Driver::GlobalContext().Exit();
+        }
+    }
 
     GS_Lexer GS_Lexer::Create(LRef<Driver::GS_Session> session,
                               ConstLRef<IO::GS_Source> source) {
@@ -107,7 +115,7 @@ namespace GSLanguageCompiler::Lexer {
             // tokenizing word
 
             return TokenizeWord();
-        } else if (ReservedSymbolType(CurrentSymbol()) != TokenType::Unknown) {
+        } else if (ReservedSymbolType(symbol) != TokenType::Unknown) {
             // tokenizing reserved symbol
 
             return TokenizeReservedSymbol();
@@ -115,11 +123,11 @@ namespace GSLanguageCompiler::Lexer {
             // tokenizing digit literal
 
             return TokenizeDigit();
-        } else if (CurrentSymbol() == '\'') {
+        } else if (symbol == '\'') {
             // tokenizing symbol literal
 
             return TokenizeSymbol();
-        } else if (CurrentSymbol() == '\"') {
+        } else if (symbol == '\"') {
             // tokenizing string literal
 
             return TokenizeString();

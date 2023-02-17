@@ -19,12 +19,24 @@ namespace GSLanguageCompiler::AST {
     class GS_Declaration : public GS_Node {
     public:
 
+        /*
+         *
+         * GS_Declaration PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for declaration
          */
         GS_Declaration();
 
     public:
+
+        /*
+         *
+         * GS_Declaration PUBLIC OVERRIDE METHODS
+         *
+         */
 
         /**
          * Is declaration
@@ -33,6 +45,12 @@ namespace GSLanguageCompiler::AST {
         Bool IsDeclaration() const override;
 
     public:
+
+        /*
+         *
+         * GS_Declaration PUBLIC VIRTUAL METHODS
+         *
+         */
 
         /**
          * Getter for declaration type
@@ -54,12 +72,12 @@ namespace GSLanguageCompiler::AST {
     /**
      * Casting node to declaration if node is declaration
      * @param node Node
-     * @return Declaration or nullptr
+     * @return Declaration or null
      */
     GSDeclarationPtr ToDeclaration(ConstLRef<GSNodePtr> node);
 
     /**
-     * Declaring for cast function
+     * Declaring declarations for cast function
      */
     class GS_TranslationUnitDeclaration;
     class GS_FunctionDeclaration;
@@ -68,11 +86,12 @@ namespace GSLanguageCompiler::AST {
      * Casting node to any type of declaration if node is declaration
      * @tparam T Type of declaration
      * @param node Node
-     * @return Declaration or nullptr
+     * @return Declaration or null
      */
     template<typename T>
     inline NodePtr<T> ToDeclaration(ConstLRef<GSNodePtr> node) {
-        static_assert(std::is_base_of_v<GS_Declaration, T>, "Type for casting must be inherited from GS_Declaration!");
+        static_assert(std::is_base_of_v<GS_Declaration, T>,
+                      "Type for casting must be inherited from GS_Declaration!");
 
         auto declaration = ToDeclaration(node);
 

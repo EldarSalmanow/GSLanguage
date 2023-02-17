@@ -13,12 +13,24 @@ namespace GSLanguageCompiler::AST {
     class GS_Node {
     public:
 
+        /*
+         *
+         * GS_Node PUBLIC DESTRUCTORS
+         *
+         */
+
         /**
          * Virtual destructor for supporting inheritance
          */
         virtual ~GS_Node();
 
     public:
+
+        /*
+         *
+         * GS_Node PUBLIC VIRTUAL METHODS
+         *
+         */
 
         /**
          * Is declaration node
