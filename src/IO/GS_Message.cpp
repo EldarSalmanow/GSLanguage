@@ -80,54 +80,54 @@ namespace GSLanguageCompiler::IO {
             && _locationRange == message.GetLocationRange();
     }
 
-    GS_MessagesBuffer::GS_MessagesBuffer(GSMessageArray messages)
+    GS_MessageBuffer::GS_MessageBuffer(GSMessageArray messages)
             : _messages(std::move(messages)) {}
 
-    GS_MessagesBuffer GS_MessagesBuffer::Create(GSMessageArray messages) {
-        return GS_MessagesBuffer(std::move(messages));
+    GS_MessageBuffer GS_MessageBuffer::Create(GSMessageArray messages) {
+        return GS_MessageBuffer(std::move(messages));
     }
 
-    GS_MessagesBuffer GS_MessagesBuffer::Create() {
-        return GS_MessagesBuffer::Create(GSMessageArray());
+    GS_MessageBuffer GS_MessageBuffer::Create() {
+        return GS_MessageBuffer::Create(GSMessageArray());
     }
 
-    GS_MessagesBuffer::Iterator GS_MessagesBuffer::begin() {
+    GS_MessageBuffer::Iterator GS_MessageBuffer::begin() {
         return _messages.begin();
     }
 
-    GS_MessagesBuffer::Iterator GS_MessagesBuffer::end() {
+    GS_MessageBuffer::Iterator GS_MessageBuffer::end() {
         return _messages.end();
     }
 
-    GS_MessagesBuffer::ConstIterator GS_MessagesBuffer::begin() const {
+    GS_MessageBuffer::ConstIterator GS_MessageBuffer::begin() const {
         return _messages.begin();
     }
 
-    GS_MessagesBuffer::ConstIterator GS_MessagesBuffer::end() const {
+    GS_MessageBuffer::ConstIterator GS_MessageBuffer::end() const {
         return _messages.end();
     }
 
-    GS_MessagesBuffer::ConstIterator GS_MessagesBuffer::cbegin() const {
+    GS_MessageBuffer::ConstIterator GS_MessageBuffer::cbegin() const {
         return _messages.cbegin();
     }
 
-    GS_MessagesBuffer::ConstIterator GS_MessagesBuffer::cend() const {
+    GS_MessageBuffer::ConstIterator GS_MessageBuffer::cend() const {
         return _messages.cend();
     }
 
-    ConstLRef<GSMessageArray> GS_MessagesBuffer::GetMessages() const {
+    ConstLRef<GSMessageArray> GS_MessageBuffer::GetMessages() const {
         return _messages;
     }
 
-    Bool GS_MessagesBuffer::operator==(ConstLRef<GS_MessagesBuffer> messagesBuffer) const {
-        return _messages == messagesBuffer.GetMessages();
+    Bool GS_MessageBuffer::operator==(ConstLRef<GS_MessageBuffer> messageBuffer) const {
+        return _messages == messageBuffer.GetMessages();
     }
 
-    LRef<GS_Message> GS_MessagesBuffer::operator[](ConstLRef<U64> index) {
+    LRef<GS_Message> GS_MessageBuffer::operator[](ConstLRef<U64> index) {
         return _messages[index];
     }
 
-    ConstLRef<GS_Message> GS_MessagesBuffer::operator[](ConstLRef<U64> index) const {
+    ConstLRef<GS_Message> GS_MessageBuffer::operator[](ConstLRef<U64> index) const {
         return _messages[index];
     }
 
@@ -424,7 +424,7 @@ namespace GSLanguageCompiler::IO {
         return *this;
     }
 
-    LRef<GS_MessageStream> GS_MessageStream::operator<<(ConstLRef<GS_MessagesBuffer> messagesBuffer) {
+    LRef<GS_MessageStream> GS_MessageStream::operator<<(ConstLRef<GS_MessageBuffer> messagesBuffer) {
         for (auto &message : messagesBuffer) {
             *this << message;
         }

@@ -13,20 +13,39 @@ namespace GSLanguageCompiler::AST {
     class GS_ASTContext {
     public:
 
+        /*
+         *
+         * GS_ASTContext PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for AST context
+         * @todo Add type context parameter
          */
         GS_ASTContext();
 
     public:
 
+        /*
+         *
+         * GS_ASTContext PUBLIC STATIC CREATE METHODS
+         *
+         */
+
         /**
          * Creating AST context
          * @return AST context ptr
          */
-        static std::shared_ptr<GS_ASTContext> Create();
+        static std::unique_ptr<GS_ASTContext> Create();
 
     public:
+
+        /*
+         *
+         * GS_ASTContext PUBLIC METHODS
+         *
+         */
 
         /**
          * Getter for default Void type
@@ -100,17 +119,30 @@ namespace GSLanguageCompiler::AST {
          * @param size Size of array
          * @return Array type
          */
-        Semantic::TypePtr<Semantic::GS_ArrayType> GetArrayType(Semantic::GSTypePtr elementsType, U64 size) const;
+        Semantic::TypePtr<Semantic::GS_ArrayType> GetArrayType(Semantic::GSTypePtr elementsType,
+                                                               U64 size) const;
 
     public:
+
+        /*
+         *
+         * GS_ASTContext PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for type context
          * @return Type context
          */
-        Semantic::GSTypeContextPtr GetTypeContext() const;
+        LRef<Semantic::GS_TypeContext> GetTypeContext();
 
     private:
+
+        /*
+         *
+         * GS_ASTContext PRIVATE FIELDS
+         *
+         */
 
         /**
          * Type context
@@ -121,7 +153,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * AST context ptr type
      */
-    using GSASTContextPtr = std::shared_ptr<GS_ASTContext>;
+    using GSASTContextPtr = std::unique_ptr<GS_ASTContext>;
 
 }
 

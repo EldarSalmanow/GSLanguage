@@ -78,7 +78,7 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Is invalid byte source location
+         * Is invalid byte source location (invalid byte position and invalid source hash)
          * @return Is invalid byte source location
          * @todo Delete or update
          */
@@ -210,7 +210,7 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Is invalid line column source location
+         * Is invalid line column source location (invalid line and column position and invalid source hash)
          * @return Is invalid line column source location
          * @todo Delete or update
          */
@@ -374,7 +374,7 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Is invalid source location range
+         * Is invalid source location range (invalid start and end location)
          * @return Is invalid source location range
          * @todo Delete or update
          */
@@ -834,7 +834,7 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Iterator (const) type
+         * Iterator type (const iterator type)
          */
         using Iterator = GS_SourceBuffer::ConstIterator;
 
@@ -1199,20 +1199,27 @@ namespace GSLanguageCompiler::IO {
     using GSSourceManagerPtr = std::unique_ptr<GS_SourceManager>;
 
     /**
-     * Converting ToSourceLocationT to FromSourceLocationT with source
-     * @tparam ToSourceLocationT To source location type
-     * @tparam FromSourceLocationT From source location type
+     * Converting InSourceLocationT to OutSourceLocationT with source
+     * @tparam OutSourceLocationT Output source location type
+     * @tparam InSourceLocationT Input source location type
      * @param sourceLocation Source location
      * @param source Source
      * @return Converted source location
      */
-    template<typename ToSourceLocationT,
-             typename FromSourceLocationT>
-    ToSourceLocationT ToSourceLocation(ConstLRef<FromSourceLocationT> sourceLocation,
-                                       ConstLRef<GS_Source> source) {
+    template<typename OutSourceLocationT,
+             typename InSourceLocationT>
+    OutSourceLocationT ToSourceLocation(ConstLRef<InSourceLocationT> sourceLocation,
+                                        ConstLRef<GS_Source> source) {
         Driver::GlobalContext().Exit();
     }
 
+    /**
+     * Converting SourceLocationT to SourceLocationT with source
+     * @tparam SourceLocationT Source location type
+     * @param sourceLocation Source location
+     * @param source Source
+     * @return Source location
+     */
     template<typename SourceLocationT>
     SourceLocationT ToSourceLocation(ConstLRef<SourceLocationT> sourceLocation,
                                      ConstLRef<GS_Source> source) {
@@ -1242,18 +1249,17 @@ namespace GSLanguageCompiler::IO {
                                                  ConstLRef<GS_Source> source);
 
     /**
-     * Converting ToSourceLocationT to FromSourceLocationT with source manager
-     * @tparam ToSourceLocationT To source location type
-     * @tparam FromSourceLocationT From source location type
+     * Converting InSourceLocationT to OutSourceLocationT with source manager
+     * @tparam OutSourceLocationT Output source location type
+     * @tparam InSourceLocationT Input source location type
      * @param sourceLocation Source location
      * @param sourceManager Source manager
      * @return Converted source location
-     * @todo Rewrite
      */
-    template<typename ToSourceLocationT,
-             typename FromSourceLocationT>
-    ToSourceLocationT ToSourceLocation(ConstLRef<FromSourceLocationT> sourceLocation,
-                                       ConstLRef<GS_SourceManager> sourceManager) {
+    template<typename OutSourceLocationT,
+             typename InSourceLocationT>
+    OutSourceLocationT ToSourceLocation(ConstLRef<InSourceLocationT> sourceLocation,
+                                        ConstLRef<GS_SourceManager> sourceManager) {
         auto sourceHash = sourceLocation.GetSourceHash();
 
         if (sourceHash == InvalidHash) {
@@ -1268,77 +1274,61 @@ namespace GSLanguageCompiler::IO {
 
         auto &source = optionalSource.value();
 
-        return ToSourceLocation<ToSourceLocationT>(sourceLocation,
-                                                   source);
+        return ToSourceLocation<OutSourceLocationT>(sourceLocation,
+                                                    source);
     }
 
-    /*
-     *
-     * (1, 1, 123) - (3, 5, 123) -> (1, 123) - (20, 123)
-     * (1, 1, 0) - (3, 5, 0) -> (1, 0) - (20, 0)
-     * (0, 0, 0) - (0, 0, 0) -> (0, 0) - (0, 0)
-     *
-     * (1, 123) - (20, 123) -> (1, 1, 123) - (3, 5, 123)
-     * (1, 0) - (20, 0) -> (1, 1, 0) - (3, 5, 0)
-     * (0, 0) - (0, 0) -> (0, 0, 0) - (0, 0, 0)
-     *
-     */
-
     /**
-     * Converting source range with FromSourceRangeLocationT to source range with ToSourceRangeLocationT with source
-     * @tparam ToSourceRangeLocationT To source range location type
-     * @tparam FromSourceRangeLocationT From source range location type
+     * Converting source range with InSourceRangeLocationT to source range with OutSourceRangeLocationT with source
+     * @tparam OutSourceRangeLocationT Output source range location type
+     * @tparam InSourceRangeLocationT Input source range location type
      * @param locationRange Source location range
      * @param source Source
      * @return Converted source location range
      */
-    template<typename ToSourceRangeLocationT,
-             typename FromSourceRangeLocationT>
-    GS_SourceRange<ToSourceRangeLocationT> ToSourceRange(ConstLRef<GS_SourceRange<FromSourceRangeLocationT>> locationRange,
-                                                         ConstLRef<GS_Source> source) {
+    template<typename OutSourceRangeLocationT,
+             typename InSourceRangeLocationT>
+    GS_SourceRange<OutSourceRangeLocationT> ToSourceRange(ConstLRef<GS_SourceRange<InSourceRangeLocationT>> locationRange,
+                                                          ConstLRef<GS_Source> source) {
         auto startLocation = locationRange.GetStartLocation();
         auto endLocation = locationRange.GetEndLocation();
 
-        auto convertedStartLocation = ToSourceLocation<ToSourceRangeLocationT>(startLocation,
-                                                                               source);
-        auto convertedEndLocation = ToSourceLocation<ToSourceRangeLocationT>(endLocation,
-                                                                             source);
+        auto convertedStartLocation = ToSourceLocation<OutSourceRangeLocationT>(startLocation,
+                                                                                source);
+        auto convertedEndLocation = ToSourceLocation<OutSourceRangeLocationT>(endLocation,
+                                                                              source);
 
-        auto convertedSourceRange = GS_SourceRange<ToSourceRangeLocationT>::Create(convertedStartLocation,
-                                                                                   convertedEndLocation);
+        auto convertedSourceRange = GS_SourceRange<OutSourceRangeLocationT>::Create(convertedStartLocation,
+                                                                                    convertedEndLocation);
 
         return convertedSourceRange;
     }
 
+    /**
+     * Converting source range with SourceRangeLocationT to source range with SourceRangeLocationT with source
+     * @tparam SourceRangeLocationT Source range location type
+     * @param locationRange Source location range
+     * @param source Source
+     * @return Converted source location range
+     */
     template<typename SourceRangeLocationT>
     GS_SourceRange<SourceRangeLocationT> ToSourceRange(ConstLRef<GS_SourceRange<SourceRangeLocationT>> locationRange,
                                                        ConstLRef<GS_Source> source) {
         return locationRange;
     }
 
-    /*
-     *
-     * (1, 1, 123) - (3, 5, 123) -> (1, 123) - (20, 123)
-     * (0, 0, 0) - (0, 0, 0) -> (0, 0) - (0, 0)
-     *
-     * (1, 123) - (20, 123) -> (1, 1, 123) - (3, 5, 123)
-     * (0, 0) - (0, 0) -> (0, 0, 0) - (0, 0, 0)
-     *
-     */
-
     /**
-     * Converting source range with FromSourceRangeLocationT to source range with ToSourceRangeLocationT with source manager
-     * @tparam ToSourceRangeLocationT To source range location type
-     * @tparam FromSourceRangeLocationT From source range location type
+     * Converting source range with InSourceRangeLocationT to source range with OutSourceRangeLocationT with source manager
+     * @tparam OutSourceRangeLocationT Output source range location type
+     * @tparam InSourceRangeLocationT Input source range location type
      * @param locationRange Location range
      * @param sourceManager Source manager
      * @return Converted source location range
-     * @todo Rewrite
      */
-    template<typename ToSourceRangeLocationT,
-             typename FromSourceRangeLocationT>
-    GS_SourceRange<ToSourceRangeLocationT> ToSourceRange(ConstLRef<GS_SourceRange<FromSourceRangeLocationT>> locationRange,
-                                                         ConstLRef<GS_SourceManager> sourceManager) {
+    template<typename OutSourceRangeLocationT,
+             typename InSourceRangeLocationT>
+    GS_SourceRange<OutSourceRangeLocationT> ToSourceRange(ConstLRef<GS_SourceRange<InSourceRangeLocationT>> locationRange,
+                                                          ConstLRef<GS_SourceManager> sourceManager) {
         auto startLocation = locationRange.GetStartLocation();
 
         auto sourceHash = startLocation.GetSourceHash();
@@ -1355,8 +1345,8 @@ namespace GSLanguageCompiler::IO {
 
         auto &source = optionalSource.value();
 
-        return ToSourceRange<ToSourceRangeLocationT>(locationRange,
-                                                     source);
+        return ToSourceRange<OutSourceRangeLocationT>(locationRange,
+                                                      source);
     }
 
 }

@@ -33,7 +33,7 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Creating reader
-         * @param stream Stream
+         * @param stream Input stream
          * @return Reader
          */
         static GS_Reader Create(LRef<InputStream> stream);
@@ -48,8 +48,8 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Creating reader and reading text from stream
-         * @param stream Stream
-         * @return Text
+         * @param stream Input stream
+         * @return Text from stream
          */
         static UString Run(LRef<InputStream> stream);
 
@@ -63,7 +63,7 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Reading text from stream
-         * @return Text
+         * @return Text from stream
          */
         UString Read();
 
@@ -76,7 +76,7 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Stream for reading text
+         * Input stream for reading text
          */
         LRef<InputStream> _stream;
     };

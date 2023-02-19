@@ -5,8 +5,8 @@ namespace GSLanguageCompiler::AST {
     GS_ASTContext::GS_ASTContext()
             : _typeContext(Semantic::GS_TypeContext::Create()) {}
 
-    std::shared_ptr<GS_ASTContext> GS_ASTContext::Create() {
-        return std::make_shared<GS_ASTContext>();
+    std::unique_ptr<GS_ASTContext> GS_ASTContext::Create() {
+        return std::make_unique<GS_ASTContext>();
     }
 
     Semantic::TypePtr<Semantic::GS_VoidType> GS_ASTContext::GetVoidType() const {
@@ -53,12 +53,14 @@ namespace GSLanguageCompiler::AST {
         return _typeContext->GetStringType();
     }
 
-    Semantic::TypePtr<Semantic::GS_ArrayType> GS_ASTContext::GetArrayType(Semantic::GSTypePtr elementsType, U64 size) const {
-        return _typeContext->GetArrayType(std::move(elementsType), size);
+    Semantic::TypePtr<Semantic::GS_ArrayType> GS_ASTContext::GetArrayType(Semantic::GSTypePtr elementsType,
+                                                                          U64 size) const {
+        return _typeContext->GetArrayType(std::move(elementsType),
+                                          size);
     }
 
-    Semantic::GSTypeContextPtr GS_ASTContext::GetTypeContext() const {
-        return _typeContext;
+    LRef<Semantic::GS_TypeContext> GS_ASTContext::GetTypeContext() {
+        return *_typeContext;
     }
 
 }

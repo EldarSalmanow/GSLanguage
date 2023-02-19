@@ -160,12 +160,12 @@ namespace GSLanguageCompiler::IO {
     /**
      * Class for containing messages
      */
-    class GS_MessagesBuffer {
+    class GS_MessageBuffer {
     public:
 
         /*
          *
-         * GS_MessagesBuffer PUBLIC TYPES
+         * GS_MessageBuffer PUBLIC TYPES
          *
          */
 
@@ -183,78 +183,78 @@ namespace GSLanguageCompiler::IO {
 
         /*
          *
-         * GS_MessagesBuffer PUBLIC CONSTRUCTORS
+         * GS_MessageBuffer PUBLIC CONSTRUCTORS
          *
          */
 
         /**
-         * Constructor for messages buffer
+         * Constructor for message buffer
          * @param messages Messages
          */
-        explicit GS_MessagesBuffer(GSMessageArray messages);
+        explicit GS_MessageBuffer(GSMessageArray messages);
 
     public:
 
         /*
          *
-         * GS_MessagesBuffer PUBLIC STATIC CREATE METHODS
+         * GS_MessageBuffer PUBLIC STATIC CREATE METHODS
          *
          */
 
         /**
-         * Creating messages buffer
+         * Creating message buffer
          * @param messages Messages
-         * @return Messages buffer
+         * @return Message buffer
          */
-        static GS_MessagesBuffer Create(GSMessageArray messages);
+        static GS_MessageBuffer Create(GSMessageArray messages);
 
         /**
-         * Creating messages buffer
-         * @return Messages buffer
+         * Creating message buffer
+         * @return Message buffer
          */
-        static GS_MessagesBuffer Create();
+        static GS_MessageBuffer Create();
 
     public:
 
         /*
          *
-         * GS_MessagesBuffer PUBLIC ITERATOR METHODS
+         * GS_MessageBuffer PUBLIC ITERATOR METHODS
          *
          */
 
         /**
-         * Getting begin messages buffer iterator
-         * @return Begin messages buffer iterator
+         * Getting begin message buffer iterator
+         * @return Begin message buffer iterator
          */
         Iterator begin();
 
         /**
-         * Getting end messages buffer iterator
-         * @return End messages buffer iterator
+         * Getting end message buffer iterator
+         * @return End message buffer iterator
          */
         Iterator end();
 
         /**
-         * Getting begin messages buffer const iterator
-         * @return Begin messages buffer const iterator
+         * Getting begin message buffer const iterator
+         * @return Begin message buffer const iterator
          */
         ConstIterator begin() const;
 
         /**
-         * Getting end messages buffer const iterator
-         * @return End messages buffer const iterator
+         * Getting end message buffer const iterator
+         * @return End message buffer const iterator
          */
         ConstIterator end() const;
 
         /**
-         * Getting begin messages buffer const iterator
-         * @return Begin messages buffer const iterator
+         * Getting begin message buffer const iterator
+         * @return Begin message buffer const iterator
          */
         ConstIterator cbegin() const;
 
         /**
-         * Getting end messages buffer const iterator
-         * @return End messages buffer const iterator
+         * Getting end message buffer const iterator
+         * @return End message buffer const iterator
          */
         ConstIterator cend() const;
 
@@ -262,7 +262,7 @@ namespace GSLanguageCompiler::IO {
 
         /*
          *
-         * GS_MessagesBuffer PUBLIC GETTER METHODS
+         * GS_MessageBuffer PUBLIC GETTER METHODS
          *
          */
 
@@ -276,26 +276,26 @@ namespace GSLanguageCompiler::IO {
 
         /*
          *
-         * GS_MessagesBuffer PUBLIC OPERATOR METHODS
+         * GS_MessageBuffer PUBLIC OPERATOR METHODS
          *
          */
 
         /**
-         * Equality operator for messages buffer
-         * @param messagesBuffer Messages buffer
-         * @return Is equal messages buffers
+         * Equality operator for message buffer
+         * @param messageBuffer Message buffer
+         * @return Is equal message buffers
          */
-        Bool operator==(ConstLRef<GS_MessagesBuffer> messagesBuffer) const;
+        Bool operator==(ConstLRef<GS_MessageBuffer> messageBuffer) const;
 
         /**
-         * Index operator for messages buffer
+         * Index operator for message buffer
          * @param index Index
          * @return Message by index in messages
          */
         LRef<GS_Message> operator[](ConstLRef<U64> index);
 
         /**
-         * Index operator for messages buffer
+         * Index operator for message buffer
          * @param index Index
          * @return Message by index in messages
          */
@@ -305,7 +305,7 @@ namespace GSLanguageCompiler::IO {
 
         /*
          *
-         * GS_MessagesBuffer PRIVATE FIELDS
+         * GS_MessageBuffer PRIVATE FIELDS
          *
          */
 
@@ -607,7 +607,7 @@ namespace GSLanguageCompiler::IO {
          * @param messagesBuffer Messages buffer
          * @return Message stream
          */
-        LRef<GS_MessageStream> operator<<(ConstLRef<GS_MessagesBuffer> messagesBuffer);
+        LRef<GS_MessageStream> operator<<(ConstLRef<GS_MessageBuffer> messagesBuffer);
 
         /**
          * Stream operator for writing message from message builder in message handler
