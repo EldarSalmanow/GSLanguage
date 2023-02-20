@@ -2,45 +2,45 @@
 
 namespace GSLanguageCompiler::IO {
 
-    GS_StdIOStreamsManager::GS_StdIOStreamsManager(LRef<InputStream> standardIn,
-                                                   LRef<OutputStream> standardOut,
-                                                   LRef<OutputStream> standardErr,
-                                                   LRef<OutputStream> standardLog)
+    GS_StdIOStreamManager::GS_StdIOStreamManager(LRef<InputStream> standardIn,
+                                                 LRef<OutputStream> standardOut,
+                                                 LRef<OutputStream> standardErr,
+                                                 LRef<OutputStream> standardLog)
             : _standardIn(standardIn),
               _standardOut(standardOut),
               _standardErr(standardErr),
               _standardLog(standardLog) {}
 
-    std::unique_ptr<GS_StdIOStreamsManager> GS_StdIOStreamsManager::Create(LRef<InputStream> standardIn,
-                                                                           LRef<OutputStream> standardOut,
-                                                                           LRef<OutputStream> standardErr,
-                                                                           LRef<OutputStream> standardLog) {
-        return std::make_unique<GS_StdIOStreamsManager>(standardIn,
-                                                        standardOut,
-                                                        standardErr,
-                                                        standardLog);
+    std::unique_ptr<GS_StdIOStreamManager> GS_StdIOStreamManager::Create(LRef<InputStream> standardIn,
+                                                                         LRef<OutputStream> standardOut,
+                                                                         LRef<OutputStream> standardErr,
+                                                                         LRef<OutputStream> standardLog) {
+        return std::make_unique<GS_StdIOStreamManager>(standardIn,
+                                                       standardOut,
+                                                       standardErr,
+                                                       standardLog);
     }
 
-    std::unique_ptr<GS_StdIOStreamsManager> GS_StdIOStreamsManager::Create() {
-        return GS_StdIOStreamsManager::Create(std::cin,
-                                              std::cout,
-                                              std::cerr,
-                                              std::clog);
+    std::unique_ptr<GS_StdIOStreamManager> GS_StdIOStreamManager::Create() {
+        return GS_StdIOStreamManager::Create(std::cin,
+                                             std::cout,
+                                             std::cerr,
+                                             std::clog);
     }
 
-    LRef<InputStream> GS_StdIOStreamsManager::In() {
+    LRef<InputStream> GS_StdIOStreamManager::In() {
         return _standardIn;
     }
 
-    LRef<OutputStream> GS_StdIOStreamsManager::Out() {
+    LRef<OutputStream> GS_StdIOStreamManager::Out() {
         return _standardOut;
     }
 
-    LRef<OutputStream> GS_StdIOStreamsManager::Err() {
+    LRef<OutputStream> GS_StdIOStreamManager::Err() {
         return _standardErr;
     }
 
-    LRef<OutputStream> GS_StdIOStreamsManager::Log() {
+    LRef<OutputStream> GS_StdIOStreamManager::Log() {
         return _standardLog;
     }
 

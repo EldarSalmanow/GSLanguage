@@ -40,8 +40,8 @@ namespace GSLanguageCompiler::Driver {
         return _context;
     }
 
-    Result GS_GlobalContext::InitializeIO(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager) {
-        _stdIOStreamsManager = std::move(stdIOStreamsManager);
+    Result GS_GlobalContext::InitializeIO(IO::GSStdIOStreamManagerPtr stdIOStreamManager) {
+        _stdIOStreamManager = std::move(stdIOStreamManager);
 
         return Result::Ok;
     }
@@ -61,10 +61,10 @@ namespace GSLanguageCompiler::Driver {
         return Result::Ok;
     }
 
-    Result GS_GlobalContext::Initialize(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+    Result GS_GlobalContext::Initialize(IO::GSStdIOStreamManagerPtr stdIOStreamManager,
                                         SignalHandlerFunctionPtr signalHandlerFunction) {
-        if (InitializeIO(std::move(stdIOStreamsManager)) != Result::Ok
-         || InitializeSignals(signalHandlerFunction)     != Result::Ok) {
+        if (InitializeIO(std::move(stdIOStreamManager)) != Result::Ok
+         || InitializeSignals(signalHandlerFunction)    != Result::Ok) {
             return Result::Err;
         }
 
@@ -72,24 +72,24 @@ namespace GSLanguageCompiler::Driver {
     }
 
     Result GS_GlobalContext::Initialize() {
-        return Initialize(IO::GS_StdIOStreamsManager::Create(),
+        return Initialize(IO::GS_StdIOStreamManager::Create(),
                           DefaultSignalHandler);
     }
 
     LRef<std::istream> GS_GlobalContext::In() {
-        return _stdIOStreamsManager->In();
+        return _stdIOStreamManager->In();
     }
 
     LRef<std::ostream> GS_GlobalContext::Out() {
-        return _stdIOStreamsManager->Out();
+        return _stdIOStreamManager->Out();
     }
 
     LRef<std::ostream> GS_GlobalContext::Err() {
-        return _stdIOStreamsManager->Err();
+        return _stdIOStreamManager->Err();
     }
 
     LRef<std::ostream> GS_GlobalContext::Log() {
-        return _stdIOStreamsManager->Log();
+        return _stdIOStreamManager->Log();
     }
 
     Void GS_GlobalContext::Exit(I32 exitCode) {
@@ -103,7 +103,7 @@ namespace GSLanguageCompiler::Driver {
     }
 
     GS_GlobalContext::GS_GlobalContext()
-            : _stdIOStreamsManager(nullptr) {}
+            : _stdIOStreamManager(nullptr) {}
 
     GS_GlobalContext GS_GlobalContext::_context = GS_GlobalContext();
     

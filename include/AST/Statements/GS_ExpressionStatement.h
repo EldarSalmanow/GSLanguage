@@ -12,6 +12,12 @@ namespace GSLanguageCompiler::AST {
     class GS_ExpressionStatement : public GS_Statement {
     public:
 
+        /*
+         *
+         * GS_ExpressionStatement PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for expression statement
          * @param expression Expression ptr
@@ -19,6 +25,12 @@ namespace GSLanguageCompiler::AST {
         explicit GS_ExpressionStatement(GSExpressionPtr expression);
 
     public:
+
+        /*
+         *
+         * GS_ExpressionStatement PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating expression statement ptr
@@ -29,6 +41,12 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_ExpressionStatement PUBLIC GETTER METHODS
+         *
+         */
+
         /**
          * Getter for expression ptr
          * @return Expression ptr
@@ -37,6 +55,12 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_ExpressionStatement PUBLIC OVERRIDE METHODS
+         *
+         */
+
         /**
          * Getter for statement type
          * @return Statement type
@@ -44,6 +68,12 @@ namespace GSLanguageCompiler::AST {
         StatementType GetStatementType() const override;
 
     private:
+
+        /*
+         *
+         * GS_ExpressionStatement PRIVATE FIELDS
+         *
+         */
 
         /**
          * Expression ptr

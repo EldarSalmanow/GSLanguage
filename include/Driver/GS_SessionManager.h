@@ -1,5 +1,5 @@
-#ifndef GSLANGUAGE_GS_SESSIONSMANAGER_H
-#define GSLANGUAGE_GS_SESSIONSMANAGER_H
+#ifndef GSLANGUAGE_GS_SESSIONMANAGER_H
+#define GSLANGUAGE_GS_SESSIONMANAGER_H
 
 #include <Driver/GS_Session.h>
 
@@ -8,47 +8,47 @@ namespace GSLanguageCompiler::Driver {
     /**
      * Class for managing compiler sessions
      */
-    class GS_SessionsManager {
+    class GS_SessionManager {
     public:
 
         /*
          *
-         * GS_SessionsManager PUBLIC CONSTRUCTORS
+         * GS_SessionManager PUBLIC CONSTRUCTORS
          *
          */
 
         /**
-         * Creating sessions manager
+         * Creating session manager
          * @param sessions Compiler sessions
          */
-        explicit GS_SessionsManager(GSSessionPtrArray sessions);
+        explicit GS_SessionManager(GSSessionPtrArray sessions);
 
     public:
 
         /*
          *
-         * GS_SessionsManager PUBLIC STATIC CREATE METHODS
+         * GS_SessionManager PUBLIC STATIC CREATE METHODS
          *
          */
 
         /**
-         * Creating sessions manager
+         * Creating session manager
          * @param sessions Sessions
-         * @return Sessions manager ptr
+         * @return Session manager ptr
          */
-        static std::unique_ptr<GS_SessionsManager> Create(GSSessionPtrArray sessions);
+        static std::unique_ptr<GS_SessionManager> Create(GSSessionPtrArray sessions);
 
         /**
-         * Creating sessions manager
-         * @return Sessions manager ptr
+         * Creating session manager
+         * @return Session manager ptr
          */
-        static std::unique_ptr<GS_SessionsManager> Create();
+        static std::unique_ptr<GS_SessionManager> Create();
 
     public:
 
         /*
          *
-         * GS_SessionsManager PUBLIC METHODS
+         * GS_SessionManager PUBLIC METHODS
          *
          */
 
@@ -69,7 +69,7 @@ namespace GSLanguageCompiler::Driver {
 
         /*
          *
-         * GS_SessionsManager PUBLIC GETTERS
+         * GS_SessionManager PUBLIC GETTER METHODS
          *
          */
 
@@ -83,7 +83,7 @@ namespace GSLanguageCompiler::Driver {
 
         /*
          *
-         * GS_SessionsManager PRIVATE FIELDS
+         * GS_SessionManager PRIVATE FIELDS
          *
          */
 
@@ -94,10 +94,10 @@ namespace GSLanguageCompiler::Driver {
     };
 
     /**
-     * Sessions manager ptr type
+     * Session manager ptr type
      */
-    using GSSessionsManagerPtr = std::unique_ptr<GS_SessionsManager>;
+    using GSSessionManagerPtr = std::unique_ptr<GS_SessionManager>;
 
 }
 
-#endif //GSLANGUAGE_GS_SESSIONSMANAGER_H
+#endif //GSLANGUAGE_GS_SESSIONMANAGER_H

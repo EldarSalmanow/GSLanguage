@@ -47,7 +47,7 @@ namespace GSLanguageCompiler::Driver {
                                    UString outputFileName);
 
         /**
-         * Creating arguments
+         * Creating arguments with default output file name
          * @param inputFileNames Input file names
          * @return Arguments
          * @todo Replace output name to ?
@@ -55,14 +55,14 @@ namespace GSLanguageCompiler::Driver {
         static GS_Arguments Create(std::vector<UString> inputFileNames);
 
         /**
-         * Creating arguments
+         * Creating default arguments
          * @return Arguments
          * @todo Remove ?
          */
         static GS_Arguments Create();
 
         /**
-         * Creating and parsing arguments
+         * Creating and parsing arguments from command line arguments
          * @param argc Arguments counter
          * @param argv Arguments values
          * @return Arguments
@@ -74,7 +74,7 @@ namespace GSLanguageCompiler::Driver {
 
         /*
          *
-         * GS_Arguments PUBLIC GETTERS
+         * GS_Arguments PUBLIC GETTER METHODS
          *
          */
 

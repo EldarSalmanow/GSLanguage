@@ -12,14 +12,27 @@ namespace GSLanguageCompiler::AST {
     class GS_AssignmentStatement : public GS_Statement {
     public:
 
+        /*
+         *
+         * GS_AssignmentStatement PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for assignment statement
          * @param lvalueExpression Left value expression ptr
          * @param rvalueExpression Right value expression ptr
          */
-        GS_AssignmentStatement(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression);
+        GS_AssignmentStatement(GSExpressionPtr lvalueExpression,
+                               GSExpressionPtr rvalueExpression);
 
     public:
+
+        /*
+         *
+         * GS_AssignmentStatement PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating assignment statement ptr
@@ -27,9 +40,16 @@ namespace GSLanguageCompiler::AST {
          * @param rvalueExpression Right value expression ptr
          * @return Assignment statement ptr
          */
-        static std::shared_ptr<GS_AssignmentStatement> Create(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression);
+        static std::shared_ptr<GS_AssignmentStatement> Create(GSExpressionPtr lvalueExpression,
+                                                              GSExpressionPtr rvalueExpression);
 
     public:
+
+        /*
+         *
+         * GS_AssignmentStatement PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for left value expression ptr
@@ -45,6 +65,12 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_AssignmentStatement PUBLIC OVERRIDE METHODS
+         *
+         */
+
         /**
          * Getter for statement type
          * @return Statement type
@@ -52,6 +78,12 @@ namespace GSLanguageCompiler::AST {
         StatementType GetStatementType() const override;
 
     private:
+
+        /*
+         *
+         * GS_AssignmentStatement PRIVATE FIELDS
+         *
+         */
 
         /**
          * Left value expression ptr

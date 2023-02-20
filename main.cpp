@@ -472,10 +472,10 @@ Void CheckGetCodeInRange() {
 
 Void CheckMessageLocation() {
     {
-        auto SS = IO::GS_StdIOStreamsManager::Create();
+        auto SS = IO::GS_StdIOStreamManager::Create();
         auto SM = IO::GS_SourceManager::Create();
-        auto MSM = IO::GS_MessageStreamsManager::Create(*SS,
-                                                        *SM);
+        auto MSM = IO::GS_MessageStreamManager::Create(*SS,
+                                                       *SM);
 
         auto &source_ = SM->AddCustomSource("func main() {\n"
                                             "    println(\"Hello, World!\"\n"

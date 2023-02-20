@@ -65,10 +65,10 @@ namespace GSLanguageCompiler::Driver {
 
         /**
          * Initializing global IO streams
-         * @param stdIOStreamsManager Standard IO streams manager
+         * @param stdIOStreamManager Standard IO stream manager
          * @return Initialization result
          */
-        Result InitializeIO(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager);
+        Result InitializeIO(IO::GSStdIOStreamManagerPtr stdIOStreamManager);
 
         /**
          * Initializing global signal handlers
@@ -79,11 +79,11 @@ namespace GSLanguageCompiler::Driver {
 
         /**
          * Initializing global context
-         * @param stdIOStreamsManager Standard IO streams manager
+         * @param stdIOStreamManager Standard IO stream manager
          * @param signalHandlerFunction Signal handler function
          * @return Initialization result
          */
-        Result Initialize(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+        Result Initialize(IO::GSStdIOStreamManagerPtr stdIOStreamManager,
                           SignalHandlerFunctionPtr signalHandlerFunction);
 
         /**
@@ -93,26 +93,26 @@ namespace GSLanguageCompiler::Driver {
         Result Initialize();
 
         /**
-         * Getting standard input stream from standard IO streams manager
+         * Getting standard input stream from standard IO stream manager
          * @return Standard input stream
          */
         LRef<std::istream> In();
 
         /**
-         * Getting standard output stream from standard IO streams manager
+         * Getting standard output stream from standard IO stream manager
          * @return Standard output stream
          */
         LRef<std::ostream> Out();
 
         /**
-         * Getting standard error stream from standard IO streams manager
+         * Getting standard error stream from standard IO stream manager
          * @return Standard error stream
          */
         LRef<std::ostream> Err();
 
         /**
-         * Getting standard logging stream from standard IO streams manager
-         * @return Standard logging stream
+         * Getting standard logger stream from standard IO stream manager
+         * @return Standard logger stream
          */
         LRef<std::ostream> Log();
 
@@ -120,6 +120,7 @@ namespace GSLanguageCompiler::Driver {
          * Exiting from program
          * @param exitCode Exit code
          * @return No return
+         * @todo Add cleanup
          */
         GS_NORETURN Void Exit(I32 exitCode);
 
@@ -179,9 +180,9 @@ namespace GSLanguageCompiler::Driver {
          */
 
         /**
-         * Standard IO streams manager
+         * Standard IO stream manager
          */
-        IO::GSStdIOStreamsManagerPtr _stdIOStreamsManager;
+        IO::GSStdIOStreamManagerPtr _stdIOStreamManager;
     };
 
     /**

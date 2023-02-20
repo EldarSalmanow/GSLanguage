@@ -23,40 +23,40 @@ namespace GSLanguageCompiler::Driver {
         return StaticCast<I32>(compilingResult);
     }
 
-    GS_Session::GS_Session(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+    GS_Session::GS_Session(IO::GSStdIOStreamManagerPtr stdIOStreamManager,
                            IO::GSSourceManagerPtr sourceManager,
-                           IO::GSMessageStreamsManagerPtr messageStreamsManager,
+                           IO::GSMessageStreamManagerPtr messageStreamManager,
                            AST::GSASTContextPtr astContext,
                            Semantic::GSTableOfSymbolsPtr tableOfSymbols)
-            : _stdIOStreamsManager(std::move(stdIOStreamsManager)),
+            : _stdIOStreamManager(std::move(stdIOStreamManager)),
               _sourceManager(std::move(sourceManager)),
-              _messageStreamsManager(std::move(messageStreamsManager)),
+              _messageStreamManager(std::move(messageStreamManager)),
               _astContext(std::move(astContext)),
               _tableOfSymbols(std::move(tableOfSymbols)) {}
 
-    std::unique_ptr<GS_Session> GS_Session::Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+    std::unique_ptr<GS_Session> GS_Session::Create(IO::GSStdIOStreamManagerPtr stdIOStreamManager,
                                                    IO::GSSourceManagerPtr sourceManager,
-                                                   IO::GSMessageStreamsManagerPtr messageStreamsManager,
+                                                   IO::GSMessageStreamManagerPtr messageStreamManager,
                                                    AST::GSASTContextPtr astContext,
                                                    Semantic::GSTableOfSymbolsPtr tableOfSymbols) {
-        return std::make_unique<GS_Session>(std::move(stdIOStreamsManager),
+        return std::make_unique<GS_Session>(std::move(stdIOStreamManager),
                                             std::move(sourceManager),
-                                            std::move(messageStreamsManager),
+                                            std::move(messageStreamManager),
                                             std::move(astContext),
                                             std::move(tableOfSymbols));
     }
 
     std::unique_ptr<GS_Session> GS_Session::Create() {
-        auto stdIOStreamsManager = IO::GS_StdIOStreamsManager::Create();
+        auto stdIOStreamManager = IO::GS_StdIOStreamManager::Create();
         auto sourceManager = IO::GS_SourceManager::Create();
-        auto messageStreamsManager = IO::GS_MessageStreamsManager::Create(*stdIOStreamsManager,
-                                                                          *sourceManager);
+        auto messageStreamManager = IO::GS_MessageStreamManager::Create(*stdIOStreamManager,
+                                                                        *sourceManager);
         auto astContext = AST::GS_ASTContext::Create();
         auto tableOfSymbols = Semantic::GS_TableOfSymbols::Create();
 
-        return GS_Session::Create(std::move(stdIOStreamsManager),
+        return GS_Session::Create(std::move(stdIOStreamManager),
                                   std::move(sourceManager),
-                                  std::move(messageStreamsManager),
+                                  std::move(messageStreamManager),
                                   std::move(astContext),
                                   std::move(tableOfSymbols));
     }
@@ -105,19 +105,19 @@ namespace GSLanguageCompiler::Driver {
     }
 
     LRef<std::istream> GS_Session::StdIn() {
-        return _stdIOStreamsManager->In();
+        return _stdIOStreamManager->In();
     }
 
     LRef<std::ostream> GS_Session::StdOut() {
-        return _stdIOStreamsManager->Out();
+        return _stdIOStreamManager->Out();
     }
 
     LRef<std::ostream> GS_Session::StdErr() {
-        return _stdIOStreamsManager->Err();
+        return _stdIOStreamManager->Err();
     }
 
     LRef<std::ostream> GS_Session::StdLog() {
-        return _stdIOStreamsManager->Log();
+        return _stdIOStreamManager->Log();
     }
 
     ConstLRef<IO::GS_Source> GS_Session::AddSource(IO::GSSourcePtr source) {
@@ -158,15 +158,15 @@ namespace GSLanguageCompiler::Driver {
     }
 
     LRef<IO::GS_MessageStream> GS_Session::Out() {
-        return _messageStreamsManager->Out();
+        return _messageStreamManager->Out();
     }
 
     LRef<IO::GS_MessageStream> GS_Session::Err() {
-        return _messageStreamsManager->Err();
+        return _messageStreamManager->Err();
     }
 
     LRef<IO::GS_MessageStream> GS_Session::Log() {
-        return _messageStreamsManager->Log();
+        return _messageStreamManager->Log();
     }
 
     IO::GS_MessageBuilder GS_Session::Message(UString messageText,
@@ -204,31 +204,31 @@ namespace GSLanguageCompiler::Driver {
     }
 
     IO::GS_MessageBuilder GS_Session::NoteMessage() const {
-        return IO::GS_MessageBuilder::Create().Note();
+        return Message().Note();
     }
 
     IO::GS_MessageBuilder GS_Session::WarningMessage() const {
-        return IO::GS_MessageBuilder::Create().Warning();
+        return Message().Warning();
     }
 
     IO::GS_MessageBuilder GS_Session::ErrorMessage() const {
-        return IO::GS_MessageBuilder::Create().Error();
+        return Message().Error();
     }
 
     IO::GS_MessageBuilder GS_Session::FatalMessage() const {
-        return IO::GS_MessageBuilder::Create().Fatal();
+        return Message().Fatal();
     }
 
-    LRef<IO::GS_StdIOStreamsManager> GS_Session::GetStdIOStreamsManager() {
-        return *_stdIOStreamsManager;
+    LRef<IO::GS_StdIOStreamManager> GS_Session::GetStdIOStreamManager() {
+        return *_stdIOStreamManager;
     }
 
     LRef<IO::GS_SourceManager> GS_Session::GetSourceManager() {
         return *_sourceManager;
     }
 
-    LRef<IO::GS_MessageStreamsManager> GS_Session::GetMessageStreamsManager() {
-        return *_messageStreamsManager;
+    LRef<IO::GS_MessageStreamManager> GS_Session::GetMessageStreamManager() {
+        return *_messageStreamManager;
     }
 
     LRef<AST::GS_ASTContext> GS_Session::GetASTContext() {

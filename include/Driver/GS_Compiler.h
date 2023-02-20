@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_COMPILER_H
 #define GSLANGUAGE_GS_COMPILER_H
 
-#include <Driver/GS_SessionsManager.h>
+#include <Driver/GS_SessionManager.h>
 
 namespace GSLanguageCompiler::Driver {
 
@@ -19,9 +19,9 @@ namespace GSLanguageCompiler::Driver {
 
         /**
          * Constructor for compiler
-         * @param sessionsManager Sessions manager
+         * @param sessionManager Session manager
          */
-        explicit GS_Compiler(GSSessionsManagerPtr sessionsManager);
+        explicit GS_Compiler(GSSessionManagerPtr sessionManager);
 
     public:
 
@@ -33,10 +33,10 @@ namespace GSLanguageCompiler::Driver {
 
         /**
          * Creating compiler
-         * @param sessionsManager Sessions manager
+         * @param sessionManager Session manager
          * @return Compiler ptr
          */
-        static std::unique_ptr<GS_Compiler> Create(GSSessionsManagerPtr sessionsManager);
+        static std::unique_ptr<GS_Compiler> Create(GSSessionManagerPtr sessionManager);
 
         /**
          * Creating compiler
@@ -103,10 +103,10 @@ namespace GSLanguageCompiler::Driver {
          */
 
         /**
-         * Getter for sessions manager
-         * @return Sessions manager
+         * Getter for session manager
+         * @return Session manager
          */
-        ConstLRef<GS_SessionsManager> GetSessionsManager() const;
+        ConstLRef<GS_SessionManager> GetSessionManager() const;
 
     private:
 
@@ -117,9 +117,9 @@ namespace GSLanguageCompiler::Driver {
          */
 
         /**
-         * Sessions manager
+         * Session manager
          */
-        GSSessionsManagerPtr _sessionsManager;
+        GSSessionManagerPtr _sessionManager;
     };
 
     /**

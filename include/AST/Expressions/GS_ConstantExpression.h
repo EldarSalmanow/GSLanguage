@@ -15,6 +15,12 @@ namespace GSLanguageCompiler::AST {
     class GS_Value {
     public:
 
+        /*
+         *
+         * GS_Value PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for value
          * @param type Type ptr
@@ -23,12 +29,24 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_Value PUBLIC DESTRUCTORS
+         *
+         */
+
         /**
          * Virtual destructor for supporting inheritance
          */
         virtual ~GS_Value();
 
     public:
+
+        /*
+         *
+         * GS_Value PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating value ptr
@@ -39,6 +57,12 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_Value PUBLIC GETTER METHODS
+         *
+         */
+
         /**
          * Getter for type ptr
          * @return Type ptr
@@ -47,6 +71,12 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_Value PUBLIC VIRTUAL METHODS
+         *
+         */
+
         /**
          * Is literal value
          * @return Is literal value
@@ -54,6 +84,12 @@ namespace GSLanguageCompiler::AST {
         virtual Bool IsLiteralValue();
 
     private:
+
+        /*
+         *
+         * GS_Value PRIVATE FIELDS
+         *
+         */
 
         /**
          * Type ptr

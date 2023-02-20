@@ -14,14 +14,27 @@ namespace GSLanguageCompiler::AST {
     class GS_FunctionSignature {
     public:
 
+        /*
+         *
+         * GS_FunctionSignature PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for function signature
          * @param paramTypes Param types
          * @param returnType Return type
          */
-        GS_FunctionSignature(Semantic::GSTypePtrArray paramTypes, Semantic::GSTypePtr returnType);
+        GS_FunctionSignature(Semantic::GSTypePtrArray paramTypes,
+                             Semantic::GSTypePtr returnType);
 
     public:
+
+        /*
+         *
+         * GS_FunctionSignature PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating function signature
@@ -29,7 +42,8 @@ namespace GSLanguageCompiler::AST {
          * @param returnType Return type
          * @return Function signature
          */
-        static GS_FunctionSignature Create(Semantic::GSTypePtrArray paramTypes, Semantic::GSTypePtr returnType);
+        static GS_FunctionSignature Create(Semantic::GSTypePtrArray paramTypes,
+                                           Semantic::GSTypePtr returnType);
 
         /**
          * Creating function signature
@@ -53,19 +67,31 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_FunctionSignature PUBLIC GETTER METHODS
+         *
+         */
+
         /**
          * Getter for param types
          * @return Param types
          */
-        Semantic::GSTypePtrArray GetParamTypes() const;
+        ConstLRef<Semantic::GSTypePtrArray> GetParamTypes() const;
 
         /**
          * Getter for return type
          * @return Return type
          */
-        Semantic::GSTypePtr GetReturnType() const;
+        ConstLRef<Semantic::GSTypePtr> GetReturnType() const;
 
     private:
+
+        /*
+         *
+         * GS_FunctionSignature PRIVATE FIELDS
+         *
+         */
 
         /**
          * Param types
@@ -79,15 +105,16 @@ namespace GSLanguageCompiler::AST {
     };
 
     /**
-     * Declaring expression
-     */
-    class GS_Expression;
-
-    /**
      * Class for function declarations in language
      */
     class GS_FunctionDeclaration : public GS_Declaration {
     public:
+
+        /*
+         *
+         * GS_FunctionDeclaration PUBLIC CONSTRUCTORS
+         *
+         */
 
         /**
          * Constructor for function declaration
@@ -95,10 +122,18 @@ namespace GSLanguageCompiler::AST {
          * @param signature Signature
          * @param body Body
          */
-        GS_FunctionDeclaration(UString name, GS_FunctionSignature signature, GSStatementPtrArray body);
+        GS_FunctionDeclaration(UString name,
+                               GS_FunctionSignature signature,
+                               GSStatementPtrArray body);
 
     public:
 
+        /*
+         *
+         * GS_FunctionDeclaration PUBLIC STATIC CREATE METHODS
+         *
+         */
+
         /**
          * Creating function declaration ptr
          * @param name Name
@@ -106,7 +141,9 @@ namespace GSLanguageCompiler::AST {
          * @param body Body
          * @return Function declaration ptr
          */
-        static std::shared_ptr<GS_FunctionDeclaration> Create(UString name, GS_FunctionSignature signature, GSStatementPtrArray body);
+        static std::shared_ptr<GS_FunctionDeclaration> Create(UString name,
+                                                              GS_FunctionSignature signature,
+                                                              GSStatementPtrArray body);
 
         /**
          * Creating function declaration ptr
@@ -114,7 +151,8 @@ namespace GSLanguageCompiler::AST {
          * @param signature Signature
          * @return Function declaration ptr
          */
-        static std::shared_ptr<GS_FunctionDeclaration> Create(UString name, GS_FunctionSignature signature);
+        static std::shared_ptr<GS_FunctionDeclaration> Create(UString name,
+                                                              GS_FunctionSignature signature);
 
         /**
          * Creating function declaration ptr
@@ -122,7 +160,8 @@ namespace GSLanguageCompiler::AST {
          * @param body Body
          * @return Function declaration ptr
          */
-        static std::shared_ptr<GS_FunctionDeclaration> Create(UString name, GSStatementPtrArray body);
+        static std::shared_ptr<GS_FunctionDeclaration> Create(UString name,
+                                                              GSStatementPtrArray body);
 
         /**
          * Creating function declaration ptr
@@ -133,32 +172,46 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_FunctionDeclaration PUBLIC METHODS
+         *
+         */
+
         /**
          * Adding statement to function body
          * @param statement Statement
-         * @return
+         * @return Statement
          */
-        Void AddStatement(GSStatementPtr statement);
+        LRef<GSStatementPtr> AddStatement(GSStatementPtr statement);
 
         /**
          * Creating and adding new statement to body and return it
-         * @tparam T Type of statement for creating
-         * @tparam Args Argument types for creating statement
+         * @tparam StatementT Type of statement for creating
+         * @tparam StatementArgs Argument types for creating statement
          * @param args Arguments for creating statement
          * @return Created statement
          */
-        template<typename T, typename... Args>
-        inline auto AddStatement(Args... args) {
-            static_assert(std::is_base_of_v<GS_Statement, T>, "Type for creating must be inherited from GS_Statement!");
+        template<typename StatementT,
+                 typename... StatementArgs>
+        inline auto AddStatement(StatementArgs... args) {
+            static_assert(std::is_base_of_v<GS_Statement, StatementT>,
+                          "Type for creating must be inherited from GS_Statement!");
 
-            auto node = T::Create(args...);
+            auto statement = StatementT::Create(args...);
 
-            AddStatement(node);
+            auto statementRef = AddStatement(statement);
 
-            return node;
+            return statementRef;
         }
 
     public:
+
+        /*
+         *
+         * GS_FunctionDeclaration PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for function name
@@ -180,6 +233,12 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_FunctionDeclaration PUBLIC OVERRIDE METHODS
+         *
+         */
+
         /**
          * Getter for declaration type
          * @return Declaration type
@@ -187,6 +246,12 @@ namespace GSLanguageCompiler::AST {
         DeclarationType GetDeclarationType() const override;
 
     private:
+
+        /*
+         *
+         * GS_FunctionDeclaration PRIVATE FIELDS
+         *
+         */
 
         /**
          * Function name

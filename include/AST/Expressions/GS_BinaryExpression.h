@@ -21,15 +21,29 @@ namespace GSLanguageCompiler::AST {
     class GS_BinaryExpression : public GS_Expression {
     public:
 
+        /*
+         *
+         * GS_BinaryExpression PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for binary expression
          * @param operation Binary operation
          * @param firstNode First expression ptr
          * @param secondNode Second expression ptr
          */
-        GS_BinaryExpression(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression);
+        GS_BinaryExpression(BinaryOperation operation,
+                            GSExpressionPtr firstExpression,
+                            GSExpressionPtr secondExpression);
 
     public:
+
+        /*
+         *
+         * GS_BinaryExpression PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating binary expression ptr
@@ -38,9 +52,17 @@ namespace GSLanguageCompiler::AST {
          * @param secondExpression Second expression ptr
          * @return Binary expression ptr
          */
-        static std::shared_ptr<GS_BinaryExpression> Create(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression);
+        static std::shared_ptr<GS_BinaryExpression> Create(BinaryOperation operation,
+                                                           GSExpressionPtr firstExpression,
+                                                           GSExpressionPtr secondExpression);
 
     public:
+
+        /*
+         *
+         * GS_BinaryExpression PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for binary operation
@@ -62,6 +84,12 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_BinaryExpression PUBLIC OVERRIDE METHODS
+         *
+         */
+
         /**
          * Getter for expression type
          * @return Expression type
@@ -69,6 +97,12 @@ namespace GSLanguageCompiler::AST {
         ExpressionType GetExpressionType() const override;
 
     private:
+
+        /*
+         *
+         * GS_BinaryExpression PRIVATE FIELDS
+         *
+         */
 
         /**
          * Binary operation
@@ -78,7 +112,8 @@ namespace GSLanguageCompiler::AST {
         /**
          * First and second expressions
          */
-        GSExpressionPtr _firstExpression, _secondExpression;
+        GSExpressionPtr _firstExpression,
+                        _secondExpression;
     };
 
 }

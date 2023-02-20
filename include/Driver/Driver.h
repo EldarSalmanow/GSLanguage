@@ -8,7 +8,7 @@
 #include <Driver/GS_Arguments.h>
 
 #include <Driver/GS_Session.h>
-#include <Driver/GS_SessionsManager.h>
+#include <Driver/GS_SessionManager.h>
 
 #include <Driver/GS_Compiler.h>
 

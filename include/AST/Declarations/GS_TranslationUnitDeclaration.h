@@ -11,14 +11,27 @@ namespace GSLanguageCompiler::AST {
     class GS_TranslationUnitDeclaration : public GS_Declaration {
     public:
 
+        /*
+         *
+         * GS_TranslationUnitDeclaration PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for translation unit declaration
          * @param name Name
          * @param nodes Nodes
          */
-        GS_TranslationUnitDeclaration(UString name, GSNodePtrArray nodes);
+        GS_TranslationUnitDeclaration(UString name,
+                                      GSNodePtrArray nodes);
 
     public:
+
+        /*
+         *
+         * GS_TranslationUnitDeclaration PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating translation unit declaration ptr
@@ -26,7 +39,8 @@ namespace GSLanguageCompiler::AST {
          * @param nodes Nodes
          * @return Translation unit declaration ptr
          */
-        static std::shared_ptr<GS_TranslationUnitDeclaration> Create(UString name, GSNodePtrArray nodes);
+        static std::shared_ptr<GS_TranslationUnitDeclaration> Create(UString name,
+                                                                     GSNodePtrArray nodes);
 
         /**
          * Creating translation unit declaration ptr
@@ -37,32 +51,45 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_TranslationUnitDeclaration PUBLIC METHODS
+         *
+         */
+
         /**
          * Adding node to translation unit
          * @param node Node
-         * @return
+         * @return Node
          */
-        Void AddNode(GSNodePtr node);
+        LRef<GSNodePtr> AddNode(GSNodePtr node);
 
         /**
          * Creating and adding new node to nodes and return it
-         * @tparam T Type of node for creating
-         * @tparam Args Argument types for creating node
+         * @tparam NodeT Type of node for creating
+         * @tparam NodeArgs Argument types for creating node
          * @param args Arguments for creating node
          * @return Created node
          */
-        template<typename T, typename... Args>
-        inline auto AddNode(Args... args) {
-            static_assert(std::is_base_of_v<GS_Node, T>, "Type for creating must be inherited from GS_Node!");
+        template<typename NodeT, typename... NodeArgs>
+        inline auto AddNode(NodeArgs... args) {
+            static_assert(std::is_base_of_v<GS_Node, NodeT>,
+                          "Type for creating must be inherited from GS_Node!");
 
-            auto node = T::Create(args...);
+            auto node = NodeT::Create(args...);
 
-            AddNode(node);
+            auto nodeRef = AddNode(node);
 
-            return node;
+            return nodeRef;
         }
 
     public:
+
+        /*
+         *
+         * GS_TranslationUnitDeclaration PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for name
@@ -78,6 +105,12 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_TranslationUnitDeclaration PUBLIC OVERRIDE METHODS
+         *
+         */
+
         /**
          * Getter for declaration type
          * @return Declaration type
@@ -85,6 +118,12 @@ namespace GSLanguageCompiler::AST {
         DeclarationType GetDeclarationType() const override;
 
     private:
+
+        /*
+         *
+         * GS_TranslationUnitDeclaration PRIVATE FIELDS
+         *
+         */
 
         /**
          * Name

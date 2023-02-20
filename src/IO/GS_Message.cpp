@@ -440,26 +440,26 @@ namespace GSLanguageCompiler::IO {
         return *this;
     }
 
-    GS_MessageStreamsManager::GS_MessageStreamsManager(GS_MessageStream messageOut,
-                                                       GS_MessageStream messageErr,
-                                                       GS_MessageStream messageLog)
+    GS_MessageStreamManager::GS_MessageStreamManager(GS_MessageStream messageOut,
+                                                     GS_MessageStream messageErr,
+                                                     GS_MessageStream messageLog)
             : _messageOut(messageOut),
               _messageErr(messageErr),
               _messageLog(messageLog) {}
 
-    std::unique_ptr<GS_MessageStreamsManager> GS_MessageStreamsManager::Create(GS_MessageStream messageOut,
-                                                                               GS_MessageStream messageErr,
-                                                                               GS_MessageStream messageLog) {
-        return std::make_unique<GS_MessageStreamsManager>(messageOut,
-                                                          messageErr,
-                                                          messageLog);
+    std::unique_ptr<GS_MessageStreamManager> GS_MessageStreamManager::Create(GS_MessageStream messageOut,
+                                                                             GS_MessageStream messageErr,
+                                                                             GS_MessageStream messageLog) {
+        return std::make_unique<GS_MessageStreamManager>(messageOut,
+                                                         messageErr,
+                                                         messageLog);
     }
 
-    std::unique_ptr<GS_MessageStreamsManager> GS_MessageStreamsManager::Create(LRef<GS_StdIOStreamsManager> stdIOStreamsManager,
-                                                                               LRef<GS_SourceManager> sourceManager) {
-        auto &standardOut = stdIOStreamsManager.Out();
-        auto &standardErr = stdIOStreamsManager.Err();
-        auto &standardLog = stdIOStreamsManager.Log();
+    std::unique_ptr<GS_MessageStreamManager> GS_MessageStreamManager::Create(LRef<GS_StdIOStreamManager> stdIOStreamManager,
+                                                                             LRef<GS_SourceManager> sourceManager) {
+        auto &standardOut = stdIOStreamManager.Out();
+        auto &standardErr = stdIOStreamManager.Err();
+        auto &standardLog = stdIOStreamManager.Log();
 
         auto messageOut = GS_MessageStream::Create(standardOut,
                                                    sourceManager);
@@ -468,20 +468,20 @@ namespace GSLanguageCompiler::IO {
         auto messageLog = GS_MessageStream::Create(standardLog,
                                                    sourceManager);
 
-        return GS_MessageStreamsManager::Create(messageOut,
-                                                messageErr,
-                                                messageLog);
+        return GS_MessageStreamManager::Create(messageOut,
+                                               messageErr,
+                                               messageLog);
     }
 
-    LRef<GS_MessageStream> GS_MessageStreamsManager::Out() {
+    LRef<GS_MessageStream> GS_MessageStreamManager::Out() {
         return _messageOut;
     }
 
-    LRef<GS_MessageStream> GS_MessageStreamsManager::Err() {
+    LRef<GS_MessageStream> GS_MessageStreamManager::Err() {
         return _messageErr;
     }
 
-    LRef<GS_MessageStream> GS_MessageStreamsManager::Log() {
+    LRef<GS_MessageStream> GS_MessageStreamManager::Log() {
         return _messageLog;
     }
 

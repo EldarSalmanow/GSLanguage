@@ -18,59 +18,59 @@ namespace GSLanguageCompiler::IO {
     /**
      * Class for setting and managing "standard" IO streams
      */
-    class GS_StdIOStreamsManager {
+    class GS_StdIOStreamManager {
     public:
 
         /*
          *
-         * GS_StdIOStreamsManager PUBLIC CONSTRUCTORS
+         * GS_StdIOStreamManager PUBLIC CONSTRUCTORS
          *
          */
 
         /**
-         * Constructor for standard IO streams manager
+         * Constructor for standard IO stream manager
          * @param standardIn Standard input stream
          * @param standardOut Standard output stream
          * @param standardErr Standard error stream
          * @param standardLog Standard logger stream
          */
-        GS_StdIOStreamsManager(LRef<InputStream> standardIn,
-                               LRef<OutputStream> standardOut,
-                               LRef<OutputStream> standardErr,
-                               LRef<OutputStream> standardLog);
+        GS_StdIOStreamManager(LRef<InputStream> standardIn,
+                              LRef<OutputStream> standardOut,
+                              LRef<OutputStream> standardErr,
+                              LRef<OutputStream> standardLog);
 
     public:
 
         /*
          *
-         * GS_StdIOStreamsManager PUBLIC STATIC CREATE METHODS
+         * GS_StdIOStreamManager PUBLIC STATIC CREATE METHODS
          *
          */
 
         /**
-         * Creating standard IO streams manager
+         * Creating standard IO stream manager
          * @param standardIn Standard input stream
          * @param standardOut Standard output stream
          * @param standardErr Standard error stream
          * @param standardLog Standard logger stream
-         * @return Standard IO streams manager ptr
+         * @return Standard IO stream manager ptr
          */
-        static std::unique_ptr<GS_StdIOStreamsManager> Create(LRef<InputStream> standardIn,
-                                                              LRef<OutputStream> standardOut,
-                                                              LRef<OutputStream> standardErr,
-                                                              LRef<OutputStream> standardLog);
+        static std::unique_ptr<GS_StdIOStreamManager> Create(LRef<InputStream> standardIn,
+                                                             LRef<OutputStream> standardOut,
+                                                             LRef<OutputStream> standardErr,
+                                                             LRef<OutputStream> standardLog);
 
         /**
-         * Creating standard IO streams manager with console standard IO streams
-         * @return Standard IO streams manager ptr
+         * Creating standard IO stream manager with console standard IO streams
+         * @return Standard IO stream manager ptr
          */
-        static std::unique_ptr<GS_StdIOStreamsManager> Create();
+        static std::unique_ptr<GS_StdIOStreamManager> Create();
 
     public:
 
         /*
          *
-         * GS_StdIOStreamsManager PUBLIC METHODS
+         * GS_StdIOStreamManager PUBLIC METHODS
          *
          */
 
@@ -102,7 +102,7 @@ namespace GSLanguageCompiler::IO {
 
         /*
          *
-         * GS_StdIOStreamsManager PRIVATE FIELDS
+         * GS_StdIOStreamManager PRIVATE FIELDS
          *
          */
 
@@ -128,9 +128,9 @@ namespace GSLanguageCompiler::IO {
     };
 
     /**
-     * Standard IO streams manager ptr type
+     * Standard IO stream manager ptr type
      */
-    using GSStdIOStreamsManagerPtr = std::unique_ptr<GS_StdIOStreamsManager>;
+    using GSStdIOStreamManagerPtr = std::unique_ptr<GS_StdIOStreamManager>;
 
 }
 

@@ -638,58 +638,58 @@ namespace GSLanguageCompiler::IO {
     /**
      * Class for containing and managing message streams
      */
-    class GS_MessageStreamsManager {
+    class GS_MessageStreamManager {
     public:
 
         /*
          *
-         * GS_MessageStreamsManager PUBLIC CONSTRUCTORS
+         * GS_MessageStreamManager PUBLIC CONSTRUCTORS
          *
          */
 
         /**
-         * Constructor for message streams manager
+         * Constructor for message stream manager
          * @param messageOut Output message stream
          * @param messageErr Error message stream
          * @param messageLog Logger message stream
          */
-        GS_MessageStreamsManager(GS_MessageStream messageOut,
-                                 GS_MessageStream messageErr,
-                                 GS_MessageStream messageLog);
+        GS_MessageStreamManager(GS_MessageStream messageOut,
+                                GS_MessageStream messageErr,
+                                GS_MessageStream messageLog);
 
     public:
 
         /*
          *
-         * GS_MessageStreamsManager PUBLIC STATIC CREATE METHODS
+         * GS_MessageStreamManager PUBLIC STATIC CREATE METHODS
          *
          */
 
         /**
-         * Creating message streams manager
+         * Creating message stream manager
          * @param messageOut Output message stream
          * @param messageErr Error message stream
          * @param messageLog Logger message stream
-         * @return Message streams manager ptr
+         * @return Message stream manager ptr
          */
-        static std::unique_ptr<GS_MessageStreamsManager> Create(GS_MessageStream messageOut,
-                                                                GS_MessageStream messageErr,
-                                                                GS_MessageStream messageLog);
+        static std::unique_ptr<GS_MessageStreamManager> Create(GS_MessageStream messageOut,
+                                                               GS_MessageStream messageErr,
+                                                               GS_MessageStream messageLog);
 
         /**
-         * Creating message streams manager
-         * @param stdIOStreamsManager Standard IO streams manager
+         * Creating message stream manager
+         * @param stdIOStreamManager Standard IO stream manager
          * @param sourceManager Source manager
-         * @return Message streams manager ptr
+         * @return Message stream manager ptr
          */
-        static std::unique_ptr<GS_MessageStreamsManager> Create(LRef<GS_StdIOStreamsManager> stdIOStreamsManager,
-                                                                LRef<GS_SourceManager> sourceManager);
+        static std::unique_ptr<GS_MessageStreamManager> Create(LRef<GS_StdIOStreamManager> stdIOStreamManager,
+                                                               LRef<GS_SourceManager> sourceManager);
 
     public:
 
         /*
          *
-         * GS_MessageStreamsManager PUBLIC METHODS
+         * GS_MessageStreamManager PUBLIC METHODS
          *
          */
 
@@ -715,7 +715,7 @@ namespace GSLanguageCompiler::IO {
 
         /*
          *
-         * GS_MessageStreamsManager PRIVATE FIELDS
+         * GS_MessageStreamManager PRIVATE FIELDS
          *
          */
 
@@ -736,9 +736,9 @@ namespace GSLanguageCompiler::IO {
     };
 
     /**
-     * Message streams manager ptr type
+     * Message stream manager ptr type
      */
-    using GSMessageStreamsManagerPtr = std::unique_ptr<GS_MessageStreamsManager>;
+    using GSMessageStreamManagerPtr = std::unique_ptr<GS_MessageStreamManager>;
 
 }
 

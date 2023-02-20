@@ -61,15 +61,15 @@ namespace GSLanguageCompiler {
 
             /**
              * Constructor for compiler session
-             * @param stdIOStreamsManager Standard IO streams manager
+             * @param stdIOStreamManager Standard IO stream manager
              * @param sourceManager Source manager
-             * @param messageStreamsManager Message streams manager
+             * @param messageStreamManager Message stream manager
              * @param astContext AST context
              * @param tableOfSymbols Table of symbols
              */
-            GS_Session(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+            GS_Session(IO::GSStdIOStreamManagerPtr stdIOStreamManager,
                        IO::GSSourceManagerPtr sourceManager,
-                       IO::GSMessageStreamsManagerPtr messageStreamsManager,
+                       IO::GSMessageStreamManagerPtr messageStreamManager,
                        AST::GSASTContextPtr astContext,
                        Semantic::GSTableOfSymbolsPtr tableOfSymbols);
 
@@ -84,16 +84,16 @@ namespace GSLanguageCompiler {
 
             /**
              * Creating compiler session
-             * @param stdIOStreamsManager Standard IO streams manager
+             * @param stdIOStreamManager Standard IO stream manager
              * @param sourceManager Source manager
-             * @param messageStreamsManager Message streams manager
+             * @param messageStreamManager Message stream manager
              * @param astContext AST context
              * @param tableOfSymbols Table of symbols
              * @return Compiler session ptr
              */
-            static std::unique_ptr<GS_Session> Create(IO::GSStdIOStreamsManagerPtr stdIOStreamsManager,
+            static std::unique_ptr<GS_Session> Create(IO::GSStdIOStreamManagerPtr stdIOStreamManager,
                                                       IO::GSSourceManagerPtr sourceManager,
-                                                      IO::GSMessageStreamsManagerPtr messageStreamsManager,
+                                                      IO::GSMessageStreamManagerPtr messageStreamManager,
                                                       AST::GSASTContextPtr astContext,
                                                       Semantic::GSTableOfSymbolsPtr tableOfSymbols);
 
@@ -126,25 +126,25 @@ namespace GSLanguageCompiler {
             CompilingResult Run();
 
             /**
-             * Getting standard input stream from standard IO streams manager for reading data from stream
+             * Getting standard input stream from standard IO stream manager for reading data from stream
              * @return Standard input stream
              */
             LRef<std::istream> StdIn();
 
             /**
-             * Getting standard output stream from standard IO streams manager for writing data in stream
+             * Getting standard output stream from standard IO stream manager for writing data in stream
              * @return Standard output stream
              */
             LRef<std::ostream> StdOut();
 
             /**
-             * Getting standard error stream from standard IO streams manager for writing data in stream
+             * Getting standard error stream from standard IO stream manager for writing data in stream
              * @return Standard error stream
              */
             LRef<std::ostream> StdErr();
 
             /**
-             * Getting standard logger stream from standard IO streams manager for writing data in stream
+             * Getting standard logger stream from standard IO stream manager for writing data in stream
              * @return Standard logger stream
              */
             LRef<std::ostream> StdLog();
@@ -213,19 +213,19 @@ namespace GSLanguageCompiler {
             ConstLRef<IO::GSSourcePtrArray> GetSources() const;
 
             /**
-             * Getting output message stream from message streams manager for writing message in stream
+             * Getting output message stream from message stream manager for writing message in stream
              * @return Output message stream
              */
             LRef<IO::GS_MessageStream> Out();
 
             /**
-             * Getting error message stream from message streams manager for writing message in stream
+             * Getting error message stream from message stream manager for writing message in stream
              * @return Error message stream
              */
             LRef<IO::GS_MessageStream> Err();
 
             /**
-             * Getting logger message stream from message streams manager for writing message in stream
+             * Getting logger message stream from message stream manager for writing message in stream
              * @return Logger message stream
              */
             LRef<IO::GS_MessageStream> Log();
@@ -308,15 +308,15 @@ namespace GSLanguageCompiler {
 
             /*
              *
-             * GS_Session PUBLIC GETTERS
+             * GS_Session PUBLIC GETTER METHODS
              *
              */
 
             /**
-             * Getter for standard IO streams manager
-             * @return Standard IO streams manager
+             * Getter for standard IO stream manager
+             * @return Standard IO stream manager
              */
-            LRef<IO::GS_StdIOStreamsManager> GetStdIOStreamsManager();
+            LRef<IO::GS_StdIOStreamManager> GetStdIOStreamManager();
 
             /**
              * Getter for source manager
@@ -325,10 +325,10 @@ namespace GSLanguageCompiler {
             LRef<IO::GS_SourceManager> GetSourceManager();
 
             /**
-             * Getter for message streams manager
-             * @return Message streams manager
+             * Getter for message stream manager
+             * @return Message stream manager
              */
-            LRef<IO::GS_MessageStreamsManager> GetMessageStreamsManager();
+            LRef<IO::GS_MessageStreamManager> GetMessageStreamManager();
 
             /**
              * Getter for AST context
@@ -351,9 +351,9 @@ namespace GSLanguageCompiler {
              */
 
             /**
-             * Standard IO streams manager
+             * Standard IO stream manager
              */
-            IO::GSStdIOStreamsManagerPtr _stdIOStreamsManager;
+            IO::GSStdIOStreamManagerPtr _stdIOStreamManager;
 
             /**
              * Source manager
@@ -361,9 +361,9 @@ namespace GSLanguageCompiler {
             IO::GSSourceManagerPtr _sourceManager;
 
             /**
-             * Message streams manager
+             * Message stream manager
              */
-            IO::GSMessageStreamsManagerPtr _messageStreamsManager;
+            IO::GSMessageStreamManagerPtr _messageStreamManager;
 
             /**
              * AST context

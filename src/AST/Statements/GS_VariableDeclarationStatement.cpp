@@ -2,19 +2,33 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_VariableDeclarationStatement::GS_VariableDeclarationStatement(UString name, Semantic::GSTypePtr type, GSExpressionPtr expression)
-            : _name(std::move(name)), _type(std::move(type)), _expression(std::move(expression)) {}
+    GS_VariableDeclarationStatement::GS_VariableDeclarationStatement(UString name,
+                                                                     Semantic::GSTypePtr type,
+                                                                     GSExpressionPtr expression)
+            : _name(std::move(name)),
+              _type(std::move(type)),
+              _expression(std::move(expression)) {}
 
-    std::shared_ptr<GS_VariableDeclarationStatement> GS_VariableDeclarationStatement::Create(UString name, Semantic::GSTypePtr type, GSExpressionPtr expression) {
-        return std::make_shared<GS_VariableDeclarationStatement>(std::move(name), std::move(type), std::move(expression));
+    std::shared_ptr<GS_VariableDeclarationStatement> GS_VariableDeclarationStatement::Create(UString name,
+                                                                                             Semantic::GSTypePtr type,
+                                                                                             GSExpressionPtr expression) {
+        return std::make_shared<GS_VariableDeclarationStatement>(std::move(name),
+                                                                 std::move(type),
+                                                                 std::move(expression));
     }
 
-    std::shared_ptr<GS_VariableDeclarationStatement> GS_VariableDeclarationStatement::Create(UString name, Semantic::GSTypePtr type) {
-        return GS_VariableDeclarationStatement::Create(std::move(name), std::move(type), GSExpressionPtr());
+    std::shared_ptr<GS_VariableDeclarationStatement> GS_VariableDeclarationStatement::Create(UString name,
+                                                                                             Semantic::GSTypePtr type) {
+        return GS_VariableDeclarationStatement::Create(std::move(name),
+                                                       std::move(type),
+                                                       GSExpressionPtr());
     }
 
-    std::shared_ptr<GS_VariableDeclarationStatement> GS_VariableDeclarationStatement::Create(UString name, GSExpressionPtr expression) {
-        return GS_VariableDeclarationStatement::Create(std::move(name), Semantic::GSTypePtr(), std::move(expression));
+    std::shared_ptr<GS_VariableDeclarationStatement> GS_VariableDeclarationStatement::Create(UString name,
+                                                                                             GSExpressionPtr expression) {
+        return GS_VariableDeclarationStatement::Create(std::move(name),
+                                                       Semantic::GSTypePtr(),
+                                                       std::move(expression));
     }
 
     LRef<UString> GS_VariableDeclarationStatement::GetName() {
