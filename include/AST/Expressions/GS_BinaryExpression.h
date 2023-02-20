@@ -46,10 +46,10 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Creating binary expression ptr
+         * Creating binary expression
          * @param operation Binary operation
-         * @param firstExpression First expression ptr
-         * @param secondExpression Second expression ptr
+         * @param firstExpression First expression
+         * @param secondExpression Second expression
          * @return Binary expression ptr
          */
         static std::shared_ptr<GS_BinaryExpression> Create(BinaryOperation operation,

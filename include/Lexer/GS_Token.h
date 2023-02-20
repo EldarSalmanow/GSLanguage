@@ -88,7 +88,7 @@ namespace GSLanguageCompiler::Lexer {
 
         /*
          *
-         * GS_Token PUBLIC GETTERS
+         * GS_Token PUBLIC GETTER METHODS
          *
          */
 
@@ -238,7 +238,7 @@ namespace GSLanguageCompiler::Lexer {
 
         /*
          *
-         * GS_TokenBuffer PUBLIC GETTERS
+         * GS_TokenBuffer PUBLIC GETTER METHODS
          *
          */
 

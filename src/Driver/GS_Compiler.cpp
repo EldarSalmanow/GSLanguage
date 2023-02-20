@@ -71,7 +71,7 @@ namespace GSLanguageCompiler::Driver {
         return _sessionManager->GetSessions();
     }
 
-    ConstLRef<GS_SessionManager> GS_Compiler::GetSessionManager() const {
+    LRef<GS_SessionManager> GS_Compiler::GetSessionManager() {
         return *_sessionManager;
     }
 

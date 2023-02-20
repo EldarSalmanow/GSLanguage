@@ -135,7 +135,7 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Creating function declaration ptr
+         * Creating function declaration
          * @param name Name
          * @param signature Signature
          * @param body Body
@@ -146,7 +146,7 @@ namespace GSLanguageCompiler::AST {
                                                               GSStatementPtrArray body);
 
         /**
-         * Creating function declaration ptr
+         * Creating function declaration
          * @param name Name
          * @param signature Signature
          * @return Function declaration ptr
@@ -155,7 +155,7 @@ namespace GSLanguageCompiler::AST {
                                                               GS_FunctionSignature signature);
 
         /**
-         * Creating function declaration ptr
+         * Creating function declaration
          * @param name Name
          * @param body Body
          * @return Function declaration ptr
@@ -164,7 +164,7 @@ namespace GSLanguageCompiler::AST {
                                                               GSStatementPtrArray body);
 
         /**
-         * Creating function declaration ptr
+         * Creating function declaration
          * @param name Name
          * @return Function declaration ptr
          */

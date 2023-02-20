@@ -34,7 +34,7 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Creating translation unit declaration ptr
+         * Creating translation unit declaration
          * @param name Name
          * @param nodes Nodes
          * @return Translation unit declaration ptr
@@ -43,7 +43,7 @@ namespace GSLanguageCompiler::AST {
                                                                      GSNodePtrArray nodes);
 
         /**
-         * Creating translation unit declaration ptr
+         * Creating translation unit declaration
          * @param name Name
          * @return Translation unit declaration ptr
          */

@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_TABLEOFSYMBOLS_H
 #define GSLANGUAGE_GS_TABLEOFSYMBOLS_H
 
+#include <optional>
+
 #include <AST/Declarations/GS_FunctionDeclaration.h>
 
 #include <AST/Statements/GS_VariableDeclarationStatement.h>
@@ -23,12 +25,24 @@ namespace GSLanguageCompiler::Semantic {
     class GS_Symbol {
     public:
 
+        /*
+         *
+         * GS_Symbol PUBLIC DESTRUCTORS
+         *
+         */
+
         /**
          * Virtual destructor for supporting inheritance
          */
         virtual ~GS_Symbol();
 
     public:
+
+        /*
+         *
+         * GS_Symbol PUBLIC VIRTUAL METHODS
+         *
+         */
 
         /**
          * Getter for symbol type
@@ -52,7 +66,7 @@ namespace GSLanguageCompiler::Semantic {
     /**
      * Symbol ptr type
      */
-    using GSSymbolPtr = std::shared_ptr<GS_Symbol>;
+    using GSSymbolPtr = SymbolPtr<GS_Symbol>;
 
     /**
      * Symbol ptr array type
@@ -65,14 +79,27 @@ namespace GSLanguageCompiler::Semantic {
     class GS_FunctionSymbol : public GS_Symbol {
     public:
 
+        /*
+         *
+         * GS_FunctionSymbol PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for function symbol
          * @param name Function name
          * @param signature Function signature
          */
-        GS_FunctionSymbol(UString name, AST::GS_FunctionSignature signature);
+        GS_FunctionSymbol(UString name,
+                          AST::GS_FunctionSignature signature);
 
     public:
+
+        /*
+         *
+         * GS_FunctionSymbol PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating function symbol
@@ -80,23 +107,36 @@ namespace GSLanguageCompiler::Semantic {
          * @param signature Function signature
          * @return Function symbol ptr
          */
-        static std::shared_ptr<GS_FunctionSymbol> Create(UString name, AST::GS_FunctionSignature signature);
+        static std::shared_ptr<GS_FunctionSymbol> Create(UString name,
+                                                         AST::GS_FunctionSignature signature);
 
     public:
+
+        /*
+         *
+         * GS_FunctionSymbol PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for function name
          * @return Function name
          */
-        UString GetName() const;
+        ConstLRef<UString> GetName() const;
 
         /**
          * Getter for function signature
          * @return Function signature
          */
-        AST::GS_FunctionSignature GetSignature() const;
+        ConstLRef<AST::GS_FunctionSignature> GetSignature() const;
 
     public:
+
+        /*
+         *
+         * GS_FunctionSymbol PUBLIC OVERRIDE METHODS
+         *
+         */
 
         /**
          * Getter for symbol type
@@ -105,6 +145,12 @@ namespace GSLanguageCompiler::Semantic {
         SymbolType GetSymbolType() const override;
 
     private:
+
+        /*
+         *
+         * GS_FunctionSymbol PRIVATE FIELDS
+         *
+         */
 
         /**
          * Function name
@@ -123,14 +169,27 @@ namespace GSLanguageCompiler::Semantic {
     class GS_VariableSymbol : public GS_Symbol {
     public:
 
+        /*
+         *
+         * GS_VariableSymbol PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for variable symbol
          * @param name Variable name
          * @param type Variable type
          */
-        GS_VariableSymbol(UString name, GSTypePtr type);
+        GS_VariableSymbol(UString name,
+                          GSTypePtr type);
 
     public:
+
+        /*
+         *
+         * GS_VariableSymbol PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating variable symbol
@@ -138,23 +197,36 @@ namespace GSLanguageCompiler::Semantic {
          * @param type Variable type
          * @return Variable symbol ptr
          */
-        static std::shared_ptr<GS_VariableSymbol> Create(UString name, GSTypePtr type);
+        static std::shared_ptr<GS_VariableSymbol> Create(UString name,
+                                                         GSTypePtr type);
 
     public:
+
+        /*
+         *
+         * GS_VariableSymbol PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for variable name
          * @return Variable name
          */
-        UString GetName() const;
+        ConstLRef<UString> GetName() const;
 
         /**
          * Getter for variable type
          * @return Variable type
          */
-        GSTypePtr GetType() const;
+        ConstLRef<GSTypePtr> GetType() const;
 
     public:
+
+        /*
+         *
+         * GS_VariableSymbol PUBLIC OVERRIDE METHODS
+         *
+         */
 
         /**
          * Getter for symbol type
@@ -163,6 +235,12 @@ namespace GSLanguageCompiler::Semantic {
         SymbolType GetSymbolType() const override;
 
     private:
+
+        /*
+         *
+         * GS_VariableSymbol PRIVATE FIELDS
+         *
+         */
 
         /**
          * Variable name
@@ -176,31 +254,32 @@ namespace GSLanguageCompiler::Semantic {
     };
 
     /**
-     * Casting symbol to any type of symbol
-     * @tparam T Type for symbol
+     * Casting symbol to SymbolT
+     * @tparam SymbolT Type of symbol
      * @param symbol Symbol
-     * @return Symbol or nullptr
+     * @return Symbol or null
      */
-    template<typename T>
-    inline SymbolPtr<T> ToSymbol(ConstLRef<GSSymbolPtr> symbol) {
-        static_assert(std::is_base_of_v<GS_Symbol, T>, "Type for casting must be inherited from GS_Symbol!");
+    template<typename SymbolT>
+    inline SymbolPtr<SymbolT> ToSymbol(ConstLRef<GSSymbolPtr> symbol) {
+        static_assert(std::is_base_of_v<GS_Symbol, SymbolT>,
+                      "Type for casting must be inherited from GS_Symbol!");
 
         switch (symbol->GetSymbolType()) {
             case SymbolType::Function:
-                if constexpr (!std::is_same_v<GS_FunctionSymbol, T>) {
+                if constexpr (!std::is_same_v<GS_FunctionSymbol, SymbolT>) {
                     return nullptr;
                 }
 
                 break;
             case SymbolType::Variable:
-                if constexpr (!std::is_same_v<GS_VariableSymbol, T>) {
+                if constexpr (!std::is_same_v<GS_VariableSymbol, SymbolT>) {
                     return nullptr;
                 }
 
                 break;
         }
 
-        return std::reinterpret_pointer_cast<T>(symbol);
+        return std::reinterpret_pointer_cast<SymbolT>(symbol);
     }
 
     /**
@@ -208,6 +287,12 @@ namespace GSLanguageCompiler::Semantic {
      */
     class GS_TableOfSymbols {
     public:
+
+        /*
+         *
+         * GS_TableOfSymbols PUBLIC CONSTRUCTORS
+         *
+         */
 
         /**
          * Constructor for table of symbols
@@ -217,67 +302,93 @@ namespace GSLanguageCompiler::Semantic {
 
     public:
 
+        /*
+         *
+         * GS_TableOfSymbols PUBLIC STATIC CREATE METHODS
+         *
+         */
+
         /**
          * Creating table of symbols
          * @param symbols Symbols
          * @return Table of symbols ptr
          */
-        static std::shared_ptr<GS_TableOfSymbols> Create(GSSymbolPtrArray symbols);
+        static std::unique_ptr<GS_TableOfSymbols> Create(GSSymbolPtrArray symbols);
 
         /**
          * Creating table of symbols
          * @return Table of symbols ptr
          */
-        static std::shared_ptr<GS_TableOfSymbols> Create();
+        static std::unique_ptr<GS_TableOfSymbols> Create();
 
     public:
+
+        /*
+         *
+         * GS_TableOfSymbols PUBLIC METHODS
+         *
+         */
 
         /**
          * Adding new symbol to table of symbols
          * @param symbol Symbol
-         * @return
+         * @return Symbol
          */
-        Void AddSymbol(GSSymbolPtr symbol);
+        ConstLRef<GSSymbolPtr> AddSymbol(GSSymbolPtr symbol);
 
         /**
          * Adding new function symbol to table of symbols
          * @param name Function name
          * @param signature Function signature
-         * @return
+         * @return Function symbol
          */
-        Void AddFunction(UString name, AST::GS_FunctionSignature signature);
+        ConstLRef<GS_FunctionSymbol> AddFunction(UString name,
+                                                 AST::GS_FunctionSignature signature);
 
         /**
          * Adding new variable symbol to table of symbols
          * @param name Variable name
          * @param type Variable type
-         * @return
+         * @return Variable symbol
          */
-        Void AddVariable(UString name, GSTypePtr type);
+        ConstLRef<GS_VariableSymbol> AddVariable(UString name,
+                                                 GSTypePtr type);
 
         /**
          * Getting function symbol by name
          * @param name Function name
-         * @return Function symbol
+         * @return Function symbol or null
          */
-        SymbolPtr<GS_FunctionSymbol> GetFunction(UString name) const;
+        std::optional<GS_FunctionSymbol> GetFunction(UString name) const;
 
         /**
          * Getting variable symbol by name
          * @param name Variable name
-         * @return Variable symbol
+         * @return Variable symbol or null
          */
-        SymbolPtr<GS_VariableSymbol> GetVariable(UString name) const;
+        std::optional<GS_VariableSymbol> GetVariable(UString name) const;
 
     public:
+
+        /*
+         *
+         * GS_TableOfSymbols PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for symbols
          * @return Symbols
          */
-        GSSymbolPtrArray GetSymbols() const;
+        ConstLRef<GSSymbolPtrArray> GetSymbols() const;
 
     private:
+
+        /*
+         *
+         * GS_TableOfSymbols PRIVATE FIELDS
+         *
+         */
 
         /**
          * Symbols
@@ -288,7 +399,7 @@ namespace GSLanguageCompiler::Semantic {
     /**
      * Table of symbols ptr
      */
-    using GSTableOfSymbolsPtr = std::shared_ptr<GS_TableOfSymbols>;
+    using GSTableOfSymbolsPtr = std::unique_ptr<GS_TableOfSymbols>;
 
 }
 

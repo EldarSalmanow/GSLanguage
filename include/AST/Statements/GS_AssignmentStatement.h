@@ -20,8 +20,8 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Constructor for assignment statement
-         * @param lvalueExpression Left value expression ptr
-         * @param rvalueExpression Right value expression ptr
+         * @param lvalueExpression Left value expression
+         * @param rvalueExpression Right value expression
          */
         GS_AssignmentStatement(GSExpressionPtr lvalueExpression,
                                GSExpressionPtr rvalueExpression);
@@ -35,9 +35,9 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Creating assignment statement ptr
-         * @param lvalueExpression Left value expression ptr
-         * @param rvalueExpression Right value expression ptr
+         * Creating assignment statement
+         * @param lvalueExpression Left value expression
+         * @param rvalueExpression Right value expression
          * @return Assignment statement ptr
          */
         static std::shared_ptr<GS_AssignmentStatement> Create(GSExpressionPtr lvalueExpression,
@@ -52,14 +52,14 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Getter for left value expression ptr
-         * @return Left value expression ptr
+         * Getter for left value expression
+         * @return Left value expression
          */
         LRef<GSExpressionPtr> GetLValueExpression();
 
         /**
-         * Getter for right value expression ptr
-         * @return Right value expression ptr
+         * Getter for right value expression
+         * @return Right value expression
          */
         LRef<GSExpressionPtr> GetRValueExpression();
 
@@ -86,12 +86,12 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Left value expression ptr
+         * Left value expression
          */
         GSExpressionPtr _lvalueExpression;
 
         /**
-         * Right value expression ptr
+         * Right value expression
          */
         GSExpressionPtr _rvalueExpression;
     };

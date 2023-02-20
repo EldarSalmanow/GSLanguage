@@ -98,7 +98,7 @@ namespace GSLanguageCompiler::Driver {
 
         /*
          *
-         * GS_Compiler PUBLIC GETTERS
+         * GS_Compiler PUBLIC GETTER METHODS
          *
          */
 
@@ -106,7 +106,7 @@ namespace GSLanguageCompiler::Driver {
          * Getter for session manager
          * @return Session manager
          */
-        ConstLRef<GS_SessionManager> GetSessionManager() const;
+        LRef<GS_SessionManager> GetSessionManager();
 
     private:
 

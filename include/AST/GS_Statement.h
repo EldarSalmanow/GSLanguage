@@ -85,14 +85,14 @@ namespace GSLanguageCompiler::AST {
     class GS_ExpressionStatement;
 
     /**
-     * Casting to any type of statement if node is statement
-     * @tparam T Type of statement
+     * Casting to StatementT if node is statement
+     * @tparam StatementT Type of statement
      * @param node Node
      * @return Statement or null
      */
-    template<typename T>
-    inline NodePtr<T> ToStatement(ConstLRef<GSNodePtr> node) {
-        static_assert(std::is_base_of_v<GS_Statement, T>,
+    template<typename StatementT>
+    inline NodePtr<StatementT> ToStatement(ConstLRef<GSNodePtr> node) {
+        static_assert(std::is_base_of_v<GS_Statement, StatementT>,
                       "Type for casting must be inherited from GS_Statement!");
 
         auto statement = ToStatement(node);
@@ -103,26 +103,26 @@ namespace GSLanguageCompiler::AST {
 
         switch (statement->GetStatementType()) {
             case StatementType::VariableDeclarationStatement:
-                if constexpr (!std::is_same_v<GS_VariableDeclarationStatement, T>) {
+                if constexpr (!std::is_same_v<GS_VariableDeclarationStatement, StatementT>) {
                     return nullptr;
                 }
 
                 break;
             case StatementType::AssignmentStatement:
-                if constexpr (!std::is_same_v<GS_AssignmentStatement, T>) {
+                if constexpr (!std::is_same_v<GS_AssignmentStatement, StatementT>) {
                     return nullptr;
                 }
 
                 break;
             case StatementType::ExpressionStatement:
-                if constexpr (!std::is_same_v<GS_ExpressionStatement, T>) {
+                if constexpr (!std::is_same_v<GS_ExpressionStatement, StatementT>) {
                     return nullptr;
                 }
 
                 break;
         }
 
-        return std::reinterpret_pointer_cast<T>(statement);
+        return std::reinterpret_pointer_cast<StatementT>(statement);
     }
 
 }

@@ -91,14 +91,14 @@ namespace GSLanguageCompiler::AST {
     class GS_FunctionCallingExpression;
 
     /**
-     * Casting to any type of expression if node is expression
-     * @tparam T Type of expression
+     * Casting to ExpressionT if node is expression
+     * @tparam ExpressionT Type of expression
      * @param node Node
      * @return Expression or null
      */
-    template<typename T>
-    inline NodePtr<T> ToExpression(ConstLRef<GSNodePtr> node) {
-        static_assert(std::is_base_of_v<GS_Expression, T>,
+    template<typename ExpressionT>
+    inline NodePtr<ExpressionT> ToExpression(ConstLRef<GSNodePtr> node) {
+        static_assert(std::is_base_of_v<GS_Expression, ExpressionT>,
                       "Type for casting must be inherited from GS_Expression!");
 
         auto expression = ToExpression(node);
@@ -109,44 +109,44 @@ namespace GSLanguageCompiler::AST {
 
         switch (expression->GetExpressionType()) {
             case ExpressionType::ConstantExpression:
-                if constexpr (!std::is_same_v<GS_ConstantExpression, T>) {
+                if constexpr (!std::is_same_v<GS_ConstantExpression, ExpressionT>) {
                     return nullptr;
                 }
 
                 break;
             case ExpressionType::UnaryExpression:
-                if constexpr (!std::is_same_v<GS_UnaryExpression, T>) {
+                if constexpr (!std::is_same_v<GS_UnaryExpression, ExpressionT>) {
                     return nullptr;
                 }
 
                 break;
             case ExpressionType::BinaryExpression:
-                if constexpr (!std::is_same_v<GS_BinaryExpression, T>) {
+                if constexpr (!std::is_same_v<GS_BinaryExpression, ExpressionT>) {
                     return nullptr;
                 }
 
                 break;
             case ExpressionType::ArrayExpression:
-                if constexpr (!std::is_same_v<GS_ArrayExpression, T>) {
+                if constexpr (!std::is_same_v<GS_ArrayExpression, ExpressionT>) {
                     return nullptr;
                 }
 
                 break;
             case ExpressionType::VariableUsingExpression:
-                if constexpr (!std::is_same_v<GS_VariableUsingExpression, T>) {
+                if constexpr (!std::is_same_v<GS_VariableUsingExpression, ExpressionT>) {
                     return nullptr;
                 }
 
                 break;
             case ExpressionType::FunctionCallingExpression:
-                if constexpr (!std::is_same_v<GS_FunctionCallingExpression, T>) {
+                if constexpr (!std::is_same_v<GS_FunctionCallingExpression, ExpressionT>) {
                     return nullptr;
                 }
 
                 break;
         }
 
-        return std::reinterpret_pointer_cast<T>(expression);
+        return std::reinterpret_pointer_cast<ExpressionT>(expression);
     }
 
     /**

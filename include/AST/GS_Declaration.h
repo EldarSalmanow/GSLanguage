@@ -83,14 +83,14 @@ namespace GSLanguageCompiler::AST {
     class GS_FunctionDeclaration;
 
     /**
-     * Casting node to any type of declaration if node is declaration
-     * @tparam T Type of declaration
+     * Casting node to DeclarationT if node is declaration
+     * @tparam DeclarationT Type of declaration
      * @param node Node
      * @return Declaration or null
      */
-    template<typename T>
-    inline NodePtr<T> ToDeclaration(ConstLRef<GSNodePtr> node) {
-        static_assert(std::is_base_of_v<GS_Declaration, T>,
+    template<typename DeclarationT>
+    inline NodePtr<DeclarationT> ToDeclaration(ConstLRef<GSNodePtr> node) {
+        static_assert(std::is_base_of_v<GS_Declaration, DeclarationT>,
                       "Type for casting must be inherited from GS_Declaration!");
 
         auto declaration = ToDeclaration(node);
@@ -101,20 +101,20 @@ namespace GSLanguageCompiler::AST {
 
         switch (declaration->GetDeclarationType()) {
             case DeclarationType::TranslationUnitDeclaration:
-                if constexpr (!std::is_same_v<GS_TranslationUnitDeclaration, T>) {
+                if constexpr (!std::is_same_v<GS_TranslationUnitDeclaration, DeclarationT>) {
                     return nullptr;
                 }
 
                 break;
             case DeclarationType::FunctionDeclaration:
-                if constexpr (!std::is_same_v<GS_FunctionDeclaration, T>) {
+                if constexpr (!std::is_same_v<GS_FunctionDeclaration, DeclarationT>) {
                     return nullptr;
                 }
 
                 break;
         }
 
-        return std::reinterpret_pointer_cast<T>(declaration);
+        return std::reinterpret_pointer_cast<DeclarationT>(declaration);
     }
 
 }

@@ -33,7 +33,7 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Creating expression statement ptr
+         * Creating expression statement
          * @param expression Expression ptr
          * @return Expression statement ptr
          */

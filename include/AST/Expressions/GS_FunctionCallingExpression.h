@@ -11,17 +11,30 @@ namespace GSLanguageCompiler::AST {
     class GS_FunctionCallingExpression : public GS_Expression {
     public:
 
+        /*
+         *
+         * GS_FunctionCallingExpression PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for function calling expression
          * @param name Function name
          * @param params Function params
          */
-        GS_FunctionCallingExpression(UString name, GSExpressionPtrArray params);
+        GS_FunctionCallingExpression(UString name,
+                                     GSExpressionPtrArray params);
 
     public:
 
+        /*
+         *
+         * GS_FunctionCallingExpression PUBLIC STATIC CREATE METHODS
+         *
+         */
+
         /**
-         * Creating function calling expression ptr
+         * Creating function calling expression
          * @param name Function name
          * @param params Function params
          * @return Function calling expression ptr

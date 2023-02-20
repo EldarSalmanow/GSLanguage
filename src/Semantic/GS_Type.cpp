@@ -11,7 +11,7 @@ namespace GSLanguageCompiler::Semantic {
         return std::make_shared<GS_Type>(std::move(name));
     }
 
-    UString GS_Type::GetName() const {
+    ConstLRef<UString> GS_Type::GetName() const {
         return _name;
     }
 
@@ -170,16 +170,19 @@ namespace GSLanguageCompiler::Semantic {
         return TypeType::String;
     }
 
-    // check
+    GS_ArrayType::GS_ArrayType(GSTypePtr elementsType,
+                               U64 size)
+            : _elementsType(std::move(elementsType)),
+              _size(size),
+              GS_Type("Array["_us + elementsType->GetName() + ", "_us + UString(std::to_string(size)) + "]"_us) {}
 
-    GS_ArrayType::GS_ArrayType(GSTypePtr elementsType, U64 size)
-            : _elementsType(std::move(elementsType)), _size(size), GS_Type("Array["_us + elementsType->GetName() + ", "_us + UString(std::to_string(size)) + "]"_us) {}
-
-    std::shared_ptr<GS_ArrayType> GS_ArrayType::Create(GSTypePtr elementsType, U64 size) {
-        return std::make_shared<GS_ArrayType>(std::move(elementsType), size);
+    std::shared_ptr<GS_ArrayType> GS_ArrayType::Create(GSTypePtr elementsType,
+                                                       U64 size) {
+        return std::make_shared<GS_ArrayType>(std::move(elementsType),
+                                              size);
     }
 
-    GSTypePtr GS_ArrayType::GetElementsType() const {
+    ConstLRef<GSTypePtr> GS_ArrayType::GetElementsType() const {
         return _elementsType;
     }
 
@@ -191,61 +194,60 @@ namespace GSLanguageCompiler::Semantic {
         return TypeType::Array;
     }
 
-    GS_TypeContext::GS_TypeContext()
-            : _voidType(GS_VoidType::Create()),
-              _i32Type(GS_I32Type::Create()),
-              _stringType(GS_StringType::Create()) {}
+    GS_TypeContext::GS_TypeContext() = default;
 
-    std::shared_ptr<GS_TypeContext> GS_TypeContext::Create() {
-        return std::make_shared<GS_TypeContext>();
+    std::unique_ptr<GS_TypeContext> GS_TypeContext::Create() {
+        return std::make_unique<GS_TypeContext>();
     }
 
     TypePtr<GS_VoidType> GS_TypeContext::GetVoidType() const {
-        return _voidType;
+        return GS_VoidType::Create();
     }
 
     TypePtr<GS_CharType> GS_TypeContext::GetCharType() const {
-        return _charType;
+        return GS_CharType::Create();
     }
 
     TypePtr<GS_I8Type> GS_TypeContext::GetI8Type() const {
-        return _i8Type;
+        return GS_I8Type::Create();
     }
 
     TypePtr<GS_I16Type> GS_TypeContext::GetI16Type() const {
-        return _i16Type;
+        return GS_I16Type::Create();
     }
 
     TypePtr<GS_I32Type> GS_TypeContext::GetI32Type() const {
-        return _i32Type;
+        return GS_I32Type::Create();
     }
 
     TypePtr<GS_I64Type> GS_TypeContext::GetI64Type() const {
-        return _i64Type;
+        return GS_I64Type::Create();
     }
 
     TypePtr<GS_U8Type> GS_TypeContext::GetU8Type() const {
-        return _u8Type;
+        return GS_U8Type::Create();
     }
 
     TypePtr<GS_U16Type> GS_TypeContext::GetU16Type() const {
-        return _u16Type;
+        return GS_U16Type::Create();
     }
 
     TypePtr<GS_U32Type> GS_TypeContext::GetU32Type() const {
-        return _u32Type;
+        return GS_U32Type::Create();
     }
 
     TypePtr<GS_U64Type> GS_TypeContext::GetU64Type() const {
-        return _u64Type;
+        return GS_U64Type::Create();
     }
 
     TypePtr<GS_StringType> GS_TypeContext::GetStringType() const {
-        return _stringType;
+        return GS_StringType::Create();
     }
 
-    TypePtr<GS_ArrayType> GS_TypeContext::GetArrayType(GSTypePtr type, U64 size) const {
-        return GS_ArrayType::Create(std::move(type), size);
+    TypePtr<GS_ArrayType> GS_TypeContext::GetArrayType(GSTypePtr type,
+                                                       U64 size) const {
+        return GS_ArrayType::Create(std::move(type),
+                                    size);
     }
 
 }

@@ -39,7 +39,7 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Creating variable declaration statement ptr
+         * Creating variable declaration statement
          * @param name Name
          * @param type Type
          * @param expression Expression
@@ -50,7 +50,7 @@ namespace GSLanguageCompiler::AST {
                                                                        GSExpressionPtr expression);
 
         /**
-         * Creating variable declaration statement ptr
+         * Creating variable declaration statement
          * @param name Name
          * @param type Type
          * @return Variable declaration statement ptr
@@ -59,7 +59,7 @@ namespace GSLanguageCompiler::AST {
                                                                        Semantic::GSTypePtr type);
 
         /**
-         * Creating variable declaration statement ptr
+         * Creating variable declaration statement
          * @param name Name
          * @param expression Expression
          * @return Variable declaration statement ptr
