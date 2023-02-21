@@ -39,9 +39,16 @@ namespace GSLanguageCompiler::AST {
          * @param params Function params
          * @return Function calling expression ptr
          */
-        static std::shared_ptr<GS_FunctionCallingExpression> Create(UString name, GSExpressionPtrArray params);
+        static std::shared_ptr<GS_FunctionCallingExpression> Create(UString name,
+                                                                    GSExpressionPtrArray params);
 
     public:
+
+        /*
+         *
+         * GS_FunctionCallingExpression PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for function name
@@ -57,6 +64,12 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_FunctionCallingExpression PUBLIC OVERRIDE METHODS
+         *
+         */
+
         /**
          * Getter for expression type
          * @return Expression type
@@ -64,6 +77,12 @@ namespace GSLanguageCompiler::AST {
         ExpressionType GetExpressionType() const override;
 
     private:
+
+        /*
+         *
+         * GS_FunctionCallingExpression PRIVATE FIELDS
+         *
+         */
 
         /**
          * Function name

@@ -13,14 +13,27 @@ namespace GSLanguageCompiler::AST {
     class GS_VariableUsingExpression : public GS_Expression {
     public:
 
+        /*
+         *
+         * GS_VariableUsingExpression PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for variable using expression
          * @param name Variable name
          * @param nameLocationRange Variable name source location range
          */
-        GS_VariableUsingExpression(UString name, IO::GSByteSourceRange nameLocationRange);
+        GS_VariableUsingExpression(UString name,
+                                   IO::GSByteSourceRange nameLocationRange);
 
     public:
+
+        /*
+         *
+         * GS_VariableUsingExpression PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating variable using expression ptr
@@ -28,7 +41,8 @@ namespace GSLanguageCompiler::AST {
          * @param nameLocation Variable name source location range
          * @return Variable using expression ptr
          */
-        static std::shared_ptr<GS_VariableUsingExpression> Create(UString name, IO::GSByteSourceRange nameLocationRange);
+        static std::shared_ptr<GS_VariableUsingExpression> Create(UString name,
+                                                                  IO::GSByteSourceRange nameLocationRange);
 
         /**
          * Creating variable using expression ptr
@@ -38,6 +52,12 @@ namespace GSLanguageCompiler::AST {
         static std::shared_ptr<GS_VariableUsingExpression> Create(UString name);
 
     public:
+
+        /*
+         *
+         * GS_VariableUsingExpression PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for variable name
@@ -49,9 +69,15 @@ namespace GSLanguageCompiler::AST {
          * Getter for variable name source location range
          * @return Variable name source location range
          */
-        IO::GSByteSourceRange GetNameLocationRange() const;
+        ConstLRef<IO::GSByteSourceRange> GetNameLocationRange() const;
 
     public:
+
+        /*
+         *
+         * GS_VariableUsingExpression PUBLIC OVERRIDE METHODS
+         *
+         */
 
         /**
          * Getter for expression type
@@ -60,6 +86,12 @@ namespace GSLanguageCompiler::AST {
         ExpressionType GetExpressionType() const override;
 
     private:
+
+        /*
+         *
+         * GS_VariableUsingExpression PRIVATE FIELDS
+         *
+         */
 
         /**
          * Variable name

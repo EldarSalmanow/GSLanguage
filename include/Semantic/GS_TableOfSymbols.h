@@ -341,6 +341,7 @@ namespace GSLanguageCompiler::Semantic {
          * @param name Function name
          * @param signature Function signature
          * @return Function symbol
+         * @todo Check return
          */
         ConstLRef<GS_FunctionSymbol> AddFunction(UString name,
                                                  AST::GS_FunctionSignature signature);
@@ -350,6 +351,7 @@ namespace GSLanguageCompiler::Semantic {
          * @param name Variable name
          * @param type Variable type
          * @return Variable symbol
+         * @todo Check return
          */
         ConstLRef<GS_VariableSymbol> AddVariable(UString name,
                                                  GSTypePtr type);

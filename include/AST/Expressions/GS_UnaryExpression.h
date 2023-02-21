@@ -18,14 +18,27 @@ namespace GSLanguageCompiler::AST {
     class GS_UnaryExpression : public GS_Expression {
     public:
 
+        /*
+         *
+         * GS_UnaryExpression PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for unary expression
          * @param operation Unary operation
          * @param expression Expression ptr
          */
-        GS_UnaryExpression(UnaryOperation operation, GSExpressionPtr expression);
+        GS_UnaryExpression(UnaryOperation operation,
+                           GSExpressionPtr expression);
 
     public:
+
+        /*
+         *
+         * GS_UnaryExpression PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating unary expression ptr
@@ -33,9 +46,16 @@ namespace GSLanguageCompiler::AST {
          * @param expression Expression ptr
          * @return Unary expression ptr
          */
-        static std::shared_ptr<GS_UnaryExpression> Create(UnaryOperation operation, GSExpressionPtr expression);
+        static std::shared_ptr<GS_UnaryExpression> Create(UnaryOperation operation,
+                                                          GSExpressionPtr expression);
 
     public:
+
+        /*
+         *
+         * GS_UnaryExpression PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for unary operation
@@ -51,6 +71,12 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_UnaryExpression PUBLIC OVERRIDE METHODS
+         *
+         */
+
         /**
          * Getter for expression type
          * @return Expression type
@@ -58,6 +84,12 @@ namespace GSLanguageCompiler::AST {
         ExpressionType GetExpressionType() const override;
 
     private:
+
+        /*
+         *
+         * GS_UnaryExpression PRIVATE FIELDS
+         *
+         */
 
         /**
          * Unary operation
