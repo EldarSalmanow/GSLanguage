@@ -25,6 +25,12 @@ namespace GSLanguageCompiler::AST {
     class GS_ASTBuilder {
     public:
 
+        /*
+         *
+         * GS_ASTBuilder PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for AST builder
          * @param context AST context
@@ -33,20 +39,32 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_ASTBuilder PUBLIC STATIC CREATE METHODS
+         *
+         */
+
         /**
          * Creating AST builder
          * @param context AST context
          * @return AST builder ptr
          */
-        static std::shared_ptr<GS_ASTBuilder> Create(GSASTContextPtr context);
+        static std::unique_ptr<GS_ASTBuilder> Create(GSASTContextPtr context);
 
         /**
          * Creating AST builder
          * @return AST builder ptr
          */
-        static std::shared_ptr<GS_ASTBuilder> Create();
+        static std::unique_ptr<GS_ASTBuilder> Create();
 
     public:
+
+        /*
+         *
+         * GS_ASTBuilder PUBLIC METHODS
+         *
+         */
 
         /**
          * Create any type
@@ -127,9 +145,8 @@ namespace GSLanguageCompiler::AST {
          * @param size Size of array
          * @return Array type
          */
-        Semantic::TypePtr<Semantic::GS_ArrayType> CreateArrayType(Semantic::GSTypePtr elementsType, U64 size);
-
-    public:
+        Semantic::TypePtr<Semantic::GS_ArrayType> CreateArrayType(Semantic::GSTypePtr elementsType,
+                                                                  U64 size);
 
         /**
          * Create any value
@@ -208,15 +225,14 @@ namespace GSLanguageCompiler::AST {
          */
         ValuePtr<GS_StringValue> CreateStringValue(UString string);
 
-    public:
-
         /**
          * Create translation unit declaration
          * @param name Name
          * @param nodes Nodes
          * @return Translation unit declaration
          */
-        GSTranslationUnitDeclarationPtr CreateTranslationUnitDeclaration(UString name, GSNodePtrArray nodes);
+        GSTranslationUnitDeclarationPtr CreateTranslationUnitDeclaration(UString name,
+                                                                         GSNodePtrArray nodes);
 
         /**
          * Create translation unit declaration
@@ -231,7 +247,8 @@ namespace GSLanguageCompiler::AST {
          * @param returnType Return type
          * @return Function signature
          */
-        GS_FunctionSignature CreateFunctionSignature(Semantic::GSTypePtrArray paramTypes, Semantic::GSTypePtr returnType);
+        GS_FunctionSignature CreateFunctionSignature(Semantic::GSTypePtrArray paramTypes,
+                                                     Semantic::GSTypePtr returnType);
 
         /**
          * Create function signature
@@ -260,7 +277,9 @@ namespace GSLanguageCompiler::AST {
          * @param body Body
          * @return Function declaration
          */
-        NodePtr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name, GS_FunctionSignature signature, GSStatementPtrArray body);
+        NodePtr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name,
+                                                                  GS_FunctionSignature signature,
+                                                                  GSStatementPtrArray body);
 
         /**
          * Create function declaration
@@ -268,7 +287,8 @@ namespace GSLanguageCompiler::AST {
          * @param signature Signature
          * @return Function declaration
          */
-        NodePtr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name, GS_FunctionSignature signature);
+        NodePtr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name,
+                                                                  GS_FunctionSignature signature);
 
         /**
          * Create function declaration
@@ -276,7 +296,8 @@ namespace GSLanguageCompiler::AST {
          * @param statements Statements
          * @return Function declaration
          */
-        NodePtr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name, GSStatementPtrArray statements);
+        NodePtr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name,
+                                                                  GSStatementPtrArray statements);
 
         /**
          * Create function declaration
@@ -285,8 +306,6 @@ namespace GSLanguageCompiler::AST {
          */
         NodePtr<GS_FunctionDeclaration> CreateFunctionDeclaration(UString name);
 
-    public:
-
         /**
          * Create variable declaration statement
          * @param name Name
@@ -294,7 +313,9 @@ namespace GSLanguageCompiler::AST {
          * @param expression Expression
          * @return Variable declaration statement
          */
-        NodePtr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name, Semantic::GSTypePtr type, GSExpressionPtr expression);
+        NodePtr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name,
+                                                                                    Semantic::GSTypePtr type,
+                                                                                    GSExpressionPtr expression);
 
         /**
          * Create variable declaration statement
@@ -302,7 +323,8 @@ namespace GSLanguageCompiler::AST {
          * @param type Type
          * @return Variable declaration statement
          */
-        NodePtr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name, Semantic::GSTypePtr type);
+        NodePtr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name,
+                                                                                    Semantic::GSTypePtr type);
 
         /**
          * Create variable declaration statement
@@ -310,7 +332,8 @@ namespace GSLanguageCompiler::AST {
          * @param expression Expression
          * @return Variable declaration statement
          */
-        NodePtr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name, GSExpressionPtr expression);
+        NodePtr<GS_VariableDeclarationStatement> CreateVariableDeclarationStatement(UString name,
+                                                                                    GSExpressionPtr expression);
 
         /**
          * Create assignment statement
@@ -318,7 +341,8 @@ namespace GSLanguageCompiler::AST {
          * @param rvalueExpression Right value expression
          * @return Assignment statement
          */
-        NodePtr<GS_AssignmentStatement> CreateAssignmentStatement(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression);
+        NodePtr<GS_AssignmentStatement> CreateAssignmentStatement(GSExpressionPtr lvalueExpression,
+                                                                  GSExpressionPtr rvalueExpression);
 
         /**
          * Create expression statement
@@ -326,8 +350,6 @@ namespace GSLanguageCompiler::AST {
          * @return Expression statement
          */
         NodePtr<GS_ExpressionStatement> CreateExpressionStatement(GSExpressionPtr expression);
-
-    public:
 
         /**
          * Create constant expression
@@ -412,7 +434,8 @@ namespace GSLanguageCompiler::AST {
          * @param expression Expression
          * @return Unary expression
          */
-        NodePtr<GS_UnaryExpression> CreateUnaryExpression(UnaryOperation operation, GSExpressionPtr expression);
+        NodePtr<GS_UnaryExpression> CreateUnaryExpression(UnaryOperation operation,
+                                                          GSExpressionPtr expression);
 
         /**
          * Create binary expression
@@ -421,7 +444,9 @@ namespace GSLanguageCompiler::AST {
          * @param secondExpression Second expression
          * @return Binary expression
          */
-        NodePtr<GS_BinaryExpression> CreateBinaryExpression(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression);
+        NodePtr<GS_BinaryExpression> CreateBinaryExpression(BinaryOperation operation,
+                                                            GSExpressionPtr firstExpression,
+                                                            GSExpressionPtr secondExpression);
 
         /**
          * Create array expression
@@ -433,17 +458,18 @@ namespace GSLanguageCompiler::AST {
         /**
          * Create variable using expression
          * @param name Name
+         * @param nameLocation Name byte source location range
          * @return Variable using expression
          */
-        NodePtr<GS_VariableUsingExpression> CreateVariableUsingExpression(UString name);
+        NodePtr<GS_VariableUsingExpression> CreateVariableUsingExpression(UString name,
+                                                                          IO::GSByteSourceRange nameLocationRange);
 
         /**
          * Create variable using expression
          * @param name Name
-         * @param nameLocation Name source location range
          * @return Variable using expression
          */
-        NodePtr<GS_VariableUsingExpression> CreateVariableUsingExpression(UString name, IO::GSByteSourceRange nameLocationRange);
+        NodePtr<GS_VariableUsingExpression> CreateVariableUsingExpression(UString name);
 
         /**
          * Create function calling expression
@@ -451,17 +477,30 @@ namespace GSLanguageCompiler::AST {
          * @param params Params
          * @return Function calling expression
          */
-        NodePtr<GS_FunctionCallingExpression> CreateFunctionCallingExpression(UString name, GSExpressionPtrArray params);
+        NodePtr<GS_FunctionCallingExpression> CreateFunctionCallingExpression(UString name,
+                                                                              GSExpressionPtrArray params);
 
     public:
+
+        /*
+         *
+         * GS_ASTBuilder PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for AST context
          * @return AST context
          */
-        GSASTContextPtr GetContext() const;
+        LRef<GS_ASTContext> GetContext();
 
     private:
+
+        /*
+         *
+         * GS_ASTBuilder PRIVATE FIELDS
+         *
+         */
 
         /**
          * AST context
@@ -472,7 +511,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * AST builder ptr type
      */
-    using GSASTBuilderPtr = std::shared_ptr<GS_ASTBuilder>;
+    using GSASTBuilderPtr = std::unique_ptr<GS_ASTBuilder>;
 
 }
 

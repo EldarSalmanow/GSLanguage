@@ -23,7 +23,7 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Constructor for value
-         * @param type Type ptr
+         * @param type Type
          */
         explicit GS_Value(Semantic::GSTypePtr type);
 
@@ -49,8 +49,8 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Creating value ptr
-         * @param type Type ptr
+         * Creating value
+         * @param type Type
          * @return Value ptr
          */
         static std::shared_ptr<GS_Value> Create(Semantic::GSTypePtr type);
@@ -64,8 +64,8 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Getter for type ptr
-         * @return Type ptr
+         * Getter for type
+         * @return Type
          */
         Semantic::GSTypePtr GetType() const;
 
@@ -92,7 +92,7 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Type ptr
+         * Type
          */
         Semantic::GSTypePtr _type;
     };
@@ -112,7 +112,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * Value ptr type
      */
-    using GSValuePtr = std::shared_ptr<GS_Value>;
+    using GSValuePtr = ValuePtr<GS_Value>;
 
     /**
      * Value ptr array type
@@ -125,51 +125,85 @@ namespace GSLanguageCompiler::AST {
     class GS_LiteralValue : public GS_Value {
     public:
 
+        /*
+         *
+         * GS_LiteralValue PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for value
-         * @tparam T Type of value
+         * @tparam ValueT Type of value
          * @param data Value
-         * @param type Type ptr
+         * @param type Type
          */
-        template<typename T>
-        GS_LiteralValue(T value, Semantic::GSTypePtr type)
-                : _value(std::move(value)), GS_Value(std::move(type)) {}
+        template<typename ValueT>
+        GS_LiteralValue(ValueT value,
+                        Semantic::GSTypePtr type)
+                : _value(std::move(value)),
+                  GS_Value(std::move(type)) {}
 
     public:
 
+        /*
+         *
+         * GS_LiteralValue PUBLIC STATIC CREATE METHODS
+         *
+         */
+
         /**
-         * Creating value ptr
-         * @tparam T Type of value
+         * Creating value
+         * @tparam ValueT Type of value
          * @param value Value
-         * @param type Type ptr
+         * @param type Type
          * @return Value ptr
          */
-        template<typename T>
-        static std::shared_ptr<GS_Value> Create(T value, Semantic::GSTypePtr type) {
-            return std::make_shared<GS_Value>(std::move(value), std::move(type));
+        template<typename ValueT>
+        static std::shared_ptr<GS_Value> Create(ValueT value,
+                                                Semantic::GSTypePtr type) {
+            return std::make_shared<GS_Value>(std::move(value),
+                                              std::move(type));
         }
 
     public:
+
+        /*
+         *
+         * GS_LiteralValue PUBLIC METHODS
+         *
+         */
 
         /**
-         * Getter for data value
-         * @tparam T Type for getting
+         * Getting value wih cast to ValueT
+         * @tparam ValueT Type of value
          * @return Value
          */
-        template<typename T>
-        T GetValueWithCast() const {
-            return std::any_cast<T>(GetValue());
+        template<typename ValueT>
+        ValueT GetValueWithCast() const {
+            return std::any_cast<ValueT>(_value);
         }
 
     public:
+
+        /*
+         *
+         * GS_LiteralValue PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for value
          * @return Value
          */
-        std::any GetValue() const;
+        ConstLRef<std::any> GetValue() const;
 
     public:
+
+        /*
+         *
+         * GS_LiteralValue PUBLIC OVERRIDE METHODS
+         *
+         */
 
         /**
          * Is literal value
@@ -178,6 +212,12 @@ namespace GSLanguageCompiler::AST {
         Bool IsLiteralValue() override;
 
     private:
+
+        /*
+         *
+         * GS_LiteralValue PRIVATE FIELDS
+         *
+         */
 
         /**
          * Container for value
@@ -191,6 +231,12 @@ namespace GSLanguageCompiler::AST {
     class GS_CharValue : public GS_LiteralValue {
     public:
 
+        /*
+         *
+         * GS_CharValue PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for Char value
          * @param symbol Char value
@@ -198,6 +244,12 @@ namespace GSLanguageCompiler::AST {
         explicit GS_CharValue(USymbol symbol);
 
     public:
+
+        /*
+         *
+         * GS_CharValue PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating Char value
@@ -208,20 +260,32 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_CharValue PUBLIC METHODS
+         *
+         */
+
         /**
-         * Getter for Char value
+         * Getting Char value
          * @return Char value
          */
         USymbol GetCharValue() const;
     };
 
-    // add (u)integer value ?
+    // TODO add (U)Integer value?
 
     /**
      * I8 value
      */
     class GS_I8Value : public GS_LiteralValue {
     public:
+
+        /*
+         *
+         * GS_I8Value PUBLIC CONSTRUCTORS
+         *
+         */
 
         /**
          * Constructor for I8 value
@@ -230,6 +294,12 @@ namespace GSLanguageCompiler::AST {
         explicit GS_I8Value(I8 value);
 
     public:
+
+        /*
+         *
+         * GS_I8Value PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating I8 value
@@ -240,8 +310,14 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_I8Value PUBLIC METHODS
+         *
+         */
+
         /**
-         * Getter for I8 value
+         * Getting I8 value
          * @return I8 value
          */
         I8 GetI8Value() const;
@@ -253,6 +329,12 @@ namespace GSLanguageCompiler::AST {
     class GS_I16Value : public GS_LiteralValue {
     public:
 
+        /*
+         *
+         * GS_I16Value PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for I16 value
          * @param value I16 value
@@ -260,6 +342,12 @@ namespace GSLanguageCompiler::AST {
         explicit GS_I16Value(I16 value);
 
     public:
+
+        /*
+         *
+         * GS_I16Value PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating I16 value
@@ -270,8 +358,14 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_I16Value PRIVATE FIELDS
+         *
+         */
+
         /**
-         * Getter for I16 value
+         * Getting I16 value
          * @return I16 value
          */
         I16 GetI16Value() const;
@@ -283,6 +377,12 @@ namespace GSLanguageCompiler::AST {
     class GS_I32Value : public GS_LiteralValue {
     public:
 
+        /*
+         *
+         * GS_I32Value PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for I32 value
          * @param value I32 value
@@ -290,6 +390,12 @@ namespace GSLanguageCompiler::AST {
         explicit GS_I32Value(I32 value);
 
     public:
+
+        /*
+         *
+         * GS_I32Value PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating I32 value
@@ -300,8 +406,14 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_I32Value PUBLIC METHODS
+         *
+         */
+
         /**
-         * Getter for I32 value
+         * Getting I32 value
          * @return I32 value
          */
         I32 GetI32Value() const;
@@ -313,6 +425,12 @@ namespace GSLanguageCompiler::AST {
     class GS_I64Value : public GS_LiteralValue {
     public:
 
+        /*
+         *
+         * GS_I64Value PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for I64 value
          * @param value I64 value
@@ -320,6 +438,12 @@ namespace GSLanguageCompiler::AST {
         explicit GS_I64Value(I64 value);
 
     public:
+
+        /*
+         *
+         * GS_I64Value PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating I64 value
@@ -329,6 +453,12 @@ namespace GSLanguageCompiler::AST {
         static std::shared_ptr<GS_I64Value> Create(I64 value);
 
     public:
+
+        /*
+         *
+         * GS_I64Value PUBLIC METHODS
+         *
+         */
 
         /**
          * Getter for I64 value
@@ -343,6 +473,12 @@ namespace GSLanguageCompiler::AST {
     class GS_U8Value : public GS_LiteralValue {
     public:
 
+        /*
+         *
+         * GS_U8Value PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for U8 value
          * @param value U8 value
@@ -350,6 +486,12 @@ namespace GSLanguageCompiler::AST {
         explicit GS_U8Value(U8 value);
 
     public:
+
+        /*
+         *
+         * GS_U8Value PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating U8 value
@@ -360,8 +502,14 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_U8Value PUBLIC METHODS
+         *
+         */
+
         /**
-         * Getter for U8 value
+         * Getting U8 value
          * @return U8 value
          */
         U8 GetU8Value() const;
@@ -373,6 +521,12 @@ namespace GSLanguageCompiler::AST {
     class GS_U16Value : public GS_LiteralValue {
     public:
 
+        /*
+         *
+         * GS_U16Value PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for U16 value
          * @param value U16 value
@@ -380,6 +534,12 @@ namespace GSLanguageCompiler::AST {
         explicit GS_U16Value(U16 value);
 
     public:
+
+        /*
+         *
+         * GS_U16Value PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating U16 value
@@ -390,8 +550,14 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_U16Value PUBLIC METHODS
+         *
+         */
+
         /**
-         * Getter for U16 value
+         * Getting U16 value
          * @return U16 value
          */
         U16 GetU16Value() const;
@@ -403,6 +569,12 @@ namespace GSLanguageCompiler::AST {
     class GS_U32Value : public GS_LiteralValue {
     public:
 
+        /*
+         *
+         * GS_U32Value PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for U32 value
          * @param value U32 value
@@ -410,6 +582,12 @@ namespace GSLanguageCompiler::AST {
         explicit GS_U32Value(U32 value);
 
     public:
+
+        /*
+         *
+         * GS_U32Value PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating U32 value
@@ -420,8 +598,14 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_U32Value PUBLIC METHODS
+         *
+         */
+
         /**
-         * Getter for U32 value
+         * Getting U32 value
          * @return U32 value
          */
         U32 GetU32Value() const;
@@ -433,6 +617,12 @@ namespace GSLanguageCompiler::AST {
     class GS_U64Value : public GS_LiteralValue {
     public:
 
+        /*
+         *
+         * GS_U64Value PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for U64 value
          * @param value U64 value
@@ -440,6 +630,12 @@ namespace GSLanguageCompiler::AST {
         explicit GS_U64Value(U64 value);
 
     public:
+
+        /*
+         *
+         * GS_U64Value PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating U64 value
@@ -450,8 +646,14 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_U64Value PUBLIC METHODS
+         *
+         */
+
         /**
-         * Getter for U64 value
+         * Getting U64 value
          * @return U64 value
          */
         U64 GetU64Value() const;
@@ -463,6 +665,12 @@ namespace GSLanguageCompiler::AST {
     class GS_StringValue : public GS_LiteralValue {
     public:
 
+        /*
+         *
+         * GS_StringValue PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for String value
          * @param value String value
@@ -470,6 +678,12 @@ namespace GSLanguageCompiler::AST {
         explicit GS_StringValue(UString value);
 
     public:
+
+        /*
+         *
+         * GS_StringValue PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating String value
@@ -480,29 +694,35 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_StringValue PUBLIC METHODS
+         *
+         */
+
         /**
-         * Getter for String value
+         * Getting String value
          * @return String value
          */
         UString GetStringValue() const;
     };
 
     /**
-     * Casting any value ptr to concrete value ptr
-     * @tparam T Type of value
-     * @param value Any value ptr
-     * @return Concrete value ptr or nullptr
+     * Casting to ValueT value
+     * @tparam ValueT Type of value
+     * @param value Value
+     * @return Value or null
+     * @todo Rewrite
      */
-    template<typename T>
-    inline Semantic::TypePtr<T> ToValue(GSValuePtr value) {
-        static_assert(std::is_base_of_v<GS_Value, T>, "Type for casting must be inherited from GS_Value!");
-
-        // todo may be optimized
+    template<typename ValueT>
+    inline ValuePtr<ValueT> ToValue(ConstLRef<GSValuePtr> value) {
+        static_assert(std::is_base_of_v<GS_Value, ValueT>,
+                      "Type for casting must be inherited from GS_Value!");
 
         auto type = value->GetType();
         auto typeType = type->GetType();
 
-        if constexpr (std::is_same_v<GS_CharValue, T>) {
+        if constexpr (std::is_same_v<GS_CharValue, ValueT>) {
             if (typeType == Semantic::TypeType::Char) {
                 return std::reinterpret_pointer_cast<GS_CharValue>(value);
             }
@@ -510,7 +730,7 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        if constexpr (std::is_same_v<GS_I8Value, T>) {
+        if constexpr (std::is_same_v<GS_I8Value, ValueT>) {
             if (typeType == Semantic::TypeType::Integer) {
                 auto integerType = std::reinterpret_pointer_cast<Semantic::GS_IntegerType>(type);
                 auto integerTypeType = integerType->GetIntegerType();
@@ -523,7 +743,7 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        if constexpr (std::is_same_v<GS_I16Value, T>) {
+        if constexpr (std::is_same_v<GS_I16Value, ValueT>) {
             if (typeType == Semantic::TypeType::Integer) {
                 auto integerType = std::reinterpret_pointer_cast<Semantic::GS_IntegerType>(type);
                 auto integerTypeType = integerType->GetIntegerType();
@@ -536,7 +756,7 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        if constexpr (std::is_same_v<GS_I32Value, T>) {
+        if constexpr (std::is_same_v<GS_I32Value, ValueT>) {
             if (typeType == Semantic::TypeType::Integer) {
                 auto integerType = std::reinterpret_pointer_cast<Semantic::GS_IntegerType>(type);
                 auto integerTypeType = integerType->GetIntegerType();
@@ -549,7 +769,7 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        if constexpr (std::is_same_v<GS_I64Value, T>) {
+        if constexpr (std::is_same_v<GS_I64Value, ValueT>) {
             if (typeType == Semantic::TypeType::Integer) {
                 auto integerType = std::reinterpret_pointer_cast<Semantic::GS_IntegerType>(type);
                 auto integerTypeType = integerType->GetIntegerType();
@@ -562,7 +782,7 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        if constexpr (std::is_same_v<GS_U8Value, T>) {
+        if constexpr (std::is_same_v<GS_U8Value, ValueT>) {
             if (typeType == Semantic::TypeType::UInteger) {
                 auto uIntegerType = std::reinterpret_pointer_cast<Semantic::GS_UIntegerType>(type);
                 auto uIntegerTypeType = uIntegerType->GetUIntegerType();
@@ -575,7 +795,7 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        if constexpr (std::is_same_v<GS_U16Value, T>) {
+        if constexpr (std::is_same_v<GS_U16Value, ValueT>) {
             if (typeType == Semantic::TypeType::UInteger) {
                 auto uIntegerType = std::reinterpret_pointer_cast<Semantic::GS_UIntegerType>(type);
                 auto uIntegerTypeType = uIntegerType->GetUIntegerType();
@@ -588,7 +808,7 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        if constexpr (std::is_same_v<GS_U32Value, T>) {
+        if constexpr (std::is_same_v<GS_U32Value, ValueT>) {
             if (typeType == Semantic::TypeType::UInteger) {
                 auto uIntegerType = std::reinterpret_pointer_cast<Semantic::GS_UIntegerType>(type);
                 auto uIntegerTypeType = uIntegerType->GetUIntegerType();
@@ -601,7 +821,7 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        if constexpr (std::is_same_v<GS_U64Value, T>) {
+        if constexpr (std::is_same_v<GS_U64Value, ValueT>) {
             if (typeType == Semantic::TypeType::UInteger) {
                 auto uIntegerType = std::reinterpret_pointer_cast<Semantic::GS_UIntegerType>(type);
                 auto uIntegerTypeType = uIntegerType->GetUIntegerType();
@@ -614,7 +834,7 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        if constexpr (std::is_same_v<GS_StringValue, T>) {
+        if constexpr (std::is_same_v<GS_StringValue, ValueT>) {
             if (typeType == Semantic::TypeType::String) {
                 return std::reinterpret_pointer_cast<GS_StringValue>(value);
             }
@@ -622,7 +842,7 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        return std::reinterpret_pointer_cast<T>(value);
+        return std::reinterpret_pointer_cast<ValueT>(value);
     }
 
     /**
@@ -631,30 +851,54 @@ namespace GSLanguageCompiler::AST {
     class GS_ConstantExpression : public GS_Expression {
     public:
 
+        /*
+         *
+         * GS_ConstantExpression PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for constant expression
-         * @param value Value ptr
+         * @param value Value
          */
         explicit GS_ConstantExpression(GSValuePtr value);
 
     public:
 
+        /*
+         *
+         * GS_ConstantExpression PUBLIC STATIC CREATE METHODS
+         *
+         */
+
         /**
-         * Creating constant expression ptr
-         * @param value Value ptr
+         * Creating constant expression
+         * @param value Value
          * @return Constant expression ptr
          */
         static std::shared_ptr<GS_ConstantExpression> Create(GSValuePtr value);
 
     public:
 
+        /*
+         *
+         * GS_ConstantExpression PUBLIC GETTER METHODS
+         *
+         */
+
         /**
-         * Getter for value ptr
-         * @return Value ptr
+         * Getter for value
+         * @return Value
          */
         LRef<GSValuePtr> GetValue();
 
     public:
+
+        /*
+         *
+         * GS_ConstantExpression PUBLIC OVERRIDE METHODS
+         *
+         */
 
         /**
          * Getter for expression type
@@ -664,8 +908,14 @@ namespace GSLanguageCompiler::AST {
 
     private:
 
+        /*
+         *
+         * GS_ConstantExpression PRIVATE FIELDS
+         *
+         */
+
         /**
-         * Value ptr
+         * Value
          */
         GSValuePtr _value;
     };

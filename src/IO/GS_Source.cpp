@@ -494,7 +494,7 @@ namespace GSLanguageCompiler::IO {
     }
 
     template<>
-    GS_ByteSourceLocation ToSourceLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
+    GS_ByteSourceLocation ToSourceLocation(GS_LineColumnSourceLocation lineColumnSourceLocation,
                                            ConstLRef<GS_Source> source) {
         auto line = lineColumnSourceLocation.GetLine();
         auto column = lineColumnSourceLocation.GetColumn();
@@ -534,7 +534,7 @@ namespace GSLanguageCompiler::IO {
     }
 
     template<>
-    GS_LineColumnSourceLocation ToSourceLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
+    GS_LineColumnSourceLocation ToSourceLocation(GS_ByteSourceLocation byteSourceLocation,
                                                  ConstLRef<GS_Source> source) {
         auto position = byteSourceLocation.GetPosition();
         auto sourceHash = byteSourceLocation.GetSourceHash();

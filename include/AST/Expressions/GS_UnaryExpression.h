@@ -27,7 +27,7 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for unary expression
          * @param operation Unary operation
-         * @param expression Expression ptr
+         * @param expression Expression
          */
         GS_UnaryExpression(UnaryOperation operation,
                            GSExpressionPtr expression);
@@ -41,9 +41,9 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Creating unary expression ptr
+         * Creating unary expression
          * @param operation Unary operation
-         * @param expression Expression ptr
+         * @param expression Expression
          * @return Unary expression ptr
          */
         static std::shared_ptr<GS_UnaryExpression> Create(UnaryOperation operation,
@@ -64,8 +64,8 @@ namespace GSLanguageCompiler::AST {
         LRef<UnaryOperation> GetUnaryOperation();
 
         /**
-         * Getter for expression ptr
-         * @return Expression ptr
+         * Getter for expression
+         * @return Expression
          */
         LRef<GSExpressionPtr> GetExpression();
 
@@ -97,7 +97,7 @@ namespace GSLanguageCompiler::AST {
         UnaryOperation _operation;
 
         /**
-         * Expression ptr
+         * Expression
          */
         GSExpressionPtr _expression;
     };

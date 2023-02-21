@@ -65,7 +65,8 @@ namespace GSLanguageCompiler::Driver {
          * @param argv Arguments values
          * @return Compiling result
          */
-        static CompilingResult Start(I32 argc, Ptr<Ptr<C>> argv);
+        static CompilingResult Start(I32 argc,
+                                     Ptr<Ptr<C>> argv);
 
     public:
 

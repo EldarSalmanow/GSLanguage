@@ -30,8 +30,8 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for binary expression
          * @param operation Binary operation
-         * @param firstNode First expression ptr
-         * @param secondNode Second expression ptr
+         * @param firstNode First expression
+         * @param secondNode Second expression
          */
         GS_BinaryExpression(BinaryOperation operation,
                             GSExpressionPtr firstExpression,
@@ -71,14 +71,14 @@ namespace GSLanguageCompiler::AST {
         LRef<BinaryOperation> GetBinaryOperation();
 
         /**
-         * Getter for first expression ptr
-         * @return First expression ptr
+         * Getter for first expression
+         * @return First expression
          */
         LRef<GSExpressionPtr> GetFirstExpression();
 
         /**
-         * Getter for second expression ptr
-         * @return Second expression ptr
+         * Getter for second expression
+         * @return Second expression
          */
         LRef<GSExpressionPtr> GetSecondExpression();
 
@@ -110,10 +110,14 @@ namespace GSLanguageCompiler::AST {
         BinaryOperation _operation;
 
         /**
-         * First and second expressions
+         * First expression
          */
-        GSExpressionPtr _firstExpression,
-                        _secondExpression;
+        GSExpressionPtr _firstExpression;
+
+        /*
+         * Second expression
+         */
+        GSExpressionPtr _secondExpression;
     };
 
 }

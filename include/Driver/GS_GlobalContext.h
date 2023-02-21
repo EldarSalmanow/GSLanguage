@@ -12,7 +12,7 @@
 namespace GSLanguageCompiler::Driver {
 
     /**
-     * Signal handler function type
+     * Signal handler function ptr type
      */
     using SignalHandlerFunctionPtr = Void (*) (I32);
 

@@ -25,8 +25,10 @@ namespace GSLanguageCompiler::Driver {
         return GS_Compiler::Create(std::move(sessionManager));
     }
 
-    CompilingResult GS_Compiler::Start(I32 argc, Ptr<Ptr<C>> argv) {
-        auto arguments = GS_Arguments::Create(argc, argv);
+    CompilingResult GS_Compiler::Start(I32 argc,
+                                       Ptr<Ptr<C>> argv) {
+        auto arguments = GS_Arguments::Create(argc,
+                                              argv);
 
         if (!arguments) {
             return CompilingResult::Failure;

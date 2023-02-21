@@ -68,7 +68,8 @@ namespace GSLanguageCompiler::Driver {
          * @return Arguments
          * @todo Rewrite
          */
-        static std::optional<GS_Arguments> Create(I32 argc, Ptr<Ptr<C>> argv);
+        static std::optional<GS_Arguments> Create(I32 argc,
+                                                  Ptr<Ptr<C>> argv);
 
     public:
 

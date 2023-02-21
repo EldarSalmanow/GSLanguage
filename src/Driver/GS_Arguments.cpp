@@ -27,7 +27,8 @@ namespace GSLanguageCompiler::Driver {
                                     UString());
     }
 
-    std::optional<GS_Arguments> GS_Arguments::Create(I32 argc, Ptr<Ptr<C>> argv) {
+    std::optional<GS_Arguments> GS_Arguments::Create(I32 argc,
+                                                     Ptr<Ptr<C>> argv) {
         args::ArgumentParser parser("GSLanguageCompiler - Compiler for GSLanguage");
         args::HelpFlag helpFlag(parser,
                                 "help",

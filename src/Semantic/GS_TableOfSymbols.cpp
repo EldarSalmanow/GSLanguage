@@ -69,7 +69,8 @@ namespace GSLanguageCompiler::Semantic {
 
     ConstLRef<GS_FunctionSymbol> GS_TableOfSymbols::AddFunction(UString name,
                                                                 AST::GS_FunctionSignature signature) {
-        auto function = GS_FunctionSymbol::Create(std::move(name), std::move(signature));
+        auto function = GS_FunctionSymbol::Create(std::move(name),
+                                                  std::move(signature));
 
         auto symbol = AddSymbol(function);
 
@@ -78,7 +79,8 @@ namespace GSLanguageCompiler::Semantic {
 
     ConstLRef<GS_VariableSymbol> GS_TableOfSymbols::AddVariable(UString name,
                                                                 GSTypePtr type) {
-        auto variable = GS_VariableSymbol::Create(std::move(name), std::move(type));
+        auto variable = GS_VariableSymbol::Create(std::move(name),
+                                                  std::move(type));
 
         auto symbol = AddSymbol(variable);
 

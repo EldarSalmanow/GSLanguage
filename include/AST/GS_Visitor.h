@@ -25,6 +25,8 @@ namespace GSLanguageCompiler {
 
     namespace AST {
 
+        // TODO update visiting and transforming AST API
+
         /**
          * Class for visiting AST nodes without result
          */

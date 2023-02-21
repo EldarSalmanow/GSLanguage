@@ -5,11 +5,11 @@ namespace GSLanguageCompiler::AST {
     GS_ASTBuilder::GS_ASTBuilder(GSASTContextPtr context)
             : _context(std::move(context)) {}
 
-    std::shared_ptr<GS_ASTBuilder> GS_ASTBuilder::Create(GSASTContextPtr context) {
-        return std::make_shared<GS_ASTBuilder>(std::move(context));
+    std::unique_ptr<GS_ASTBuilder> GS_ASTBuilder::Create(GSASTContextPtr context) {
+        return std::make_unique<GS_ASTBuilder>(std::move(context));
     }
 
-    std::shared_ptr<GS_ASTBuilder> GS_ASTBuilder::Create() {
+    std::unique_ptr<GS_ASTBuilder> GS_ASTBuilder::Create() {
         return GS_ASTBuilder::Create(GS_ASTContext::Create());
     }
 
@@ -61,8 +61,10 @@ namespace GSLanguageCompiler::AST {
         return _context->GetStringType();
     }
 
-    Semantic::TypePtr<Semantic::GS_ArrayType> GS_ASTBuilder::CreateArrayType(Semantic::GSTypePtr elementsType, U64 size) {
-        return _context->GetArrayType(std::move(elementsType), size);
+    Semantic::TypePtr<Semantic::GS_ArrayType> GS_ASTBuilder::CreateArrayType(Semantic::GSTypePtr elementsType,
+                                                                             U64 size) {
+        return _context->GetArrayType(std::move(elementsType),
+                                      size);
     }
 
     GSValuePtr GS_ASTBuilder::CreateValue(Semantic::GSTypePtr type) {
@@ -109,16 +111,20 @@ namespace GSLanguageCompiler::AST {
         return GS_StringValue::Create(std::move(string));
     }
 
-    GSTranslationUnitDeclarationPtr GS_ASTBuilder::CreateTranslationUnitDeclaration(UString name, GSNodePtrArray nodes) {
-        return GS_TranslationUnitDeclaration::Create(std::move(name), std::move(nodes));
+    GSTranslationUnitDeclarationPtr GS_ASTBuilder::CreateTranslationUnitDeclaration(UString name,
+                                                                                    GSNodePtrArray nodes) {
+        return GS_TranslationUnitDeclaration::Create(std::move(name),
+                                                     std::move(nodes));
     }
 
     GSTranslationUnitDeclarationPtr GS_ASTBuilder::CreateTranslationUnitDeclaration(UString name) {
         return GS_TranslationUnitDeclaration::Create(std::move(name));
     }
 
-    GS_FunctionSignature GS_ASTBuilder::CreateFunctionSignature(Semantic::GSTypePtrArray paramTypes, Semantic::GSTypePtr returnType) {
-        return GS_FunctionSignature::Create(std::move(paramTypes), std::move(returnType));
+    GS_FunctionSignature GS_ASTBuilder::CreateFunctionSignature(Semantic::GSTypePtrArray paramTypes,
+                                                                Semantic::GSTypePtr returnType) {
+        return GS_FunctionSignature::Create(std::move(paramTypes),
+                                            std::move(returnType));
     }
 
     GS_FunctionSignature GS_ASTBuilder::CreateFunctionSignature(Semantic::GSTypePtrArray paramTypes) {
@@ -133,36 +139,54 @@ namespace GSLanguageCompiler::AST {
         return GS_FunctionSignature::Create();
     }
 
-    NodePtr<GS_FunctionDeclaration> GS_ASTBuilder::CreateFunctionDeclaration(UString name, GS_FunctionSignature signature, GSStatementPtrArray body) {
-        return GS_FunctionDeclaration::Create(std::move(name), std::move(signature), std::move(body));
+    NodePtr<GS_FunctionDeclaration> GS_ASTBuilder::CreateFunctionDeclaration(UString name,
+                                                                             GS_FunctionSignature signature,
+                                                                             GSStatementPtrArray body) {
+        return GS_FunctionDeclaration::Create(std::move(name),
+                                              std::move(signature),
+                                              std::move(body));
     }
 
-    NodePtr<GS_FunctionDeclaration> GS_ASTBuilder::CreateFunctionDeclaration(UString name, GS_FunctionSignature signature) {
-        return GS_FunctionDeclaration::Create(std::move(name), std::move(signature));
+    NodePtr<GS_FunctionDeclaration> GS_ASTBuilder::CreateFunctionDeclaration(UString name,
+                                                                             GS_FunctionSignature signature) {
+        return GS_FunctionDeclaration::Create(std::move(name),
+                                              std::move(signature));
     }
 
-    NodePtr<GS_FunctionDeclaration> GS_ASTBuilder::CreateFunctionDeclaration(UString name, GSStatementPtrArray statements) {
-        return GS_FunctionDeclaration::Create(std::move(name), std::move(statements));
+    NodePtr<GS_FunctionDeclaration> GS_ASTBuilder::CreateFunctionDeclaration(UString name,
+                                                                             GSStatementPtrArray statements) {
+        return GS_FunctionDeclaration::Create(std::move(name),
+                                              std::move(statements));
     }
 
     NodePtr<GS_FunctionDeclaration> GS_ASTBuilder::CreateFunctionDeclaration(UString name) {
         return GS_FunctionDeclaration::Create(std::move(name));
     }
 
-    NodePtr<GS_VariableDeclarationStatement> GS_ASTBuilder::CreateVariableDeclarationStatement(UString name, Semantic::GSTypePtr type, GSExpressionPtr expression) {
-        return GS_VariableDeclarationStatement::Create(std::move(name), std::move(type), std::move(expression));
+    NodePtr<GS_VariableDeclarationStatement> GS_ASTBuilder::CreateVariableDeclarationStatement(UString name,
+                                                                                               Semantic::GSTypePtr type,
+                                                                                               GSExpressionPtr expression) {
+        return GS_VariableDeclarationStatement::Create(std::move(name),
+                                                       std::move(type),
+                                                       std::move(expression));
     }
 
-    NodePtr<GS_VariableDeclarationStatement> GS_ASTBuilder::CreateVariableDeclarationStatement(UString name, Semantic::GSTypePtr type) {
-        return GS_VariableDeclarationStatement::Create(std::move(name), std::move(type));
+    NodePtr<GS_VariableDeclarationStatement> GS_ASTBuilder::CreateVariableDeclarationStatement(UString name,
+                                                                                               Semantic::GSTypePtr type) {
+        return GS_VariableDeclarationStatement::Create(std::move(name),
+                                                       std::move(type));
     }
 
-    NodePtr<GS_VariableDeclarationStatement> GS_ASTBuilder::CreateVariableDeclarationStatement(UString name, GSExpressionPtr expression) {
-        return GS_VariableDeclarationStatement::Create(std::move(name), std::move(expression));
+    NodePtr<GS_VariableDeclarationStatement> GS_ASTBuilder::CreateVariableDeclarationStatement(UString name,
+                                                                                               GSExpressionPtr expression) {
+        return GS_VariableDeclarationStatement::Create(std::move(name),
+                                                       std::move(expression));
     }
 
-    NodePtr<GS_AssignmentStatement> GS_ASTBuilder::CreateAssignmentStatement(GSExpressionPtr lvalueExpression, GSExpressionPtr rvalueExpression) {
-        return GS_AssignmentStatement::Create(std::move(lvalueExpression), std::move(rvalueExpression));
+    NodePtr<GS_AssignmentStatement> GS_ASTBuilder::CreateAssignmentStatement(GSExpressionPtr lvalueExpression,
+                                                                             GSExpressionPtr rvalueExpression) {
+        return GS_AssignmentStatement::Create(std::move(lvalueExpression),
+                                              std::move(rvalueExpression));
     }
 
     NodePtr<GS_ExpressionStatement> GS_ASTBuilder::CreateExpressionStatement(GSExpressionPtr expression) {
@@ -213,12 +237,18 @@ namespace GSLanguageCompiler::AST {
         return CreateConstantExpression(CreateStringValue(std::move(string)));
     }
 
-    NodePtr<GS_UnaryExpression> GS_ASTBuilder::CreateUnaryExpression(UnaryOperation operation, GSExpressionPtr expression) {
-        return GS_UnaryExpression::Create(operation, std::move(expression));
+    NodePtr<GS_UnaryExpression> GS_ASTBuilder::CreateUnaryExpression(UnaryOperation operation,
+                                                                     GSExpressionPtr expression) {
+        return GS_UnaryExpression::Create(operation,
+                                          std::move(expression));
     }
 
-    NodePtr<GS_BinaryExpression> GS_ASTBuilder::CreateBinaryExpression(BinaryOperation operation, GSExpressionPtr firstExpression, GSExpressionPtr secondExpression) {
-        return GS_BinaryExpression::Create(operation, std::move(firstExpression), std::move(secondExpression));
+    NodePtr<GS_BinaryExpression> GS_ASTBuilder::CreateBinaryExpression(BinaryOperation operation,
+                                                                       GSExpressionPtr firstExpression,
+                                                                       GSExpressionPtr secondExpression) {
+        return GS_BinaryExpression::Create(operation,
+                                           std::move(firstExpression),
+                                           std::move(secondExpression));
     }
 
     NodePtr<GS_ArrayExpression> GS_ASTBuilder::CreateArrayExpression(GSExpressionPtrArray expressions) {
@@ -229,16 +259,20 @@ namespace GSLanguageCompiler::AST {
         return GS_VariableUsingExpression::Create(std::move(name));
     }
 
-    NodePtr<GS_VariableUsingExpression> GS_ASTBuilder::CreateVariableUsingExpression(UString name, IO::GSByteSourceRange nameLocationRange) {
-        return GS_VariableUsingExpression::Create(std::move(name), nameLocationRange);
+    NodePtr<GS_VariableUsingExpression> GS_ASTBuilder::CreateVariableUsingExpression(UString name,
+                                                                                     IO::GSByteSourceRange nameLocationRange) {
+        return GS_VariableUsingExpression::Create(std::move(name),
+                                                  nameLocationRange);
     }
 
-    NodePtr<GS_FunctionCallingExpression> GS_ASTBuilder::CreateFunctionCallingExpression(UString name, GSExpressionPtrArray params) {
-        return GS_FunctionCallingExpression::Create(std::move(name), std::move(params));
+    NodePtr<GS_FunctionCallingExpression> GS_ASTBuilder::CreateFunctionCallingExpression(UString name,
+                                                                                         GSExpressionPtrArray params) {
+        return GS_FunctionCallingExpression::Create(std::move(name),
+                                                    std::move(params));
     }
 
-    GSASTContextPtr GS_ASTBuilder::GetContext() const {
-        return _context;
+    LRef<GS_ASTContext> GS_ASTBuilder::GetContext() {
+        return *_context;
     }
 
 }

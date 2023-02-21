@@ -20,7 +20,7 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Constructor for expression statement
-         * @param expression Expression ptr
+         * @param expression Expression
          */
         explicit GS_ExpressionStatement(GSExpressionPtr expression);
 
@@ -34,7 +34,7 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Creating expression statement
-         * @param expression Expression ptr
+         * @param expression Expression
          * @return Expression statement ptr
          */
         static std::shared_ptr<GS_ExpressionStatement> Create(GSExpressionPtr expression);
@@ -48,8 +48,8 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Getter for expression ptr
-         * @return Expression ptr
+         * Getter for expression
+         * @return Expression
          */
         LRef<GSExpressionPtr> GetExpression();
 
@@ -76,7 +76,7 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Expression ptr
+         * Expression
          */
         GSExpressionPtr _expression;
     };

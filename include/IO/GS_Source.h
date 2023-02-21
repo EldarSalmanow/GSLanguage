@@ -1208,7 +1208,7 @@ namespace GSLanguageCompiler::IO {
      */
     template<typename OutSourceLocationT,
              typename InSourceLocationT>
-    OutSourceLocationT ToSourceLocation(ConstLRef<InSourceLocationT> sourceLocation,
+    OutSourceLocationT ToSourceLocation(InSourceLocationT sourceLocation,
                                         ConstLRef<GS_Source> source) {
         Driver::GlobalContext().Exit();
     }
@@ -1221,7 +1221,7 @@ namespace GSLanguageCompiler::IO {
      * @return Source location
      */
     template<typename SourceLocationT>
-    SourceLocationT ToSourceLocation(ConstLRef<SourceLocationT> sourceLocation,
+    SourceLocationT ToSourceLocation(SourceLocationT sourceLocation,
                                      ConstLRef<GS_Source> source) {
         return sourceLocation;
     }
@@ -1234,7 +1234,7 @@ namespace GSLanguageCompiler::IO {
      * @todo Rewrite
      */
     template<>
-    GS_ByteSourceLocation ToSourceLocation(ConstLRef<GS_LineColumnSourceLocation> lineColumnSourceLocation,
+    GS_ByteSourceLocation ToSourceLocation(GS_LineColumnSourceLocation lineColumnSourceLocation,
                                            ConstLRef<GS_Source> source);
 
     /**
@@ -1245,7 +1245,7 @@ namespace GSLanguageCompiler::IO {
      * @todo Rewrite
      */
     template<>
-    GS_LineColumnSourceLocation ToSourceLocation(ConstLRef<GS_ByteSourceLocation> byteSourceLocation,
+    GS_LineColumnSourceLocation ToSourceLocation(GS_ByteSourceLocation byteSourceLocation,
                                                  ConstLRef<GS_Source> source);
 
     /**
@@ -1258,7 +1258,7 @@ namespace GSLanguageCompiler::IO {
      */
     template<typename OutSourceLocationT,
              typename InSourceLocationT>
-    OutSourceLocationT ToSourceLocation(ConstLRef<InSourceLocationT> sourceLocation,
+    OutSourceLocationT ToSourceLocation(InSourceLocationT sourceLocation,
                                         ConstLRef<GS_SourceManager> sourceManager) {
         auto sourceHash = sourceLocation.GetSourceHash();
 
@@ -1288,7 +1288,7 @@ namespace GSLanguageCompiler::IO {
      */
     template<typename OutSourceRangeLocationT,
              typename InSourceRangeLocationT>
-    GS_SourceRange<OutSourceRangeLocationT> ToSourceRange(ConstLRef<GS_SourceRange<InSourceRangeLocationT>> locationRange,
+    GS_SourceRange<OutSourceRangeLocationT> ToSourceRange(GS_SourceRange<InSourceRangeLocationT> locationRange,
                                                           ConstLRef<GS_Source> source) {
         auto startLocation = locationRange.GetStartLocation();
         auto endLocation = locationRange.GetEndLocation();
@@ -1312,7 +1312,7 @@ namespace GSLanguageCompiler::IO {
      * @return Converted source location range
      */
     template<typename SourceRangeLocationT>
-    GS_SourceRange<SourceRangeLocationT> ToSourceRange(ConstLRef<GS_SourceRange<SourceRangeLocationT>> locationRange,
+    GS_SourceRange<SourceRangeLocationT> ToSourceRange(GS_SourceRange<SourceRangeLocationT> locationRange,
                                                        ConstLRef<GS_Source> source) {
         return locationRange;
     }
@@ -1327,7 +1327,7 @@ namespace GSLanguageCompiler::IO {
      */
     template<typename OutSourceRangeLocationT,
              typename InSourceRangeLocationT>
-    GS_SourceRange<OutSourceRangeLocationT> ToSourceRange(ConstLRef<GS_SourceRange<InSourceRangeLocationT>> locationRange,
+    GS_SourceRange<OutSourceRangeLocationT> ToSourceRange(GS_SourceRange<InSourceRangeLocationT> locationRange,
                                                           ConstLRef<GS_SourceManager> sourceManager) {
         auto startLocation = locationRange.GetStartLocation();
 

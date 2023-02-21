@@ -989,7 +989,7 @@ namespace GSLanguageCompiler::Semantic {
         TypePtr<GS_StringType> GetStringType() const;
 
         /**
-         * Getter for Array type
+         * Getter for default Array type
          * @param type Type of array elements
          * @param size Size of array
          * @return Array type
