@@ -16,7 +16,7 @@ namespace GSLanguageCompiler::IO {
     using OutputStream = std::ostream;
 
     /**
-     * Class for setting and managing "standard" IO streams
+     * Class for setting and managing standard IO streams
      */
     class GS_StdIOStreamManager {
     public:
@@ -75,25 +75,25 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Getting standard input stream for reading data from stream
+         * Getting standard input stream
          * @return Standard input stream
          */
         LRef<InputStream> In();
 
         /**
-         * Getting standard output stream for writing data in stream
+         * Getting standard output stream
          * @return Standard output stream
          */
         LRef<OutputStream> Out();
 
         /**
-         * Getting standard error stream for writing data in stream
+         * Getting standard error stream
          * @return Standard error stream
          */
         LRef<OutputStream> Err();
 
         /**
-         * Getting standard logger stream for writing data in stream
+         * Getting standard logger stream
          * @return Standard logger stream
          */
         LRef<OutputStream> Log();

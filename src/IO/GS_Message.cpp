@@ -48,7 +48,8 @@ namespace GSLanguageCompiler::IO {
         auto endSourceLocation = GS_ByteSourceLocation::Create(position + 1,
                                                                sourceHash);
 
-        auto locationRange = GSByteSourceRange::Create(sourceLocation, endSourceLocation);
+        auto locationRange = GSByteSourceRange::Create(sourceLocation,
+                                                       endSourceLocation);
 
         return GS_Message::Create(std::move(text),
                                   level,
@@ -163,7 +164,8 @@ namespace GSLanguageCompiler::IO {
         auto endSourceLocation = GS_ByteSourceLocation::Create(messagePosition + 1,
                                                                messageSourceHash);
 
-        auto locationRange = GSByteSourceRange::Create(messageSourceLocation, endSourceLocation);
+        auto locationRange = GSByteSourceRange::Create(messageSourceLocation,
+                                                       endSourceLocation);
 
         return GS_MessageBuilder::Create(std::move(messageText),
                                          messageLevel,
@@ -424,8 +426,8 @@ namespace GSLanguageCompiler::IO {
         return *this;
     }
 
-    LRef<GS_MessageStream> GS_MessageStream::operator<<(ConstLRef<GS_MessageBuffer> messagesBuffer) {
-        for (auto &message : messagesBuffer) {
+    LRef<GS_MessageStream> GS_MessageStream::operator<<(ConstLRef<GS_MessageBuffer> messageBuffer) {
+        for (auto &message : messageBuffer) {
             *this << message;
         }
 

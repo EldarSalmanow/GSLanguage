@@ -47,7 +47,8 @@ namespace GSLanguageCompiler::IO {
     std::partial_ordering GS_ByteSourceLocation::operator<=>(ConstLRef<GS_ByteSourceLocation> sourceLocation) const {
         auto position = sourceLocation.GetPosition();
 
-        if (IsInvalid() || sourceLocation.IsInvalid()) {
+        if (IsInvalid()
+         || sourceLocation.IsInvalid()) {
             return std::partial_ordering::unordered;
         }
 

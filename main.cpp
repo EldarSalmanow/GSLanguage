@@ -541,8 +541,7 @@ Result GSMain(I32 argc, Ptr<Ptr<C>> argv) {
 I32 main(I32 argc, Ptr<Ptr<C>> argv) {
     auto compilerResult = GSMain(argc, argv);
 
-    // TODO add ToExitCode function in GSCrossPlatform
-    auto exitCode = StaticCast<I32>(compilerResult);
+    auto exitCode = ToExitCode(compilerResult);
 
     return exitCode;
 }

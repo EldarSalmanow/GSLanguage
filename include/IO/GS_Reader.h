@@ -6,7 +6,7 @@
 namespace GSLanguageCompiler::IO {
 
     /**
-     * Reader for reading text
+     * Reader for reading text from input stream
      */
     class GS_Reader {
     public:

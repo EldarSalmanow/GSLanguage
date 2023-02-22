@@ -1109,28 +1109,28 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Adding source to manager
+         * Adding source
          * @param source Source
          * @return Source
          */
         ConstLRef<GS_Source> AddSource(GSSourcePtr source);
 
         /**
-         * Adding file source to manager
+         * Adding file source
          * @param name File name
          * @return File source
          */
         ConstLRef<GS_Source> AddFileSource(UString name);
 
         /**
-         * Adding string source to manager
+         * Adding string source
          * @param source Source code
          * @return String source
          */
         ConstLRef<GS_Source> AddStringSource(UString source);
 
         /**
-         * Adding custom source to manager
+         * Adding custom source
          * @param source Source code
          * @param name Source name
          * @return Custom source
@@ -1139,28 +1139,28 @@ namespace GSLanguageCompiler::IO {
                                              UString name);
 
         /**
-         * Get source from manager by source hash
+         * Getting source by source hash
          * @param sourceHash Source hash
          * @return Source or null
          */
         std::optional<GS_Source> GetSource(U64 sourceHash) const;
 
         /**
-         * Get source from manager by source name
+         * Getting source by source name
          * @param sourceName Source name
          * @return Source or null
          */
         std::optional<GS_Source> GetSource(GS_SourceName sourceName) const;
 
         /**
-         * Get file source from manager by file name
+         * Getting file source by file name
          * @param fileName File name
          * @return File source or null
          */
         std::optional<GS_Source> GetFileSource(UString fileName) const;
 
         /**
-         * Get custom source from manager by source name
+         * Getting custom source by source name
          * @return Custom source or null
          */
         std::optional<GS_Source> GetCustomSource(UString sourceName) const;

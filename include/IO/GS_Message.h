@@ -16,7 +16,7 @@ namespace GSLanguageCompiler::IO {
     };
 
     /**
-     * Class for containing any messages
+     * Class for containing information about compiler message
      */
     class GS_Message {
     public:
@@ -546,7 +546,7 @@ namespace GSLanguageCompiler::IO {
          * Creating message stream
          * @param messageHandler Message handler
          * @param sourceManager Source manager
-         * @return Message stream ptr
+         * @return Message stream
          */
         static GS_MessageStream Create(LRef<GSMessageHandler> messageHandler,
                                        LRef<GS_SourceManager> sourceManager);
@@ -562,7 +562,7 @@ namespace GSLanguageCompiler::IO {
         /**
          * Writing message in message handler
          * @param message Message
-         * @return
+         * @return Void return
          * @todo Rewrite
          */
         Void Write(GS_Message message);
@@ -604,10 +604,10 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Stream operator for writing messages buffer in message handler
-         * @param messagesBuffer Messages buffer
+         * @param messageBuffer Messages buffer
          * @return Message stream
          */
-        LRef<GS_MessageStream> operator<<(ConstLRef<GS_MessageBuffer> messagesBuffer);
+        LRef<GS_MessageStream> operator<<(ConstLRef<GS_MessageBuffer> messageBuffer);
 
         /**
          * Stream operator for writing message from message builder in message handler
@@ -694,19 +694,19 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Getting output message stream for writing message in stream
+         * Getting output message stream
          * @return Output message stream
          */
         LRef<GS_MessageStream> Out();
 
         /**
-         * Getting error message stream for writing message in stream
+         * Getting error message stream
          * @return Error message stream
          */
         LRef<GS_MessageStream> Err();
 
         /**
-         * Getting logger message stream for writing message in stream
+         * Getting logger message stream
          * @return Logger message stream
          */
         LRef<GS_MessageStream> Log();
