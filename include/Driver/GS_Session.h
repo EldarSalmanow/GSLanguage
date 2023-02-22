@@ -126,52 +126,52 @@ namespace GSLanguageCompiler {
             CompilingResult Run();
 
             /**
-             * Getting standard input stream from standard IO stream manager for reading data from stream
+             * Getting standard input stream
              * @return Standard input stream
              */
             LRef<std::istream> StdIn();
 
             /**
-             * Getting standard output stream from standard IO stream manager for writing data in stream
+             * Getting standard output stream
              * @return Standard output stream
              */
             LRef<std::ostream> StdOut();
 
             /**
-             * Getting standard error stream from standard IO stream manager for writing data in stream
+             * Getting standard error stream
              * @return Standard error stream
              */
             LRef<std::ostream> StdErr();
 
             /**
-             * Getting standard logger stream from standard IO stream manager for writing data in stream
+             * Getting standard logger stream
              * @return Standard logger stream
              */
             LRef<std::ostream> StdLog();
 
             /**
-             * Add source to source manager
+             * Adding source
              * @param source Source
-             * @return Source hash
+             * @return Source
              */
             ConstLRef<IO::GS_Source> AddSource(IO::GSSourcePtr source);
 
             /**
-             * Adding file source to source manager
+             * Adding file source
              * @param name File name
              * @return File source
              */
             ConstLRef<IO::GS_Source> AddFileSource(UString name);
 
             /**
-             * Adding string source to source manager
+             * Adding string source
              * @param source Source code
              * @return String source
              */
             ConstLRef<IO::GS_Source> AddStringSource(UString source);
 
             /**
-             * Adding custom source to source manager
+             * Adding custom source
              * @param source Source code
              * @param name Source name
              * @return Custom source
@@ -180,52 +180,52 @@ namespace GSLanguageCompiler {
                                                      UString name);
 
             /**
-             * Get source from source manager by source hash
+             * Getting source by source hash
              * @param sourceHash Source hash
              * @return Source or null
              */
             std::optional<IO::GS_Source> GetSource(U64 sourceHash) const;
 
             /**
-             * Get source from source manager by source name
+             * Getting source by source name
              * @param sourceName Source name
              * @return Source or null
              */
             std::optional<IO::GS_Source> GetSource(IO::GS_SourceName sourceName) const;
 
             /**
-             * Get file source from source manager by file name
+             * Getting file source by file name
              * @param fileName File name
              * @return File source or null
              */
             std::optional<IO::GS_Source> GetFileSource(UString fileName) const;
 
             /**
-             * Get custom source from source manager by source name
+             * Getting custom source by source name
              * @return Custom source or null
              */
             std::optional<IO::GS_Source> GetCustomSource(UString sourceName) const;
 
             /**
-             * Getter for sources from source manager
+             * Getter for sources
              * @return Sources
              */
             ConstLRef<IO::GSSourcePtrArray> GetSources() const;
 
             /**
-             * Getting output message stream from message stream manager for writing message in stream
+             * Getting output message stream
              * @return Output message stream
              */
             LRef<IO::GS_MessageStream> Out();
 
             /**
-             * Getting error message stream from message stream manager for writing message in stream
+             * Getting error message stream
              * @return Error message stream
              */
             LRef<IO::GS_MessageStream> Err();
 
             /**
-             * Getting logger message stream from message stream manager for writing message in stream
+             * Getting logger message stream
              * @return Logger message stream
              */
             LRef<IO::GS_MessageStream> Log();
@@ -278,7 +278,7 @@ namespace GSLanguageCompiler {
              */
             IO::GS_MessageBuilder Message() const;
 
-            // TODO Add new message Create or printing message methods ?
+            // TODO Add new message Create or printing message methods?
 
             /**
              * Creating message builder for creating 'note' message

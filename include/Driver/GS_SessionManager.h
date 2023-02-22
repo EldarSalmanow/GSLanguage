@@ -19,7 +19,7 @@ namespace GSLanguageCompiler::Driver {
 
         /**
          * Creating session manager
-         * @param sessions Compiler sessions
+         * @param sessions Sessions
          */
         explicit GS_SessionManager(GSSessionPtrArray sessions);
 

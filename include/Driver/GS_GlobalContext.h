@@ -93,25 +93,25 @@ namespace GSLanguageCompiler::Driver {
         Result Initialize();
 
         /**
-         * Getting standard input stream from standard IO stream manager
+         * Getting standard input stream
          * @return Standard input stream
          */
         LRef<std::istream> In();
 
         /**
-         * Getting standard output stream from standard IO stream manager
+         * Getting standard output stream
          * @return Standard output stream
          */
         LRef<std::ostream> Out();
 
         /**
-         * Getting standard error stream from standard IO stream manager
+         * Getting standard error stream
          * @return Standard error stream
          */
         LRef<std::ostream> Err();
 
         /**
-         * Getting standard logger stream from standard IO stream manager
+         * Getting standard logger stream
          * @return Standard logger stream
          */
         LRef<std::ostream> Log();
@@ -125,7 +125,7 @@ namespace GSLanguageCompiler::Driver {
         GS_NORETURN Void Exit(I32 exitCode);
 
         /**
-         * Exiting from program with exit code 1
+         * Exiting from program with Err result
          * @return No return
          */
         GS_NORETURN Void Exit();

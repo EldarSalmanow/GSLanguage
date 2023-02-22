@@ -116,7 +116,7 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Tokenizing code from source
          * @return Token buffer
-         * @todo Lexing space symbol in token ?
+         * @todo Lexing space symbol in token?
          * @todo Update messages flushing
          */
         GS_TokenBuffer Tokenize();
