@@ -35,275 +35,275 @@ namespace GSLanguageCompiler {
 
             /**
              * Default visit node
-             * @param node Node
              * @param session Session
-             * @return
+             * @param node Node
+             * @return Void return
              */
-            Void SuperNode(LRef<GSNodePtr> node,
-                           LRef<Driver::GS_Session> session);
+            Void SuperNode(LRef<Driver::GS_Session> session,
+                           LRef<GSNodePtr> node);
 
             /**
              * Default visit declaration
-             * @param declaration Declaration
              * @param session Session
-             * @return
+             * @param declaration Declaration
+             * @return Void return
              */
-            Void SuperDeclaration(LRef<GSDeclarationPtr> declaration,
-                                  LRef<Driver::GS_Session> session);
+            Void SuperDeclaration(LRef<Driver::GS_Session> session,
+                                  LRef<GSDeclarationPtr> declaration);
 
             /**
              * Default visit statement
-             * @param statement Statement
              * @param session Session
-             * @return
+             * @param statement Statement
+             * @return Void return
              */
-            Void SuperStatement(LRef<GSStatementPtr> statement,
-                                LRef<Driver::GS_Session> session);
+            Void SuperStatement(LRef<Driver::GS_Session> session,
+                                LRef<GSStatementPtr> statement);
 
             /**
              * Default visit expression
-             * @param expression Expression
              * @param session Session
-             * @return
+             * @param expression Expression
+             * @return Void return
              */
-            Void SuperExpression(LRef<GSExpressionPtr> expression,
-                                 LRef<Driver::GS_Session> session);
+            Void SuperExpression(LRef<Driver::GS_Session> session,
+                                 LRef<GSExpressionPtr> expression);
 
             /**
              * Default visit translation unit declaration
-             * @param translationUnitDeclaration Translation unit declaration
              * @param session Session
-             * @return
+             * @param translationUnitDeclaration Translation unit declaration
+             * @return Void return
              */
-            Void SuperTranslationUnitDeclaration(NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration,
-                                                 LRef<Driver::GS_Session> session);
+            Void SuperTranslationUnitDeclaration(LRef<Driver::GS_Session> session,
+                                                 NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration);
 
             /**
              * Default visit function declaration
-             * @param functionDeclaration Function declaration
              * @param session Session
-             * @return
+             * @param functionDeclaration Function declaration
+             * @return Void return
              */
-            Void SuperFunctionDeclaration(NodePtrLRef<GS_FunctionDeclaration> functionDeclaration,
-                                          LRef<Driver::GS_Session> session);
+            Void SuperFunctionDeclaration(LRef<Driver::GS_Session> session,
+                                          NodePtrLRef<GS_FunctionDeclaration> functionDeclaration);
 
             /**
              * Default visit variable declaration statement
-             * @param variableDeclarationStatement Variable declaration statement
              * @param session Session
-             * @return
+             * @param variableDeclarationStatement Variable declaration statement
+             * @return Void return
              */
-            Void SuperVariableDeclarationStatement(NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement,
-                                                   LRef<Driver::GS_Session> session);
+            Void SuperVariableDeclarationStatement(LRef<Driver::GS_Session> session,
+                                                   NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement);
 
             /**
              * Default visit assignment statement
-             * @param assignmentStatement Assignment statement
              * @param session Session
-             * @return
+             * @param assignmentStatement Assignment statement
+             * @return Void return
              */
-            Void SuperAssignmentStatement(NodePtrLRef<GS_AssignmentStatement> assignmentStatement,
-                                          LRef<Driver::GS_Session> session);
+            Void SuperAssignmentStatement(LRef<Driver::GS_Session> session,
+                                          NodePtrLRef<GS_AssignmentStatement> assignmentStatement);
 
             /**
              * Default visit expression statement
-             * @param expressionStatement Expression statement
              * @param session Session
-             * @return
+             * @param expressionStatement Expression statement
+             * @return Void return
              */
-            Void SuperExpressionStatement(NodePtrLRef<GS_ExpressionStatement> expressionStatement,
-                                          LRef<Driver::GS_Session> session);
+            Void SuperExpressionStatement(LRef<Driver::GS_Session> session,
+                                          NodePtrLRef<GS_ExpressionStatement> expressionStatement);
 
             /**
              * Default visit constant expression
-             * @param constantExpression Constant expression
              * @param session Session
-             * @return
+             * @param constantExpression Constant expression
+             * @return Void return
              */
-            Void SuperConstantExpression(NodePtrLRef<GS_ConstantExpression> constantExpression,
-                                         LRef<Driver::GS_Session> session);
+            Void SuperConstantExpression(LRef<Driver::GS_Session> session,
+                                         NodePtrLRef<GS_ConstantExpression> constantExpression);
 
             /**
              * Default visit unary expression
-             * @param unaryExpression Unary expression
              * @param session Session
-             * @return
+             * @param unaryExpression Unary expression
+             * @return Void return
              */
-            Void SuperUnaryExpression(NodePtrLRef<GS_UnaryExpression> unaryExpression,
-                                      LRef<Driver::GS_Session> session);
+            Void SuperUnaryExpression(LRef<Driver::GS_Session> session,
+                                      NodePtrLRef<GS_UnaryExpression> unaryExpression);
 
             /**
              * Default visit binary expression
-             * @param binaryExpression Binary expression
              * @param session Session
-             * @return
+             * @param binaryExpression Binary expression
+             * @return Void return
              */
-            Void SuperBinaryExpression(NodePtrLRef<GS_BinaryExpression> binaryExpression,
-                                       LRef<Driver::GS_Session> session);
+            Void SuperBinaryExpression(LRef<Driver::GS_Session> session,
+                                       NodePtrLRef<GS_BinaryExpression> binaryExpression);
 
             /**
              * Default visit array expression
-             * @param arrayExpression Array expression
              * @param session Session
-             * @return
+             * @param arrayExpression Array expression
+             * @return Void return
              */
-            Void SuperArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
-                                      LRef<Driver::GS_Session> session);
+            Void SuperArrayExpression(LRef<Driver::GS_Session> session,
+                                      NodePtrLRef<GS_ArrayExpression> arrayExpression);
 
             /**
              * Default visit variable using expression
-             * @param variableUsingExpression Variable using expression
              * @param session Session
-             * @return
+             * @param variableUsingExpression Variable using expression
+             * @return Void return
              */
-            Void SuperVariableUsingExpression(NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression,
-                                              LRef<Driver::GS_Session> session);
+            Void SuperVariableUsingExpression(LRef<Driver::GS_Session> session,
+                                              NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression);
 
             /**
              * Default visit function calling expression
-             * @param functionCallingExpression Function calling expression
              * @param session Session
-             * @return
+             * @param functionCallingExpression Function calling expression
+             * @return Void return
              */
-            Void SuperFunctionCallingExpression(NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression,
-                                                LRef<Driver::GS_Session> session);
+            Void SuperFunctionCallingExpression(LRef<Driver::GS_Session> session,
+                                                NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression);
 
         public:
 
             /**
              * Visit node
-             * @param node Node
              * @param session Session
-             * @return
+             * @param node Node
+             * @return Void return
              */
-            virtual Void VisitNode(LRef<GSNodePtr> node,
-                                   LRef<Driver::GS_Session> session);
+            virtual Void VisitNode(LRef<Driver::GS_Session> session,
+                                   LRef<GSNodePtr> node);
 
             /**
              * Visit declaration
-             * @param declaration Declaration
              * @param session Session
-             * @return
+             * @param declaration Declaration
+             * @return Void return
              */
-            virtual Void VisitDeclaration(LRef<GSDeclarationPtr> declaration,
-                                          LRef<Driver::GS_Session> session);
+            virtual Void VisitDeclaration(LRef<Driver::GS_Session> session,
+                                          LRef<GSDeclarationPtr> declaration);
 
             /**
              * Visit statement
-             * @param statement Statement
              * @param session Session
-             * @return
+             * @param statement Statement
+             * @return Void return
              */
-            virtual Void VisitStatement(LRef<GSStatementPtr> statement,
-                                        LRef<Driver::GS_Session> session);
+            virtual Void VisitStatement(LRef<Driver::GS_Session> session,
+                                        LRef<GSStatementPtr> statement);
 
             /**
              * Visit expression
-             * @param expression Expression
              * @param session Session
-             * @return
+             * @param expression Expression
+             * @return Void return
              */
-            virtual Void VisitExpression(LRef<GSExpressionPtr> expression,
-                                         LRef<Driver::GS_Session> session);
+            virtual Void VisitExpression(LRef<Driver::GS_Session> session,
+                                         LRef<GSExpressionPtr> expression);
 
             /**
              * Visit translation unit declaration
-             * @param translationUnitDeclaration Translation unit declaration
              * @param session Session
-             * @return
+             * @param translationUnitDeclaration Translation unit declaration
+             * @return Void return
              */
-            virtual Void VisitTranslationUnitDeclaration(NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration,
-                                                         LRef<Driver::GS_Session> session);
+            virtual Void VisitTranslationUnitDeclaration(LRef<Driver::GS_Session> session,
+                                                         NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration);
 
             /**
              * Visit function declaration
-             * @param functionDeclaration Function declaration
              * @param session Session
-             * @return
+             * @param functionDeclaration Function declaration
+             * @return Void return
              */
-            virtual Void VisitFunctionDeclaration(NodePtrLRef<GS_FunctionDeclaration> functionDeclaration,
-                                                  LRef<Driver::GS_Session> session);
+            virtual Void VisitFunctionDeclaration(LRef<Driver::GS_Session> session,
+                                                  NodePtrLRef<GS_FunctionDeclaration> functionDeclaration);
 
             /**
              * Visit variable declaration statement
-             * @param variableDeclarationStatement Variable declaration statement
              * @param session Session
-             * @return
+             * @param variableDeclarationStatement Variable declaration statement
+             * @return Void return
              */
-            virtual Void VisitVariableDeclarationStatement(NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement,
-                                                           LRef<Driver::GS_Session> session);
+            virtual Void VisitVariableDeclarationStatement(LRef<Driver::GS_Session> session,
+                                                           NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement);
 
             /**
              * Visit assignment statement
-             * @param assignmentStatement Assignment statement
              * @param session Session
-             * @return
+             * @param assignmentStatement Assignment statement
+             * @return Void return
              */
-            virtual Void VisitAssignmentStatement(NodePtrLRef<GS_AssignmentStatement> assignmentStatement,
-                                                  LRef<Driver::GS_Session> session);
+            virtual Void VisitAssignmentStatement(LRef<Driver::GS_Session> session,
+                                                  NodePtrLRef<GS_AssignmentStatement> assignmentStatement);
 
             /**
              * Visit expression statement
-             * @param expressionStatement Expression statement
              * @param session Session
-             * @return
+             * @param expressionStatement Expression statement
+             * @return Void return
              */
-            virtual Void VisitExpressionStatement(NodePtrLRef<GS_ExpressionStatement> expressionStatement,
-                                                  LRef<Driver::GS_Session> session);
+            virtual Void VisitExpressionStatement(LRef<Driver::GS_Session> session,
+                                                  NodePtrLRef<GS_ExpressionStatement> expressionStatement);
 
             /**
              * Visit constant expression
-             * @param constantExpression Constant expression
              * @param session Session
-             * @return
+             * @param constantExpression Constant expression
+             * @return Void return
              */
-            virtual Void VisitConstantExpression(NodePtrLRef<GS_ConstantExpression> constantExpression,
-                                                 LRef<Driver::GS_Session> session);
+            virtual Void VisitConstantExpression(LRef<Driver::GS_Session> session,
+                                                 NodePtrLRef<GS_ConstantExpression> constantExpression);
 
             /**
              * Visit unary expression
-             * @param unaryExpression Unary expression
              * @param session Session
-             * @return
+             * @param unaryExpression Unary expression
+             * @return Void return
              */
-            virtual Void VisitUnaryExpression(NodePtrLRef<GS_UnaryExpression> unaryExpression,
-                                              LRef<Driver::GS_Session> session);
+            virtual Void VisitUnaryExpression(LRef<Driver::GS_Session> session,
+                                              NodePtrLRef<GS_UnaryExpression> unaryExpression);
 
             /**
              * Visit binary expression
-             * @param binaryExpression Binary expression
              * @param session Session
-             * @return
+             * @param binaryExpression Binary expression
+             * @return Void return
              */
-            virtual Void VisitBinaryExpression(NodePtrLRef<GS_BinaryExpression> binaryExpression,
-                                               LRef<Driver::GS_Session> session);
+            virtual Void VisitBinaryExpression(LRef<Driver::GS_Session> session,
+                                               NodePtrLRef<GS_BinaryExpression> binaryExpression);
 
             /**
              * Visit array expression
-             * @param arrayExpression Array expression
              * @param session Session
-             * @return
+             * @param arrayExpression Array expression
+             * @return Void return
              */
-            virtual Void VisitArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
-                                               LRef<Driver::GS_Session> session);
+            virtual Void VisitArrayExpression(LRef<Driver::GS_Session> session,
+                                              NodePtrLRef<GS_ArrayExpression> arrayExpression);
 
             /**
              * Visit variable using expression
-             * @param variableUsingExpression Variable using expression
              * @param session Session
-             * @return
+             * @param variableUsingExpression Variable using expression
+             * @return Void return
              */
-            virtual Void VisitVariableUsingExpression(NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression,
-                                                      LRef<Driver::GS_Session> session);
+            virtual Void VisitVariableUsingExpression(LRef<Driver::GS_Session> session,
+                                                      NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression);
 
             /**
              * Visit function calling expression
-             * @param functionCallingExpression Function calling expression
              * @param session Session
-             * @return
+             * @param functionCallingExpression Function calling expression
+             * @return Void return
              */
-            virtual Void VisitFunctionCallingExpression(NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression,
-                                                        LRef<Driver::GS_Session> session);
+            virtual Void VisitFunctionCallingExpression(LRef<Driver::GS_Session> session,
+                                                        NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression);
         };
 
         /**

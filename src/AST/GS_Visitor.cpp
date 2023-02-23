@@ -2,249 +2,287 @@
 
 namespace GSLanguageCompiler::AST {
 
-    Void GS_Visitor::SuperNode(LRef<GSNodePtr> node,
-                               LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperNode(LRef<Driver::GS_Session> session,
+                               LRef<GSNodePtr> node) {
         if (node->IsDeclaration()) {
             auto declaration = ToDeclaration(node);
 
-            return VisitDeclaration(declaration, session);
+            return VisitDeclaration(session,
+                                    declaration);
         }
 
         if (node->IsStatement()) {
             auto statement = ToStatement(node);
 
-            return VisitStatement(statement, session);
+            return VisitStatement(session,
+                                  statement);
         }
 
         if (node->IsExpression()) {
             auto expression = ToExpression(node);
 
-            return VisitExpression(expression, session);
+            return VisitExpression(session,
+                                   expression);
         }
     }
 
-    Void GS_Visitor::SuperDeclaration(LRef<GSDeclarationPtr> declaration,
-                                      LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperDeclaration(LRef<Driver::GS_Session> session,
+                                      LRef<GSDeclarationPtr> declaration) {
         switch (declaration->GetDeclarationType()) {
             case DeclarationType::TranslationUnitDeclaration: {
                 auto translationUnitDeclaration = ToDeclaration<GS_TranslationUnitDeclaration>(declaration);
 
-                return VisitTranslationUnitDeclaration(translationUnitDeclaration, session);
+                return VisitTranslationUnitDeclaration(session,
+                                                       translationUnitDeclaration);
             }
             case DeclarationType::FunctionDeclaration: {
                 auto functionDeclaration = ToDeclaration<GS_FunctionDeclaration>(declaration);
 
-                return VisitFunctionDeclaration(functionDeclaration, session);
+                return VisitFunctionDeclaration(session,
+                                                functionDeclaration);
             }
         }
     }
 
-    Void GS_Visitor::SuperStatement(LRef<GSStatementPtr> statement,
-                                    LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperStatement(LRef<Driver::GS_Session> session,
+                                    LRef<GSStatementPtr> statement) {
         switch (statement->GetStatementType()) {
             case StatementType::VariableDeclarationStatement: {
                 auto variableDeclarationStatement = ToStatement<GS_VariableDeclarationStatement>(statement);
 
-                return VisitVariableDeclarationStatement(variableDeclarationStatement, session);
+                return VisitVariableDeclarationStatement(session,
+                                                         variableDeclarationStatement);
             }
             case StatementType::AssignmentStatement: {
                 auto assignmentStatement = ToStatement<GS_AssignmentStatement>(statement);
 
-                return VisitAssignmentStatement(assignmentStatement, session);
+                return VisitAssignmentStatement(session,
+                                                assignmentStatement);
             }
             case StatementType::ExpressionStatement: {
                 auto expressionStatement = ToStatement<GS_ExpressionStatement>(statement);
 
-                return VisitExpressionStatement(expressionStatement, session);
+                return VisitExpressionStatement(session,
+                                                expressionStatement);
             }
         }
     }
 
-    Void GS_Visitor::SuperExpression(LRef<GSExpressionPtr> expression,
-                                     LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperExpression(LRef<Driver::GS_Session> session,
+                                     LRef<GSExpressionPtr> expression) {
         switch (expression->GetExpressionType()) {
             case ExpressionType::ConstantExpression: {
                 auto constantExpression = ToExpression<GS_ConstantExpression>(expression);
 
-                return VisitConstantExpression(constantExpression, session);
+                return VisitConstantExpression(session,
+                                               constantExpression);
             }
             case ExpressionType::UnaryExpression: {
                 auto unaryExpression = ToExpression<GS_UnaryExpression>(expression);
 
-                return VisitUnaryExpression(unaryExpression, session);
+                return VisitUnaryExpression(session,
+                                            unaryExpression);
             }
             case ExpressionType::BinaryExpression: {
                 auto binaryExpression = ToExpression<GS_BinaryExpression>(expression);
 
-                return VisitBinaryExpression(binaryExpression, session);
+                return VisitBinaryExpression(session,
+                                             binaryExpression);
             }
             case ExpressionType::VariableUsingExpression: {
                 auto variableUsingExpression = ToExpression<GS_VariableUsingExpression>(expression);
 
-                return VisitVariableUsingExpression(variableUsingExpression, session);
+                return VisitVariableUsingExpression(session,
+                                                    variableUsingExpression);
             }
             case ExpressionType::FunctionCallingExpression: {
                 auto functionCallingExpression = ToExpression<GS_FunctionCallingExpression>(expression);
 
-                return VisitFunctionCallingExpression(functionCallingExpression, session);
+                return VisitFunctionCallingExpression(session,
+                                                      functionCallingExpression);
             }
         }
     }
 
-    Void GS_Visitor::SuperTranslationUnitDeclaration(NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration,
-                                                     LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperTranslationUnitDeclaration(LRef<Driver::GS_Session> session,
+                                                     NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration) {
         auto nodes = translationUnitDeclaration->GetNodes();
 
         for (auto &node: nodes) {
-            VisitNode(node, session);
+            VisitNode(session,
+                      node);
         }
     }
 
-    Void GS_Visitor::SuperFunctionDeclaration(NodePtrLRef<GS_FunctionDeclaration> functionDeclaration,
-                                              LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperFunctionDeclaration(LRef<Driver::GS_Session> session,
+                                              NodePtrLRef<GS_FunctionDeclaration> functionDeclaration) {
         auto statements = functionDeclaration->GetBody();
 
         for (auto &statement: statements) {
-            VisitStatement(statement, session);
+            VisitStatement(session,
+                           statement);
         }
     }
 
-    Void GS_Visitor::SuperVariableDeclarationStatement(NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement,
-                                                       LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperVariableDeclarationStatement(LRef<Driver::GS_Session> session,
+                                                       NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement) {
         auto expression = variableDeclarationStatement->GetExpression();
 
-        VisitExpression(expression, session);
+        VisitExpression(session,
+                        expression);
     }
 
-    Void GS_Visitor::SuperAssignmentStatement(NodePtrLRef<GS_AssignmentStatement> assignmentStatement,
-                                              LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperAssignmentStatement(LRef<Driver::GS_Session> session,
+                                              NodePtrLRef<GS_AssignmentStatement> assignmentStatement) {
         auto lvalueExpression = assignmentStatement->GetLValueExpression();
         auto rvalueExpression = assignmentStatement->GetRValueExpression();
 
-        VisitExpression(lvalueExpression, session);
-        VisitExpression(rvalueExpression, session);
+        VisitExpression(session,
+                        lvalueExpression);
+        VisitExpression(session,
+                        rvalueExpression);
     }
 
-    Void GS_Visitor::SuperExpressionStatement(NodePtrLRef<GS_ExpressionStatement> expressionStatement,
-                                              LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperExpressionStatement(LRef<Driver::GS_Session> session,
+                                              NodePtrLRef<GS_ExpressionStatement> expressionStatement) {
         auto expression = expressionStatement->GetExpression();
 
-        VisitExpression(expression, session);
+        VisitExpression(session,
+                        expression);
     }
 
-    Void GS_Visitor::SuperConstantExpression(NodePtrLRef<GS_ConstantExpression> constantExpression,
-                                             LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperConstantExpression(LRef<Driver::GS_Session> session,
+                                             NodePtrLRef<GS_ConstantExpression> constantExpression) {
 
     }
 
-    Void GS_Visitor::SuperUnaryExpression(NodePtrLRef<GS_UnaryExpression> unaryExpression,
-                                          LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperUnaryExpression(LRef<Driver::GS_Session> session,
+                                          NodePtrLRef<GS_UnaryExpression> unaryExpression) {
         auto expression = unaryExpression->GetExpression();
 
-        VisitExpression(expression, session);
+        VisitExpression(session,
+                        expression);
     }
 
-    Void GS_Visitor::SuperBinaryExpression(NodePtrLRef<GS_BinaryExpression> binaryExpression,
-                                           LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperBinaryExpression(LRef<Driver::GS_Session> session,
+                                           NodePtrLRef<GS_BinaryExpression> binaryExpression) {
         auto firstExpression = binaryExpression->GetFirstExpression();
         auto secondExpression = binaryExpression->GetSecondExpression();
 
-        VisitExpression(firstExpression, session);
-        VisitExpression(secondExpression, session);
+        VisitExpression(session,
+                        firstExpression);
+        VisitExpression(session,
+                        secondExpression);
     }
 
-    Void GS_Visitor::SuperArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
-                                          LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperArrayExpression(LRef<Driver::GS_Session> session,
+                                          NodePtrLRef<GS_ArrayExpression> arrayExpression) {
         auto expressions = arrayExpression->GetExpressions();
 
         for (auto &expression : expressions) {
-            VisitExpression(expression, session);
+            VisitExpression(session,
+                            expression);
         }
     }
 
-    Void GS_Visitor::SuperVariableUsingExpression(NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression,
-                                                  LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperVariableUsingExpression(LRef<Driver::GS_Session> session,
+                                                  NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression) {
 
     }
 
-    Void GS_Visitor::SuperFunctionCallingExpression(NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression,
-                                                    LRef<Driver::GS_Session> session) {
+    Void GS_Visitor::SuperFunctionCallingExpression(LRef<Driver::GS_Session> session,
+                                                    NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression) {
 
     }
 
-    Void GS_Visitor::VisitNode(LRef<GSNodePtr> node,
-                               LRef<Driver::GS_Session> session) {
-        SuperNode(node, session);
+    Void GS_Visitor::VisitNode(LRef<Driver::GS_Session> session,
+                               LRef<GSNodePtr> node) {
+        SuperNode(session,
+                  node);
     }
 
-    Void GS_Visitor::VisitDeclaration(LRef<GSDeclarationPtr> declaration,
-                                      LRef<Driver::GS_Session> session) {
-        SuperDeclaration(declaration, session);
+    Void GS_Visitor::VisitDeclaration(LRef<Driver::GS_Session> session,
+                                      LRef<GSDeclarationPtr> declaration) {
+        SuperDeclaration(session,
+                         declaration);
     }
 
-    Void GS_Visitor::VisitStatement(LRef<GSStatementPtr> statement,
-                                    LRef<Driver::GS_Session> session) {
-        SuperStatement(statement, session);
+    Void GS_Visitor::VisitStatement(LRef<Driver::GS_Session> session,
+                                    LRef<GSStatementPtr> statement) {
+        SuperStatement(session,
+                       statement);
     }
 
-    Void GS_Visitor::VisitExpression(LRef<GSExpressionPtr> expression,
-                                     LRef<Driver::GS_Session> session) {
-        SuperExpression(expression, session);
+    Void GS_Visitor::VisitExpression(LRef<Driver::GS_Session> session,
+                                     LRef<GSExpressionPtr> expression) {
+        SuperExpression(session,
+                        expression);
     }
 
-    Void GS_Visitor::VisitTranslationUnitDeclaration(NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration,
-                                                     LRef<Driver::GS_Session> session) {
-        SuperTranslationUnitDeclaration(translationUnitDeclaration, session);
+    Void GS_Visitor::VisitTranslationUnitDeclaration(LRef<Driver::GS_Session> session,
+                                                     NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration) {
+        SuperTranslationUnitDeclaration(session,
+                                        translationUnitDeclaration);
     }
 
-    Void GS_Visitor::VisitFunctionDeclaration(NodePtrLRef<GS_FunctionDeclaration> functionDeclaration,
-                                              LRef<Driver::GS_Session> session) {
-        SuperFunctionDeclaration(functionDeclaration, session);
+    Void GS_Visitor::VisitFunctionDeclaration(LRef<Driver::GS_Session> session,
+                                              NodePtrLRef<GS_FunctionDeclaration> functionDeclaration) {
+        SuperFunctionDeclaration(session,
+                                 functionDeclaration);
     }
 
-    Void GS_Visitor::VisitVariableDeclarationStatement(NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement,
-                                                       LRef<Driver::GS_Session> session) {
-        SuperVariableDeclarationStatement(variableDeclarationStatement, session);
+    Void GS_Visitor::VisitVariableDeclarationStatement(LRef<Driver::GS_Session> session,
+                                                       NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement) {
+        SuperVariableDeclarationStatement(session,
+                                          variableDeclarationStatement);
     }
 
-    Void GS_Visitor::VisitAssignmentStatement(NodePtrLRef<GS_AssignmentStatement> assignmentStatement,
-                                              LRef<Driver::GS_Session> session) {
-        SuperAssignmentStatement(assignmentStatement, session);
+    Void GS_Visitor::VisitAssignmentStatement(LRef<Driver::GS_Session> session,
+                                              NodePtrLRef<GS_AssignmentStatement> assignmentStatement) {
+        SuperAssignmentStatement(session,
+                                 assignmentStatement);
     }
 
-    Void GS_Visitor::VisitExpressionStatement(NodePtrLRef<GS_ExpressionStatement> expressionStatement,
-                                              LRef<Driver::GS_Session> session) {
-        SuperExpressionStatement(expressionStatement, session);
+    Void GS_Visitor::VisitExpressionStatement(LRef<Driver::GS_Session> session,
+                                              NodePtrLRef<GS_ExpressionStatement> expressionStatement) {
+        SuperExpressionStatement(session,
+                                 expressionStatement);
     }
 
-    Void GS_Visitor::VisitConstantExpression(NodePtrLRef<GS_ConstantExpression> constantExpression,
-                                             LRef<Driver::GS_Session> session) {
-        SuperConstantExpression(constantExpression, session);
+    Void GS_Visitor::VisitConstantExpression(LRef<Driver::GS_Session> session,
+                                             NodePtrLRef<GS_ConstantExpression> constantExpression) {
+        SuperConstantExpression(session,
+                                constantExpression);
     }
 
-    Void GS_Visitor::VisitUnaryExpression(NodePtrLRef<GS_UnaryExpression> unaryExpression,
-                                          LRef<Driver::GS_Session> session) {
-        SuperUnaryExpression(unaryExpression, session);
+    Void GS_Visitor::VisitUnaryExpression(LRef<Driver::GS_Session> session,
+                                          NodePtrLRef<GS_UnaryExpression> unaryExpression) {
+        SuperUnaryExpression(session,
+                             unaryExpression);
     }
 
-    Void GS_Visitor::VisitBinaryExpression(NodePtrLRef<GS_BinaryExpression> binaryExpression,
-                                           LRef<Driver::GS_Session> session) {
-        SuperBinaryExpression(binaryExpression, session);
+    Void GS_Visitor::VisitBinaryExpression(LRef<Driver::GS_Session> session,
+                                           NodePtrLRef<GS_BinaryExpression> binaryExpression) {
+        SuperBinaryExpression(session,
+                              binaryExpression);
     }
 
-    Void GS_Visitor::VisitArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
-                                          LRef<Driver::GS_Session> session) {
-        SuperArrayExpression(arrayExpression, session);
+    Void GS_Visitor::VisitArrayExpression(LRef<Driver::GS_Session> session,
+                                          NodePtrLRef<GS_ArrayExpression> arrayExpression) {
+        SuperArrayExpression(session,
+                             arrayExpression);
     }
 
-    Void GS_Visitor::VisitVariableUsingExpression(NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression,
-                                                  LRef<Driver::GS_Session> session) {
-        SuperVariableUsingExpression(variableUsingExpression, session);
+    Void GS_Visitor::VisitVariableUsingExpression(LRef<Driver::GS_Session> session,
+                                                  NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression) {
+        SuperVariableUsingExpression(session,
+                                     variableUsingExpression);
     }
 
-    Void GS_Visitor::VisitFunctionCallingExpression(NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression,
-                                                    LRef<Driver::GS_Session> session) {
-        SuperFunctionCallingExpression(functionCallingExpression, session);
+    Void GS_Visitor::VisitFunctionCallingExpression(LRef<Driver::GS_Session> session,
+                                                    NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression) {
+        SuperFunctionCallingExpression(session,
+                                       functionCallingExpression);
     }
 
     GSNodePtr GS_Transformer::SuperNode(LRef<GSNodePtr> node,
