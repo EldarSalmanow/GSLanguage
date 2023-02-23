@@ -22,6 +22,7 @@ namespace GSLanguageCompiler::AST {
          * Constructor for assignment statement
          * @param lvalueExpression Left value expression
          * @param rvalueExpression Right value expression
+         * @todo Rewrite
          */
         GS_AssignmentStatement(GSExpressionPtr lvalueExpression,
                                GSExpressionPtr rvalueExpression);

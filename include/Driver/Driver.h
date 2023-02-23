@@ -7,15 +7,15 @@
 
 /*
  *
- * AUDIT - Pass
+ * AUDIT               - Pass
  *
- * CMakeLists.txt - Pass
- * Driver.h - Pass
- * GS_Arguments.h - Pass
- * GS_Session.h - Pass
+ * CMakeLists.txt      - Pass
+ * Driver.h            - Pass
+ * GS_Arguments.h      - Pass
+ * GS_Session.h        - Pass
  * GS_SessionManager.h - Pass
- * GS_Compiler.h - Pass
- * GS_GlobalContext.h - Pass
+ * GS_Compiler.h       - Pass
+ * GS_GlobalContext.h  - Pass
  *
  */
 

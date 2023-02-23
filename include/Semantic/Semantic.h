@@ -7,13 +7,13 @@
 
 /*
  *
- * AUDIT -
+ * AUDIT                              - Pass
  *
- * CMakeLists.txt - Pass
- * Semantic.h - Pass
- * GS_Type.h - Pass
- * GS_TableOfSymbols.h - Pass
- * Passes/SemanticPasse.h - Pass
+ * CMakeLists.txt                     - Pass
+ * Semantic.h                         - Pass
+ * GS_Type.h                          - Pass
+ * GS_TableOfSymbols.h                - Pass
+ * Passes/SemanticPasse.h             - Pass
  * Passes/GS_SymbolsPlaceholderPass.h - Pass
  *
  */

@@ -3,6 +3,35 @@
 
 /**
  * This file includes all files from GSLanguageCompiler AST Module
+ * @todo Add GS_BlockStatement AST node
+ */
+
+/*
+ *
+ * AUDIT                                        - Pass
+ *
+ * CMakeLists.txt                               - Pass
+ * AST.h                                        - Pass
+ * GS_ASTContext.h                              - Pass
+ * GS_ASTBuilder.h                              - Pass
+ * GS_Node.h                                    - Pass
+ * GS_Declaration.h                             - Pass
+ * GS_Statement.h                               - Pass
+ * GS_Expression.h                              - Pass
+ * Declarations/GS_TranslationUnitDeclaration.h - Pass
+ * Declarations/GS_FunctionDeclaration.h        - Pass
+ * Statements/GS_VariableDeclarationStatement.h - Pass
+ * Statements/GS_AssignmentStatement.h          - Pass
+ * Statements/GS_ExpressionStatement.h          - Pass
+ * Expressions/GS_ConstantExpression.h          - Pass
+ * Expressions/GS_UnaryExpression.h             - Pass
+ * Expressions/GS_BinaryExpression.h            - Pass
+ * Expressions/GS_ArrayExpression.h             - Pass
+ * Expressions/GS_VariableUsingExpression.h     - Pass
+ * Expressions/GS_FunctionCallingExpression.h   - Pass
+ * GS_Visitor.h                                 - Pass
+ * GS_Pass.h                                    - Pass
+ *
  */
 
 #include <AST/GS_ASTContext.h>
@@ -18,7 +47,6 @@
 #include <AST/Declarations/GS_TranslationUnitDeclaration.h>
 #include <AST/Declarations/GS_FunctionDeclaration.h>
 
-// TODO add GS_BlockStatement AST node
 #include <AST/Statements/GS_VariableDeclarationStatement.h>
 #include <AST/Statements/GS_AssignmentStatement.h>
 #include <AST/Statements/GS_ExpressionStatement.h>
