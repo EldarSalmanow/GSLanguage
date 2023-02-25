@@ -35,13 +35,14 @@ namespace GSLanguageCompiler::AST {
          * Constructor for AST builder
          * @param context AST context
          */
-        explicit GS_ASTBuilder(GSASTContextPtr context);
+        explicit GS_ASTBuilder(LRef<GS_ASTContext> context);
 
     public:
 
         /*
          *
          * GS_ASTBuilder PUBLIC STATIC CREATE METHODS
+         * TODO Add Create method from session
          *
          */
 
@@ -50,13 +51,7 @@ namespace GSLanguageCompiler::AST {
          * @param context AST context
          * @return AST builder ptr
          */
-        static std::unique_ptr<GS_ASTBuilder> Create(GSASTContextPtr context);
-
-        /**
-         * Creating AST builder
-         * @return AST builder ptr
-         */
-        static std::unique_ptr<GS_ASTBuilder> Create();
+        static std::unique_ptr<GS_ASTBuilder> Create(LRef<GS_ASTContext> context);
 
     public:
 
@@ -505,7 +500,7 @@ namespace GSLanguageCompiler::AST {
         /**
          * AST context
          */
-        GSASTContextPtr _context;
+        LRef<GS_ASTContext> _context;
     };
 
     /**

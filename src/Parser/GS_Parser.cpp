@@ -17,29 +17,31 @@ namespace GSLanguageCompiler::Parser {
 //              _messages(IO::GSMessagePtrArray()),
               _tokenBuffer(tokenBuffer),
               _tokenIterator(_tokenBuffer.cbegin()),
-              _builder(AST::GS_ASTBuilder::Create()) {}
+              _builder(AST::GS_ASTBuilder::Create(_session.GetASTContext())) {}
 
     GS_Parser GS_Parser::Create(LRef<Driver::GS_Session> session,
                                 ConstLRef<Lexer::GS_TokenBuffer> tokenBuffer) {
-        return GS_Parser(session, tokenBuffer);
+        return GS_Parser(session,
+                         tokenBuffer);
     }
 
     AST::GSTranslationUnitDeclarationPtr GS_Parser::Run(LRef<Driver::GS_Session> session,
                                                         ConstLRef<Lexer::GS_TokenBuffer> tokenBuffer,
                                                         UString translationUnitName) {
-        auto parser = GS_Parser::Create(session, tokenBuffer);
+        auto parser = GS_Parser::Create(session,
+                                        tokenBuffer);
 
         auto translationUnitDeclaration = parser.ParseProgram(std::move(translationUnitName));
 
         return translationUnitDeclaration;
     }
 
-    AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseProgram(UString translationUnitName) {
-        auto translationUnitDeclaration = ParseTranslationUnitDeclaration(std::move(translationUnitName));
+    AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseProgram(UString programName) {
+        auto translationUnitDeclaration = ParseTranslationUnitDeclaration(std::move(programName));
 
-//        for (auto &message : _messages) {
-//            _session.Write(message);
-//        }
+        for (auto &message : _messages) {
+            _session.Out() << message;
+        }
 
         return translationUnitDeclaration;
     }
@@ -65,26 +67,26 @@ namespace GSLanguageCompiler::Parser {
             return ParseFunctionDeclaration();
         }
 
-        UStringStream stringStream;
-
-        stringStream << "Unknown declaration!"_us;
-
-        LocatedMessage(stringStream.String(),
-                       IO::MessageLevel::Error,
-                       TokenLocation());
+//        UStringStream stringStream;
+//
+//        stringStream << "Unknown declaration!"_us;
+//
+//        LocatedMessage(stringStream.String(),
+//                       IO::MessageLevel::Error,
+//                       TokenLocation());
 
         return nullptr;
     }
 
     AST::NodePtr<AST::GS_FunctionDeclaration> GS_Parser::ParseFunctionDeclaration() {
         if (!IsTokenType(Lexer::TokenType::KeywordFunc)) {
-            UStringStream stringStream;
-
-            stringStream << "Missed keyword 'func' in function declaration!"_us;
-
-            LocatedMessage(stringStream.String(),
-                           IO::MessageLevel::Error,
-                           TokenLocation());
+//            UStringStream stringStream;
+//
+//            stringStream << "Missed keyword 'func' in function declaration!"_us;
+//
+//            LocatedMessage(stringStream.String(),
+//                           IO::MessageLevel::Error,
+//                           TokenLocation());
 
             return nullptr;
         }
@@ -92,13 +94,13 @@ namespace GSLanguageCompiler::Parser {
         NextToken(); // skip 'func'
 
         if (!IsTokenType(Lexer::TokenType::Identifier)) {
-            UStringStream stringStream;
-
-            stringStream << "Invalid identifier in function declaration!"_us;
-
-            LocatedMessage(stringStream.String(),
-                           IO::MessageLevel::Error,
-                           TokenLocation());
+//            UStringStream stringStream;
+//
+//            stringStream << "Invalid identifier in function declaration!"_us;
+//
+//            LocatedMessage(stringStream.String(),
+//                           IO::MessageLevel::Error,
+//                           TokenLocation());
 
             return nullptr;
         }
@@ -108,13 +110,13 @@ namespace GSLanguageCompiler::Parser {
         NextToken(); // skip function name
 
         if (!IsTokenType(Lexer::TokenType::SymbolLeftParen)) {
-            UStringStream stringStream;
-
-            stringStream << "Missed symbol '(' in function declaration!"_us;
-
-            LocatedMessage(stringStream.String(),
-                           IO::MessageLevel::Error,
-                           TokenLocation());
+//            UStringStream stringStream;
+//
+//            stringStream << "Missed symbol '(' in function declaration!"_us;
+//
+//            LocatedMessage(stringStream.String(),
+//                           IO::MessageLevel::Error,
+//                           TokenLocation());
 
             return nullptr;
         }
@@ -122,13 +124,13 @@ namespace GSLanguageCompiler::Parser {
         NextToken(); // skip '('
 
         if (!IsTokenType(Lexer::TokenType::SymbolRightParen)) {
-            UStringStream stringStream;
-
-            stringStream << "Missed symbol ')' in function declaration!"_us;
-
-            LocatedMessage(stringStream.String(),
-                           IO::MessageLevel::Error,
-                           TokenLocation());
+//            UStringStream stringStream;
+//
+//            stringStream << "Missed symbol ')' in function declaration!"_us;
+//
+//            LocatedMessage(stringStream.String(),
+//                           IO::MessageLevel::Error,
+//                           TokenLocation());
 
             return nullptr;
         }
@@ -136,13 +138,13 @@ namespace GSLanguageCompiler::Parser {
         NextToken(); // skip ')'
 
         if (!IsTokenType(Lexer::TokenType::SymbolLeftBrace)) {
-            UStringStream stringStream;
-
-            stringStream << "Missed symbol '{' in function declaration!"_us;
-
-            LocatedMessage(stringStream.String(),
-                           IO::MessageLevel::Error,
-                           TokenLocation());
+//            UStringStream stringStream;
+//
+//            stringStream << "Missed symbol '{' in function declaration!"_us;
+//
+//            LocatedMessage(stringStream.String(),
+//                           IO::MessageLevel::Error,
+//                           TokenLocation());
 
             return nullptr;
         }
@@ -153,6 +155,10 @@ namespace GSLanguageCompiler::Parser {
 
         while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
             auto statement = ParseStatement();
+
+            if (!statement) {
+                return nullptr;
+            }
 
             function->AddStatement(statement);
         }
@@ -180,43 +186,19 @@ namespace GSLanguageCompiler::Parser {
         return ParseExpressionStatement();
     }
 
-    AST::NodePtr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement() {
-        auto lvalueExpression = ParseLValueExpression();
-
-        if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
-            UStringStream stringStream;
-
-            stringStream << "Missed symbol '=' in assignment statement!"_us;
-
-            LocatedMessage(stringStream.String(),
-                           IO::MessageLevel::Error,
-                           TokenLocation());
-
-            return nullptr;
-        }
-
-        NextToken(); // skip '='
-
-        auto rvalueExpression = ParseRValueExpression();
-
-        auto assignmentStatement = _builder->CreateAssignmentStatement(lvalueExpression, rvalueExpression);
-
-        return assignmentStatement;
-    }
-
     AST::NodePtr<AST::GS_VariableDeclarationStatement> GS_Parser::ParseVariableDeclarationStatement() {
         UString variableName;
         Semantic::GSTypePtr variableType;
         AST::GSExpressionPtr variableExpression;
 
         if (!IsTokenType(Lexer::TokenType::KeywordVar)) {
-            UStringStream stringStream;
-
-            stringStream << "Missed keyword 'var' in variable declaration statement!"_us;
-
-            LocatedMessage(stringStream.String(),
-                           IO::MessageLevel::Error,
-                           TokenLocation());
+//            UStringStream stringStream;
+//
+//            stringStream << "Missed keyword 'var' in variable declaration statement!"_us;
+//
+//            LocatedMessage(stringStream.String(),
+//                           IO::MessageLevel::Error,
+//                           TokenLocation());
 
             return nullptr;
         }
@@ -224,13 +206,13 @@ namespace GSLanguageCompiler::Parser {
         NextToken(); // skip 'var'
 
         if (!IsTokenType(Lexer::TokenType::Identifier)) {
-            UStringStream stringStream;
-
-            stringStream << "Invalid identifier in variable declaration statement!"_us;
-
-            LocatedMessage(stringStream.String(),
-                           IO::MessageLevel::Error,
-                           TokenLocation());
+//            UStringStream stringStream;
+//
+//            stringStream << "Invalid identifier in variable declaration statement!"_us;
+//
+//            LocatedMessage(stringStream.String(),
+//                           IO::MessageLevel::Error,
+//                           TokenLocation());
 
             return nullptr;
         }
@@ -245,25 +227,42 @@ namespace GSLanguageCompiler::Parser {
             variableType = ParseType();
         }
 
+        if (IsTokenType(Lexer::TokenType::SymbolEq)) {
+            NextToken(); // skip '='
+
+            variableExpression = ParseExpression();
+        }
+
+        auto variable = _builder->CreateVariableDeclarationStatement(variableName,
+                                                                     variableType,
+                                                                     variableExpression);
+
+        return variable;
+    }
+
+    AST::NodePtr<AST::GS_AssignmentStatement> GS_Parser::ParseAssignmentStatement() {
+        auto lvalueExpression = ParseLValueExpression();
+
         if (!IsTokenType(Lexer::TokenType::SymbolEq)) {
-            UStringStream stringStream;
-
-            stringStream << "Missed symbol '=' in variable declaration statement!"_us;
-
-            LocatedMessage(stringStream.String(),
-                           IO::MessageLevel::Error,
-                           TokenLocation());
+//            UStringStream stringStream;
+//
+//            stringStream << "Missed symbol '=' in assignment statement!"_us;
+//
+//            LocatedMessage(stringStream.String(),
+//                           IO::MessageLevel::Error,
+//                           TokenLocation());
 
             return nullptr;
         }
 
         NextToken(); // skip '='
 
-        variableExpression = ParseExpression();
+        auto rvalueExpression = ParseRValueExpression();
 
-        auto variable = _builder->CreateVariableDeclarationStatement(variableName, variableType, variableExpression);
+        auto assignmentStatement = _builder->CreateAssignmentStatement(lvalueExpression,
+                                                                       rvalueExpression);
 
-        return variable;
+        return assignmentStatement;
     }
 
     AST::NodePtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement() {
@@ -283,19 +282,19 @@ namespace GSLanguageCompiler::Parser {
             return ParseBinaryExpression(0, expression);
         }
 
-        expression = TryParse(&GS_Parser::ParseArrayExpression);
+//        expression = TryParse(&GS_Parser::ParseArrayExpression);
+//
+//        if (expression) {
+//            return expression;
+//        }
 
-        if (expression) {
-            return expression;
-        }
-
-        UStringStream stringStream;
-
-        stringStream << "Unknown expression!"_us;
-
-        LocatedMessage(stringStream.String(),
-                       IO::MessageLevel::Error,
-                       TokenLocation());
+//        UStringStream stringStream;
+//
+//        stringStream << "Unknown expression!"_us;
+//
+//        LocatedMessage(stringStream.String(),
+//                       IO::MessageLevel::Error,
+//                       TokenLocation());
 
         return nullptr;
     }
@@ -305,13 +304,13 @@ namespace GSLanguageCompiler::Parser {
             return ParseVariableUsingExpression();
         }
 
-        UStringStream stringStream;
-
-        stringStream << "Unknown left value expression!"_us;
-
-        LocatedMessage(stringStream.String(),
-                       IO::MessageLevel::Error,
-                       TokenLocation());
+//        UStringStream stringStream;
+//
+//        stringStream << "Unknown left value expression!"_us;
+//
+//        LocatedMessage(stringStream.String(),
+//                       IO::MessageLevel::Error,
+//                       TokenLocation());
 
         return nullptr;
     }
@@ -325,19 +324,19 @@ namespace GSLanguageCompiler::Parser {
             return ParseBinaryExpression(0, expression);
         }
 
-        expression = TryParse(&GS_Parser::ParseArrayExpression);
+//        expression = TryParse(&GS_Parser::ParseArrayExpression);
+//
+//        if (expression) {
+//            return expression;
+//        }
 
-        if (expression) {
-            return expression;
-        }
-
-        UStringStream stringStream;
-
-        stringStream << "Unknown expression!"_us;
-
-        LocatedMessage(stringStream.String(),
-                       IO::MessageLevel::Error,
-                       TokenLocation());
+//        UStringStream stringStream;
+//
+//        stringStream << "Unknown expression!"_us;
+//
+//        LocatedMessage(stringStream.String(),
+//                       IO::MessageLevel::Error,
+//                       TokenLocation());
 
         return nullptr;
     }
@@ -722,15 +721,19 @@ namespace GSLanguageCompiler::Parser {
         ++_tokenIterator;
     }
 
-    Void GS_Parser::Message(UString message, IO::MessageLevel messageLevel) {
+    Void GS_Parser::Message(UString message,
+                            IO::MessageLevel messageLevel) {
 
     }
 
-    Void GS_Parser::LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GSByteSourceRange locationRange) {
+    Void GS_Parser::LocatedMessage(UString message,
+                                   IO::MessageLevel messageLevel,
+                                   IO::GSByteSourceRange locationRange) {
 
     }
 
-    AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_Session> session, ConstLRef<IO::GS_Source> source) {
+    AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_Session> session,
+                                                      ConstLRef<IO::GS_Source> source) {
         auto tokenBuffer = Lexer::GS_Lexer::Run(session,
                                                 source);
 
@@ -741,22 +744,26 @@ namespace GSLanguageCompiler::Parser {
         return program;
     }
 
-    AST::GSTranslationUnitDeclarationPtr ParseProgramFromFile(LRef<Driver::GS_Session> session, UString fileName) {
+    AST::GSTranslationUnitDeclarationPtr ParseProgramFromFile(LRef<Driver::GS_Session> session,
+                                                              UString fileName) {
         auto fileSource = IO::GS_Source::CreateFile(std::move(fileName));
 
         auto fileSourceRef = session.AddSource(std::move(fileSource));
 
-        auto program = ParseProgram(session, fileSourceRef);
+        auto program = ParseProgram(session,
+                                    fileSourceRef);
 
         return program;
     }
 
-    AST::GSTranslationUnitDeclarationPtr ParseProgramFromString(LRef<Driver::GS_Session> session, UString string) {
+    AST::GSTranslationUnitDeclarationPtr ParseProgramFromString(LRef<Driver::GS_Session> session,
+                                                                UString string) {
         auto stringSource = IO::GS_Source::CreateString(std::move(string));
 
         auto stringSourceRef = session.AddSource(std::move(stringSource));
 
-        auto program = ParseProgram(session, stringSourceRef);
+        auto program = ParseProgram(session,
+                                    stringSourceRef);
 
         return program;
     }

@@ -2,15 +2,11 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_ASTBuilder::GS_ASTBuilder(GSASTContextPtr context)
-            : _context(std::move(context)) {}
+    GS_ASTBuilder::GS_ASTBuilder(LRef<GS_ASTContext> context)
+            : _context(context) {}
 
-    std::unique_ptr<GS_ASTBuilder> GS_ASTBuilder::Create(GSASTContextPtr context) {
-        return std::make_unique<GS_ASTBuilder>(std::move(context));
-    }
-
-    std::unique_ptr<GS_ASTBuilder> GS_ASTBuilder::Create() {
-        return GS_ASTBuilder::Create(GS_ASTContext::Create());
+    std::unique_ptr<GS_ASTBuilder> GS_ASTBuilder::Create(LRef<GS_ASTContext> context) {
+        return std::make_unique<GS_ASTBuilder>(context);
     }
 
     Semantic::GSTypePtr GS_ASTBuilder::CreateType(UString name) {
@@ -18,53 +14,53 @@ namespace GSLanguageCompiler::AST {
     }
 
     Semantic::TypePtr<Semantic::GS_VoidType> GS_ASTBuilder::CreateVoidType() {
-        return _context->GetVoidType();
+        return _context.GetVoidType();
     }
 
     Semantic::TypePtr<Semantic::GS_CharType> GS_ASTBuilder::CreateCharType() {
-        return _context->GetCharType();
+        return _context.GetCharType();
     }
 
     Semantic::TypePtr<Semantic::GS_I8Type> GS_ASTBuilder::CreateI8Type() {
-        return _context->GetI8Type();
+        return _context.GetI8Type();
     }
 
     Semantic::TypePtr<Semantic::GS_I16Type> GS_ASTBuilder::CreateI16Type() {
-        return _context->GetI16Type();
+        return _context.GetI16Type();
     }
 
     Semantic::TypePtr<Semantic::GS_I32Type> GS_ASTBuilder::CreateI32Type() {
-        return _context->GetI32Type();
+        return _context.GetI32Type();
     }
 
     Semantic::TypePtr<Semantic::GS_I64Type> GS_ASTBuilder::CreateI64Type() {
-        return _context->GetI64Type();
+        return _context.GetI64Type();
     }
 
     Semantic::TypePtr<Semantic::GS_U8Type> GS_ASTBuilder::CreateU8Type() {
-        return _context->GetU8Type();
+        return _context.GetU8Type();
     }
 
     Semantic::TypePtr<Semantic::GS_U16Type> GS_ASTBuilder::CreateU16Type() {
-        return _context->GetU16Type();
+        return _context.GetU16Type();
     }
 
     Semantic::TypePtr<Semantic::GS_U32Type> GS_ASTBuilder::CreateU32Type() {
-        return _context->GetU32Type();
+        return _context.GetU32Type();
     }
 
     Semantic::TypePtr<Semantic::GS_U64Type> GS_ASTBuilder::CreateU64Type() {
-        return _context->GetU64Type();
+        return _context.GetU64Type();
     }
 
     Semantic::TypePtr<Semantic::GS_StringType> GS_ASTBuilder::CreateStringType() {
-        return _context->GetStringType();
+        return _context.GetStringType();
     }
 
     Semantic::TypePtr<Semantic::GS_ArrayType> GS_ASTBuilder::CreateArrayType(Semantic::GSTypePtr elementsType,
                                                                              U64 size) {
-        return _context->GetArrayType(std::move(elementsType),
-                                      size);
+        return _context.GetArrayType(std::move(elementsType),
+                                     size);
     }
 
     GSValuePtr GS_ASTBuilder::CreateValue(Semantic::GSTypePtr type) {
@@ -272,7 +268,7 @@ namespace GSLanguageCompiler::AST {
     }
 
     LRef<GS_ASTContext> GS_ASTBuilder::GetContext() {
-        return *_context;
+        return _context;
     }
 
 }

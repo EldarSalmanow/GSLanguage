@@ -1,3 +1,5 @@
+#include <Driver/GS_Session.h>
+
 #include <AST/GS_ASTBuilder.h>
 
 #include <Passes/GS_ConstantFoldingPass.h>
@@ -6,7 +8,8 @@ namespace GSLanguageCompiler::Optimizer {
 
     // TODO: add folding values with non I32 type
 
-    AST::GSValuePtr FoldConstants(AST::UnaryOperation operation,
+    AST::GSValuePtr FoldConstants(LRef<Driver::GS_Session> session,
+                                  AST::UnaryOperation operation,
                                   ConstLRef<AST::GSValuePtr> value) {
         if (auto i32Value = AST::ToValue<AST::GS_I32Value>(value)) {
             auto number = i32Value->GetI32Value();
@@ -20,13 +23,14 @@ namespace GSLanguageCompiler::Optimizer {
                     break;
             }
 
-            return AST::GS_ASTBuilder::Create()->CreateI32Value(result);
+            return AST::GS_ASTBuilder::Create(session.GetASTContext())->CreateI32Value(result);
         }
 
         return nullptr;
     }
 
-    AST::GSValuePtr FoldConstants(AST::BinaryOperation operation,
+    AST::GSValuePtr FoldConstants(LRef<Driver::GS_Session> session,
+                                  AST::BinaryOperation operation,
                                   ConstLRef<AST::GSValuePtr> firstValue,
                                   ConstLRef<AST::GSValuePtr> secondValue) {
         if (auto firstI32Value = AST::ToValue<AST::GS_I32Value>(firstValue)) {
@@ -55,7 +59,7 @@ namespace GSLanguageCompiler::Optimizer {
                         break;
                 }
 
-                return AST::GS_ASTBuilder::Create()->CreateI32Value(result);
+                return AST::GS_ASTBuilder::Create(session.GetASTContext())->CreateI32Value(result);
             }
         }
 
@@ -75,9 +79,10 @@ namespace GSLanguageCompiler::Optimizer {
         if (auto constantExpression = AST::ToExpression<AST::GS_ConstantExpression>(expression)) {
             auto value = constantExpression->GetValue();
 
-            if (auto result = FoldConstants(operation,
+            if (auto result = FoldConstants(session,
+                                            operation,
                                             value)) {
-                return AST::GS_ASTBuilder::Create()->CreateConstantExpression(result);
+                return AST::GS_ASTBuilder::Create(session.GetASTContext())->CreateConstantExpression(result);
             }
         }
 
@@ -89,19 +94,20 @@ namespace GSLanguageCompiler::Optimizer {
         binaryExpression = AST::ToExpression<AST::GS_BinaryExpression>(GS_Transformer::TransformBinaryExpression(session,
                                                                                                                  binaryExpression));
 
-        auto firstExpression  = binaryExpression->GetFirstExpression();
+        auto firstExpression = binaryExpression->GetFirstExpression();
         auto secondExpression = binaryExpression->GetSecondExpression();
-        auto operation        = binaryExpression->GetBinaryOperation();
+        auto operation = binaryExpression->GetBinaryOperation();
 
         if (auto firstConstantExpression = AST::ToExpression<AST::GS_ConstantExpression>(firstExpression)) {
             if (auto secondConstantExpression = AST::ToExpression<AST::GS_ConstantExpression>(secondExpression)) {
-                auto firstValue  = firstConstantExpression->GetValue();
+                auto firstValue = firstConstantExpression->GetValue();
                 auto secondValue = secondConstantExpression->GetValue();
 
-                if (auto result = FoldConstants(operation,
+                if (auto result = FoldConstants(session,
+                                                operation,
                                                 firstValue,
                                                 secondValue)) {
-                    return AST::GS_ASTBuilder::Create()->CreateConstantExpression(result);
+                    return AST::GS_ASTBuilder::Create(session.GetASTContext())->CreateConstantExpression(result);
                 }
             }
         }

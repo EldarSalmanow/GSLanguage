@@ -42,6 +42,7 @@ namespace GSLanguageCompiler::Parser {
     /**
      *
      * Expression
+     * TODO Add braced expression in grammar and add expression precedence
      *
      * expr -> const_expr, unary_expr, binary_expr, var_using_expr, func_call_expr
      *
@@ -105,7 +106,13 @@ namespace GSLanguageCompiler::Parser {
 
     public:
 
-        AST::GSTranslationUnitDeclarationPtr ParseProgram(UString translationUnitName);
+        /**
+         *
+         * @param programName
+         * @return
+         * @todo Update messages flushing
+         */
+        AST::GSTranslationUnitDeclarationPtr ParseProgram(UString programName);
 
     private:
 
@@ -123,17 +130,21 @@ namespace GSLanguageCompiler::Parser {
 
         AST::NodePtr<AST::GS_ExpressionStatement> ParseExpressionStatement();
 
+        // TODO
         AST::GSExpressionPtr ParseExpression();
 
+        // TODO
         AST::GSExpressionPtr ParseLValueExpression();
 
+        // TODO
         AST::GSExpressionPtr ParseRValueExpression();
 
         AST::GSExpressionPtr ParseConstantExpression();
 
         AST::GSExpressionPtr ParseUnaryExpression();
 
-        AST::GSExpressionPtr ParseBinaryExpression(I32 precedence, LRef<AST::GSExpressionPtr> expression);
+        AST::GSExpressionPtr ParseBinaryExpression(I32 precedence,
+                                                   LRef<AST::GSExpressionPtr> expression);
 
         AST::NodePtr<AST::GS_ArrayExpression> ParseArrayExpression();
 
@@ -153,14 +164,14 @@ namespace GSLanguageCompiler::Parser {
 
         template<typename T>
         inline T TryParse(T (GS_Parser::*method)()) {
-//            auto messages = _messages;
+            auto messages = _messages;
 
             auto tokenIterator = _tokenIterator;
 
             auto result = (this->*method)();
 
             if (!result) {
-//                _messages = messages;
+                _messages = messages;
 
                 _tokenIterator = tokenIterator;
 
@@ -186,15 +197,18 @@ namespace GSLanguageCompiler::Parser {
 
         Void NextToken();
 
-        Void Message(UString message, IO::MessageLevel messageLevel);
+        Void Message(UString message,
+                     IO::MessageLevel messageLevel);
 
-        Void LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GSByteSourceRange locationRange);
+        Void LocatedMessage(UString message,
+                            IO::MessageLevel messageLevel,
+                            IO::GSByteSourceRange locationRange);
 
     private:
 
         LRef<Driver::GS_Session> _session;
 
-//        IO::GSMessagePtrArray _messages;
+        IO::GSMessageArray _messages;
 
         ConstLRef<Lexer::GS_TokenBuffer> _tokenBuffer;
 
@@ -209,7 +223,8 @@ namespace GSLanguageCompiler::Parser {
      * @param source Source
      * @return Translation unit declaration
      */
-    AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_Session> session, ConstLRef<IO::GS_Source> source);
+    AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_Session> session,
+                                                      ConstLRef<IO::GS_Source> source);
 
     /**
      * Parsing program from file
@@ -217,7 +232,8 @@ namespace GSLanguageCompiler::Parser {
      * @param fileName File name
      * @return Translation unit declaration
      */
-    AST::GSTranslationUnitDeclarationPtr ParseProgramFromFile(LRef<Driver::GS_Session> session, UString fileName);
+    AST::GSTranslationUnitDeclarationPtr ParseProgramFromFile(LRef<Driver::GS_Session> session,
+                                                              UString fileName);
 
     /**
      * Parsing program from string
@@ -225,7 +241,8 @@ namespace GSLanguageCompiler::Parser {
      * @param string String
      * @return Translation unit declaration
      */
-    AST::GSTranslationUnitDeclarationPtr ParseProgramFromString(LRef<Driver::GS_Session> session, UString string);
+    AST::GSTranslationUnitDeclarationPtr ParseProgramFromString(LRef<Driver::GS_Session> session,
+                                                                UString string);
 
 }
 

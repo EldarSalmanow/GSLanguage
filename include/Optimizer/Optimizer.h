@@ -7,12 +7,12 @@
 
 /*
  *
- * AUDIT - Pass
+ * AUDIT                           - Pass
  *
- * CMakeLists.txt - Pass
- * Optimizer.h - Pass
- * GS_Optimizer.h - Pass
- * Passes/OptimizingPasses.h - Pass
+ * CMakeLists.txt                  - Pass
+ * Optimizer.h                     - Pass
+ * GS_Optimizer.h                  - Pass
+ * Passes/OptimizingPasses.h       - Pass
  * Passes/GS_ConstantFoldingPass.h - Pass
  *
  */
