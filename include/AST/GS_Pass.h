@@ -11,6 +11,12 @@ namespace GSLanguageCompiler::AST {
     class GS_Pass {
     public:
 
+        /*
+         *
+         * GS_Pass PUBLIC DESTRUCTORS
+         *
+         */
+
         /**
          * Virtual destructor for supporting inheritance
          */
@@ -18,59 +24,65 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
-        /**
-         * Run pass on translation unit declaration ptr
-         * @param translationUnitDeclaration Translation unit declaration ptr
-         * @param session Session
-         * @return
+        /*
+         *
+         * GS_Pass PUBLIC VIRTUAL METHODS
+         *
          */
-        virtual Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration,
-                         LRef<Driver::GS_Session> session);
 
         /**
-         * Run pass on node ptr
-         * @param node Node ptr
+         * Run pass on translation unit declaration
          * @param session Session
-         * @return
+         * @param translationUnitDeclaration Translation unit declaration
+         * @return Void return
          */
-        virtual Void Run(LRef<GSNodePtr> node,
-                         LRef<Driver::GS_Session> session);
+        virtual Void Run(LRef<Driver::GS_Session> session,
+                         LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration);
+
+        /**
+         * Run pass on node
+         * @param session Session
+         * @param node Node
+         * @return Void return
+         */
+        virtual Void Run(LRef<Driver::GS_Session> session,
+                         LRef<GSNodePtr> node);
 
         /**
          * Run pass on nodes
-         * @param nodes Nodes
          * @param session Session
-         * @return
+         * @param nodes Nodes
+         * @return Void return
          */
-        virtual Void Run(LRef<GSNodePtrArray> nodes,
-                         LRef<Driver::GS_Session> session);
+        virtual Void Run(LRef<Driver::GS_Session> session,
+                         LRef<GSNodePtrArray> nodes);
 
         /**
          * Run pass on declarations
-         * @param declarations Declarations
          * @param session Session
-         * @return
+         * @param declarations Declarations
+         * @return Void return
          */
-        virtual Void Run(LRef<GSDeclarationPtrArray> declarations,
-                         LRef<Driver::GS_Session> session);
+        virtual Void Run(LRef<Driver::GS_Session> session,
+                         LRef<GSDeclarationPtrArray> declarations);
 
         /**
          * Run pass on statements
-         * @param statements Statements
          * @param session Session
-         * @return
+         * @param statements Statements
+         * @return Void return
          */
-        virtual Void Run(LRef<GSStatementPtrArray> statements,
-                         LRef<Driver::GS_Session> session);
+        virtual Void Run(LRef<Driver::GS_Session> session,
+                         LRef<GSStatementPtrArray> statements);
 
         /**
          * Run pass on expressions
-         * @param expressions Expressions
          * @param session Session
-         * @return
+         * @param expressions Expressions
+         * @return Void return
          */
-        virtual Void Run(LRef<GSExpressionPtrArray> expressions,
-                         LRef<Driver::GS_Session> session);
+        virtual Void Run(LRef<Driver::GS_Session> session,
+                         LRef<GSExpressionPtrArray> expressions);
     };
 
     /**
@@ -85,191 +97,240 @@ namespace GSLanguageCompiler::AST {
 
     /**
      * Class for generating default pass for visitor
-     * @tparam T Type of visitor
+     * @tparam VisitorT Type of visitor
      */
-    template<typename T>
+    template<typename VisitorT>
     class GS_VisitPass : public GS_Pass {
     public:
 
-        /**
-         * Run pass on translation unit declaration ptr
-         * @param translationUnitDeclaration Translation unit declaration ptr
-         * @param session Session
-         * @return
+        /*
+         *
+         * GS_VisitPass PUBLIC CONSTRUCTORS
+         *
          */
-        Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration,
-                 LRef<Driver::GS_Session> session) override {
-            T visitor;
 
-            visitor.VisitTranslationUnitDeclaration(translationUnitDeclaration, session);
+        /**
+         * Default constructor for visit pass
+         */
+        GS_VisitPass() = default;
+
+    public:
+
+        /*
+         *
+         * GS_VisitPass PUBLIC OVERRIDE METHODS
+         *
+         */
+
+        /**
+         * Run pass on translation unit declaration
+         * @param session Session
+         * @param translationUnitDeclaration Translation unit declaration
+         * @return Void return
+         */
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration) override {
+            VisitorT visitor;
+
+            visitor.VisitTranslationUnitDeclaration(session,
+                                                    translationUnitDeclaration);
         }
 
         /**
-         * Run pass on node ptr
-         * @param node Node ptr
+         * Run pass on node
          * @param session Session
-         * @return
+         * @param node Node
+         * @return Void return
          */
-        Void Run(LRef<GSNodePtr> node,
-                 LRef<Driver::GS_Session> session) override {
-            T visitor;
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSNodePtr> node) override {
+            VisitorT visitor;
 
-            visitor.VisitNode(node, session);
+            visitor.VisitNode(session,
+                              node);
         }
 
         /**
          * Run pass on nodes
-         * @param nodes Nodes
          * @param session Session
-         * @return
+         * @param nodes Nodes
+         * @return Void return
          */
-        Void Run(LRef<GSNodePtrArray> nodes,
-                 LRef<Driver::GS_Session> session) override {
-            T visitor;
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSNodePtrArray> nodes) override {
+            VisitorT visitor;
 
             for (auto &node : nodes) {
-                visitor.VisitNode(node, session);
+                visitor.VisitNode(session,
+                                  node);
             }
         }
 
         /**
          * Run pass on declarations
-         * @param declarations Declarations
          * @param session Session
-         * @return
+         * @param declarations Declarations
+         * @return Void return
          */
-        Void Run(LRef<GSDeclarationPtrArray> declarations,
-                 LRef<Driver::GS_Session> session) override {
-            T visitor;
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSDeclarationPtrArray> declarations) override {
+            VisitorT visitor;
 
             for (auto &declaration : declarations) {
-                visitor.VisitDeclaration(declaration, session);
+                visitor.VisitDeclaration(session,
+                                         declaration);
             }
         }
 
         /**
          * Run pass on statements
-         * @param statements Statements
          * @param session Session
-         * @return
+         * @param statements Statements
+         * @return Void return
          */
-        Void Run(LRef<GSStatementPtrArray> statements,
-                 LRef<Driver::GS_Session> session) override {
-            T visitor;
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSStatementPtrArray> statements) override {
+            VisitorT visitor;
 
             for (auto &statement : statements) {
-                visitor.VisitStatement(statement, session);
+                visitor.VisitStatement(session,
+                                       statement);
             }
         }
 
         /**
          * Run pass on expressions
-         * @param expressions Expressions
          * @param session Session
-         * @return
+         * @param expressions Expressions
+         * @return Void return
          */
-        Void Run(LRef<GSExpressionPtrArray> expressions,
-                 LRef<Driver::GS_Session> session) override {
-            T visitor;
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSExpressionPtrArray> expressions) override {
+            VisitorT visitor;
 
             for (auto &expression : expressions) {
-                visitor.VisitExpression(expression, session);
+                visitor.VisitExpression(session,
+                                        expression);
             }
         }
     };
 
     /**
      * Class for generating default pass for transformer
-     * @tparam T Type of transformer
+     * @tparam TransformerT Type of transformer
      */
-    template<typename T>
+    template<typename TransformerT>
     class GS_TransformPass : public GS_Pass {
     public:
 
-        /**
-         * Run pass on translation unit declaration ptr
-         * @param translationUnitDeclaration Translation unit declaration ptr
-         * @param session Session
-         * @return
+        /*
+         *
+         * GS_TransformPass PUBLIC CONSTRUCTORS
+         *
          */
-        Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration,
-                 LRef<Driver::GS_Session> session) override {
-            T transformer;
 
-            translationUnitDeclaration = ToDeclaration<GS_TranslationUnitDeclaration>(
-                    transformer.TransformTranslationUnitDeclaration(translationUnitDeclaration, session));
+        /**
+         * Default constructor for transform pass
+         */
+        GS_TransformPass() = default;
+
+    public:
+
+        /*
+         *
+         * GS_TransformPass PUBLIC OVERRIDE METHODS
+         *
+         */
+
+        /**
+         * Run pass on translation unit declaration
+         * @param session Session
+         * @param translationUnitDeclaration Translation unit declaration
+         * @return Void return
+         */
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration) override {
+            TransformerT transformer;
+
+            translationUnitDeclaration = ToDeclaration<GS_TranslationUnitDeclaration>(transformer.TransformTranslationUnitDeclaration(session,
+                                                                                                                                      translationUnitDeclaration));
         }
 
         /**
-         * Run pass on node ptr
-         * @param node Node ptr
+         * Run pass on node
          * @param session Session
-         * @return
+         * @param node Node
+         * @return Void return
          */
-        Void Run(LRef<GSNodePtr> node,
-                 LRef<Driver::GS_Session> session) override {
-            T transformer;
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSNodePtr> node) override {
+            TransformerT transformer;
 
-            node = transformer.TransformNode(node, session);
+            node = transformer.TransformNode(session,
+                                             node);
         }
 
         /**
          * Run pass on nodes
-         * @param nodes Nodes
          * @param session Session
-         * @return
+         * @param nodes Nodes
+         * @return Void return
          */
-        Void Run(LRef<GSNodePtrArray> nodes,
-                 LRef<Driver::GS_Session> session) override {
-            T transformer;
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSNodePtrArray> nodes) override {
+            TransformerT transformer;
 
             for (auto &node : nodes) {
-                node = transformer.TransformNode(node, session);
+                node = transformer.TransformNode(session,
+                                                 node);
             }
         }
 
         /**
          * Run pass on declarations
-         * @param declarations Declarations
          * @param session Session
-         * @return
+         * @param declarations Declarations
+         * @return Void return
          */
-        Void Run(LRef<GSDeclarationPtrArray> declarations,
-                 LRef<Driver::GS_Session> session) override {
-            T transformer;
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSDeclarationPtrArray> declarations) override {
+            TransformerT transformer;
 
             for (auto &declaration : declarations) {
-                declaration = ToDeclaration(transformer.TransformDeclaration(declaration, session));
+                declaration = ToDeclaration(transformer.TransformDeclaration(session,
+                                                                             declaration));
             }
         }
 
         /**
          * Run pass on statements
-         * @param statements Statements
          * @param session Session
-         * @return
+         * @param statements Statements
+         * @return Void return
          */
-        Void Run(LRef<GSStatementPtrArray> statements,
-                 LRef<Driver::GS_Session> session) override {
-            T transformer;
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSStatementPtrArray> statements) override {
+            TransformerT transformer;
 
             for (auto &statement : statements) {
-                statement = ToStatement(transformer.TransformStatement(statement, session));
+                statement = ToStatement(transformer.TransformStatement(session,
+                                                                       statement));
             }
         }
 
         /**
          * Run pass on expressions
-         * @param expressions Expressions
          * @param session Session
-         * @return
+         * @param expressions Expressions
+         * @return Void return
          */
-        Void Run(LRef<GSExpressionPtrArray> expressions,
-                 LRef<Driver::GS_Session> session) override {
-            T transformer;
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSExpressionPtrArray> expressions) override {
+            TransformerT transformer;
 
             for (auto &expression : expressions) {
-                expression = ToExpression(transformer.TransformExpression(expression, session));
+                expression = ToExpression(transformer.TransformExpression(session,
+                                                                          expression));
             }
         }
     };
@@ -280,6 +341,12 @@ namespace GSLanguageCompiler::AST {
     class GS_PassManager {
     public:
 
+        /*
+         *
+         * GS_PassManager PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for pass manager
          * @param passes Passes
@@ -288,94 +355,116 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_PassManager PUBLIC STATIC CREATE METHODS
+         *
+         */
+
         /**
          * Creating pass manager
          * @param passes Passes
          * @return Pass manager ptr
          */
-        static std::shared_ptr<GS_PassManager> Create(GSPassPtrArray passes);
+        static std::unique_ptr<GS_PassManager> Create(GSPassPtrArray passes);
 
         /**
          * Creating pass manager
          * @return Pass manager ptr
          */
-        static std::shared_ptr<GS_PassManager> Create();
+        static std::unique_ptr<GS_PassManager> Create();
 
     public:
 
-        /**
-         * Run passes on translation unit declaration ptr
-         * @param translationUnitDeclaration Translation unit declaration ptr
-         * @param session Session
-         * @return
+        /*
+         *
+         * GS_PassManager PUBLIC METHODS
+         *
          */
-        Void Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration,
-                 LRef<Driver::GS_Session> session);
+
+        /**
+         * Run passes on translation unit declaration
+         * @param session Session
+         * @param translationUnitDeclaration Translation unit declaration
+         * @return Void return
+         */
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration);
 
 
         /**
-         * Run passes on node ptr
-         * @param node Node ptr
+         * Run passes on node
          * @param session Session
-         * @return
+         * @param node Node
+         * @return Void return
          */
-        Void Run(LRef<GSNodePtr> node,
-                 LRef<Driver::GS_Session> session);
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSNodePtr> node);
 
         /**
          * Run pass on nodes
-         * @param nodes Nodes
          * @param session Session
-         * @return
+         * @param nodes Nodes
+         * @return Void return
          */
-        Void Run(LRef<GSNodePtrArray> nodes,
-                 LRef<Driver::GS_Session> session);
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSNodePtrArray> nodes);
 
         /**
          * Run pass on declarations
-         * @param declarations Declarations
          * @param session Session
-         * @return
+         * @param declarations Declarations
+         * @return Void return
          */
-        Void Run(LRef<GSDeclarationPtrArray> declarations,
-                 LRef<Driver::GS_Session> session);
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSDeclarationPtrArray> declarations);
 
         /**
          * Run pass on statements
-         * @param statements Statements
          * @param session Session
-         * @return
+         * @param statements Statements
+         * @return Void return
          */
-        Void Run(LRef<GSStatementPtrArray> statements,
-                 LRef<Driver::GS_Session> session);
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSStatementPtrArray> statements);
 
         /**
          * Run pass on expressions
-         * @param expressions Expressions
          * @param session Session
-         * @return
+         * @param expressions Expressions
+         * @return Void return
          */
-        Void Run(LRef<GSExpressionPtrArray> expressions,
-                 LRef<Driver::GS_Session> session);
-
-    public:
+        Void Run(LRef<Driver::GS_Session> session,
+                 LRef<GSExpressionPtrArray> expressions);
 
         /**
          * Add pass to pass list
          * @param pass Pass
          * @return Pass
          */
-        Void AddPass(GSPassPtr pass);
+        ConstLRef<GS_Pass> AddPass(GSPassPtr pass);
 
     public:
+
+        /*
+         *
+         * GS_PassManager PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for passes
          * @return Passes
          */
-        GSPassPtrArray GetPasses() const;
+        ConstLRef<GSPassPtrArray> GetPasses() const;
 
     private:
+
+        /*
+         *
+         * GS_PassManager PRIVATE FIELDS
+         *
+         */
 
         /**
          * Passes
@@ -386,7 +475,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * Pass manager ptr type
      */
-    using GSPassManagerPtr = std::shared_ptr<GS_PassManager>;
+    using GSPassManagerPtr = std::unique_ptr<GS_PassManager>;
 
 }
 

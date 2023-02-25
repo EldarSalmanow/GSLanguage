@@ -5,23 +5,25 @@
 
 #include <AST/AST.h>
 
+#include <Semantic/Semantic.h>
+
 #include <Driver/GS_Arguments.h>
 
 namespace GSLanguageCompiler {
 
-    namespace Semantic {
-
-        /**
-         * Declaring table of symbols for compiler session
-         */
-        class GS_TableOfSymbols;
-
-        /**
-         * Declaring table of symbols ptr type for compiler session
-         */
-        using GSTableOfSymbolsPtr = std::shared_ptr<GS_TableOfSymbols>;
-
-    }
+//    namespace Semantic {
+//
+//        /**
+//         * Declaring table of symbols for compiler session
+//         */
+//        class GS_TableOfSymbols;
+//
+//        /**
+//         * Declaring table of symbols ptr type for compiler session
+//         */
+//        using GSTableOfSymbolsPtr = std::unique_ptr<GS_TableOfSymbols>;
+//
+//    }
 
     namespace Driver {
 

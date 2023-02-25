@@ -11,7 +11,8 @@ namespace GSLanguageCompiler::Optimizer {
      * @param value Value
      * @return Folded value
      */
-    AST::GSValuePtr FoldConstants(AST::UnaryOperation operation, ConstLRef<AST::GSValuePtr> value);
+    AST::GSValuePtr FoldConstants(AST::UnaryOperation operation,
+                                  ConstLRef<AST::GSValuePtr> value);
 
     /**
      * Folding binary expression
@@ -20,7 +21,9 @@ namespace GSLanguageCompiler::Optimizer {
      * @param secondValue Second value
      * @return Folded value
      */
-    AST::GSValuePtr FoldConstants(AST::BinaryOperation operation, ConstLRef<AST::GSValuePtr> firstValue, ConstLRef<AST::GSValuePtr> secondValue);
+    AST::GSValuePtr FoldConstants(AST::BinaryOperation operation,
+                                  ConstLRef<AST::GSValuePtr> firstValue,
+                                  ConstLRef<AST::GSValuePtr> secondValue);
 
     /**
      * Transformer class for applying constant folding optimization on nodes
@@ -28,18 +31,37 @@ namespace GSLanguageCompiler::Optimizer {
     class GS_ConstantFoldingTransformer : public AST::GS_Transformer {
     public:
 
+        /*
+         *
+         * GS_ConstantFoldingTransformer PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
+         * Default constructor for constant folding transformer
+         */
+        GS_ConstantFoldingTransformer();
+
+    public:
+
+        /*
+         *
+         * GS_ConstantFoldingTransformer PUBLIC OVERRIDE METHODS
+         *
+         */
+
         /**
          * Transform unary expression
          *
          * Transformation rules:
          * --- - ( constant expression ) -> - constant expression
          *
-         * @param unaryExpression Unary expression
          * @param session Session
+         * @param unaryExpression Unary expression
          * @return Transformed unary expression
          */
-        AST::GSNodePtr TransformUnaryExpression(AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression,
-                                                LRef<Driver::GS_Session> session) override;
+        AST::GSNodePtr TransformUnaryExpression(LRef<Driver::GS_Session> session,
+                                                AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression) override;
 
         /**
          * Transform binary expression
@@ -47,12 +69,12 @@ namespace GSLanguageCompiler::Optimizer {
          * Transformation rules:
          * --- ( constant expression ) +|-|*|/ ( constant expression ) -> constant expression +|-|*|/ constant expression
          *
-         * @param binaryExpression Binary expression
          * @param session Session
+         * @param binaryExpression Binary expression
          * @return Transformed binary expression
          */
-        AST::GSNodePtr TransformBinaryExpression(AST::NodePtrLRef<AST::GS_BinaryExpression> binaryExpression,
-                                                 LRef<Driver::GS_Session> session) override;
+        AST::GSNodePtr TransformBinaryExpression(LRef<Driver::GS_Session> session,
+                                                 AST::NodePtrLRef<AST::GS_BinaryExpression> binaryExpression) override;
     };
 
     /**
@@ -62,7 +84,7 @@ namespace GSLanguageCompiler::Optimizer {
 
     /**
      * Creating constant folding optimization pass
-     * @return Constant folding optimization pass
+     * @return Constant folding optimization pass ptr
      */
     AST::GSPassPtr CreateConstantFoldingPass();
 

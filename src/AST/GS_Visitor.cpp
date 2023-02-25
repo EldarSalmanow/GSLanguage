@@ -2,6 +2,8 @@
 
 namespace GSLanguageCompiler::AST {
 
+    GS_Visitor::~GS_Visitor() = default;
+
     Void GS_Visitor::SuperNode(LRef<Driver::GS_Session> session,
                                LRef<GSNodePtr> node) {
         if (node->IsDeclaration()) {
@@ -88,6 +90,12 @@ namespace GSLanguageCompiler::AST {
 
                 return VisitBinaryExpression(session,
                                              binaryExpression);
+            }
+            case ExpressionType::ArrayExpression: {
+                auto arrayExpression = ToExpression<GS_ArrayExpression>(expression);
+
+                return VisitArrayExpression(session,
+                                            arrayExpression);
             }
             case ExpressionType::VariableUsingExpression: {
                 auto variableUsingExpression = ToExpression<GS_VariableUsingExpression>(expression);
@@ -285,109 +293,131 @@ namespace GSLanguageCompiler::AST {
                                        functionCallingExpression);
     }
 
-    GSNodePtr GS_Transformer::SuperNode(LRef<GSNodePtr> node,
-                                        LRef<Driver::GS_Session> session) {
+    GS_Transformer::~GS_Transformer() = default;
+
+    GSNodePtr GS_Transformer::SuperNode(LRef<Driver::GS_Session> session,
+                                        LRef<GSNodePtr> node) {
         if (node->IsDeclaration()) {
             auto declaration = ToDeclaration(node);
 
-            return TransformDeclaration(declaration, session);
+            return TransformDeclaration(session,
+                                        declaration);
         }
 
         if (node->IsStatement()) {
             auto statement = ToStatement(node);
 
-            return TransformStatement(statement, session);
+            return TransformStatement(session,
+                                      statement);
         }
 
         if (node->IsExpression()) {
             auto expression = ToExpression(node);
 
-            return TransformExpression(expression, session);
+            return TransformExpression(session,
+                                       expression);
         }
 
         return nullptr;
     }
 
-    GSNodePtr GS_Transformer::SuperDeclaration(LRef<GSDeclarationPtr> declaration,
-                                               LRef<Driver::GS_Session> session) {
+    GSNodePtr GS_Transformer::SuperDeclaration(LRef<Driver::GS_Session> session,
+                                               LRef<GSDeclarationPtr> declaration) {
         switch (declaration->GetDeclarationType()) {
             case DeclarationType::TranslationUnitDeclaration: {
                 auto translationUnitDeclaration = ToDeclaration<GS_TranslationUnitDeclaration>(declaration);
 
-                return TransformTranslationUnitDeclaration(translationUnitDeclaration, session);
+                return TransformTranslationUnitDeclaration(session,
+                                                           translationUnitDeclaration);
             }
             case DeclarationType::FunctionDeclaration: {
                 auto functionDeclaration = ToDeclaration<GS_FunctionDeclaration>(declaration);
 
-                return TransformFunctionDeclaration(functionDeclaration, session);
+                return TransformFunctionDeclaration(session,
+                                                    functionDeclaration);
             }
         }
 
         return nullptr;
     }
 
-    GSNodePtr GS_Transformer::SuperStatement(LRef<GSStatementPtr> statement,
-                                             LRef<Driver::GS_Session> session) {
+    GSNodePtr GS_Transformer::SuperStatement(LRef<Driver::GS_Session> session,
+                                             LRef<GSStatementPtr> statement) {
         switch (statement->GetStatementType()) {
             case StatementType::VariableDeclarationStatement: {
                 auto variableDeclarationStatement = ToStatement<GS_VariableDeclarationStatement>(statement);
 
-                return TransformVariableDeclarationStatement(variableDeclarationStatement, session);
+                return TransformVariableDeclarationStatement(session,
+                                                             variableDeclarationStatement);
             }
             case StatementType::AssignmentStatement: {
                 auto assignmentStatement = ToStatement<GS_AssignmentStatement>(statement);
 
-                return TransformAssignmentStatement(assignmentStatement, session);
+                return TransformAssignmentStatement(session,
+                                                    assignmentStatement);
             }
             case StatementType::ExpressionStatement: {
                 auto expressionStatement = ToStatement<GS_ExpressionStatement>(statement);
 
-                return TransformExpressionStatement(expressionStatement, session);
+                return TransformExpressionStatement(session,
+                                                    expressionStatement);
             }
         }
 
         return nullptr;
     }
 
-    GSNodePtr GS_Transformer::SuperExpression(LRef<GSExpressionPtr> expression,
-                                              LRef<Driver::GS_Session> session) {
+    GSNodePtr GS_Transformer::SuperExpression(LRef<Driver::GS_Session> session,
+                                              LRef<GSExpressionPtr> expression) {
         switch (expression->GetExpressionType()) {
             case ExpressionType::ConstantExpression: {
                 auto constantExpression = ToExpression<GS_ConstantExpression>(expression);
 
-                return TransformConstantExpression(constantExpression, session);
+                return TransformConstantExpression(session,
+                                                   constantExpression);
             }
             case ExpressionType::UnaryExpression: {
                 auto unaryExpression = ToExpression<GS_UnaryExpression>(expression);
 
-                return TransformUnaryExpression(unaryExpression, session);
+                return TransformUnaryExpression(session,
+                                                unaryExpression);
             }
             case ExpressionType::BinaryExpression: {
                 auto binaryExpression = ToExpression<GS_BinaryExpression>(expression);
 
-                return TransformBinaryExpression(binaryExpression, session);
+                return TransformBinaryExpression(session,
+                                                 binaryExpression);
+            }
+            case ExpressionType::ArrayExpression: {
+                auto arrayExpression = ToExpression<GS_ArrayExpression>(expression);
+
+                return TransformArrayExpression(session,
+                                                arrayExpression);
             }
             case ExpressionType::VariableUsingExpression: {
                 auto variableUsingExpression = ToExpression<GS_VariableUsingExpression>(expression);
 
-                return TransformVariableUsingExpression(variableUsingExpression, session);
+                return TransformVariableUsingExpression(session,
+                                                        variableUsingExpression);
             }
             case ExpressionType::FunctionCallingExpression: {
                 auto functionCallingExpression = ToExpression<GS_FunctionCallingExpression>(expression);
 
-                return TransformFunctionCallingExpression(functionCallingExpression, session);
+                return TransformFunctionCallingExpression(session,
+                                                          functionCallingExpression);
             }
         }
 
         return nullptr;
     }
 
-    GSNodePtr GS_Transformer::SuperTranslationUnitDeclaration(NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration,
-                                                              LRef<Driver::GS_Session> session) {
+    GSNodePtr GS_Transformer::SuperTranslationUnitDeclaration(LRef<Driver::GS_Session> session,
+                                                              NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration) {
         auto &nodes = translationUnitDeclaration->GetNodes();
 
         for (auto &node: nodes) {
-            auto transformedNode = TransformNode(node, session);
+            auto transformedNode = TransformNode(session,
+                                                 node);
 
             node.swap(transformedNode);
         }
@@ -395,12 +425,13 @@ namespace GSLanguageCompiler::AST {
         return translationUnitDeclaration;
     }
 
-    GSNodePtr GS_Transformer::SuperFunctionDeclaration(NodePtrLRef<GS_FunctionDeclaration> functionDeclaration,
-                                                       LRef<Driver::GS_Session> session) {
+    GSNodePtr GS_Transformer::SuperFunctionDeclaration(LRef<Driver::GS_Session> session,
+                                                       NodePtrLRef<GS_FunctionDeclaration> functionDeclaration) {
         auto &statements = functionDeclaration->GetBody();
 
         for (auto &statement: statements) {
-            auto transformedStatement = ToStatement(TransformStatement(statement, session));
+            auto transformedStatement = ToStatement(TransformStatement(session,
+                                                                       statement));
 
             statement.swap(transformedStatement);
         }
@@ -408,24 +439,27 @@ namespace GSLanguageCompiler::AST {
         return functionDeclaration;
     }
 
-    GSNodePtr GS_Transformer::SuperVariableDeclarationStatement(NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement,
-                                                                LRef<Driver::GS_Session> session) {
+    GSNodePtr GS_Transformer::SuperVariableDeclarationStatement(LRef<Driver::GS_Session> session,
+                                                                NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement) {
         auto &expression = variableDeclarationStatement->GetExpression();
 
-        auto transformedExpression = ToExpression(TransformExpression(expression, session));
+        auto transformedExpression = ToExpression(TransformExpression(session,
+                                                                      expression));
 
         expression.swap(transformedExpression);
 
         return variableDeclarationStatement;
     }
 
-    GSNodePtr GS_Transformer::SuperAssignmentStatement(NodePtrLRef<GS_AssignmentStatement> assignmentStatement,
-                                                       LRef<Driver::GS_Session> session) {
+    GSNodePtr GS_Transformer::SuperAssignmentStatement(LRef<Driver::GS_Session> session,
+                                                       NodePtrLRef<GS_AssignmentStatement> assignmentStatement) {
         auto &lvalueExpression = assignmentStatement->GetLValueExpression();
         auto &rvalueExpression = assignmentStatement->GetRValueExpression();
 
-        auto transformedLvalueExpression = ToExpression(TransformExpression(lvalueExpression, session));
-        auto transformedRvalueExpression = ToExpression(TransformExpression(rvalueExpression, session));
+        auto transformedLvalueExpression = ToExpression(TransformExpression(session,
+                                                                            lvalueExpression));
+        auto transformedRvalueExpression = ToExpression(TransformExpression(session,
+                                                                            rvalueExpression));
 
         lvalueExpression.swap(transformedLvalueExpression);
         rvalueExpression.swap(transformedRvalueExpression);
@@ -433,40 +467,44 @@ namespace GSLanguageCompiler::AST {
         return assignmentStatement;
     }
 
-    GSNodePtr GS_Transformer::SuperExpressionStatement(NodePtrLRef<GS_ExpressionStatement> expressionStatement,
-                                                       LRef<Driver::GS_Session> session) {
+    GSNodePtr GS_Transformer::SuperExpressionStatement(LRef<Driver::GS_Session> session,
+                                                       NodePtrLRef<GS_ExpressionStatement> expressionStatement) {
         auto &expression = expressionStatement->GetExpression();
 
-        auto transformedExpression = ToExpression(TransformExpression(expression, session));
+        auto transformedExpression = ToExpression(TransformExpression(session,
+                                                                      expression));
 
         expression.swap(transformedExpression);
 
         return expressionStatement;
     }
 
-    GSNodePtr GS_Transformer::SuperConstantExpression(NodePtrLRef<GS_ConstantExpression> constantExpression,
-                                                      LRef<Driver::GS_Session> session) {
+    GSNodePtr GS_Transformer::SuperConstantExpression(LRef<Driver::GS_Session> session,
+                                                      NodePtrLRef<GS_ConstantExpression> constantExpression) {
         return constantExpression;
     }
 
-    GSNodePtr GS_Transformer::SuperUnaryExpression(NodePtrLRef<GS_UnaryExpression> unaryExpression,
-                                                   LRef<Driver::GS_Session> session) {
+    GSNodePtr GS_Transformer::SuperUnaryExpression(LRef<Driver::GS_Session> session,
+                                                   NodePtrLRef<GS_UnaryExpression> unaryExpression) {
         auto &expression = unaryExpression->GetExpression();
 
-        auto transformedExpression = ToExpression(TransformExpression(expression, session));
+        auto transformedExpression = ToExpression(TransformExpression(session,
+                                                                      expression));
 
         expression.swap(transformedExpression);
 
         return unaryExpression;
     }
 
-    GSNodePtr GS_Transformer::SuperBinaryExpression(NodePtrLRef<GS_BinaryExpression> binaryExpression,
-                                                    LRef<Driver::GS_Session> session) {
+    GSNodePtr GS_Transformer::SuperBinaryExpression(LRef<Driver::GS_Session> session,
+                                                    NodePtrLRef<GS_BinaryExpression> binaryExpression) {
         auto &firstExpression = binaryExpression->GetFirstExpression();
         auto &secondExpression = binaryExpression->GetSecondExpression();
 
-        auto transformedFirstExpression = ToExpression(TransformExpression(firstExpression, session));
-        auto transformedSecondExpression = ToExpression(TransformExpression(secondExpression, session));
+        auto transformedFirstExpression = ToExpression(TransformExpression(session,
+                                                                           firstExpression));
+        auto transformedSecondExpression = ToExpression(TransformExpression(session,
+                                                                            secondExpression));
 
         firstExpression.swap(transformedFirstExpression);
         secondExpression.swap(transformedSecondExpression);
@@ -474,12 +512,13 @@ namespace GSLanguageCompiler::AST {
         return binaryExpression;
     }
 
-    GSNodePtr GS_Transformer::SuperArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
-                                         LRef<Driver::GS_Session> session) {
+    GSNodePtr GS_Transformer::SuperArrayExpression(LRef<Driver::GS_Session> session,
+                                                   NodePtrLRef<GS_ArrayExpression> arrayExpression) {
         auto &expressions = arrayExpression->GetExpressions();
 
         for (auto &expression : expressions) {
-            auto transformedExpression = ToExpression(TransformExpression(expression, session));
+            auto transformedExpression = ToExpression(TransformExpression(session,
+                                                                          expression));
 
             expression.swap(transformedExpression);
         }
@@ -487,89 +526,104 @@ namespace GSLanguageCompiler::AST {
         return arrayExpression;
     }
 
-    GSNodePtr GS_Transformer::SuperVariableUsingExpression(NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression,
-                                                           LRef<Driver::GS_Session> session) {
+    GSNodePtr GS_Transformer::SuperVariableUsingExpression(LRef<Driver::GS_Session> session,
+                                                           NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression) {
         return variableUsingExpression;
     }
 
-    GSNodePtr GS_Transformer::SuperFunctionCallingExpression(NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression,
-                                                             LRef<Driver::GS_Session> session) {
+    GSNodePtr GS_Transformer::SuperFunctionCallingExpression(LRef<Driver::GS_Session> session,
+                                                             NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression) {
         return functionCallingExpression;
     }
 
-    GSNodePtr GS_Transformer::TransformNode(LRef<GSNodePtr> node,
-                                            LRef<Driver::GS_Session> session) {
-        return SuperNode(node, session);
+    GSNodePtr GS_Transformer::TransformNode(LRef<Driver::GS_Session> session,
+                                            LRef<GSNodePtr> node) {
+        return SuperNode(session,
+                         node);
     }
 
-    GSNodePtr GS_Transformer::TransformDeclaration(LRef<GSDeclarationPtr> declaration,
-                                                   LRef<Driver::GS_Session> session) {
-        return SuperDeclaration(declaration, session);
+    GSNodePtr GS_Transformer::TransformDeclaration(LRef<Driver::GS_Session> session,
+                                                   LRef<GSDeclarationPtr> declaration) {
+        return SuperDeclaration(session,
+                                declaration);
     }
 
-    GSNodePtr GS_Transformer::TransformStatement(LRef<GSStatementPtr> statement,
-                                                 LRef<Driver::GS_Session> session) {
-        return SuperStatement(statement, session);
+    GSNodePtr GS_Transformer::TransformStatement(LRef<Driver::GS_Session> session,
+                                                 LRef<GSStatementPtr> statement) {
+        return SuperStatement(session,
+                              statement);
     }
 
-    GSNodePtr GS_Transformer::TransformExpression(LRef<GSExpressionPtr> expression,
-                                                  LRef<Driver::GS_Session> session) {
-        return SuperExpression(expression, session);
+    GSNodePtr GS_Transformer::TransformExpression(LRef<Driver::GS_Session> session,
+                                                  LRef<GSExpressionPtr> expression) {
+        return SuperExpression(session,
+                               expression);
     }
 
-    GSNodePtr GS_Transformer::TransformTranslationUnitDeclaration(NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration,
-                                                                  LRef<Driver::GS_Session> session) {
-        return SuperTranslationUnitDeclaration(translationUnitDeclaration, session);
+    GSNodePtr GS_Transformer::TransformTranslationUnitDeclaration(LRef<Driver::GS_Session> session,
+                                                                  NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration) {
+        return SuperTranslationUnitDeclaration(session,
+                                               translationUnitDeclaration);
     }
 
-    GSNodePtr GS_Transformer::TransformFunctionDeclaration(NodePtrLRef<GS_FunctionDeclaration> functionDeclaration,
-                                                           LRef<Driver::GS_Session> session) {
-        return SuperFunctionDeclaration(functionDeclaration, session);
+    GSNodePtr GS_Transformer::TransformFunctionDeclaration(LRef<Driver::GS_Session> session,
+                                                           NodePtrLRef<GS_FunctionDeclaration> functionDeclaration) {
+        return SuperFunctionDeclaration(session,
+                                        functionDeclaration);
     }
 
-    GSNodePtr GS_Transformer::TransformVariableDeclarationStatement(NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement,
-                                                                    LRef<Driver::GS_Session> session) {
-        return SuperVariableDeclarationStatement(variableDeclarationStatement, session);
+    GSNodePtr GS_Transformer::TransformVariableDeclarationStatement(LRef<Driver::GS_Session> session,
+                                                                    NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement) {
+        return SuperVariableDeclarationStatement(session,
+                                                 variableDeclarationStatement);
     }
 
-    GSNodePtr GS_Transformer::TransformAssignmentStatement(NodePtrLRef<GS_AssignmentStatement> assignmentStatement,
-                                                           LRef<Driver::GS_Session> session) {
-        return SuperAssignmentStatement(assignmentStatement, session);
+    GSNodePtr GS_Transformer::TransformAssignmentStatement(LRef<Driver::GS_Session> session,
+                                                           NodePtrLRef<GS_AssignmentStatement> assignmentStatement) {
+        return SuperAssignmentStatement(session,
+                                        assignmentStatement);
     }
 
-    GSNodePtr GS_Transformer::TransformExpressionStatement(NodePtrLRef<GS_ExpressionStatement> expressionStatement,
-                                                           LRef<Driver::GS_Session> session) {
-        return SuperExpressionStatement(expressionStatement, session);
+    GSNodePtr GS_Transformer::TransformExpressionStatement(LRef<Driver::GS_Session> session,
+                                                           NodePtrLRef<GS_ExpressionStatement> expressionStatement) {
+        return SuperExpressionStatement(session,
+                                        expressionStatement);
     }
 
-    GSNodePtr GS_Transformer::TransformConstantExpression(NodePtrLRef<GS_ConstantExpression> constantExpression,
-                                                          LRef<Driver::GS_Session> session) {
-        return SuperConstantExpression(constantExpression, session);
+    GSNodePtr GS_Transformer::TransformConstantExpression(LRef<Driver::GS_Session> session,
+                                                          NodePtrLRef<GS_ConstantExpression> constantExpression) {
+        return SuperConstantExpression(session,
+                                       constantExpression);
     }
 
-    GSNodePtr GS_Transformer::TransformUnaryExpression(NodePtrLRef<GS_UnaryExpression> unaryExpression,
-                                                       LRef<Driver::GS_Session> session) {
-        return SuperUnaryExpression(unaryExpression, session);
+    GSNodePtr GS_Transformer::TransformUnaryExpression(LRef<Driver::GS_Session> session,
+                                                       NodePtrLRef<GS_UnaryExpression> unaryExpression) {
+        return SuperUnaryExpression(session,
+                                    unaryExpression);
     }
 
-    GSNodePtr GS_Transformer::TransformBinaryExpression(NodePtrLRef<GS_BinaryExpression> binaryExpression,
-                                                        LRef<Driver::GS_Session> session) {
-        return SuperBinaryExpression(binaryExpression, session);
+    GSNodePtr GS_Transformer::TransformBinaryExpression(LRef<Driver::GS_Session> session,
+                                                        NodePtrLRef<GS_BinaryExpression> binaryExpression) {
+        return SuperBinaryExpression(session,
+                                     binaryExpression);
     }
 
-    GSNodePtr GS_Transformer::TransformArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
-                                             LRef<Driver::GS_Session> session) {
-        return SuperArrayExpression(arrayExpression, session);
+    GSNodePtr GS_Transformer::TransformArrayExpression(LRef<Driver::GS_Session> session,
+                                                       NodePtrLRef<GS_ArrayExpression> arrayExpression) {
+        return SuperArrayExpression(session,
+                                    arrayExpression);
     }
 
-    GSNodePtr GS_Transformer::TransformVariableUsingExpression(NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression,
-                                                               LRef<Driver::GS_Session> session) {
-        return SuperVariableUsingExpression(variableUsingExpression, session);
+    GSNodePtr GS_Transformer::TransformVariableUsingExpression(LRef<Driver::GS_Session> session,
+                                                               NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression) {
+        return SuperVariableUsingExpression(session,
+                                            variableUsingExpression);
     }
 
-    GSNodePtr GS_Transformer::TransformFunctionCallingExpression(NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression,
-                                                                 LRef<Driver::GS_Session> session) {
-        return SuperFunctionCallingExpression(functionCallingExpression, session);
+    GSNodePtr GS_Transformer::TransformFunctionCallingExpression(LRef<Driver::GS_Session> session,
+                                                                 NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression) {
+        return SuperFunctionCallingExpression(session,
+                                              functionCallingExpression);
     }
 
 }

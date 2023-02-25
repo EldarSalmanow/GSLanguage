@@ -12,7 +12,8 @@ namespace GSLanguageCompiler::Optimizer {
     Void GS_Optimizer::Optimize(LRef<AST::GSNodePtr> node, AST::GSPassPtrArray passes) {
         auto passManager = AST::GS_PassManager::Create(std::move(passes));
 
-        passManager->Run(node, _session);
+        passManager->Run(_session,
+                         node);
     }
 
 }

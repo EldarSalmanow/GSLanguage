@@ -11,6 +11,12 @@ namespace GSLanguageCompiler::Optimizer {
     class GS_Optimizer {
     public:
 
+        /*
+         *
+         * GS_Optimizer PUBLiC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for optimizer
          * @param session Session

@@ -4,7 +4,7 @@
 
 #include <Semantic/Semantic.h>
 
-#include <Debug/Debug.h>
+//#include <Debug/Debug.h>
 
 #include <GS_Session.h>
 
@@ -88,15 +88,17 @@ namespace GSLanguageCompiler::Driver {
         for (auto &source : sources) {
             auto translationUnitDeclaration = Parser::ParseProgram(*this, *source);
 
-            Semantic::CreateSymbolsPlaceholderPass()->Run(translationUnitDeclaration, *this);
+            Semantic::CreateSymbolsPlaceholderPass()->Run(*this,
+                                                          translationUnitDeclaration);
 
             for (auto &optimizingPass : optimizingPasses) {
-                optimizingPass->Run(translationUnitDeclaration, *this);
+                optimizingPass->Run(*this,
+                                    translationUnitDeclaration);
             }
 
-            Debug::DumpTableOfSymbols(_tableOfSymbols);
-
-            Debug::DumpAST(translationUnitDeclaration, *this);
+//            Debug::DumpTableOfSymbols(_tableOfSymbols);
+//
+//            Debug::DumpAST(translationUnitDeclaration, *this);
 
             translationUnitDeclarations.emplace_back(translationUnitDeclaration);
         }

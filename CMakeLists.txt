@@ -36,9 +36,9 @@ set(PROJECT_LIBRARIES
         GSDriverLibrary
         GSIOLibrary
         GSLexerLibrary
-#        GSParserLibrary
+        GSParserLibrary
         GSASTLibrary
-#        GSOptimizerLibrary
+        GSOptimizerLibrary
         GSSemanticLibrary
 #        GSCodeGeneratorLibrary
 #        GSDebugLibrary
@@ -57,9 +57,9 @@ include_directories(${INCLUDE_DIR})
 add_subdirectory(${INCLUDE_DIR}/Driver)
 add_subdirectory(${INCLUDE_DIR}/IO)
 add_subdirectory(${INCLUDE_DIR}/Lexer)
-#add_subdirectory(${INCLUDE_DIR}/Parser)
+add_subdirectory(${INCLUDE_DIR}/Parser)
 add_subdirectory(${INCLUDE_DIR}/AST)
-#add_subdirectory(${INCLUDE_DIR}/Optimizer)
+add_subdirectory(${INCLUDE_DIR}/Optimizer)
 add_subdirectory(${INCLUDE_DIR}/Semantic)
 #add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
 #add_subdirectory(${INCLUDE_DIR}/Debug)

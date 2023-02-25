@@ -19,19 +19,39 @@ namespace GSLanguageCompiler {
 
     namespace Driver {
 
+        /**
+         * Declaring compiler session for AST visitor and transformer
+         */
         class GS_Session;
 
     }
 
     namespace AST {
 
-        // TODO update visiting and transforming AST API
-
         /**
          * Class for visiting AST nodes without result
          */
         class GS_Visitor {
         public:
+
+            /*
+             *
+             * GS_Visitor PUBLIC DESTRUCTORS
+             *
+             */
+
+            /**
+             * Virtual destructor for supporting inheritance
+             */
+            virtual ~GS_Visitor();
+
+        public:
+
+            /*
+             *
+             * GS_Visitor PUBLIC METHODS
+             *
+             */
 
             /**
              * Default visit node
@@ -169,6 +189,12 @@ namespace GSLanguageCompiler {
                                                 NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression);
 
         public:
+
+            /*
+             *
+             * GS_Visitor PUBLIC VIRTUAL METHODS
+             *
+             */
 
             /**
              * Visit node
@@ -312,277 +338,302 @@ namespace GSLanguageCompiler {
         class GS_Transformer {
         public:
 
-            /**
-             * Default transform node
-             * @param node Node
-             * @param session Session
-             * @return Transformed node
+            /*
+             *
+             * GS_Transformer PUBLIC DESTRUCTORS
+             *
              */
-            GSNodePtr SuperNode(LRef<GSNodePtr> node,
-                                LRef<Driver::GS_Session> session);
 
             /**
-             * Default transform declaration
-             * @param declaration Declaration
-             * @param session Session
-             * @return Transformed declaration
+             * Virtual destructor for supporting inheritance
              */
-            GSNodePtr SuperDeclaration(LRef<GSDeclarationPtr> declaration,
-                                       LRef<Driver::GS_Session> session);
-
-            /**
-             * Default transform statement
-             * @param statement Statement
-             * @param session Session
-             * @return Transformed statement
-             */
-            GSNodePtr SuperStatement(LRef<GSStatementPtr> statement,
-                                     LRef<Driver::GS_Session> session);
-
-            /**
-             * Default transform expression
-             * @param expression Expression
-             * @param session Session
-             * @return Transformed expression
-             */
-            GSNodePtr SuperExpression(LRef<GSExpressionPtr> expression,
-                                      LRef<Driver::GS_Session> session);
-
-            /**
-             * Default transform translation unit declaration
-             * @param translationUnitDeclaration Translation unit declaration
-             * @param session Session
-             * @return Transformed translation unit declaration
-             */
-            GSNodePtr SuperTranslationUnitDeclaration(NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration,
-                                                      LRef<Driver::GS_Session> session);
-
-            /**
-             * Default transform function declaration
-             * @param functionDeclaration Function declaration
-             * @param session Session
-             * @return Transformed function declaration
-             */
-            GSNodePtr SuperFunctionDeclaration(NodePtrLRef<GS_FunctionDeclaration> functionDeclaration,
-                                               LRef<Driver::GS_Session> session);
-
-            /**
-             * Default transform variable declaration statement
-             * @param variableDeclarationStatement Variable declaration statement
-             * @param session Session
-             * @return Transformed variable declaration statement
-             */
-            GSNodePtr SuperVariableDeclarationStatement(NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement,
-                                                        LRef<Driver::GS_Session> session);
-
-            /**
-             * Default transform assignment statement
-             * @param assignmentStatement Assignment statement
-             * @param session Session
-             * @return Transformed assignment statement
-             */
-            GSNodePtr SuperAssignmentStatement(NodePtrLRef<GS_AssignmentStatement> assignmentStatement,
-                                               LRef<Driver::GS_Session> session);
-
-            /**
-             * Default transform expression statement
-             * @param expressionStatement Expression statement
-             * @param session Session
-             * @return Transformed expression statement
-             */
-            GSNodePtr SuperExpressionStatement(NodePtrLRef<GS_ExpressionStatement> expressionStatement,
-                                               LRef<Driver::GS_Session> session);
-
-            /**
-             * Default transform constant expression
-             * @param constantExpression Constant expression
-             * @param session Session
-             * @return Transformed constant expression
-             */
-            GSNodePtr SuperConstantExpression(NodePtrLRef<GS_ConstantExpression> constantExpression,
-                                              LRef<Driver::GS_Session> session);
-
-            /**
-             * Default transform unary expression
-             * @param unaryExpression Unary expression
-             * @param session Session
-             * @return Transformed unary expression
-             */
-            GSNodePtr SuperUnaryExpression(NodePtrLRef<GS_UnaryExpression> unaryExpression,
-                                           LRef<Driver::GS_Session> session);
-
-            /**
-             * Default transform binary expression
-             * @param binaryExpression Binary expression
-             * @param session Session
-             * @return Transformed binary expression
-             */
-            GSNodePtr SuperBinaryExpression(NodePtrLRef<GS_BinaryExpression> binaryExpression,
-                                            LRef<Driver::GS_Session> session);
-
-            /**
-             * Default transform array expression
-             * @param arrayExpression Array expression
-             * @param session Session
-             * @return Transformed array expression
-             */
-            GSNodePtr SuperArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
-                                            LRef<Driver::GS_Session> session);
-
-            /**
-             * Default transform variable using expression
-             * @param variableUsingExpression Variable using expression
-             * @param session Session
-             * @return Transformed variable using expression
-             */
-            GSNodePtr SuperVariableUsingExpression(NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression,
-                                                   LRef<Driver::GS_Session> session);
-
-            /**
-             * Default transform function calling expression
-             * @param functionCallingExpression Function calling expression
-             * @param session Session
-             * @return Transformed function calling expression
-             */
-            GSNodePtr SuperFunctionCallingExpression(NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression,
-                                                     LRef<Driver::GS_Session> session);
+            virtual ~GS_Transformer();
 
         public:
 
+            /*
+             *
+             * GS_Transformer PUBLIC METHODS
+             *
+             */
+
             /**
-             * Transform node
-             * @param node Node
+             * Default transform node
              * @param session Session
+             * @param node Node
              * @return Transformed node
              */
-            virtual GSNodePtr TransformNode(LRef<GSNodePtr> node,
-                                            LRef<Driver::GS_Session> session);
+            GSNodePtr SuperNode(LRef<Driver::GS_Session> session,
+                                LRef<GSNodePtr> node);
+
+            /**
+             * Default transform declaration
+             * @param session Session
+             * @param declaration Declaration
+             * @return Transformed declaration
+             */
+            GSNodePtr SuperDeclaration(LRef<Driver::GS_Session> session,
+                                       LRef<GSDeclarationPtr> declaration);
+
+            /**
+             * Default transform statement
+             * @param session Session
+             * @param statement Statement
+             * @return Transformed statement
+             */
+            GSNodePtr SuperStatement(LRef<Driver::GS_Session> session,
+                                     LRef<GSStatementPtr> statement);
+
+            /**
+             * Default transform expression
+             * @param session Session
+             * @param expression Expression
+             * @return Transformed expression
+             */
+            GSNodePtr SuperExpression(LRef<Driver::GS_Session> session,
+                                      LRef<GSExpressionPtr> expression);
+
+            /**
+             * Default transform translation unit declaration
+             * @param session Session
+             * @param translationUnitDeclaration Translation unit declaration
+             * @return Transformed translation unit declaration
+             */
+            GSNodePtr SuperTranslationUnitDeclaration(LRef<Driver::GS_Session> session,
+                                                      NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration);
+
+            /**
+             * Default transform function declaration
+             * @param session Session
+             * @param functionDeclaration Function declaration
+             * @return Transformed function declaration
+             */
+            GSNodePtr SuperFunctionDeclaration(LRef<Driver::GS_Session> session,
+                                               NodePtrLRef<GS_FunctionDeclaration> functionDeclaration);
+
+            /**
+             * Default transform variable declaration statement
+             * @param session Session
+             * @param variableDeclarationStatement Variable declaration statement
+             * @return Transformed variable declaration statement
+             */
+            GSNodePtr SuperVariableDeclarationStatement(LRef<Driver::GS_Session> session,
+                                                        NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement);
+
+            /**
+             * Default transform assignment statement
+             * @param session Session
+             * @param assignmentStatement Assignment statement
+             * @return Transformed assignment statement
+             */
+            GSNodePtr SuperAssignmentStatement(LRef<Driver::GS_Session> session,
+                                               NodePtrLRef<GS_AssignmentStatement> assignmentStatement);
+
+            /**
+             * Default transform expression statement
+             * @param session Session
+             * @param expressionStatement Expression statement
+             * @return Transformed expression statement
+             */
+            GSNodePtr SuperExpressionStatement(LRef<Driver::GS_Session> session,
+                                               NodePtrLRef<GS_ExpressionStatement> expressionStatement);
+
+            /**
+             * Default transform constant expression
+             * @param session Session
+             * @param constantExpression Constant expression
+             * @return Transformed constant expression
+             */
+            GSNodePtr SuperConstantExpression(LRef<Driver::GS_Session> session,
+                                              NodePtrLRef<GS_ConstantExpression> constantExpression);
+
+            /**
+             * Default transform unary expression
+             * @param session Session
+             * @param unaryExpression Unary expression
+             * @return Transformed unary expression
+             */
+            GSNodePtr SuperUnaryExpression(LRef<Driver::GS_Session> session,
+                                           NodePtrLRef<GS_UnaryExpression> unaryExpression);
+
+            /**
+             * Default transform binary expression
+             * @param session Session
+             * @param binaryExpression Binary expression
+             * @return Transformed binary expression
+             */
+            GSNodePtr SuperBinaryExpression(LRef<Driver::GS_Session> session,
+                                            NodePtrLRef<GS_BinaryExpression> binaryExpression);
+
+            /**
+             * Default transform array expression
+             * @param session Session
+             * @param arrayExpression Array expression
+             * @return Transformed array expression
+             */
+            GSNodePtr SuperArrayExpression(LRef<Driver::GS_Session> session,
+                                           NodePtrLRef<GS_ArrayExpression> arrayExpression);
+
+            /**
+             * Default transform variable using expression
+             * @param session Session
+             * @param variableUsingExpression Variable using expression
+             * @return Transformed variable using expression
+             */
+            GSNodePtr SuperVariableUsingExpression(LRef<Driver::GS_Session> session,
+                                                   NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression);
+
+            /**
+             * Default transform function calling expression
+             * @param session Session
+             * @param functionCallingExpression Function calling expression
+             * @return Transformed function calling expression
+             */
+            GSNodePtr SuperFunctionCallingExpression(LRef<Driver::GS_Session> session,
+                                                     NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression);
+
+        public:
+
+            /*
+             *
+             * GS_Transformer PUBLIC VIRTUAL METHODS
+             *
+             */
+
+            /**
+             * Transform node
+             * @param session Session
+             * @param node Node
+             * @return Transformed node
+             */
+            virtual GSNodePtr TransformNode(LRef<Driver::GS_Session> session,
+                                            LRef<GSNodePtr> node);
 
             /**
              * Transform declaration
-             * @param declaration Declaration
              * @param session Session
+             * @param declaration Declaration
              * @return Transformed declaration
              */
-            virtual GSNodePtr TransformDeclaration(LRef<GSDeclarationPtr> declaration,
-                                                   LRef<Driver::GS_Session> session);
+            virtual GSNodePtr TransformDeclaration(LRef<Driver::GS_Session> session,
+                                                   LRef<GSDeclarationPtr> declaration);
 
             /**
              * Transform statement
-             * @param statement Statement
              * @param session Session
+             * @param statement Statement
              * @return Transformed statement
              */
-            virtual GSNodePtr TransformStatement(LRef<GSStatementPtr> statement,
-                                                 LRef<Driver::GS_Session> session);
+            virtual GSNodePtr TransformStatement(LRef<Driver::GS_Session> session,
+                                                 LRef<GSStatementPtr> statement);
 
             /**
              * Transform expression
-             * @param expression Expression
              * @param session Session
+             * @param expression Expression
              * @return Transformed expression
              */
-            virtual GSNodePtr TransformExpression(LRef<GSExpressionPtr> expression,
-                                                  LRef<Driver::GS_Session> session);
+            virtual GSNodePtr TransformExpression(LRef<Driver::GS_Session> session,
+                                                  LRef<GSExpressionPtr> expression);
 
             /**
              * Transform translation unit declaration
-             * @param translationUnitDeclaration Translation unit declaration
              * @param session Session
+             * @param translationUnitDeclaration Translation unit declaration
              * @return Transformed translation unit declaration
              */
-            virtual GSNodePtr TransformTranslationUnitDeclaration(NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration,
-                                                                  LRef<Driver::GS_Session> session);
+            virtual GSNodePtr TransformTranslationUnitDeclaration(LRef<Driver::GS_Session> session,
+                                                                  NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration);
 
             /**
              * Transform function declaration
-             * @param functionDeclaration Function declaration
              * @param session Session
+             * @param functionDeclaration Function declaration
              * @return Transformed function declaration
              */
-            virtual GSNodePtr TransformFunctionDeclaration(NodePtrLRef<GS_FunctionDeclaration> functionDeclaration,
-                                                           LRef<Driver::GS_Session> session);
+            virtual GSNodePtr TransformFunctionDeclaration(LRef<Driver::GS_Session> session,
+                                                           NodePtrLRef<GS_FunctionDeclaration> functionDeclaration);
 
             /**
              * Transform variable declaration statement
-             * @param variableDeclarationStatement Variable declaration statement
              * @param session Session
+             * @param variableDeclarationStatement Variable declaration statement
              * @return Transformed variable declaration statement
              */
-            virtual GSNodePtr TransformVariableDeclarationStatement(NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement,
-                                                                    LRef<Driver::GS_Session> session);
+            virtual GSNodePtr TransformVariableDeclarationStatement(LRef<Driver::GS_Session> session,
+                                                                    NodePtrLRef<GS_VariableDeclarationStatement> variableDeclarationStatement);
 
             /**
              * Transform assignment statement
-             * @param assignmentStatement Assignment statement
              * @param session Session
+             * @param assignmentStatement Assignment statement
              * @return Transformed assignment statement
              */
-            virtual GSNodePtr TransformAssignmentStatement(NodePtrLRef<GS_AssignmentStatement> assignmentStatement,
-                                                           LRef<Driver::GS_Session> session);
+            virtual GSNodePtr TransformAssignmentStatement(LRef<Driver::GS_Session> session,
+                                                           NodePtrLRef<GS_AssignmentStatement> assignmentStatement);
 
             /**
              * Transform expression statement
-             * @param expressionStatement Expression statement
              * @param session Session
+             * @param expressionStatement Expression statement
              * @return Transformed expression statement
              */
-            virtual GSNodePtr TransformExpressionStatement(NodePtrLRef<GS_ExpressionStatement> expressionStatement,
-                                                           LRef<Driver::GS_Session> session);
+            virtual GSNodePtr TransformExpressionStatement(LRef<Driver::GS_Session> session,
+                                                           NodePtrLRef<GS_ExpressionStatement> expressionStatement);
 
             /**
              * Transform constant expression
-             * @param constantExpression Constant expression
              * @param session Session
+             * @param constantExpression Constant expression
              * @return Transformed constant expression
              */
-            virtual GSNodePtr TransformConstantExpression(NodePtrLRef<GS_ConstantExpression> constantExpression,
-                                                          LRef<Driver::GS_Session> session);
+            virtual GSNodePtr TransformConstantExpression(LRef<Driver::GS_Session> session,
+                                                          NodePtrLRef<GS_ConstantExpression> constantExpression);
 
             /**
              * Transform unary expression
-             * @param unaryExpression Unary expression
              * @param session Session
+             * @param unaryExpression Unary expression
              * @return Transformed unary expression
              */
-            virtual GSNodePtr TransformUnaryExpression(NodePtrLRef<GS_UnaryExpression> unaryExpression,
-                                                       LRef<Driver::GS_Session> session);
+            virtual GSNodePtr TransformUnaryExpression(LRef<Driver::GS_Session> session,
+                                                       NodePtrLRef<GS_UnaryExpression> unaryExpression);
 
             /**
              * Transform binary expression
-             * @param binaryExpression Binary expression
              * @param session Session
+             * @param binaryExpression Binary expression
              * @return Transformed binary expression
              */
-            virtual GSNodePtr TransformBinaryExpression(NodePtrLRef<GS_BinaryExpression> binaryExpression,
-                                                        LRef<Driver::GS_Session> session);
+            virtual GSNodePtr TransformBinaryExpression(LRef<Driver::GS_Session> session,
+                                                        NodePtrLRef<GS_BinaryExpression> binaryExpression);
 
             /**
              * Transform array expression
-             * @param arrayExpression Array expression
              * @param session Session
+             * @param arrayExpression Array expression
              * @return Transformed array expression
              */
-            virtual GSNodePtr TransformArrayExpression(NodePtrLRef<GS_ArrayExpression> arrayExpression,
-                                                        LRef<Driver::GS_Session> session);
+            virtual GSNodePtr TransformArrayExpression(LRef<Driver::GS_Session> session,
+                                                       NodePtrLRef<GS_ArrayExpression> arrayExpression);
 
             /**
              * Transform variable using expression
-             * @param variableUsingExpression Variable using expression
              * @param session Session
+             * @param variableUsingExpression Variable using expression
              * @return Transformed variable using expression
              */
-            virtual GSNodePtr TransformVariableUsingExpression(NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression,
-                                                               LRef<Driver::GS_Session> session);
+            virtual GSNodePtr TransformVariableUsingExpression(LRef<Driver::GS_Session> session,
+                                                               NodePtrLRef<GS_VariableUsingExpression> variableUsingExpression);
 
             /**
              * Transform function calling expression
-             * @param functionCallingExpression Function calling expression
              * @param session Session
+             * @param functionCallingExpression Function calling expression
              * @return Transformed function calling expression
              */
-            virtual GSNodePtr TransformFunctionCallingExpression(NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression,
-                                                                 LRef<Driver::GS_Session> session);
+            virtual GSNodePtr TransformFunctionCallingExpression(LRef<Driver::GS_Session> session,
+                                                                 NodePtrLRef<GS_FunctionCallingExpression> functionCallingExpression);
         };
 
     }

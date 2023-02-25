@@ -4,30 +4,46 @@
 
 namespace GSLanguageCompiler::Semantic {
 
-    Void AddFunction(ConstLRef<AST::NodePtr<AST::GS_FunctionDeclaration>> functionDeclaration, LRef<GSTableOfSymbolsPtr> tableOfSymbols) {
-        tableOfSymbols->AddFunction(functionDeclaration->GetName(), functionDeclaration->GetSignature());
+    Void AddFunction(ConstLRef<AST::NodePtr<AST::GS_FunctionDeclaration>> functionDeclaration,
+                     LRef<GS_TableOfSymbols> tableOfSymbols) {
+        auto functionName = functionDeclaration->GetName();
+        auto functionSignature = functionDeclaration->GetSignature();
+
+        tableOfSymbols.AddFunction(functionName,
+                                   functionSignature);
     }
 
-    Void AddVariable(ConstLRef<AST::NodePtr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement, LRef<GSTableOfSymbolsPtr> tableOfSymbols) {
-        tableOfSymbols->AddVariable(variableDeclarationStatement->GetName(), variableDeclarationStatement->GetType());
+    Void AddVariable(ConstLRef<AST::NodePtr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement,
+                     LRef<GS_TableOfSymbols> tableOfSymbols) {
+        auto variableName = variableDeclarationStatement->GetName();
+        auto variableType = variableDeclarationStatement->GetType();
+        
+        tableOfSymbols.AddVariable(variableName,
+                                   variableType);
     }
 
-    Void GS_SymbolsPlaceholderVisitor::VisitFunctionDeclaration(LRef<AST::NodePtr<AST::GS_FunctionDeclaration>> functionDeclaration,
-                                                                LRef<Driver::GS_Session> session) {
-        GS_Visitor::VisitFunctionDeclaration(functionDeclaration, session);
+    GS_SymbolsPlaceholderVisitor::GS_SymbolsPlaceholderVisitor() = default;
 
-        auto tableOfSymbols = session.GetTableOfSymbols();
+    Void GS_SymbolsPlaceholderVisitor::VisitFunctionDeclaration(LRef<Driver::GS_Session> session,
+                                                                AST::NodePtrLRef<AST::GS_FunctionDeclaration> functionDeclaration) {
+        GS_Visitor::VisitFunctionDeclaration(session,
+                                             functionDeclaration);
 
-        AddFunction(functionDeclaration, tableOfSymbols);
+        auto &tableOfSymbols = session.GetTableOfSymbols();
+
+        AddFunction(functionDeclaration,
+                    tableOfSymbols);
     }
 
-    Void GS_SymbolsPlaceholderVisitor::VisitVariableDeclarationStatement(LRef<AST::NodePtr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement,
-                                                                         LRef<Driver::GS_Session> session) {
-        GS_Visitor::VisitVariableDeclarationStatement(variableDeclarationStatement, session);
+    Void GS_SymbolsPlaceholderVisitor::VisitVariableDeclarationStatement(LRef<Driver::GS_Session> session,
+                                                                         AST::NodePtrLRef<AST::GS_VariableDeclarationStatement> variableDeclarationStatement) {
+        GS_Visitor::VisitVariableDeclarationStatement(session,
+                                                      variableDeclarationStatement);
 
-        auto tableOfSymbols = session.GetTableOfSymbols();
+        auto &tableOfSymbols = session.GetTableOfSymbols();
 
-        AddVariable(variableDeclarationStatement, tableOfSymbols);
+        AddVariable(variableDeclarationStatement,
+                    tableOfSymbols);
     }
 
     AST::GSPassPtr CreateSymbolsPlaceholderPass() {

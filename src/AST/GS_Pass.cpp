@@ -4,94 +4,102 @@ namespace GSLanguageCompiler::AST {
 
     GS_Pass::~GS_Pass() = default;
 
-    Void GS_Pass::Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration,
-                      LRef<Driver::GS_Session> session) {
+    Void GS_Pass::Run(LRef<Driver::GS_Session> session,
+                      LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration) {
 
     }
 
-    Void GS_Pass::Run(LRef<GSNodePtr> node,
-                      LRef<Driver::GS_Session> session) {
+    Void GS_Pass::Run(LRef<Driver::GS_Session> session,
+                      LRef<GSNodePtr> node) {
 
     }
 
-    Void GS_Pass::Run(LRef<GSNodePtrArray> nodes,
-                      LRef<Driver::GS_Session> session) {
+    Void GS_Pass::Run(LRef<Driver::GS_Session> session,
+                      LRef<GSNodePtrArray> nodes) {
 
     }
 
-    Void GS_Pass::Run(LRef<GSDeclarationPtrArray> declarations,
-                      LRef<Driver::GS_Session> session) {
+    Void GS_Pass::Run(LRef<Driver::GS_Session> session,
+                      LRef<GSDeclarationPtrArray> declarations) {
 
     }
 
-    Void GS_Pass::Run(LRef<GSStatementPtrArray> statements,
-                      LRef<Driver::GS_Session> session) {
+    Void GS_Pass::Run(LRef<Driver::GS_Session> session,
+                      LRef<GSStatementPtrArray> statements) {
 
     }
 
-    Void GS_Pass::Run(LRef<GSExpressionPtrArray> expressions,
-                      LRef<Driver::GS_Session> session) {
+    Void GS_Pass::Run(LRef<Driver::GS_Session> session,
+                      LRef<GSExpressionPtrArray> expressions) {
 
     }
 
     GS_PassManager::GS_PassManager(GSPassPtrArray passes)
             : _passes(std::move(passes)) {}
 
-    std::shared_ptr<GS_PassManager> GS_PassManager::Create(GSPassPtrArray passes) {
-        return std::make_shared<GS_PassManager>(std::move(passes));
+    std::unique_ptr<GS_PassManager> GS_PassManager::Create(GSPassPtrArray passes) {
+        return std::make_unique<GS_PassManager>(std::move(passes));
     }
 
-    std::shared_ptr<GS_PassManager> GS_PassManager::Create() {
+    std::unique_ptr<GS_PassManager> GS_PassManager::Create() {
         return GS_PassManager::Create(GSPassPtrArray());
     }
 
-    Void GS_PassManager::Run(LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration,
-                             LRef<Driver::GS_Session> session) {
+    Void GS_PassManager::Run(LRef<Driver::GS_Session> session,
+                             LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration) {
         for (auto &pass : _passes) {
-            pass->Run(translationUnitDeclaration, session);
+            pass->Run(session,
+                      translationUnitDeclaration);
         }
     }
 
-    Void GS_PassManager::Run(LRef<GSNodePtr> node,
-                             LRef<Driver::GS_Session> session) {
+    Void GS_PassManager::Run(LRef<Driver::GS_Session> session,
+                             LRef<GSNodePtr> node) {
         for (auto &pass : _passes) {
-            pass->Run(node, session);
+            pass->Run(session,
+                      node);
         }
     }
 
-    Void GS_PassManager::Run(LRef<GSNodePtrArray> nodes,
-                             LRef<Driver::GS_Session> session) {
+    Void GS_PassManager::Run(LRef<Driver::GS_Session> session,
+                             LRef<GSNodePtrArray> nodes) {
         for (auto &pass : _passes) {
-            pass->Run(nodes, session);
+            pass->Run(session,
+                      nodes);
         }
     }
 
-    Void GS_PassManager::Run(LRef<GSDeclarationPtrArray> declarations,
-                             LRef<Driver::GS_Session> session) {
+    Void GS_PassManager::Run(LRef<Driver::GS_Session> session,
+                             LRef<GSDeclarationPtrArray> declarations) {
         for (auto &pass : _passes) {
-            pass->Run(declarations, session);
+            pass->Run(session,
+                      declarations);
         }
     }
 
-    Void GS_PassManager::Run(LRef<GSStatementPtrArray> statements,
-                             LRef<Driver::GS_Session> session) {
+    Void GS_PassManager::Run(LRef<Driver::GS_Session> session,
+                             LRef<GSStatementPtrArray> statements) {
         for (auto &pass : _passes) {
-            pass->Run(statements, session);
+            pass->Run(session,
+                      statements);
         }
     }
 
-    Void GS_PassManager::Run(LRef<GSExpressionPtrArray> expressions,
-                             LRef<Driver::GS_Session> session) {
+    Void GS_PassManager::Run(LRef<Driver::GS_Session> session,
+                             LRef<GSExpressionPtrArray> expressions) {
         for (auto &pass : _passes) {
-            pass->Run(expressions, session);
+            pass->Run(session,
+                      expressions);
         }
     }
 
-    Void GS_PassManager::AddPass(GSPassPtr pass) {
+    ConstLRef<GS_Pass> GS_PassManager::AddPass(GSPassPtr pass) {
         _passes.emplace_back(std::move(pass));
+
+        return *_passes[_passes.size() - 1];
     }
 
-    GSPassPtrArray GS_PassManager::GetPasses() const {
+    ConstLRef<GSPassPtrArray> GS_PassManager::GetPasses() const {
         return _passes;
     }
 

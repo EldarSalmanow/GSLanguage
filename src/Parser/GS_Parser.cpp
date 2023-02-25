@@ -17,7 +17,7 @@ namespace GSLanguageCompiler::Parser {
 //              _messages(IO::GSMessagePtrArray()),
               _tokenBuffer(tokenBuffer),
               _tokenIterator(_tokenBuffer.cbegin()),
-              _builder(AST::GS_ASTBuilder::Create(_session.GetASTContext())) {}
+              _builder(AST::GS_ASTBuilder::Create()) {}
 
     GS_Parser GS_Parser::Create(LRef<Driver::GS_Session> session,
                                 ConstLRef<Lexer::GS_TokenBuffer> tokenBuffer) {
@@ -720,6 +720,14 @@ namespace GSLanguageCompiler::Parser {
 
     Void GS_Parser::NextToken() {
         ++_tokenIterator;
+    }
+
+    Void GS_Parser::Message(UString message, IO::MessageLevel messageLevel) {
+
+    }
+
+    Void GS_Parser::LocatedMessage(UString message, IO::MessageLevel messageLevel, IO::GSByteSourceRange locationRange) {
+
     }
 
     AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_Session> session, ConstLRef<IO::GS_Source> source) {
