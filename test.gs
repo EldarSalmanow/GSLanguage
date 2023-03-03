@@ -1,3 +1,3 @@
 func main() {
-    1 + 1
+    var number = 1 + 1
 }

@@ -239,7 +239,7 @@ namespace GSLanguageCompiler::Lexer {
         ConstLRef<IO::GS_Source> _source;
 
         /**
-         * Source buffer iterator (cursor)
+         * Source buffer iterator (source cursor)
          */
         IO::GS_Source::ConstIterator _sourceIterator;
 

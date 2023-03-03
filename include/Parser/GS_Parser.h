@@ -42,7 +42,6 @@ namespace GSLanguageCompiler::Parser {
     /**
      *
      * Expression
-     * TODO Add braced expression in grammar and add expression precedence
      *
      * expr -> const_expr, unary_expr, binary_expr, var_using_expr, func_call_expr
      *
@@ -107,38 +106,43 @@ namespace GSLanguageCompiler::Parser {
     public:
 
         /**
-         *
-         * @param programName
-         * @return
+         * Parsing program
+         * @param programName Program name
+         * @return Program (translation unit declaration)
          * @todo Update messages flushing
          */
         AST::GSTranslationUnitDeclarationPtr ParseProgram(UString programName);
 
     private:
 
+        // norm
         AST::GSTranslationUnitDeclarationPtr ParseTranslationUnitDeclaration(UString translationUnitName);
 
+        // norm
         AST::GSDeclarationPtr ParseDeclaration();
 
+        // norm
         AST::NodePtr<AST::GS_FunctionDeclaration> ParseFunctionDeclaration();
 
+        // norm
         AST::GSStatementPtr ParseStatement();
 
+        // norm
         AST::NodePtr<AST::GS_VariableDeclarationStatement> ParseVariableDeclarationStatement();
 
+        // norm
         AST::NodePtr<AST::GS_AssignmentStatement> ParseAssignmentStatement();
 
+        // norm
         AST::NodePtr<AST::GS_ExpressionStatement> ParseExpressionStatement();
 
-        // TODO
         AST::GSExpressionPtr ParseExpression();
 
-        // TODO
         AST::GSExpressionPtr ParseLValueExpression();
 
-        // TODO
         AST::GSExpressionPtr ParseRValueExpression();
 
+        // norm
         AST::GSExpressionPtr ParseConstantExpression();
 
         AST::GSExpressionPtr ParseUnaryExpression();
@@ -146,18 +150,23 @@ namespace GSLanguageCompiler::Parser {
         AST::GSExpressionPtr ParseBinaryExpression(I32 precedence,
                                                    LRef<AST::GSExpressionPtr> expression);
 
+        // norm
         AST::NodePtr<AST::GS_ArrayExpression> ParseArrayExpression();
 
-        AST::GSExpressionPtr ParseVariableUsingExpression();
+        // norm
+        AST::NodePtr<AST::GS_VariableUsingExpression> ParseVariableUsingExpression();
 
-        AST::GSExpressionPtr ParseFunctionCallingExpression();
+        // norm
+        AST::NodePtr<AST::GS_FunctionCallingExpression> ParseFunctionCallingExpression();
 
         AST::GSExpressionPtr ParsePrimaryExpression();
 
     private:
 
+        // norm
         AST::GSValuePtr ParseValue();
 
+        // norm
         Semantic::GSTypePtr ParseType();
 
     private:
@@ -197,23 +206,31 @@ namespace GSLanguageCompiler::Parser {
 
         Void NextToken();
 
-        Void Message(UString message,
-                     IO::MessageLevel messageLevel);
-
-        Void LocatedMessage(UString message,
-                            IO::MessageLevel messageLevel,
-                            IO::GSByteSourceRange locationRange);
-
     private:
 
+        /**
+         * Session
+         */
         LRef<Driver::GS_Session> _session;
 
+        /**
+         * Messages
+         */
         IO::GSMessageArray _messages;
 
+        /**
+         * Token buffer
+         */
         ConstLRef<Lexer::GS_TokenBuffer> _tokenBuffer;
 
+        /**
+         * Token buffer iterator (token cursor)
+         */
         Lexer::GS_TokenBuffer::ConstIterator _tokenIterator;
 
+        /**
+         * AST builder
+         */
         AST::GSASTBuilderPtr _builder;
     };
 
