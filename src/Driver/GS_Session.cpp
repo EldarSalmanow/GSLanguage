@@ -86,7 +86,8 @@ namespace GSLanguageCompiler::Driver {
         };
 
         for (auto &source : sources) {
-            auto translationUnitDeclaration = Parser::ParseProgram(*this, *source);
+            auto translationUnitDeclaration = Parser::ParseProgram(*this,
+                                                                   *source);
 
             Semantic::CreateSymbolsPlaceholderPass()->Run(*this,
                                                           translationUnitDeclaration);
@@ -96,7 +97,8 @@ namespace GSLanguageCompiler::Driver {
                                     translationUnitDeclaration);
             }
 
-            Debug::DumpAST(translationUnitDeclaration, *this);
+            Debug::DumpAST(translationUnitDeclaration,
+                           *this);
 
             Debug::DumpTableOfSymbols(*_tableOfSymbols);
 

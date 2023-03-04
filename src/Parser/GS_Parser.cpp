@@ -63,8 +63,12 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSDeclarationPtr GS_Parser::ParseDeclaration() {
-        if (IsTokenType(Lexer::TokenType::KeywordFunc)) {
-            return ParseFunctionDeclaration();
+        AST::GSDeclarationPtr declaration;
+
+        declaration = TryParse(&GS_Parser::ParseFunctionDeclaration);
+
+        if (declaration) {
+            return declaration;
         }
 
         ErrorMessage("Unknown declaration!"_us);
@@ -147,7 +151,15 @@ namespace GSLanguageCompiler::Parser {
             return statement;
         }
 
-        return ParseExpressionStatement();
+        statement = TryParse(&GS_Parser::ParseExpressionStatement);
+
+        if (statement) {
+            return statement;
+        }
+
+        ErrorMessage("Unknown statement!");
+
+        return nullptr;
     }
 
     AST::NodePtr<AST::GS_VariableDeclarationStatement> GS_Parser::ParseVariableDeclarationStatement() {
@@ -176,6 +188,8 @@ namespace GSLanguageCompiler::Parser {
         if (!IsTokenType(Lexer::TokenType::SymbolColon) &&
             !IsTokenType(Lexer::TokenType::SymbolEq)) {
             ErrorMessage("Missed '=' for expression or ':' for type in variable declaration statement!"_us);
+
+            return nullptr;
         }
 
         if (IsTokenType(Lexer::TokenType::SymbolColon)) {
