@@ -2,11 +2,11 @@
 
 namespace GSLanguageCompiler::Debug {
 
-    GS_TableOfSymbolsDumper::GS_TableOfSymbolsDumper(Semantic::GSTableOfSymbolsPtr tableOfSymbols)
-            : _tableOfSymbols(std::move(tableOfSymbols)) {}
+    GS_TableOfSymbolsDumper::GS_TableOfSymbolsDumper(ConstLRef<Semantic::GS_TableOfSymbols> tableOfSymbols)
+            : _tableOfSymbols(tableOfSymbols) {}
 
-    std::shared_ptr<GS_TableOfSymbolsDumper> GS_TableOfSymbolsDumper::Create(Semantic::GSTableOfSymbolsPtr tableOfSymbols) {
-        return std::make_shared<GS_TableOfSymbolsDumper>(std::move(tableOfSymbols));
+    std::shared_ptr<GS_TableOfSymbolsDumper> GS_TableOfSymbolsDumper::Create(ConstLRef<Semantic::GS_TableOfSymbols> tableOfSymbols) {
+        return std::make_shared<GS_TableOfSymbolsDumper>(tableOfSymbols);
     }
 
     Void GS_TableOfSymbolsDumper::Dump() {
@@ -14,7 +14,7 @@ namespace GSLanguageCompiler::Debug {
 
         U64 index = 0;
 
-        for (auto &symbol : _tableOfSymbols->GetSymbols()) {
+        for (auto &symbol : _tableOfSymbols.GetSymbols()) {
             ++index;
 
             UStringStream stringStream;
@@ -32,10 +32,12 @@ namespace GSLanguageCompiler::Debug {
                 case Semantic::SymbolType::Variable: {
                     auto variableSymbol = Semantic::ToSymbol<Semantic::GS_VariableSymbol>(symbol);
 
+                    // TODO Add UnknownType
+
                     stringStream
                             << index << ": Variable {\n"_us
                             << "  Name: "_us << variableSymbol->GetName() << "\n"_us
-                            << "  Type: "_us << variableSymbol->GetType()->GetName() << "\n}\n"_us;
+                            << "  Type: "_us << (variableSymbol->GetType() ? variableSymbol->GetType()->GetName() : "<unknown>"_us) << "\n}\n"_us;
 
                     break;
                 }
@@ -47,8 +49,8 @@ namespace GSLanguageCompiler::Debug {
         std::cout << "-------------------------------------------"_us << std::endl;
     }
 
-    Void DumpTableOfSymbols(Semantic::GSTableOfSymbolsPtr tableOfSymbols) {
-        auto dumper = GS_TableOfSymbolsDumper::Create(std::move(tableOfSymbols));
+    Void DumpTableOfSymbols(ConstLRef<Semantic::GS_TableOfSymbols> tableOfSymbols) {
+        auto dumper = GS_TableOfSymbolsDumper::Create(tableOfSymbols);
 
         dumper->Dump();
     }

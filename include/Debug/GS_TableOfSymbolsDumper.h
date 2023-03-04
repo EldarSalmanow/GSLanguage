@@ -17,7 +17,7 @@ namespace GSLanguageCompiler::Debug {
          * Constructor for table of symbols dumper
          * @param tableOfSymbols Table of symbols dumper
          */
-        explicit GS_TableOfSymbolsDumper(Semantic::GSTableOfSymbolsPtr tableOfSymbols);
+        explicit GS_TableOfSymbolsDumper(ConstLRef<Semantic::GS_TableOfSymbols> tableOfSymbols);
 
     public:
 
@@ -26,7 +26,7 @@ namespace GSLanguageCompiler::Debug {
          * @param tableOfSymbols Table of symbols
          * @return Table of symbols dumper ptr
          */
-        static std::shared_ptr<GS_TableOfSymbolsDumper> Create(Semantic::GSTableOfSymbolsPtr tableOfSymbols);
+        static std::shared_ptr<GS_TableOfSymbolsDumper> Create(ConstLRef<Semantic::GS_TableOfSymbols> tableOfSymbols);
 
     public:
 
@@ -41,7 +41,7 @@ namespace GSLanguageCompiler::Debug {
         /**
          * Table of symbols
          */
-        Semantic::GSTableOfSymbolsPtr _tableOfSymbols;
+        ConstLRef<Semantic::GS_TableOfSymbols> _tableOfSymbols;
     };
 
     /**
@@ -49,7 +49,7 @@ namespace GSLanguageCompiler::Debug {
      * @param tableOfSymbols Table of symbols
      * @return
      */
-    Void DumpTableOfSymbols(Semantic::GSTableOfSymbolsPtr tableOfSymbols);
+    Void DumpTableOfSymbols(ConstLRef<Semantic::GS_TableOfSymbols> tableOfSymbols);
 
 }
 

@@ -283,7 +283,7 @@ namespace GSLanguageCompiler::Lexer {
                 }
             }
 
-            return GS_Token::Create(TokenType::LiteralNumber,
+            return GS_Token::Create(TokenType::LiteralString,
                                     string,
                                     IO::GSByteSourceRange::Create(startPosition,
                                                                   endPosition));

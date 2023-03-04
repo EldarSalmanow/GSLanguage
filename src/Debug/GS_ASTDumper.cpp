@@ -12,8 +12,8 @@ namespace GSLanguageCompiler::Debug {
 
     public:
 
-        Void VisitTranslationUnitDeclaration(AST::NodePtrLRef<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration,
-                                             LRef<Driver::GS_Session> session) override {
+        Void VisitTranslationUnitDeclaration(LRef<Driver::GS_Session> session,
+                                             AST::NodePtrLRef<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration) override {
             Print("TranslationUnitDeclaration: {"_us, session);
 
             IncTab();
@@ -25,7 +25,7 @@ namespace GSLanguageCompiler::Debug {
             IncTab();
 
             for (auto &node : translationUnitDeclaration->GetNodes()) {
-                VisitNode(node, session);
+                VisitNode(session, node);
             }
 
             DecTab();
@@ -37,8 +37,8 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us, session);
         }
 
-        Void VisitFunctionDeclaration(AST::NodePtrLRef<AST::GS_FunctionDeclaration> functionDeclaration,
-                                      LRef<Driver::GS_Session> session) override {
+        Void VisitFunctionDeclaration(LRef<Driver::GS_Session> session,
+                                      AST::NodePtrLRef<AST::GS_FunctionDeclaration> functionDeclaration) override {
             Print("FunctionDeclaration: {"_us, session);
 
             IncTab();
@@ -65,7 +65,7 @@ namespace GSLanguageCompiler::Debug {
             IncTab();
 
             for (auto &statement : functionDeclaration->GetBody()) {
-                VisitStatement(statement, session);
+                VisitStatement(session, statement);
             }
 
             DecTab();
@@ -77,21 +77,25 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us, session);
         }
 
-        Void VisitVariableDeclarationStatement(AST::NodePtrLRef<AST::GS_VariableDeclarationStatement> variableDeclarationStatement,
-                                               LRef<Driver::GS_Session> session) override {
+        Void VisitVariableDeclarationStatement(LRef<Driver::GS_Session> session,
+                                               AST::NodePtrLRef<AST::GS_VariableDeclarationStatement> variableDeclarationStatement) override {
             Print("VariableDeclarationStatement: {"_us, session);
 
             IncTab();
 
             Print("Name: "_us + variableDeclarationStatement->GetName(), session);
 
-            Print("Type: "_us + variableDeclarationStatement->GetType()->GetName(), session);
+            if (variableDeclarationStatement->GetType()) {
+                Print("Type: "_us + variableDeclarationStatement->GetType()->GetName(), session);
+            } else {
+                Print("Type: <unknown>"_us, session);
+            }
 
             Print("Expression: {"_us, session);
 
             IncTab();
 
-            VisitExpression(variableDeclarationStatement->GetExpression(), session);
+            VisitExpression(session, variableDeclarationStatement->GetExpression());
 
             DecTab();
 
@@ -102,8 +106,8 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us, session);
         }
 
-        Void VisitAssignmentStatement(AST::NodePtrLRef<AST::GS_AssignmentStatement> assignmentStatement,
-                                      LRef<Driver::GS_Session> session) override {
+        Void VisitAssignmentStatement(LRef<Driver::GS_Session> session,
+                                      AST::NodePtrLRef<AST::GS_AssignmentStatement> assignmentStatement) override {
             Print("AssignmentStatement: {"_us, session);
 
             IncTab();
@@ -112,7 +116,8 @@ namespace GSLanguageCompiler::Debug {
 
             IncTab();
 
-            VisitExpression(assignmentStatement->GetLValueExpression(), session);
+            VisitExpression(session,
+                            assignmentStatement->GetLValueExpression());
 
             DecTab();
 
@@ -122,7 +127,8 @@ namespace GSLanguageCompiler::Debug {
 
             IncTab();
 
-            VisitExpression(assignmentStatement->GetRValueExpression(), session);
+            VisitExpression(session,
+                            assignmentStatement->GetRValueExpression());
 
             DecTab();
 
@@ -133,21 +139,21 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us, session);
         }
 
-        Void VisitExpressionStatement(AST::NodePtrLRef<AST::GS_ExpressionStatement> expressionStatement,
-                                      LRef<Driver::GS_Session> session) override {
+        Void VisitExpressionStatement(LRef<Driver::GS_Session> session,
+                                      AST::NodePtrLRef<AST::GS_ExpressionStatement> expressionStatement) override {
             Print("ExpressionStatement: {"_us, session);
 
             IncTab();
 
-            VisitExpression(expressionStatement->GetExpression(), session);
+            VisitExpression(session, expressionStatement->GetExpression());
 
             DecTab();
 
             Print("}"_us, session);
         }
 
-        Void VisitConstantExpression(AST::NodePtrLRef<AST::GS_ConstantExpression> constantExpression,
-                                     LRef<Driver::GS_Session> session) override {
+        Void VisitConstantExpression(LRef<Driver::GS_Session> session,
+                                     AST::NodePtrLRef<AST::GS_ConstantExpression> constantExpression) override {
             Print("ConstantExpression: {"_us, session);
 
             IncTab();
@@ -176,8 +182,8 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us, session);
         }
 
-        Void VisitUnaryExpression(AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression,
-                                  LRef<Driver::GS_Session> session) override {
+        Void VisitUnaryExpression(LRef<Driver::GS_Session> session,
+                                  AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression) override {
             Print("UnaryExpression: {"_us, session);
 
             IncTab();
@@ -186,7 +192,8 @@ namespace GSLanguageCompiler::Debug {
 
             IncTab();
 
-            VisitExpression(unaryExpression->GetExpression(), session);
+            VisitExpression(session,
+                            unaryExpression->GetExpression());
 
             DecTab();
 
@@ -210,8 +217,8 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us, session);
         }
 
-        Void VisitBinaryExpression(AST::NodePtrLRef<AST::GS_BinaryExpression> binaryExpression,
-                                   LRef<Driver::GS_Session> session) override {
+        Void VisitBinaryExpression(LRef<Driver::GS_Session> session,
+                                   AST::NodePtrLRef<AST::GS_BinaryExpression> binaryExpression) override {
             Print("BinaryExpression: {"_us, session);
 
             IncTab();
@@ -220,7 +227,8 @@ namespace GSLanguageCompiler::Debug {
 
             IncTab();
 
-            VisitExpression(binaryExpression->GetFirstExpression(), session);
+            VisitExpression(session,
+                            binaryExpression->GetFirstExpression());
 
             DecTab();
 
@@ -230,7 +238,8 @@ namespace GSLanguageCompiler::Debug {
 
             IncTab();
 
-            VisitExpression(binaryExpression->GetSecondExpression(), session);
+            VisitExpression(session,
+                            binaryExpression->GetSecondExpression());
 
             DecTab();
 
@@ -266,8 +275,8 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us, session);
         }
 
-        Void VisitArrayExpression(AST::NodePtrLRef<AST::GS_ArrayExpression> arrayExpression,
-                                  LRef<Driver::GS_Session> session) override {
+        Void VisitArrayExpression(LRef<Driver::GS_Session> session,
+                                  AST::NodePtrLRef<AST::GS_ArrayExpression> arrayExpression) override {
             Print("ArrayExpression: {"_us, session);
 
             IncTab();
@@ -277,7 +286,7 @@ namespace GSLanguageCompiler::Debug {
             IncTab();
 
             for (auto &expression : arrayExpression->GetExpressions()) {
-                VisitExpression(expression, session);
+                VisitExpression(session, expression);
             }
 
             DecTab();
@@ -289,8 +298,8 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us, session);
         }
 
-        Void VisitVariableUsingExpression(AST::NodePtrLRef<AST::GS_VariableUsingExpression> variableUsingExpression,
-                                          LRef<Driver::GS_Session> session) override {
+        Void VisitVariableUsingExpression(LRef<Driver::GS_Session> session,
+                                          AST::NodePtrLRef<AST::GS_VariableUsingExpression> variableUsingExpression) override {
             Print("VariableUsingExpression: {"_us, session);
 
             IncTab();
@@ -302,8 +311,8 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us, session);
         }
 
-        Void VisitFunctionCallingExpression(AST::NodePtrLRef<AST::GS_FunctionCallingExpression> functionCallingExpression,
-                                            LRef<Driver::GS_Session> session) override {
+        Void VisitFunctionCallingExpression(LRef<Driver::GS_Session> session,
+                                            AST::NodePtrLRef<AST::GS_FunctionCallingExpression> functionCallingExpression) override {
             Print("FunctionCallingExpression: {"_us, session);
 
             IncTab();
@@ -315,7 +324,8 @@ namespace GSLanguageCompiler::Debug {
             IncTab();
 
             for (auto &param : functionCallingExpression->GetParams()) {
-                VisitExpression(param, session);
+                VisitExpression(session,
+                                param);
             }
 
             DecTab();
@@ -330,7 +340,7 @@ namespace GSLanguageCompiler::Debug {
     private:
 
         Void Print(ConstLRef<UString> message, LRef<Driver::GS_Session> session) {
-            auto &outputStream = session.Out();
+            auto &outputStream = session.StdOut();
 
             for (U64 i = 0; i < _tabsNumber; ++i) {
                 outputStream << "  "_us;
@@ -362,7 +372,7 @@ namespace GSLanguageCompiler::Debug {
     Void GS_ASTDumper::Dump() {
         GS_ASTDumpVisitor visitor;
 
-        visitor.VisitNode(_node, _session);
+        visitor.VisitNode(_session, _node);
     }
 
     Void DumpAST(AST::GSNodePtr node, LRef<Driver::GS_Session> session) {

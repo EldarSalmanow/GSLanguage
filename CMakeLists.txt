@@ -41,7 +41,7 @@ set(PROJECT_LIBRARIES
         GSOptimizerLibrary
         GSSemanticLibrary
 #        GSCodeGeneratorLibrary
-#        GSDebugLibrary
+        GSDebugLibrary
         )
 
 add_executable(${PROJECT_NAME}
@@ -62,7 +62,7 @@ add_subdirectory(${INCLUDE_DIR}/AST)
 add_subdirectory(${INCLUDE_DIR}/Optimizer)
 add_subdirectory(${INCLUDE_DIR}/Semantic)
 #add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
-#add_subdirectory(${INCLUDE_DIR}/Debug)
+add_subdirectory(${INCLUDE_DIR}/Debug)
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${CONAN_LIB_DIRS})
 
