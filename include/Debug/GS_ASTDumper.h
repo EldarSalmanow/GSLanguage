@@ -7,6 +7,8 @@
 
 namespace GSLanguageCompiler::Debug {
 
+    // TODO Add converting and dumping AST to JSON with rapidjson
+
     /**
      * Class for dumping AST
      */
