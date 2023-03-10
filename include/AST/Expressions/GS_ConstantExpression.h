@@ -273,12 +273,77 @@ namespace GSLanguageCompiler::AST {
         USymbol GetCharValue() const;
     };
 
-    // TODO add (U)Integer value?
+    /**
+     * Integer value
+     */
+    class GS_IntegerValue : public GS_LiteralValue {
+    public:
+
+        /*
+         *
+         * GS_IntegerValue PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
+         * Constructor for integer value
+         * @tparam ValueT Value type
+         * @param value Value
+         * @param integerType Integer type
+         */
+        template<typename ValueT>
+        GS_IntegerValue(ValueT value,
+                        Semantic::GSTypePtr integerType)
+                : GS_LiteralValue(std::move(value),
+                                  std::move(integerType)) {
+            if (GetType()->GetType() != Semantic::TypeType::Integer) {
+                Driver::GlobalContext().Exit();
+            }
+        }
+
+    public:
+
+        /*
+         *
+         * GS_IntegerValue PUBLIC STATIC CREATE METHODS
+         *
+         */
+
+        /**
+         * Creating integer value
+         * @tparam ValueT Value type
+         * @param value Value
+         * @param integerType Integer type
+         * @return Integer value ptr
+         */
+        template<typename ValueT>
+        static std::shared_ptr<GS_IntegerValue> Create(ValueT value,
+                                                       Semantic::GSTypePtr integerType) {
+            return std::make_shared<GS_IntegerValue>(std::move(value),
+                                                     std::move(integerType));
+        }
+
+    public:
+
+        /*
+         *
+         * GS_IntegerValue PUBLIC METHODS
+         *
+         */
+
+        /**
+         * Getting integer type
+         * @return Integer type
+         */
+        Semantic::TypePtr<Semantic::GS_IntegerType> GetIntegerType() const {
+            return std::reinterpret_pointer_cast<Semantic::GS_IntegerType>(GetType());
+        }
+    };
 
     /**
      * I8 value
      */
-    class GS_I8Value : public GS_LiteralValue {
+    class GS_I8Value : public GS_IntegerValue {
     public:
 
         /*
@@ -326,7 +391,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * I16 value
      */
-    class GS_I16Value : public GS_LiteralValue {
+    class GS_I16Value : public GS_IntegerValue {
     public:
 
         /*
@@ -374,7 +439,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * I32 value
      */
-    class GS_I32Value : public GS_LiteralValue {
+    class GS_I32Value : public GS_IntegerValue {
     public:
 
         /*
@@ -422,7 +487,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * I64 value
      */
-    class GS_I64Value : public GS_LiteralValue {
+    class GS_I64Value : public GS_IntegerValue {
     public:
 
         /*
@@ -468,9 +533,76 @@ namespace GSLanguageCompiler::AST {
     };
 
     /**
+     * Unsigned integer value
+     */
+    class GS_UIntegerValue : public GS_LiteralValue {
+    public:
+
+        /*
+         *
+         * GS_UIntegerValue PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
+         * Constructor for unsigned integer value
+         * @tparam ValueT Value type
+         * @param value Value
+         * @param unsignedIntegerType Unsigned integer type
+         */
+        template<typename ValueT>
+        GS_UIntegerValue(ValueT value,
+                         Semantic::GSTypePtr unsignedIntegerType)
+                : GS_LiteralValue(std::move(value),
+                                  std::move(unsignedIntegerType)) {
+            if (GetType()->GetType() != Semantic::TypeType::UInteger) {
+                Driver::GlobalContext().Exit();
+            }
+        }
+
+    public:
+
+        /*
+         *
+         * GS_UIntegerValue PUBLIC STATIC CREATE METHODS
+         *
+         */
+
+        /**
+         * Creating unsigned integer value
+         * @tparam ValueT Value type
+         * @param value Value
+         * @param unsignedIntegerType Unsigned integer type
+         * @return Unsigned integer value ptr
+         */
+        template<typename ValueT>
+        static std::shared_ptr<GS_UIntegerValue> Create(ValueT value,
+                                                        Semantic::GSTypePtr unsignedIntegerType) {
+            return std::make_shared<GS_UIntegerValue>(std::move(value),
+                                                      std::move(unsignedIntegerType));
+        }
+
+    public:
+
+        /*
+         *
+         * GS_UIntegerValue PUBLIC METHODS
+         *
+         */
+
+        /**
+         * Getting unsigned integer type
+         * @return Unsigned integer type
+         */
+        Semantic::TypePtr<Semantic::GS_UIntegerType> GetUIntegerType() const {
+            return std::reinterpret_pointer_cast<Semantic::GS_UIntegerType>(GetType());
+        }
+    };
+
+    /**
      * U8 value
      */
-    class GS_U8Value : public GS_LiteralValue {
+    class GS_U8Value : public GS_UIntegerValue {
     public:
 
         /*
@@ -518,7 +650,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * U16 value
      */
-    class GS_U16Value : public GS_LiteralValue {
+    class GS_U16Value : public GS_UIntegerValue {
     public:
 
         /*
@@ -566,7 +698,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * U32 value
      */
-    class GS_U32Value : public GS_LiteralValue {
+    class GS_U32Value : public GS_UIntegerValue {
     public:
 
         /*
@@ -614,7 +746,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * U64 value
      */
-    class GS_U64Value : public GS_LiteralValue {
+    class GS_U64Value : public GS_UIntegerValue {
     public:
 
         /*

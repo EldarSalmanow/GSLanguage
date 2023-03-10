@@ -92,14 +92,38 @@ namespace GSLanguageCompiler::Driver {
         return _stdIOStreamManager->Log();
     }
 
-    Void GS_GlobalContext::Exit(I32 exitCode) {
+    Void GS_GlobalContext::Exit(UString exitMessage,
+                                I32 exitCode) {
+        auto movedExitMessage = std::move(exitMessage);
+
+        // TODO coloring message?
+
+        _stdIOStreamManager->Err() << " |--------------------------------------------------"_us << std::endl
+                                   << "/"_us << std::endl;
+
+        _stdIOStreamManager->Err() << "| Exiting from program!" << std::endl;
+        _stdIOStreamManager->Err() << "| Exit message: " << movedExitMessage << std::endl;
+        _stdIOStreamManager->Err() << "| Exit code: " << exitCode << std::endl;
+
+        _stdIOStreamManager->Err() << "\\"_us << std::endl
+                                   << " |--------------------------------------------------"_us << std::endl;
+
         std::exit(exitCode);
     }
 
-    Void GS_GlobalContext::Exit() {
-        auto exitCode = StaticCast<I32>(Result::Err);
+    Void GS_GlobalContext::Exit(UString exitMessage) {
+        Exit(std::move(exitMessage),
+             ToExitCode(Result::Err));
+    }
 
-        Exit(exitCode);
+    Void GS_GlobalContext::Exit(I32 exitCode) {
+        Exit("<unknown>",
+             exitCode);
+    }
+
+    Void GS_GlobalContext::Exit() {
+        Exit("<unknown>",
+             ToExitCode(Result::Err));
     }
 
     GS_GlobalContext::GS_GlobalContext()

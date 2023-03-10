@@ -117,10 +117,25 @@ namespace GSLanguageCompiler::Driver {
         LRef<std::ostream> Log();
 
         /**
-         * Exiting from program
+         * Exiting from program with exit message and exit code
+         * @param exitMessage Exit message
          * @param exitCode Exit code
          * @return No return
-         * @todo Add cleanup
+         */
+        GS_NORETURN Void Exit(UString exitMessage,
+                              I32 exitCode);
+
+        /**
+         * Exiting from program with exit message and Err result
+         * @param exitMessage Exit message
+         * @return No return
+         */
+        GS_NORETURN Void Exit(UString exitMessage);
+
+        /**
+         * Exiting from program with void exit message and exit code
+         * @param exitCode Exit code
+         * @return No return
          */
         GS_NORETURN Void Exit(I32 exitCode);
 

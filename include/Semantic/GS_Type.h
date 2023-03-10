@@ -299,8 +299,6 @@ namespace GSLanguageCompiler::Semantic {
         virtual IntegerType GetIntegerType() const;
     };
 
-    // TODO add (U)Integer ptr type
-
     /**
      * Builtin I8 type
      */
@@ -918,7 +916,7 @@ namespace GSLanguageCompiler::Semantic {
 
         /*
          *
-         * GS_TypeContext PUBLIC TODO METHODS
+         * GS_TypeContext PUBLIC METHODS
          *
          */
 

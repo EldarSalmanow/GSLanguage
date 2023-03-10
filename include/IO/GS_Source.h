@@ -82,7 +82,7 @@ namespace GSLanguageCompiler::IO {
          * @return Is invalid byte source location
          * @todo Delete or update
          */
-        Bool IsInvalid() const;
+//        Bool IsInvalid() const;
 
     public:
 
@@ -214,7 +214,7 @@ namespace GSLanguageCompiler::IO {
          * @return Is invalid line column source location
          * @todo Delete or update
          */
-        Bool IsInvalid() const;
+//        Bool IsInvalid() const;
 
     public:
 
@@ -326,7 +326,7 @@ namespace GSLanguageCompiler::IO {
                 : _startLocation(std::move(startLocation)),
                   _endLocation(std::move(endLocation)) {
             if (_startLocation.GetSourceHash() != _endLocation.GetSourceHash()) {
-                Driver::GlobalContext().Exit();
+                Driver::GlobalContext().Exit("Can`t create source location range with different source hash in source locations!");
             }
 
             if (!_startLocation.IsInvalid() && !_endLocation.IsInvalid()) {
@@ -378,9 +378,9 @@ namespace GSLanguageCompiler::IO {
          * @return Is invalid source location range
          * @todo Delete or update
          */
-        Bool IsInvalid() const {
-            return _startLocation.IsInvalid() && _endLocation.IsInvalid();
-        }
+//        Bool IsInvalid() const {
+//            return _startLocation.IsInvalid() && _endLocation.IsInvalid();
+//        }
 
     public:
 

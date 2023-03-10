@@ -40,7 +40,7 @@ namespace GSLanguageCompiler::AST {
     }
 
     GS_I8Value::GS_I8Value(I8 value)
-            : GS_LiteralValue(value,
+            : GS_IntegerValue(value,
                               Semantic::GS_I8Type::Create()) {}
 
     std::shared_ptr<GS_I8Value> GS_I8Value::Create(I8 value) {
@@ -52,7 +52,7 @@ namespace GSLanguageCompiler::AST {
     }
 
     GS_I16Value::GS_I16Value(I16 value)
-            : GS_LiteralValue(value,
+            : GS_IntegerValue(value,
                               Semantic::GS_I16Type::Create()) {}
 
     std::shared_ptr<GS_I16Value> GS_I16Value::Create(I16 value) {
@@ -64,7 +64,7 @@ namespace GSLanguageCompiler::AST {
     }
 
     GS_I32Value::GS_I32Value(I32 value)
-            : GS_LiteralValue(value,
+            : GS_IntegerValue(value,
                               Semantic::GS_I32Type::Create()) {}
 
     std::shared_ptr<GS_I32Value> GS_I32Value::Create(I32 value) {
@@ -76,7 +76,7 @@ namespace GSLanguageCompiler::AST {
     }
 
     GS_I64Value::GS_I64Value(I64 value)
-            : GS_LiteralValue(value,
+            : GS_IntegerValue(value,
                               Semantic::GS_I64Type::Create()) {}
 
     std::shared_ptr<GS_I64Value> GS_I64Value::Create(I64 value) {
@@ -88,8 +88,8 @@ namespace GSLanguageCompiler::AST {
     }
 
     GS_U8Value::GS_U8Value(U8 value)
-            : GS_LiteralValue(value,
-                              Semantic::GS_U8Type::Create()) {}
+            : GS_UIntegerValue(value,
+                               Semantic::GS_U8Type::Create()) {}
 
     std::shared_ptr<GS_U8Value> GS_U8Value::Create(U8 value) {
         return std::make_shared<GS_U8Value>(value);
@@ -100,8 +100,8 @@ namespace GSLanguageCompiler::AST {
     }
 
     GS_U16Value::GS_U16Value(U16 value)
-            : GS_LiteralValue(value,
-                              Semantic::GS_U16Type::Create()) {}
+            : GS_UIntegerValue(value,
+                               Semantic::GS_U16Type::Create()) {}
 
     std::shared_ptr<GS_U16Value> GS_U16Value::Create(U16 value) {
         return std::make_shared<GS_U16Value>(value);
@@ -112,8 +112,8 @@ namespace GSLanguageCompiler::AST {
     }
 
     GS_U32Value::GS_U32Value(U32 value)
-            : GS_LiteralValue(value,
-                              Semantic::GS_U32Type::Create()) {}
+            : GS_UIntegerValue(value,
+                               Semantic::GS_U32Type::Create()) {}
 
     std::shared_ptr<GS_U32Value> GS_U32Value::Create(U32 value) {
         return std::make_shared<GS_U32Value>(value);
@@ -124,8 +124,8 @@ namespace GSLanguageCompiler::AST {
     }
 
     GS_U64Value::GS_U64Value(U64 value)
-            : GS_LiteralValue(value,
-                              Semantic::GS_U64Type::Create()) {}
+            : GS_UIntegerValue(value,
+                               Semantic::GS_U64Type::Create()) {}
 
     std::shared_ptr<GS_U64Value> GS_U64Value::Create(U64 value) {
         return std::make_shared<GS_U64Value>(value);

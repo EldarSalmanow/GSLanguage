@@ -46,18 +46,18 @@ find_package(LLD REQUIRED)
 set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${LLD_INCLUDE_DIRS})
 set(EXTERNAL_LIBS         ${EXTERNAL_LIBS}         lldCommon lldCOFF)
 
-# args
-
-find_package(args REQUIRED)
-
-set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${args_INCLUDE_DIRS})
-
 # GSCrossPlatform
 
 find_package(GSCrossPlatform REQUIRED)
 
 set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${GSCrossPlatform_INCLUDE_DIRS})
 set(EXTERNAL_LIBS         ${EXTERNAL_LIBS}         ${GSCrossPlatform_LIBRARIES})
+
+# args (taywee-args)
+
+find_package(args REQUIRED)
+
+set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${args_INCLUDE_DIRS})
 
 set(PROJECT_LIBS
         GSDriverLibrary

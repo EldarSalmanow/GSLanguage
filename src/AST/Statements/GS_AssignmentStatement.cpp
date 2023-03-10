@@ -8,17 +8,16 @@ namespace GSLanguageCompiler::AST {
                                                    GSExpressionPtr rvalueExpression)
             : _lvalueExpression(nullptr),
               _rvalueExpression(nullptr) {
-        if (IsLValueExpression(lvalueExpression)) {
-            _lvalueExpression = std::move(lvalueExpression);
-        } else {
+        if (!IsLValueExpression(lvalueExpression)) {
             Driver::GlobalContext().Exit();
         }
 
-        if (IsRValueExpression(rvalueExpression)) {
-            _rvalueExpression = std::move(rvalueExpression);
-        } else {
+        if (!IsRValueExpression(rvalueExpression)) {
             Driver::GlobalContext().Exit();
         }
+
+        _lvalueExpression = std::move(lvalueExpression);
+        _rvalueExpression = std::move(rvalueExpression);
     }
 
     std::shared_ptr<GS_AssignmentStatement> GS_AssignmentStatement::Create(GSExpressionPtr lvalueExpression,
