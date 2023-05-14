@@ -7,14 +7,14 @@
 
 /*
  *
- * AUDIT          - Pass
+ * AUDIT          - Pass (with rewrites)
  *
  * CMakeLists.txt - Pass
  * IO.h           - Pass
  * GS_Stream.h    - Pass
  * GS_Reader.h    - Pass
- * GS_Source.h    - Pass
- * GS_Message.h   - Pass
+ * GS_Source.h    - Rewrites
+ * GS_Message.h   - Rewrite
  *
  */
 

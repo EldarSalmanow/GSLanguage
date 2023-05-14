@@ -1,5 +1,6 @@
 [requires]
 gs_cross_platform/1.0
+rang/3.2
 taywee-args/6.3.0
 
 [generators]

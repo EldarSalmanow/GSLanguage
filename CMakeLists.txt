@@ -28,23 +28,23 @@ set(EXTERNAL_LIBS         )
 
 # LLVM
 
-find_package(LLVM REQUIRED)
-
-separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
-
-add_definitions(${LLVM_DEFINITIONS_LIST})
-
-llvm_map_components_to_libnames(LLVM_LIBS all)
-
-set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${LLVM_INCLUDE_DIRS})
-set(EXTERNAL_LIBS         ${EXTERNAL_LIBS}         ${LLVM_LIBS})
+#find_package(LLVM REQUIRED)
+#
+#separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
+#
+#add_definitions(${LLVM_DEFINITIONS_LIST})
+#
+#llvm_map_components_to_libnames(LLVM_LIBS all)
+#
+#set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${LLVM_INCLUDE_DIRS})
+#set(EXTERNAL_LIBS         ${EXTERNAL_LIBS}         ${LLVM_LIBS})
 
 # LLD
 
-find_package(LLD REQUIRED)
-
-set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${LLD_INCLUDE_DIRS})
-set(EXTERNAL_LIBS         ${EXTERNAL_LIBS}         lldCommon lldCOFF)
+#find_package(LLD REQUIRED)
+#
+#set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${LLD_INCLUDE_DIRS})
+#set(EXTERNAL_LIBS         ${EXTERNAL_LIBS}         lldCommon lldCOFF)
 
 # GSCrossPlatform
 
@@ -52,6 +52,12 @@ find_package(GSCrossPlatform REQUIRED)
 
 set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${GSCrossPlatform_INCLUDE_DIRS})
 set(EXTERNAL_LIBS         ${EXTERNAL_LIBS}         ${GSCrossPlatform_LIBRARIES})
+
+# rang
+
+find_package(rang REQUIRED)
+
+set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${rang_INCLUDE_DIRS})
 
 # args (taywee-args)
 
@@ -67,7 +73,7 @@ set(PROJECT_LIBS
         GSASTLibrary
         GSOptimizerLibrary
         GSSemanticLibrary
-#        GSCodeGeneratorLibrary
+        GSCodeGeneratorLibrary
         GSDebugLibrary
         )
 
@@ -85,7 +91,7 @@ add_subdirectory(${INCLUDE_DIR}/Parser)
 add_subdirectory(${INCLUDE_DIR}/AST)
 add_subdirectory(${INCLUDE_DIR}/Optimizer)
 add_subdirectory(${INCLUDE_DIR}/Semantic)
-#add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
+add_subdirectory(${INCLUDE_DIR}/CodeGenerator)
 add_subdirectory(${INCLUDE_DIR}/Debug)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${EXTERNAL_LIBS})

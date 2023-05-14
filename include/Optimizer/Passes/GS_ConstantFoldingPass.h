@@ -6,30 +6,6 @@
 namespace GSLanguageCompiler::Optimizer {
 
     /**
-     * Folding unary expression
-     * @param session Session
-     * @param operation Unary operation
-     * @param value Value
-     * @return Folded value
-     */
-    AST::GSValuePtr FoldConstants(LRef<Driver::GS_Session> session,
-                                  AST::UnaryOperation operation,
-                                  ConstLRef<AST::GSValuePtr> value);
-
-    /**
-     * Folding binary expression
-     * @param session Session
-     * @param operation Binary operation
-     * @param firstValue First value
-     * @param secondValue Second value
-     * @return Folded value
-     */
-    AST::GSValuePtr FoldConstants(LRef<Driver::GS_Session> session,
-                                  AST::BinaryOperation operation,
-                                  ConstLRef<AST::GSValuePtr> firstValue,
-                                  ConstLRef<AST::GSValuePtr> secondValue);
-
-    /**
      * Transformer class for applying constant folding optimization on nodes
      */
     class GS_ConstantFoldingTransformer : public AST::GS_Transformer {
@@ -71,7 +47,7 @@ namespace GSLanguageCompiler::Optimizer {
          * Transform binary expression
          *
          * Transformation rules:
-         * --- ( constant expression ) +|-|*|/ ( constant expression ) -> constant expression +|-|*|/ constant expression
+         * --- ( constant expression ) + | - | * | / ( constant expression ) -> constant expression + | - | * | / constant expression
          *
          * @param session Session
          * @param binaryExpression Binary expression

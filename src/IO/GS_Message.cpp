@@ -6,11 +6,11 @@
      * Can`t include in rang.hpp io.h standard header because preprocessor include IO.h project header.
      * Including low-level I/O functions manually from corecrt_io.h
      */
-//    #include <corecrt_io.h>
+    #include <corecrt_io.h>
 
 #endif
 
-//#include <rang.hpp>
+#include <rang.hpp>
 
 #include <GS_Message.h>
 
@@ -268,13 +268,13 @@ namespace GSLanguageCompiler::IO {
     }
 
     Void GS_MessageStream::Write(GS_Message message) {
-//        auto SetColor = [this] (rang::fg color) {
-//            _messageHandler << color;
-//        };
-//
-//        auto SetStyle = [this] (rang::style style) {
-//            _messageHandler << style;
-//        };
+        auto SetColor = [this] (rang::fg color) {
+            _messageHandler << color;
+        };
+
+        auto SetStyle = [this] (rang::style style) {
+            _messageHandler << style;
+        };
 
         auto movedMessage = std::move(message);
 
@@ -283,52 +283,52 @@ namespace GSLanguageCompiler::IO {
         auto optionalMessageLocationRange = movedMessage.GetLocationRange();
 
         UString textMessageLevel;
-//        rang::fg messageColor;
+        rang::fg messageColor;
 
         switch (messageLevel) {
             case MessageLevel::Note: {
                 textMessageLevel = "Note";
-//                messageColor = rang::fg::blue;
+                messageColor = rang::fg::blue;
 
                 break;
             }
             case MessageLevel::Warning: {
                 textMessageLevel = "Warning";
-//                messageColor = rang::fg::yellow;
+                messageColor = rang::fg::yellow;
 
                 break;
             }
             case MessageLevel::Error: {
                 textMessageLevel = "Error";
-//                messageColor = rang::fg::red;
+                messageColor = rang::fg::red;
 
                 break;
             }
             case MessageLevel::Fatal: {
                 textMessageLevel = "Fatal";
-//                messageColor = rang::fg::black;
+                messageColor = rang::fg::black;
 
                 break;
             }
             default: {
                 textMessageLevel = "<invalid>";
-//                messageColor = rang::fg::gray;
+                messageColor = rang::fg::gray;
 
                 break;
             }
         }
 
-//        SetStyle(rang::style::bold);
-//        SetColor(rang::fg::reset);
+        SetStyle(rang::style::bold);
+        SetColor(rang::fg::reset);
 
-//        SetColor(messageColor);
+        SetColor(messageColor);
 
         _messageHandler << " |--------------------------------------------------"_us << std::endl
                         << "/"_us << std::endl;
 
         _messageHandler << "| "_us << textMessageLevel;
 
-//        SetColor(rang::fg::reset);
+        SetColor(rang::fg::reset);
 
         _messageHandler << ": " << messageText << std::endl;
 
@@ -370,46 +370,46 @@ namespace GSLanguageCompiler::IO {
                 whitespaces += ' ';
             }
 
-//            SetColor(messageColor);
+            SetColor(messageColor);
 
             _messageHandler << "| "_us << "> "_us;
 
-//            SetColor(rang::fg::reset);
+            SetColor(rang::fg::reset);
 
             _messageHandler << sourceName.GetName() << ":" << "[" << line << "." << column << "]" << std::endl;
 
-//            SetColor(messageColor);
+            SetColor(messageColor);
 
             _messageHandler << "| "_us;
 
-//            SetColor(rang::fg::reset);
+            SetColor(rang::fg::reset);
 
             _messageHandler << lineCode <<  std::endl;
 
-//            SetColor(messageColor);
+            SetColor(messageColor);
 
             _messageHandler << "| "_us;
 
-//            SetColor(rang::fg::reset);
+            SetColor(rang::fg::reset);
 
             _messageHandler << whitespaces;
 
-//            SetColor(messageColor);
+            SetColor(messageColor);
 
             _messageHandler << "^" << std::endl;
 
-//            SetColor(rang::fg::reset);
+            SetColor(rang::fg::reset);
         }
 
-//        SetColor(messageColor);
+        SetColor(messageColor);
 
         _messageHandler << "\\"_us << std::endl
                         << " |--------------------------------------------------"_us << std::endl;
 
-//        SetColor(rang::fg::reset);
+        SetColor(rang::fg::reset);
 
-//        SetStyle(rang::style::reset);
-//        SetColor(rang::fg::reset);
+        SetStyle(rang::style::reset);
+        SetColor(rang::fg::reset);
     }
 
     LRef<GSMessageHandler> GS_MessageStream::GetMessageHandler() {

@@ -71,7 +71,8 @@ namespace GSLanguageCompiler::AST {
          * @param args Arguments for creating node
          * @return Created node
          */
-        template<typename NodeT, typename... NodeArgs>
+        template<typename NodeT,
+                 typename... NodeArgs>
         inline auto AddNode(NodeArgs... args) {
             static_assert(std::is_base_of_v<GS_Node, NodeT>,
                           "Type for creating must be inherited from GS_Node!");

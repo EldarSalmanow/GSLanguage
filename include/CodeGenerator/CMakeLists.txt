@@ -22,6 +22,6 @@ add_library(
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR}/CodeGenerator)
 
-llvm_map_components_to_libnames(LLVM_LIBS core native)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE ${LLVM_LIBS})
+#llvm_map_components_to_libnames(LLVM_LIBS core native)
+#
+#target_link_libraries(${PROJECT_NAME} PRIVATE ${LLVM_LIBS})

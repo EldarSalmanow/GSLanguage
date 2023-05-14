@@ -7,11 +7,11 @@
 
 /*
  *
- * AUDIT          - Pass
+ * AUDIT          - Pass (with rewrite logic)
  *
  * CMakeLists.txt - Pass
  * Parser.h       - Pass
- * GS_Parser.h    - Pass
+ * GS_Parser.h    - Rewrite logic
  *
  */
 

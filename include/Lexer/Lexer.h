@@ -7,13 +7,13 @@
 
 /*
  *
- * AUDIT             - Pass
+ * AUDIT             - Pass (with rewrite logic and comment)
  *
  * CMakeLists.txt    - Pass
  * Lexer.h           - Pass
  * GS_TokenTypes.def - Pass
  * GS_Token.h        - Pass
- * GS_Lexer.h        - Pass
+ * GS_Lexer.h        - Rewrite logic and comment
  *
  */
 

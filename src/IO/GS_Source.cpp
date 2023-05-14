@@ -46,9 +46,10 @@ namespace GSLanguageCompiler::IO {
 
     std::partial_ordering GS_ByteSourceLocation::operator<=>(ConstLRef<GS_ByteSourceLocation> sourceLocation) const {
         auto position = sourceLocation.GetPosition();
+        auto sourceHash = sourceLocation.GetSourceHash();
 
-        if (IsInvalid()
-         || sourceLocation.IsInvalid()) {
+        if ((_position == InvalidPosition && _sourceHash == InvalidHash)
+         || (position == InvalidPosition && sourceHash == InvalidHash)) {
             return std::partial_ordering::unordered;
         }
 
