@@ -28,23 +28,23 @@ set(EXTERNAL_LIBS         )
 
 # LLVM
 
-#find_package(LLVM REQUIRED)
-#
-#separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
-#
-#add_definitions(${LLVM_DEFINITIONS_LIST})
-#
-#llvm_map_components_to_libnames(LLVM_LIBS all)
-#
-#set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${LLVM_INCLUDE_DIRS})
-#set(EXTERNAL_LIBS         ${EXTERNAL_LIBS}         ${LLVM_LIBS})
+find_package(LLVM REQUIRED)
+
+separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
+
+add_definitions(${LLVM_DEFINITIONS_LIST})
+
+llvm_map_components_to_libnames(LLVM_LIBS all)
+
+set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${LLVM_INCLUDE_DIRS})
+set(EXTERNAL_LIBS         ${EXTERNAL_LIBS}         ${LLVM_LIBS})
 
 # LLD
 
-#find_package(LLD REQUIRED)
-#
-#set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${LLD_INCLUDE_DIRS})
-#set(EXTERNAL_LIBS         ${EXTERNAL_LIBS}         lldCommon lldCOFF)
+find_package(LLD REQUIRED)
+
+set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${LLD_INCLUDE_DIRS})
+set(EXTERNAL_LIBS         ${EXTERNAL_LIBS}         lldCommon lldCOFF)
 
 # GSCrossPlatform
 

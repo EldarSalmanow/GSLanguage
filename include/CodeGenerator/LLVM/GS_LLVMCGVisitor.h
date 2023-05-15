@@ -5,7 +5,7 @@
 
 #include <AST/GS_Visitor.h>
 
-#include <CodeGenerator/LLVM/GS_LLVMCGContext.h>
+#include <CodeGenerator/LLVM/GS_LLVMCGBackend.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
@@ -17,109 +17,146 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         /**
          * Constructor for LLVM code generation visitor
-         * @param context LLVM code generation context
+         * @param codeHolder LLVM code holder
          */
-        explicit GS_LLVMCGVisitor(LRef<GSLLVMCGContextPtr> context);
+        explicit GS_LLVMCGVisitor(LRef<GS_LLVMCodeHolder> codeHolder);
 
     public:
 
         /**
          * Generate node
+         * @param session Session
          * @param node Node
-         * @return
+         * @return Generated node
          */
-        Ptr<llvm::Value> GenerateNode(LRef<AST::GSNodePtr> node);
+        Ptr<llvm::Value> GenerateNode(LRef<Driver::GS_Session> session,
+                                      LRef<AST::GSNodePtr> node);
 
         /**
          * Generate declaration
+         * @param session Session
          * @param declaration Declaration
-         * @return
+         * @return Generated declaration
          */
-        Ptr<llvm::Value> GenerateDeclaration(LRef<AST::GSDeclarationPtr> declaration);
+        Ptr<llvm::Value> GenerateDeclaration(LRef<Driver::GS_Session> session,
+                                             LRef<AST::GSDeclarationPtr> declaration);
 
         /**
          * Generate statement
+         * @param session Session
          * @param statement Statement
-         * @return
+         * @return Generated statement
          */
-        Ptr<llvm::Value> GenerateStatement(LRef<AST::GSStatementPtr> statement);
+        Ptr<llvm::Value> GenerateStatement(LRef<Driver::GS_Session> session,
+                                           LRef<AST::GSStatementPtr> statement);
 
         /**
          * Generate expression
+         * @param session Session
          * @param expression Expression
-         * @return
+         * @return Generated expression
          */
-        Ptr<llvm::Value> GenerateExpression(LRef<AST::GSExpressionPtr> expression);
+        Ptr<llvm::Value> GenerateExpression(LRef<Driver::GS_Session> session,
+                                            LRef<AST::GSExpressionPtr> expression);
 
         /**
          * Generate translation unit declaration
+         * @param session Session
          * @param translationUnitDeclaration Translation unit declaration
-         * @return
+         * @return Generated translation unit declaration
          */
-        Ptr<llvm::Value> GenerateTranslationUnitDeclaration(LRef<std::shared_ptr<AST::GS_TranslationUnitDeclaration>> translationUnitDeclaration);
+        Ptr<llvm::Value> GenerateTranslationUnitDeclaration(LRef<Driver::GS_Session> session,
+                                                            AST::NodePtrLRef<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration);
 
         /**
          * Generate function declaration
+         * @param session Session
          * @param functionDeclaration Function declaration
-         * @return
+         * @return Generated function declaration
          */
-        Ptr<llvm::Value> GenerateFunctionDeclaration(LRef<std::shared_ptr<AST::GS_FunctionDeclaration>> functionDeclaration);
+        Ptr<llvm::Value> GenerateFunctionDeclaration(LRef<Driver::GS_Session> session,
+                                                     AST::NodePtrLRef<AST::GS_FunctionDeclaration> functionDeclaration);
 
         /**
          * Generate variable declaration statement
+         * @param session Session
          * @param variableDeclarationStatement Variable declaration statement
-         * @return
+         * @return Generated variable declaration statement
          */
-        Ptr<llvm::Value> GenerateVariableDeclarationStatement(LRef<std::shared_ptr<AST::GS_VariableDeclarationStatement>> variableDeclarationStatement);
+        Ptr<llvm::Value> GenerateVariableDeclarationStatement(LRef<Driver::GS_Session> session,
+                                                              AST::NodePtrLRef<AST::GS_VariableDeclarationStatement> variableDeclarationStatement);
 
         /**
          * Generate assignment statement
+         * @param session Session
          * @param assignmentStatement Assignment statement
-         * @return
+         * @return Generated assignment statement
          */
-        Ptr<llvm::Value> GenerateAssignmentStatement(LRef<std::shared_ptr<AST::GS_AssignmentStatement>> assignmentStatement);
+        Ptr<llvm::Value> GenerateAssignmentStatement(LRef<Driver::GS_Session> session,
+                                                     AST::NodePtrLRef<AST::GS_AssignmentStatement> assignmentStatement);
 
         /**
          * Generate expression statement
+         * @param session Session
          * @param expressionStatement Expression statement
-         * @return
+         * @return Generated expression statement
          */
-        Ptr<llvm::Value> GenerateExpressionStatement(LRef<std::shared_ptr<AST::GS_ExpressionStatement>> expressionStatement);
+        Ptr<llvm::Value> GenerateExpressionStatement(LRef<Driver::GS_Session> session,
+                                                     AST::NodePtrLRef<AST::GS_ExpressionStatement> expressionStatement);
 
         /**
          * Generate constant expression
+         * @param session Session
          * @param constantExpression Constant expression
-         * @return
+         * @return Generated constant expression
          */
-        Ptr<llvm::Value> GenerateConstantExpression(LRef<std::shared_ptr<AST::GS_ConstantExpression>> constantExpression);
+        Ptr<llvm::Value> GenerateConstantExpression(LRef<Driver::GS_Session> session,
+                                                    AST::NodePtrLRef<AST::GS_ConstantExpression> constantExpression);
 
         /**
          * Generate unary expression
+         * @param session Session
          * @param unaryExpression Unary expression
-         * @return
+         * @return Generated unary expression
          */
-        Ptr<llvm::Value> GenerateUnaryExpression(LRef<std::shared_ptr<AST::GS_UnaryExpression>> unaryExpression);
+        Ptr<llvm::Value> GenerateUnaryExpression(LRef<Driver::GS_Session> session,
+                                                 AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression);
 
         /**
          * Generate binary expression
+         * @param session Session
          * @param binaryExpression Binary expression
-         * @return
+         * @return Generated binary expression
          */
-        Ptr<llvm::Value> GenerateBinaryExpression(LRef<std::shared_ptr<AST::GS_BinaryExpression>> binaryExpression);
+        Ptr<llvm::Value> GenerateBinaryExpression(LRef<Driver::GS_Session> session,
+                                                  AST::NodePtrLRef<AST::GS_BinaryExpression> binaryExpression);
+
+        /**
+         * Generate array expression
+         * @param session Session
+         * @param arrayExpression Array expression
+         * @return Generated array expression
+         */
+        Ptr<llvm::Value> GenerateArrayExpression(LRef<Driver::GS_Session> session,
+                                                 AST::NodePtrLRef<AST::GS_ArrayExpression> arrayExpression);
 
         /**
          * Generate variable using expression
+         * @param session Session
          * @param variableUsingExpression Variable using expression
-         * @return
+         * @return Generated variable using expression
          */
-        Ptr<llvm::Value> GenerateVariableUsingExpression(LRef<std::shared_ptr<AST::GS_VariableUsingExpression>> variableUsingExpression);
+        Ptr<llvm::Value> GenerateVariableUsingExpression(LRef<Driver::GS_Session> session,
+                                                         AST::NodePtrLRef<AST::GS_VariableUsingExpression> variableUsingExpression);
 
         /**
          * Generate function calling expression
+         * @param session Session
          * @param functionCallingExpression Function calling expression
-         * @return
+         * @return Generated function calling expression
          */
-        Ptr<llvm::Value> GenerateFunctionCallingExpression(LRef<std::shared_ptr<AST::GS_FunctionCallingExpression>> functionCallingExpression);
+        Ptr<llvm::Value> GenerateFunctionCallingExpression(LRef<Driver::GS_Session> session,
+                                                           AST::NodePtrLRef<AST::GS_FunctionCallingExpression> functionCallingExpression);
 
     private:
 
@@ -127,20 +164,20 @@ namespace GSLanguageCompiler::CodeGenerator {
          * Getter for LLVM context
          * @return LLVM context
          */
-        LRef<llvm::LLVMContext> GetLLVMContext();
+        LRef<llvm::LLVMContext> GetContext();
 
         /**
          * Getter for LLVM IR module
          * @return LLVM IR module
          */
-        LRef<llvm::Module> GetLLVMModule();
+        LRef<llvm::Module> GetModule();
 
     private:
 
         /**
-         * LLVM code generation context
+         * LLVM code holder
          */
-        LRef<GSLLVMCGContextPtr> _context;
+        LRef<GS_LLVMCodeHolder> _codeHolder;
 
         /**
          * LLVM IR builder

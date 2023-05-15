@@ -4,6 +4,8 @@
 
 #include <Semantic/Semantic.h>
 
+#include <CodeGenerator/CodeGenerator.h>
+
 #include <Debug/Debug.h>
 
 #include <GS_Session.h>
@@ -103,6 +105,21 @@ namespace GSLanguageCompiler::Driver {
             Debug::DumpTableOfSymbols(*_tableOfSymbols);
 
             translationUnitDeclarations.emplace_back(translationUnitDeclaration);
+        }
+
+        // TODO
+
+        std::vector<CodeGenerator::GSCodeHolderPtr> codeHolders;
+
+        auto backend = CodeGenerator::GS_LLVMCGBackend::Create();
+
+        for (auto &translationUnitDeclaration : translationUnitDeclarations) {
+            auto codeGenerator = CodeGenerator::GS_CodeGenerator::Create(*this,
+                                                                         translationUnitDeclaration);
+
+            auto codeHolder = codeGenerator.Generate(backend);
+
+            codeHolders.emplace_back(codeHolder);
         }
 
         return CompilingResult::Success;
