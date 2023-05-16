@@ -54,6 +54,10 @@ namespace GSLanguageCompiler::CodeGenerator {
         GSCodeHolderPtr Generate(LRef<Driver::GS_Session> session,
                                  AST::GSTranslationUnitDeclarationPtr unit) override;
 
+        Void Write(LRef<Driver::GS_Session> session,
+                   UString fileName,
+                   GSCodeHolderPtr codeHolder) override;
+
     public:
 
         CGBackendType GetBackendType() const override;

@@ -25,6 +25,10 @@ namespace GSLanguageCompiler::CodeGenerator {
         virtual GSCodeHolderPtr Generate(LRef<Driver::GS_Session> session,
                                          AST::GSTranslationUnitDeclarationPtr unit) = 0;
 
+        virtual Void Write(LRef<Driver::GS_Session> session,
+                           UString fileName,
+                           GSCodeHolderPtr codeHolder) = 0;
+
     public:
 
         virtual CGBackendType GetBackendType() const = 0;

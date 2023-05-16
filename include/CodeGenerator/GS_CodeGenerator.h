@@ -27,7 +27,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         LRef<Driver::GS_Session> _session;
 
         AST::GSTranslationUnitDeclarationPtr _unit;
-    }
+    };
 
 }
 

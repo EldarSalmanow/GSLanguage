@@ -1,3 +1,10 @@
+#include <llvm/IR/LegacyPassManager.h>
+#include <llvm/MC/TargetRegistry.h>
+#include <llvm/Support/FileSystem.h>
+#include <llvm/Support/Host.h>
+#include <llvm/Support/TargetSelect.h>
+#include <llvm/Target/TargetMachine.h>
+
 #include <LLVM/GS_LLVMCGBackend.h>
 
 #include <LLVM/GS_LLVMCGVisitor.h>
@@ -55,6 +62,77 @@ namespace GSLanguageCompiler::CodeGenerator {
                                                    unit);
 
         return codeHolder;
+    }
+
+    Void GS_LLVMCGBackend::Write(LRef<Driver::GS_Session> session,
+                                 UString fileName,
+                                 GSCodeHolderPtr codeHolder) {
+        auto llvmCodeHolder = std::reinterpret_pointer_cast<GS_LLVMCodeHolder>(codeHolder);
+
+        auto &llvmModule = llvmCodeHolder->GetModule();
+
+        llvm::InitializeAllTargetInfos();
+        llvm::InitializeAllTargets();
+        llvm::InitializeAllTargetMCs();
+        llvm::InitializeAllAsmParsers();
+        llvm::InitializeAllAsmPrinters();
+
+        auto targetTriple = llvm::sys::getDefaultTargetTriple();
+        llvmModule.setTargetTriple(targetTriple);
+
+        std::string error;
+        auto target = llvm::TargetRegistry::lookupTarget(targetTriple,
+                                                         error);
+
+//        if (!target) {
+//            llvm::errs() << error;
+//
+//            return;
+//        }
+
+        auto cpu = "generic";
+        auto features = "";
+
+        llvm::TargetOptions targetOptions;
+        auto relocModel = llvm::Optional<llvm::Reloc::Model>();
+        auto targetMachine = target->createTargetMachine(targetTriple,
+                                                         cpu,
+                                                         features,
+                                                         targetOptions,
+                                                         relocModel);
+
+        llvmModule.setDataLayout(targetMachine->createDataLayout());
+
+        std::error_code errorCode;
+        llvm::raw_fd_ostream output(fileName.AsUTF8(),
+                                    errorCode,
+                                    llvm::sys::fs::OF_None);
+
+//        if (errorCode) {
+//            llvm::errs() << "Could not open file: " << errorCode.message();
+//
+//            return;
+//        }
+
+        llvm::legacy::PassManager passManager;
+        auto fileType = llvm::CGFT_ObjectFile;
+
+        targetMachine->addPassesToEmitFile(passManager,
+                                           output,
+                                           nullptr,
+                                           fileType);
+
+//        if (targetMachine->addPassesToEmitFile(passManager,
+//                                               output,
+//                                               nullptr,
+//                                               fileType)) {
+//            llvm::errs() << "TheTargetMachine can't emit a file of this type";
+//
+//            return;
+//        }
+
+        passManager.run(llvmModule);
+        output.flush();
     }
 
     CGBackendType GS_LLVMCGBackend::GetBackendType() const {
