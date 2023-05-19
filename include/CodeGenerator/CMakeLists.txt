@@ -5,6 +5,8 @@ set(CODEGENERATOR_DIR ${SOURCE_DIR}/CodeGenerator)
 set(GS_CODEGENERATOR_SOURCE
         ${CODEGENERATOR_DIR}/GS_CodeGenerator.cpp
 
+        ${CODEGENERATOR_DIR}/GS_CGBackend.cpp
+
         ${CODEGENERATOR_DIR}/LLVM/GS_LLVMCGBackend.cpp
         ${CODEGENERATOR_DIR}/LLVM/GS_LLVMCGVisitor.cpp)
 

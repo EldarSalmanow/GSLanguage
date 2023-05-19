@@ -11,7 +11,33 @@ namespace GSLanguageCompiler::Optimizer {
     AST::GSValuePtr FoldConstants(LRef<Driver::GS_Session> session,
                                   AST::UnaryOperation operation,
                                   ConstLRef<AST::GSValuePtr> value) {
-        if (auto i32Value = AST::ToValue<AST::GS_I32Value>(value)) {
+        if (auto i8Value = AST::ToValue<AST::GS_I8Value>(value)) {
+            auto number = i8Value->GetI8Value();
+
+            I8 result;
+
+            switch (operation) {
+                case AST::UnaryOperation::Minus:
+                    result = -number;
+
+                    break;
+            }
+
+            return AST::GS_ASTBuilder::Create(session.GetASTContext())->CreateI8Value(result);
+        } else if (auto i16Value = AST::ToValue<AST::GS_I16Value>(value)) {
+            auto number = i16Value->GetI16Value();
+
+            I16 result;
+
+            switch (operation) {
+                case AST::UnaryOperation::Minus:
+                    result = -number;
+
+                    break;
+            }
+
+            return AST::GS_ASTBuilder::Create(session.GetASTContext())->CreateI16Value(result);
+        } else if (auto i32Value = AST::ToValue<AST::GS_I32Value>(value)) {
             auto number = i32Value->GetI32Value();
 
             I32 result;
@@ -24,6 +50,19 @@ namespace GSLanguageCompiler::Optimizer {
             }
 
             return AST::GS_ASTBuilder::Create(session.GetASTContext())->CreateI32Value(result);
+        } else if (auto i64Value = AST::ToValue<AST::GS_I64Value>(value)) {
+            auto number = i64Value->GetI64Value();
+
+            I64 result;
+
+            switch (operation) {
+                case AST::UnaryOperation::Minus:
+                    result = -number;
+
+                    break;
+            }
+
+            return AST::GS_ASTBuilder::Create(session.GetASTContext())->CreateI64Value(result);
         }
 
         return nullptr;

@@ -122,9 +122,9 @@ namespace GSLanguageCompiler::Driver {
             codeHolders.emplace_back(codeHolder);
         }
 
-        backend->Write(*this,
-                       "main.o",
-                       codeHolders[0]);
+//        backend->Write(*this,
+//                       "main.o",
+//                       codeHolders[0]);
 
         return CompilingResult::Success;
     }
