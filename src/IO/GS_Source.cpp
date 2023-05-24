@@ -140,9 +140,6 @@ namespace GSLanguageCompiler::IO {
         return GS_SourceBuffer(std::move(source));
     }
 
-    /**
-     * @todo Rewrite
-     */
     U64 GetIndexByLocation(GS_ByteSourceLocation sourceLocation,
                            ConstLRef<GS_SourceBuffer> sourceBuffer) {
         auto position = sourceLocation.GetPosition();
@@ -152,7 +149,7 @@ namespace GSLanguageCompiler::IO {
         }
 
         if (position > sourceBuffer.GetSource().Size()) {
-            Driver::GlobalContext().Exit();
+            Driver::GlobalContext().Exit("Can`t convert byte source location to index with position in byte source location bigger than source buffer size!");
         }
 
         auto index = position - 1;
@@ -160,9 +157,6 @@ namespace GSLanguageCompiler::IO {
         return index;
     }
 
-    /**
-     * @todo Rewrite
-     */
     U64 GetIndexByLocation(GS_LineColumnSourceLocation sourceLocation,
                            ConstLRef<GS_SourceBuffer> sourceBuffer) {
         auto line = sourceLocation.GetLine();
@@ -178,7 +172,7 @@ namespace GSLanguageCompiler::IO {
 
         for (U64 lineIndex = 1; lineIndex < line; ++position) {
             if (position > sourceSize) {
-                Driver::GlobalContext().Exit();
+                Driver::GlobalContext().Exit("Can`t convert line column source location to index with position in line column source location bigger than source buffer size!");
             }
 
             if (sourceBuffer[position - 1] == '\n') {
@@ -188,11 +182,11 @@ namespace GSLanguageCompiler::IO {
 
         for (U64 columnIndex = 1; columnIndex < column; ++columnIndex, ++position) {
             if (position > sourceSize) {
-                Driver::GlobalContext().Exit();
+                Driver::GlobalContext().Exit("Can`t convert line column source location to index with position in line column source location bigger than source buffer size!");
             }
 
             if (sourceBuffer[position - 1] == '\n') {
-                Driver::GlobalContext().Exit();
+                Driver::GlobalContext().Exit("Can`t convert line column source location to index with column in line column source location bigger than column in source buffer!");
             }
         }
 
@@ -504,7 +498,7 @@ namespace GSLanguageCompiler::IO {
 
         if (sourceHash != InvalidHash
          && sourceHash != source.GetHash()) {
-            Driver::GlobalContext().Exit();
+            Driver::GlobalContext().Exit("Can`t convert line column source location to byte source location with different source hash in line column source location and input source!");
         }
 
         U64 position = 1;
@@ -513,7 +507,7 @@ namespace GSLanguageCompiler::IO {
 
         for (U64 lineIndex = 1; lineIndex < line; ++position) {
             if (position > sourceSize) {
-                Driver::GlobalContext().Exit();
+                Driver::GlobalContext().Exit("Can`t convert line column source location to byte source location with position in line column source location bigger than source buffer size!");
             }
 
             if (source[position - 1] == '\n') {
@@ -523,11 +517,11 @@ namespace GSLanguageCompiler::IO {
 
         for (U64 columnIndex = 1; columnIndex < column; ++columnIndex, ++position) {
             if (position > sourceSize) {
-                Driver::GlobalContext().Exit();
+                Driver::GlobalContext().Exit("Can`t convert line column source location to byte source location with position in line column source location bigger than source buffer size!");
             }
 
             if (source[position - 1] == '\n') {
-                Driver::GlobalContext().Exit();
+                Driver::GlobalContext().Exit("Can`t convert line column source location to byte source location with column in line column source location bigger than column in source!");
             }
         }
 
@@ -542,12 +536,12 @@ namespace GSLanguageCompiler::IO {
         auto sourceHash = byteSourceLocation.GetSourceHash();
 
         if (position > source.GetBuffer().GetSource().Size()) {
-            Driver::GlobalContext().Exit();
+            Driver::GlobalContext().Exit("Can`t convert byte source location to line column source location with position in byte source location bigger than source buffer size!");
         }
 
         if (sourceHash != InvalidHash
          && sourceHash != source.GetHash()) {
-            Driver::GlobalContext().Exit();
+            Driver::GlobalContext().Exit("Can`t convert byte source location to line column source location with different source hash in byte source location and input source!");
         }
 
         U64 line = 1, column = 1;

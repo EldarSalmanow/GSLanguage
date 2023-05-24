@@ -4,8 +4,6 @@
 
 namespace GSLanguageCompiler::Driver {
 
-    using ManipulatorFunc =
-
     GS_Compiler::GS_Compiler(GSSessionManagerPtr sessionManager)
             : _sessionManager(std::move(sessionManager)) {}
 

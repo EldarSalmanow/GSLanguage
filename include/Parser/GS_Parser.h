@@ -7,9 +7,11 @@
 
 namespace GSLanguageCompiler::Parser {
 
+    /*
+     * TODO: Create Grammar file (GRAMMAR.md or Grammar.md in docs or Grammar.h in Parser module)
+     */
+
     /**
-     *
-     * TODO Create Grammar file (GRAMMAR.md or Grammar.md in docs or Grammar.h in Parser module)
      *
      * Program
      *

@@ -78,9 +78,12 @@ namespace GSLanguageCompiler {
         public:
 
             /*
+             * TODO: Add Create methods
+             */
+
+            /*
              *
              * GS_Session PUBLIC STATIC CREATE METHODS
-             * TODO Add Create methods
              *
              */
 
@@ -280,7 +283,9 @@ namespace GSLanguageCompiler {
              */
             IO::GS_MessageBuilder Message() const;
 
-            // TODO Add new message Create or printing message methods?
+            /*
+             * TODO: Add new message Create or printing message methods?
+             */
 
             /**
              * Creating message builder for creating 'note' message

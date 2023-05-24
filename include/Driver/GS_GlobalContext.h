@@ -3,7 +3,9 @@
 
 #include <IO/GS_Stream.h>
 
-// TODO move macros to GSCrossPlatform library
+/*
+ * TODO: Move macros to GSCrossPlatform library
+ */
 
 #define GS_ATTRIBUTE(name) [[name]]
 

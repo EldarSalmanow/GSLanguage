@@ -9,6 +9,10 @@
 
 namespace GSLanguageCompiler::IO {
 
+    /*
+     * TODO: Check all position system and rewrite
+     */
+
     /**
      * Invalid hash constant
      */
@@ -80,9 +84,8 @@ namespace GSLanguageCompiler::IO {
         /**
          * Is invalid byte source location (invalid byte position and invalid source hash)
          * @return Is invalid byte source location
-         * @todo Delete or update
          */
-//        Bool IsInvalid() const;
+        Bool IsInvalid() const;
 
     public:
 
@@ -212,9 +215,8 @@ namespace GSLanguageCompiler::IO {
         /**
          * Is invalid line column source location (invalid line and column position and invalid source hash)
          * @return Is invalid line column source location
-         * @todo Delete or update
          */
-//        Bool IsInvalid() const;
+        Bool IsInvalid() const;
 
     public:
 
@@ -319,7 +321,6 @@ namespace GSLanguageCompiler::IO {
          * Constructor for source location range [startLocation..endLocation]
          * @param startLocation Start source location
          * @param endLocation End source location
-         * @todo Rewrite
          */
         GS_SourceRange(SourceLocation startLocation,
                        SourceLocation endLocation)
@@ -331,7 +332,7 @@ namespace GSLanguageCompiler::IO {
 
             if (!_startLocation.IsInvalid() && !_endLocation.IsInvalid()) {
                 if (_startLocation > _endLocation) {
-                    Driver::GlobalContext().Exit();
+                    Driver::GlobalContext().Exit("Can`t create source range with start location \"bigger\" than end location!");
                 }
             }
         }
@@ -376,11 +377,10 @@ namespace GSLanguageCompiler::IO {
         /**
          * Is invalid source location range (invalid start and end location)
          * @return Is invalid source location range
-         * @todo Delete or update
          */
-//        Bool IsInvalid() const {
-//            return _startLocation.IsInvalid() && _endLocation.IsInvalid();
-//        }
+        Bool IsInvalid() const {
+            return _startLocation.IsInvalid() && _endLocation.IsInvalid();
+        }
 
     public:
 
@@ -1210,7 +1210,7 @@ namespace GSLanguageCompiler::IO {
              typename InSourceLocationT>
     OutSourceLocationT ToSourceLocation(InSourceLocationT sourceLocation,
                                         ConstLRef<GS_Source> source) {
-        Driver::GlobalContext().Exit();
+        Driver::GlobalContext().Exit("Can`t convert input source location to unknown output source location type!");
     }
 
     /**
@@ -1231,7 +1231,6 @@ namespace GSLanguageCompiler::IO {
      * @param lineColumnSourceLocation Line column source location
      * @param source Source
      * @return Converted byte source location
-     * @todo Rewrite
      */
     template<>
     GS_ByteSourceLocation ToSourceLocation(GS_LineColumnSourceLocation lineColumnSourceLocation,
@@ -1242,7 +1241,6 @@ namespace GSLanguageCompiler::IO {
      * @param byteSourceLocation Byte source location
      * @param source Source
      * @return Converted line column source location
-     * @todo Rewrite
      */
     template<>
     GS_LineColumnSourceLocation ToSourceLocation(GS_ByteSourceLocation byteSourceLocation,
@@ -1263,13 +1261,13 @@ namespace GSLanguageCompiler::IO {
         auto sourceHash = sourceLocation.GetSourceHash();
 
         if (sourceHash == InvalidHash) {
-            Driver::GlobalContext().Exit();
+            Driver::GlobalContext().Exit("Can`t find source in source manager by source location with invalid source hash!");
         }
 
         auto optionalSource = sourceManager.GetSource(sourceHash);
 
         if (!optionalSource.has_value()) {
-            Driver::GlobalContext().Exit();
+            Driver::GlobalContext().Exit("Can`t find source in source manager with source hash from source location!");
         }
 
         auto &source = optionalSource.value();
@@ -1334,13 +1332,13 @@ namespace GSLanguageCompiler::IO {
         auto sourceHash = startLocation.GetSourceHash();
 
         if (sourceHash == InvalidHash) {
-            Driver::GlobalContext().Exit();
+            Driver::GlobalContext().Exit("Can`t find source in source manager by source range with invalid source hash!");
         }
 
         auto optionalSource = sourceManager.GetSource(sourceHash);
 
         if (!optionalSource.has_value()) {
-            Driver::GlobalContext().Exit();
+            Driver::GlobalContext().Exit("Can`t find source in source manager with source hash from source range!");
         }
 
         auto &source = optionalSource.value();
