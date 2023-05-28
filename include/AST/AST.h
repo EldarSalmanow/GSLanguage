@@ -3,7 +3,6 @@
 
 /**
  * This file includes all files from GSLanguageCompiler AST Module
- * @todo Add GS_BlockStatement AST node (or GS_Block<NodeT> ?)
  */
 
 /*

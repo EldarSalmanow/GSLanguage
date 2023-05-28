@@ -47,7 +47,7 @@ namespace GSLanguageCompiler::Lexer {
     GS_Lexer::GS_Lexer(LRef<Driver::GS_Session> session,
                        ConstLRef<IO::GS_Source> source)
             : _session(session),
-              _messages(IO::GSMessageArray()),
+              _messageQueue(_session.Out()),
               _source(source),
               _sourceIterator(_source.cbegin()),
               _currentPosition(1) {
@@ -95,11 +95,9 @@ namespace GSLanguageCompiler::Lexer {
             token = GetToken();
         }
 
-        auto tokenBuffer = GS_TokenBuffer::Create(std::move(tokens));
+        _messageQueue.Flush();
 
-        for (auto &message : _messages) {
-            _session.Out() << message;
-        }
+        auto tokenBuffer = GS_TokenBuffer::Create(std::move(tokens));
 
         return tokenBuffer;
     }
@@ -268,6 +266,8 @@ namespace GSLanguageCompiler::Lexer {
 
             auto startPosition = CurrentLocation(),
                  endPosition = Location();
+
+            NextSymbol();
 
             while (true) {
                 string += CurrentSymbol();

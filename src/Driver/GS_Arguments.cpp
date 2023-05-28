@@ -18,13 +18,9 @@ namespace GSLanguageCompiler::Driver {
     }
 
     GS_Arguments GS_Arguments::Create(std::vector<UString> inputFileNames) {
+        // TODO: Output file name must be change by compiling mode, OS
         return GS_Arguments::Create(std::move(inputFileNames),
                                     "a.exe"_us);
-    }
-
-    GS_Arguments GS_Arguments::Create() {
-        return GS_Arguments::Create(std::vector<UString>(),
-                                    UString());
     }
 
     std::optional<GS_Arguments> GS_Arguments::Create(I32 argc,

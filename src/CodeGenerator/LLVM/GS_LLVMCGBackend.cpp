@@ -94,7 +94,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         auto features = "";
 
         llvm::TargetOptions targetOptions;
-        auto relocModel = llvm::Optional<llvm::Reloc::Model>();
+        auto relocModel = std::optional<llvm::Reloc::Model>();
         auto targetMachine = target->createTargetMachine(targetTriple,
                                                          cpu,
                                                          features,

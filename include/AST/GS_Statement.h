@@ -63,7 +63,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * Statement ptr type
      */
-    using GSStatementPtr = std::shared_ptr<GS_Statement>;
+    using GSStatementPtr = NodePtr<GS_Statement>;
 
     /**
      * Statement ptr array type
@@ -101,25 +101,33 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        switch (statement->GetStatementType()) {
-            case StatementType::VariableDeclarationStatement:
+        auto statementType = statement->GetStatementType();
+
+        switch (statementType) {
+            case StatementType::VariableDeclarationStatement: {
                 if constexpr (!std::is_same_v<GS_VariableDeclarationStatement, StatementT>) {
                     return nullptr;
                 }
 
                 break;
-            case StatementType::AssignmentStatement:
+            }
+            case StatementType::AssignmentStatement: {
                 if constexpr (!std::is_same_v<GS_AssignmentStatement, StatementT>) {
                     return nullptr;
                 }
 
                 break;
-            case StatementType::ExpressionStatement:
+            }
+            case StatementType::ExpressionStatement: {
                 if constexpr (!std::is_same_v<GS_ExpressionStatement, StatementT>) {
                     return nullptr;
                 }
 
                 break;
+            }
+            default: {
+                return nullptr;
+            }
         }
 
         return std::reinterpret_pointer_cast<StatementT>(statement);

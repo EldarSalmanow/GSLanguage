@@ -30,7 +30,9 @@ namespace GSLanguageCompiler::AST {
 
     Void GS_Visitor::SuperDeclaration(LRef<Driver::GS_Session> session,
                                       LRef<GSDeclarationPtr> declaration) {
-        switch (declaration->GetDeclarationType()) {
+        auto declarationType = declaration->GetDeclarationType();
+
+        switch (declarationType) {
             case DeclarationType::TranslationUnitDeclaration: {
                 auto translationUnitDeclaration = ToDeclaration<GS_TranslationUnitDeclaration>(declaration);
 
@@ -48,7 +50,9 @@ namespace GSLanguageCompiler::AST {
 
     Void GS_Visitor::SuperStatement(LRef<Driver::GS_Session> session,
                                     LRef<GSStatementPtr> statement) {
-        switch (statement->GetStatementType()) {
+        auto statementType = statement->GetStatementType();
+
+        switch (statementType) {
             case StatementType::VariableDeclarationStatement: {
                 auto variableDeclarationStatement = ToStatement<GS_VariableDeclarationStatement>(statement);
 
@@ -72,7 +76,9 @@ namespace GSLanguageCompiler::AST {
 
     Void GS_Visitor::SuperExpression(LRef<Driver::GS_Session> session,
                                      LRef<GSExpressionPtr> expression) {
-        switch (expression->GetExpressionType()) {
+        auto expressionType = expression->GetExpressionType();
+
+        switch (expressionType) {
             case ExpressionType::ConstantExpression: {
                 auto constantExpression = ToExpression<GS_ConstantExpression>(expression);
 
@@ -323,7 +329,9 @@ namespace GSLanguageCompiler::AST {
 
     GSNodePtr GS_Transformer::SuperDeclaration(LRef<Driver::GS_Session> session,
                                                LRef<GSDeclarationPtr> declaration) {
-        switch (declaration->GetDeclarationType()) {
+        auto declarationType = declaration->GetDeclarationType();
+
+        switch (declarationType) {
             case DeclarationType::TranslationUnitDeclaration: {
                 auto translationUnitDeclaration = ToDeclaration<GS_TranslationUnitDeclaration>(declaration);
 
@@ -343,7 +351,9 @@ namespace GSLanguageCompiler::AST {
 
     GSNodePtr GS_Transformer::SuperStatement(LRef<Driver::GS_Session> session,
                                              LRef<GSStatementPtr> statement) {
-        switch (statement->GetStatementType()) {
+        auto statementType = statement->GetStatementType();
+
+        switch (statementType) {
             case StatementType::VariableDeclarationStatement: {
                 auto variableDeclarationStatement = ToStatement<GS_VariableDeclarationStatement>(statement);
 
@@ -369,7 +379,9 @@ namespace GSLanguageCompiler::AST {
 
     GSNodePtr GS_Transformer::SuperExpression(LRef<Driver::GS_Session> session,
                                               LRef<GSExpressionPtr> expression) {
-        switch (expression->GetExpressionType()) {
+        auto expressionType = expression->GetExpressionType();
+
+        switch (expressionType) {
             case ExpressionType::ConstantExpression: {
                 auto constantExpression = ToExpression<GS_ConstantExpression>(expression);
 

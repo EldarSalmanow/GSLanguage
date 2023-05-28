@@ -62,7 +62,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * Declaration ptr type
      */
-    using GSDeclarationPtr = std::shared_ptr<GS_Declaration>;
+    using GSDeclarationPtr = NodePtr<GS_Declaration>;
 
     /**
      * Declaration ptr array type
@@ -99,19 +99,26 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        switch (declaration->GetDeclarationType()) {
-            case DeclarationType::TranslationUnitDeclaration:
+        auto declarationType = declaration->GetDeclarationType();
+
+        switch (declarationType) {
+            case DeclarationType::TranslationUnitDeclaration: {
                 if constexpr (!std::is_same_v<GS_TranslationUnitDeclaration, DeclarationT>) {
                     return nullptr;
                 }
 
                 break;
-            case DeclarationType::FunctionDeclaration:
+            }
+            case DeclarationType::FunctionDeclaration: {
                 if constexpr (!std::is_same_v<GS_FunctionDeclaration, DeclarationT>) {
                     return nullptr;
                 }
 
                 break;
+            }
+            default: {
+                return nullptr;
+            }
         }
 
         return std::reinterpret_pointer_cast<DeclarationT>(declaration);

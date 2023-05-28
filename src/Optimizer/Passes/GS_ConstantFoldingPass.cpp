@@ -6,7 +6,7 @@
 
 namespace GSLanguageCompiler::Optimizer {
 
-    // TODO: add folding values with non I32 type
+    // TODO: Add folding values with non I32 type
 
     AST::GSValuePtr FoldConstants(LRef<Driver::GS_Session> session,
                                   AST::UnaryOperation operation,

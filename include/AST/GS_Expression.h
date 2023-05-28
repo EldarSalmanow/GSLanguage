@@ -66,7 +66,7 @@ namespace GSLanguageCompiler::AST {
     /**
      * Expression ptr type
      */
-    using GSExpressionPtr = std::shared_ptr<GS_Expression>;
+    using GSExpressionPtr = NodePtr<GS_Expression>;
 
     /**
      * Expression ptr array type
@@ -107,43 +107,54 @@ namespace GSLanguageCompiler::AST {
             return nullptr;
         }
 
-        switch (expression->GetExpressionType()) {
-            case ExpressionType::ConstantExpression:
+        auto expressionType = expression->GetExpressionType();
+
+        switch (expressionType) {
+            case ExpressionType::ConstantExpression: {
                 if constexpr (!std::is_same_v<GS_ConstantExpression, ExpressionT>) {
                     return nullptr;
                 }
 
                 break;
-            case ExpressionType::UnaryExpression:
+            }
+            case ExpressionType::UnaryExpression: {
                 if constexpr (!std::is_same_v<GS_UnaryExpression, ExpressionT>) {
                     return nullptr;
                 }
 
                 break;
-            case ExpressionType::BinaryExpression:
+            }
+            case ExpressionType::BinaryExpression: {
                 if constexpr (!std::is_same_v<GS_BinaryExpression, ExpressionT>) {
                     return nullptr;
                 }
 
                 break;
-            case ExpressionType::ArrayExpression:
+            }
+            case ExpressionType::ArrayExpression: {
                 if constexpr (!std::is_same_v<GS_ArrayExpression, ExpressionT>) {
                     return nullptr;
                 }
 
                 break;
-            case ExpressionType::VariableUsingExpression:
+            }
+            case ExpressionType::VariableUsingExpression: {
                 if constexpr (!std::is_same_v<GS_VariableUsingExpression, ExpressionT>) {
                     return nullptr;
                 }
 
                 break;
-            case ExpressionType::FunctionCallingExpression:
+            }
+            case ExpressionType::FunctionCallingExpression: {
                 if constexpr (!std::is_same_v<GS_FunctionCallingExpression, ExpressionT>) {
                     return nullptr;
                 }
 
                 break;
+            }
+            default: {
+                return nullptr;
+            }
         }
 
         return std::reinterpret_pointer_cast<ExpressionT>(expression);
@@ -155,7 +166,9 @@ namespace GSLanguageCompiler::AST {
      * @return Is left value expression
      */
     inline Bool IsLValueExpression(ConstLRef<GSExpressionPtr> expression) {
-        switch (expression->GetExpressionType()) {
+        auto expressionType = expression->GetExpressionType();
+
+        switch (expressionType) {
             case ExpressionType::VariableUsingExpression:
                 return true;
             default:
@@ -169,7 +182,9 @@ namespace GSLanguageCompiler::AST {
      * @return Is right value expression
      */
     inline Bool IsRValueExpression(ConstLRef<GSExpressionPtr> expression) {
-        switch (expression->GetExpressionType()) {
+        auto expressionType = expression->GetExpressionType();
+
+        switch (expressionType) {
             case ExpressionType::ConstantExpression:
             case ExpressionType::UnaryExpression:
             case ExpressionType::BinaryExpression:

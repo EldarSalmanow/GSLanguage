@@ -3,6 +3,8 @@
 
 #include <any>
 
+#include <Driver/GS_GlobalContext.h>
+
 #include <Semantic/GS_Type.h>
 
 #include <AST/GS_Expression.h>
@@ -297,7 +299,7 @@ namespace GSLanguageCompiler::AST {
                 : GS_LiteralValue(std::move(value),
                                   std::move(integerType)) {
             if (GetType()->GetType() != Semantic::TypeType::Integer) {
-                Driver::GlobalContext().Exit();
+                Driver::GlobalContext().Exit("Can`t create integer value with non integer type!");
             }
         }
 
@@ -556,7 +558,7 @@ namespace GSLanguageCompiler::AST {
                 : GS_LiteralValue(std::move(value),
                                   std::move(unsignedIntegerType)) {
             if (GetType()->GetType() != Semantic::TypeType::UInteger) {
-                Driver::GlobalContext().Exit();
+                Driver::GlobalContext().Exit("Can`t create unsigned integer value with non unsigned integer type!");
             }
         }
 
@@ -840,11 +842,10 @@ namespace GSLanguageCompiler::AST {
     };
 
     /**
-     * Casting to ValueT value
+     * Casting value to ValueT
      * @tparam ValueT Type of value
      * @param value Value
      * @return Value or null
-     * @todo Rewrite
      */
     template<typename ValueT>
     inline ValuePtr<ValueT> ToValue(ConstLRef<GSValuePtr> value) {
@@ -854,124 +855,126 @@ namespace GSLanguageCompiler::AST {
         auto type = value->GetType();
         auto typeType = type->GetType();
 
-        if constexpr (std::is_same_v<GS_CharValue, ValueT>) {
-            if (typeType == Semantic::TypeType::Char) {
-                return std::reinterpret_pointer_cast<GS_CharValue>(value);
-            }
-
-            return nullptr;
+        // TODO
+        if constexpr (std::is_same_v<GS_LiteralValue, ValueT>) {
+            return std::reinterpret_pointer_cast<ValueT>(value);
         }
 
-        if constexpr (std::is_same_v<GS_I8Value, ValueT>) {
-            if (typeType == Semantic::TypeType::Integer) {
+        switch (typeType) {
+            case Semantic::TypeType::Void: {
+                return nullptr;
+            }
+            case Semantic::TypeType::Char: {
+                if constexpr (!std::is_same_v<GS_CharValue, ValueT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case Semantic::TypeType::Integer: {
                 auto integerType = std::reinterpret_pointer_cast<Semantic::GS_IntegerType>(type);
                 auto integerTypeType = integerType->GetIntegerType();
 
-                if (integerTypeType == Semantic::IntegerType::I8) {
-                    return std::reinterpret_pointer_cast<GS_I8Value>(value);
+                if constexpr (std::is_same_v<GS_IntegerValue, ValueT>) {
+                    break;
                 }
-            }
 
-            return nullptr;
-        }
+                switch (integerTypeType) {
+                    case Semantic::IntegerType::I8: {
+                        if constexpr (!std::is_same_v<GS_I8Value, ValueT>) {
+                            return nullptr;
+                        }
 
-        if constexpr (std::is_same_v<GS_I16Value, ValueT>) {
-            if (typeType == Semantic::TypeType::Integer) {
-                auto integerType = std::reinterpret_pointer_cast<Semantic::GS_IntegerType>(type);
-                auto integerTypeType = integerType->GetIntegerType();
+                        break;
+                    }
+                    case Semantic::IntegerType::I16: {
+                        if constexpr (!std::is_same_v<GS_I16Value, ValueT>) {
+                            return nullptr;
+                        }
 
-                if (integerTypeType == Semantic::IntegerType::I16) {
-                    return std::reinterpret_pointer_cast<GS_I16Value>(value);
+                        break;
+                    }
+                    case Semantic::IntegerType::I32: {
+                        if constexpr (!std::is_same_v<GS_I32Value, ValueT>) {
+                            return nullptr;
+                        }
+
+                        break;
+                    }
+                    case Semantic::IntegerType::I64: {
+                        if constexpr (!std::is_same_v<GS_I64Value, ValueT>) {
+                            return nullptr;
+                        }
+
+                        break;
+                    }
+                    case Semantic::IntegerType::User: {
+                        return nullptr;
+                    }
                 }
+
+                break;
             }
-
-            return nullptr;
-        }
-
-        if constexpr (std::is_same_v<GS_I32Value, ValueT>) {
-            if (typeType == Semantic::TypeType::Integer) {
-                auto integerType = std::reinterpret_pointer_cast<Semantic::GS_IntegerType>(type);
-                auto integerTypeType = integerType->GetIntegerType();
-
-                if (integerTypeType == Semantic::IntegerType::I32) {
-                    return std::reinterpret_pointer_cast<GS_I32Value>(value);
-                }
-            }
-
-            return nullptr;
-        }
-
-        if constexpr (std::is_same_v<GS_I64Value, ValueT>) {
-            if (typeType == Semantic::TypeType::Integer) {
-                auto integerType = std::reinterpret_pointer_cast<Semantic::GS_IntegerType>(type);
-                auto integerTypeType = integerType->GetIntegerType();
-
-                if (integerTypeType == Semantic::IntegerType::I64) {
-                    return std::reinterpret_pointer_cast<GS_I64Value>(value);
-                }
-            }
-
-            return nullptr;
-        }
-
-        if constexpr (std::is_same_v<GS_U8Value, ValueT>) {
-            if (typeType == Semantic::TypeType::UInteger) {
+            case Semantic::TypeType::UInteger: {
                 auto uIntegerType = std::reinterpret_pointer_cast<Semantic::GS_UIntegerType>(type);
                 auto uIntegerTypeType = uIntegerType->GetUIntegerType();
 
-                if (uIntegerTypeType == Semantic::UIntegerType::U8) {
-                    return std::reinterpret_pointer_cast<GS_U8Value>(value);
+                if constexpr (std::is_same_v<GS_UIntegerValue, ValueT>) {
+                    break;
                 }
-            }
 
-            return nullptr;
-        }
+                switch (uIntegerTypeType) {
+                    case Semantic::UIntegerType::U8: {
+                        if constexpr (!std::is_same_v<GS_U8Value, ValueT>) {
+                            return nullptr;
+                        }
 
-        if constexpr (std::is_same_v<GS_U16Value, ValueT>) {
-            if (typeType == Semantic::TypeType::UInteger) {
-                auto uIntegerType = std::reinterpret_pointer_cast<Semantic::GS_UIntegerType>(type);
-                auto uIntegerTypeType = uIntegerType->GetUIntegerType();
+                        break;
+                    }
+                    case Semantic::UIntegerType::U16: {
+                        if constexpr (!std::is_same_v<GS_U16Value, ValueT>) {
+                            return nullptr;
+                        }
 
-                if (uIntegerTypeType == Semantic::UIntegerType::U16) {
-                    return std::reinterpret_pointer_cast<GS_U16Value>(value);
+                        break;
+                    }
+                    case Semantic::UIntegerType::U32: {
+                        if constexpr (!std::is_same_v<GS_U32Value, ValueT>) {
+                            return nullptr;
+                        }
+
+                        break;
+                    }
+                    case Semantic::UIntegerType::U64: {
+                        if constexpr (!std::is_same_v<GS_U64Value, ValueT>) {
+                            return nullptr;
+                        }
+
+                        break;
+                    }
+                    case Semantic::UIntegerType::User: {
+                        return nullptr;
+                    }
                 }
+
+                break;
             }
-
-            return nullptr;
-        }
-
-        if constexpr (std::is_same_v<GS_U32Value, ValueT>) {
-            if (typeType == Semantic::TypeType::UInteger) {
-                auto uIntegerType = std::reinterpret_pointer_cast<Semantic::GS_UIntegerType>(type);
-                auto uIntegerTypeType = uIntegerType->GetUIntegerType();
-
-                if (uIntegerTypeType == Semantic::UIntegerType::U32) {
-                    return std::reinterpret_pointer_cast<GS_U8Value>(value);
+            case Semantic::TypeType::String: {
+                if constexpr (!std::is_same_v<GS_StringValue, ValueT>) {
+                    return nullptr;
                 }
+
+                break;
             }
-
-            return nullptr;
-        }
-
-        if constexpr (std::is_same_v<GS_U64Value, ValueT>) {
-            if (typeType == Semantic::TypeType::UInteger) {
-                auto uIntegerType = std::reinterpret_pointer_cast<Semantic::GS_UIntegerType>(type);
-                auto uIntegerTypeType = uIntegerType->GetUIntegerType();
-
-                if (uIntegerTypeType == Semantic::UIntegerType::U64) {
-                    return std::reinterpret_pointer_cast<GS_U8Value>(value);
-                }
+            case Semantic::TypeType::Array: {
+                return nullptr;
             }
-
-            return nullptr;
-        }
-
-        if constexpr (std::is_same_v<GS_StringValue, ValueT>) {
-            if (typeType == Semantic::TypeType::String) {
-                return std::reinterpret_pointer_cast<GS_StringValue>(value);
+            case Semantic::TypeType::User: {
+                return nullptr;
             }
-
-            return nullptr;
+            default: {
+                return nullptr;
+            }
         }
 
         return std::reinterpret_pointer_cast<ValueT>(value);

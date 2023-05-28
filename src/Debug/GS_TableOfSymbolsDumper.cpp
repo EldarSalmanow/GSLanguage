@@ -19,7 +19,9 @@ namespace GSLanguageCompiler::Debug {
 
             UStringStream stringStream;
 
-            switch (symbol->GetSymbolType()) {
+            auto symbolType = symbol->GetSymbolType();
+
+            switch (symbolType) {
                 case Semantic::SymbolType::Function: {
                     auto functionSymbol = Semantic::ToSymbol<Semantic::GS_FunctionSymbol>(symbol);
 

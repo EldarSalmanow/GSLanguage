@@ -2,11 +2,15 @@
 
 namespace GSLanguageCompiler::AST {
 
-    GS_ASTContext::GS_ASTContext()
-            : _typeContext(Semantic::GS_TypeContext::Create()) {}
+    GS_ASTContext::GS_ASTContext(Semantic::GSTypeContextPtr typeContext)
+            : _typeContext(std::move(typeContext)) {}
+
+    std::unique_ptr<GS_ASTContext> GS_ASTContext::Create(Semantic::GSTypeContextPtr typeContext) {
+        return std::make_unique<GS_ASTContext>(std::move(typeContext));
+    }
 
     std::unique_ptr<GS_ASTContext> GS_ASTContext::Create() {
-        return std::make_unique<GS_ASTContext>();
+        return GS_ASTContext::Create(Semantic::GS_TypeContext::Create());
     }
 
     Semantic::TypePtr<Semantic::GS_VoidType> GS_ASTContext::GetVoidType() const {

@@ -136,7 +136,9 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateDeclaration(LRef<Driver::GS_Session> session,
                                                            LRef<AST::GSDeclarationPtr> declaration) {
-        switch (declaration->GetDeclarationType()) {
+        auto declarationType = declaration->GetDeclarationType();
+
+        switch (declarationType) {
             case AST::DeclarationType::TranslationUnitDeclaration: {
                 auto translationUnitDeclaration = AST::ToDeclaration<AST::GS_TranslationUnitDeclaration>(declaration);
 
@@ -156,7 +158,9 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateStatement(LRef<Driver::GS_Session> session,
                                                          LRef<AST::GSStatementPtr> statement) {
-        switch (statement->GetStatementType()) {
+        auto statementType = statement->GetStatementType();
+
+        switch (statementType) {
             case AST::StatementType::VariableDeclarationStatement: {
                 auto variableDeclarationStatement = AST::ToStatement<AST::GS_VariableDeclarationStatement>(statement);
 
@@ -182,7 +186,9 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateExpression(LRef<Driver::GS_Session> session,
                                                           LRef<AST::GSExpressionPtr> expression) {
-        switch (expression->GetExpressionType()) {
+        auto expressionType = expression->GetExpressionType();
+
+        switch (expressionType) {
             case AST::ExpressionType::ConstantExpression: {
                 auto constantExpression = AST::ToExpression<AST::GS_ConstantExpression>(expression);
 

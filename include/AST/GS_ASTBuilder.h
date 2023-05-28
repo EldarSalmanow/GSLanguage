@@ -42,7 +42,6 @@ namespace GSLanguageCompiler::AST {
         /*
          *
          * GS_ASTBuilder PUBLIC STATIC CREATE METHODS
-         * TODO Add Create method from session
          *
          */
 

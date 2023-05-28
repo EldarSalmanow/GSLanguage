@@ -328,7 +328,9 @@ namespace GSLanguageCompiler::Parser {
 
             AST::BinaryOperation binaryOperator;
 
-            switch (TokenType()) {
+            auto tokenType = TokenType();
+
+            switch (tokenType) {
                 case Lexer::TokenType::SymbolPlus:
                     binaryOperator = AST::BinaryOperation::Plus;
 

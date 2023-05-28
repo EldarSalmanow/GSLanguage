@@ -116,8 +116,6 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Tokenizing code from source
          * @return Token buffer
-         * @todo Lexing space symbol in token?
-         * @todo Update messages flushing
          */
         GS_TokenBuffer Tokenize();
 
@@ -229,9 +227,9 @@ namespace GSLanguageCompiler::Lexer {
         LRef<Driver::GS_Session> _session;
 
         /**
-         * Messages
+         * Message queue
          */
-        IO::GSMessageArray _messages;
+        IO::GS_MessageQueue _messageQueue;
 
         /**
          * Source

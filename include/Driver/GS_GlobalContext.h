@@ -3,14 +3,6 @@
 
 #include <IO/GS_Stream.h>
 
-/*
- * TODO: Move macros to GSCrossPlatform library
- */
-
-#define GS_ATTRIBUTE(name) [[name]]
-
-#define GS_NORETURN GS_ATTRIBUTE(noreturn)
-
 namespace GSLanguageCompiler::Driver {
 
     /**

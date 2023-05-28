@@ -7,7 +7,6 @@ namespace GSLanguageCompiler::Optimizer {
 
     /**
      * Class for optimizing AST
-     * @todo Delete?
      */
     class GS_Optimizer {
     public:
@@ -61,7 +60,6 @@ namespace GSLanguageCompiler::Optimizer {
         /**
          * Run optimizing passes for optimize node
          * @param node Node
-         * @param passes Optimizing passes
          * @return Void return
          */
         Void Optimize(LRef<AST::GSNodePtr> node);

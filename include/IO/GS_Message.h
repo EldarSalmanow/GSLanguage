@@ -1,6 +1,8 @@
 #ifndef GSLANGUAGE_GS_MESSAGE_H
 #define GSLANGUAGE_GS_MESSAGE_H
 
+#include <deque>
+
 #include <IO/GS_Source.h>
 
 namespace GSLanguageCompiler::IO {
@@ -313,6 +315,97 @@ namespace GSLanguageCompiler::IO {
          * Messages
          */
         GSMessageArray _messages;
+    };
+
+    /**
+     * Declaring message stream for message queue
+     */
+    class GS_MessageStream;
+
+    /**
+     * Class for containing and flushing messages
+     */
+    class GS_MessageQueue {
+    public:
+
+        /*
+         *
+         * GS_MessageQueue PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
+         * Constructor for message queue
+         * @param messageStream Message stream
+         */
+        explicit GS_MessageQueue(LRef<GS_MessageStream> messageStream);
+
+    public:
+
+        /*
+         *
+         * GS_MessageQueue PUBLIC DESTRUCTORS
+         *
+         */
+
+        /**
+         * Destructor for message queue
+         */
+        ~GS_MessageQueue();
+
+    public:
+
+        /*
+         *
+         * GS_MessageQueue PUBLIC STATIC CREATE METHODS
+         *
+         */
+
+        /**
+         * Creating message queue
+         * @param messageStream Message stream
+         * @return Message queue
+         */
+        static GS_MessageQueue Create(LRef<GS_MessageStream> messageStream);
+
+    public:
+
+        /*
+         *
+         * GS_MessageQueue PUBLIC METHODS
+         *
+         */
+
+        /**
+         * Adding message to message queue
+         * @param message Message
+         * @return Message
+         */
+        ConstLRef<GS_Message> AddMessage(GS_Message message);
+
+        /**
+         * Flush messages to message stream and clear it
+         * @return Void return
+         */
+        Void Flush();
+
+    private:
+
+        /*
+         *
+         * GS_MessageQueue PRIVATE FIELDS
+         *
+         */
+
+        /**
+         * Messages
+         */
+        std::deque<GS_Message> _messages;
+
+        /**
+         * Message stream
+         */
+        LRef<GS_MessageStream> _messageStream;
     };
 
     /**

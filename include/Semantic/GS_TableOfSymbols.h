@@ -264,19 +264,26 @@ namespace GSLanguageCompiler::Semantic {
         static_assert(std::is_base_of_v<GS_Symbol, SymbolT>,
                       "Type for casting must be inherited from GS_Symbol!");
 
-        switch (symbol->GetSymbolType()) {
-            case SymbolType::Function:
+        auto symbolType = symbol->GetSymbolType();
+
+        switch (symbolType) {
+            case SymbolType::Function: {
                 if constexpr (!std::is_same_v<GS_FunctionSymbol, SymbolT>) {
                     return nullptr;
                 }
 
                 break;
-            case SymbolType::Variable:
+            }
+            case SymbolType::Variable: {
                 if constexpr (!std::is_same_v<GS_VariableSymbol, SymbolT>) {
                     return nullptr;
                 }
 
                 break;
+            }
+            default: {
+                return nullptr;
+            }
         }
 
         return std::reinterpret_pointer_cast<SymbolT>(symbol);
@@ -341,7 +348,6 @@ namespace GSLanguageCompiler::Semantic {
          * @param name Function name
          * @param signature Function signature
          * @return Function symbol
-         * @todo Check return
          */
         ConstLRef<GS_FunctionSymbol> AddFunction(UString name,
                                                  AST::GS_FunctionSignature signature);
@@ -351,7 +357,6 @@ namespace GSLanguageCompiler::Semantic {
          * @param name Variable name
          * @param type Variable type
          * @return Variable symbol
-         * @todo Check return
          */
         ConstLRef<GS_VariableSymbol> AddVariable(UString name,
                                                  GSTypePtr type);

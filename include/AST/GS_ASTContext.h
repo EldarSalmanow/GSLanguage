@@ -21,9 +21,9 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Constructor for AST context
-         * @todo Add type context parameter
+         * @param typeContext Type context
          */
-        GS_ASTContext();
+        explicit GS_ASTContext(Semantic::GSTypeContextPtr typeContext);
 
     public:
 
@@ -32,6 +32,13 @@ namespace GSLanguageCompiler::AST {
          * GS_ASTContext PUBLIC STATIC CREATE METHODS
          *
          */
+
+        /**
+         * Creating AST context
+         * @param typeContext Type context
+         * @return AST context ptr
+         */
+        static std::unique_ptr<GS_ASTContext> Create(Semantic::GSTypeContextPtr typeContext);
 
         /**
          * Creating AST context

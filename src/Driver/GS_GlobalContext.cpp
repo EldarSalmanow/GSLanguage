@@ -28,12 +28,7 @@ namespace GSLanguageCompiler::Driver {
                          << signal;
         }
 
-        stringStream << "\n"_us;
-
-        // TODO add ErrAndExit (?) function
-        GlobalContext().Err() << stringStream.String();
-
-        GlobalContext().Exit();
+        GlobalContext().Exit(stringStream.String());
     }
 
     LRef<GS_GlobalContext> GS_GlobalContext::GetInstance() {
@@ -95,8 +90,6 @@ namespace GSLanguageCompiler::Driver {
     Void GS_GlobalContext::Exit(UString exitMessage,
                                 I32 exitCode) {
         auto movedExitMessage = std::move(exitMessage);
-
-        // TODO coloring message?
 
         _stdIOStreamManager->Err() << " |--------------------------------------------------"_us << std::endl
                                    << "/"_us << std::endl;

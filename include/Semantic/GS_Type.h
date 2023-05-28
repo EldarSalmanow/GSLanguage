@@ -803,7 +803,6 @@ namespace GSLanguageCompiler::Semantic {
          * Constructor for Array type
          * @param elementsType Type of array elements
          * @param size Size of array
-         * @todo Check
          */
         GS_ArrayType(GSTypePtr elementsType,
                      U64 size);
@@ -878,11 +877,150 @@ namespace GSLanguageCompiler::Semantic {
         U64 _size;
     };
 
-    // TODO add type casting function?
+    /**
+     * Casting type to TypeT
+     * @tparam TypeT Type of type
+     * @param type Type
+     * @return Type or null
+     */
+    template<typename TypeT>
+    inline TypePtr<TypeT> ToType(ConstLRef<GSTypePtr> type) {
+        static_assert(std::is_base_of_v<GS_Type, TypeT>,
+                      "Type for casting must be inherited from GS_Type!");
+
+        auto typeType = type->GetType();
+
+        switch (typeType) {
+            case TypeType::Void: {
+                if constexpr (!std::is_same_v<GS_VoidType, TypeT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case TypeType::Char: {
+                if constexpr (!std::is_same_v<GS_CharType, TypeT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case TypeType::Integer: {
+                auto integerType = std::reinterpret_pointer_cast<GS_IntegerType>(type);
+                auto integerTypeType = integerType->GetIntegerType();
+
+                if constexpr (std::is_same_v<GS_IntegerType, TypeT>) {
+                    break;
+                }
+
+                switch (integerTypeType) {
+                    case IntegerType::I8: {
+                        if constexpr (!std::is_same_v<GS_I8Type, TypeT>) {
+                            return nullptr;
+                        }
+
+                        break;
+                    }
+                    case IntegerType::I16: {
+                        if constexpr (!std::is_same_v<GS_I16Type, TypeT>) {
+                            return nullptr;
+                        }
+
+                        break;
+                    }
+                    case IntegerType::I32: {
+                        if constexpr (!std::is_same_v<GS_I32Type, TypeT>) {
+                            return nullptr;
+                        }
+
+                        break;
+                    }
+                    case IntegerType::I64: {
+                        if constexpr (!std::is_same_v<GS_I64Type, TypeT>) {
+                            return nullptr;
+                        }
+
+                        break;
+                    }
+                    case IntegerType::User: {
+                        return nullptr;
+                    }
+                }
+
+                break;
+            }
+            case TypeType::UInteger: {
+                auto uIntegerType = std::reinterpret_pointer_cast<GS_UIntegerType>(type);
+                auto uIntegerTypeType = uIntegerType->GetUIntegerType();
+
+                if constexpr (std::is_same_v<GS_UIntegerType, TypeT>) {
+                    break;
+                }
+
+                switch (uIntegerTypeType) {
+                    case UIntegerType::U8: {
+                        if constexpr (!std::is_same_v<GS_U8Type, TypeT>) {
+                            return nullptr;
+                        }
+
+                        break;
+                    }
+                    case UIntegerType::U16: {
+                        if constexpr (!std::is_same_v<GS_U16Type, TypeT>) {
+                            return nullptr;
+                        }
+
+                        break;
+                    }
+                    case UIntegerType::U32: {
+                        if constexpr (!std::is_same_v<GS_U32Type, TypeT>) {
+                            return nullptr;
+                        }
+
+                        break;
+                    }
+                    case UIntegerType::U64: {
+                        if constexpr (!std::is_same_v<GS_U64Type, TypeT>) {
+                            return nullptr;
+                        }
+
+                        break;
+                    }
+                    case UIntegerType::User: {
+                        return nullptr;
+                    }
+                }
+
+                break;
+            }
+            case TypeType::String: {
+                if constexpr (!std::is_same_v<GS_StringType, TypeT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case TypeType::Array: {
+                if constexpr (!std::is_same_v<GS_ArrayType, TypeT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case TypeType::User: {
+                return nullptr;
+            }
+            default: {
+                return nullptr;
+            }
+        }
+
+        return std::reinterpret_pointer_cast<TypeT>(type);
+    }
 
     /**
      * Context for containing information about types
-     * @todo Caching default types and any types?
+     * @todo Add caching default types and any types
      */
     class GS_TypeContext {
     public:

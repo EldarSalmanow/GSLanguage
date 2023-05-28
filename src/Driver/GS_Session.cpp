@@ -2,8 +2,6 @@
 
 #include <Optimizer/Optimizer.h>
 
-#include <Semantic/Semantic.h>
-
 #include <CodeGenerator/CodeGenerator.h>
 
 #include <Debug/Debug.h>
@@ -83,21 +81,17 @@ namespace GSLanguageCompiler::Driver {
 
         AST::GSTranslationUnitDeclarationPtrArray translationUnitDeclarations;
 
-        auto optimizingPasses = {
-                Optimizer::CreateConstantFoldingPass()
-        };
+        auto optimizer = Optimizer::GS_Optimizer::Create(*this);
 
         for (auto &source : sources) {
             auto translationUnitDeclaration = Parser::ParseProgram(*this,
                                                                    *source);
 
+            // TODO: Add GS_Semantic class for run semantic passes
             Semantic::CreateSymbolsPlaceholderPass()->Run(*this,
                                                           translationUnitDeclaration);
 
-            for (auto &optimizingPass : optimizingPasses) {
-                optimizingPass->Run(*this,
-                                    translationUnitDeclaration);
-            }
+//            optimizer->Optimize(translationUnitDeclaration);
 
             Debug::DumpAST(translationUnitDeclaration,
                            *this);

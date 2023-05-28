@@ -132,6 +132,32 @@ namespace GSLanguageCompiler::IO {
         return _messages[index];
     }
 
+    GS_MessageQueue::GS_MessageQueue(LRef<GS_MessageStream> messageStream)
+            : _messages(),
+              _messageStream(messageStream) {}
+
+    GS_MessageQueue::~GS_MessageQueue() {
+        Flush();
+    }
+
+    GS_MessageQueue GS_MessageQueue::Create(LRef<GS_MessageStream> messageStream) {
+        return GS_MessageQueue(messageStream);
+    }
+
+    ConstLRef<GS_Message> GS_MessageQueue::AddMessage(GS_Message message) {
+        _messages.emplace_back(std::move(message));
+
+        return _messages[_messages.size() - 1];
+    }
+
+    Void GS_MessageQueue::Flush() {
+        for (auto &messages : _messages) {
+            _messageStream << messages;
+        }
+
+        _messages.clear();
+    }
+
     GS_MessageBuilder::GS_MessageBuilder(UString messageText,
                                          MessageLevel messageLevel,
                                          std::optional<GSByteSourceRange> messageLocationRange)
@@ -268,14 +294,6 @@ namespace GSLanguageCompiler::IO {
     }
 
     Void GS_MessageStream::Write(GS_Message message) {
-        auto SetColor = [this] (rang::fg color) {
-            _messageHandler << color;
-        };
-
-        auto SetStyle = [this] (rang::style style) {
-            _messageHandler << style;
-        };
-
         auto movedMessage = std::move(message);
 
         auto &messageText = movedMessage.GetText();
@@ -318,19 +336,10 @@ namespace GSLanguageCompiler::IO {
             }
         }
 
-        SetStyle(rang::style::bold);
-        SetColor(rang::fg::reset);
-
-        SetColor(messageColor);
-
-        _messageHandler << " |--------------------------------------------------"_us << std::endl
-                        << "/"_us << std::endl;
-
-        _messageHandler << "| "_us << textMessageLevel;
-
-        SetColor(rang::fg::reset);
-
-        _messageHandler << ": " << messageText << std::endl;
+        _messageHandler << rang::style::bold << messageColor
+                        << " |--------------------------------------------------"_us << std::endl
+                        << "/"_us << std::endl
+                        << "| "_us << textMessageLevel << rang::fg::reset << ": " << messageText << std::endl;
 
         if (optionalMessageLocationRange.has_value()) {
             auto &messageLocationRange = optionalMessageLocationRange.value();
@@ -370,46 +379,18 @@ namespace GSLanguageCompiler::IO {
                 whitespaces += ' ';
             }
 
-            SetColor(messageColor);
-
-            _messageHandler << "| "_us << "> "_us;
-
-            SetColor(rang::fg::reset);
-
-            _messageHandler << sourceName.GetName() << ":" << "[" << line << "." << column << "]" << std::endl;
-
-            SetColor(messageColor);
-
-            _messageHandler << "| "_us;
-
-            SetColor(rang::fg::reset);
-
-            _messageHandler << lineCode <<  std::endl;
-
-            SetColor(messageColor);
-
-            _messageHandler << "| "_us;
-
-            SetColor(rang::fg::reset);
-
-            _messageHandler << whitespaces;
-
-            SetColor(messageColor);
-
-            _messageHandler << "^" << std::endl;
-
-            SetColor(rang::fg::reset);
+            _messageHandler << messageColor
+                            << "| "_us << "> "_us << rang::fg::reset << sourceName.GetName() << ":" << "[" << line << "." << column << "]" << std::endl
+                            << messageColor
+                            << "| "_us << rang::fg::reset << lineCode <<  std::endl
+                            << messageColor
+                            << "| "_us << whitespaces << "^" << std::endl << rang::fg::reset;
         }
 
-        SetColor(messageColor);
-
-        _messageHandler << "\\"_us << std::endl
-                        << " |--------------------------------------------------"_us << std::endl;
-
-        SetColor(rang::fg::reset);
-
-        SetStyle(rang::style::reset);
-        SetColor(rang::fg::reset);
+        _messageHandler << messageColor
+                        << "\\"_us << std::endl
+                        << " |--------------------------------------------------"_us << std::endl
+                        << rang::fg::reset << rang::style::reset;
     }
 
     LRef<GSMessageHandler> GS_MessageStream::GetMessageHandler() {

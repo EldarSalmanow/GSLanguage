@@ -5,6 +5,10 @@
 
 namespace GSLanguageCompiler::AST {
 
+    /*
+     * TODO: Check and rewrite pass system
+     */
+
     /**
      * Class for run visitor on any nodes
      */
