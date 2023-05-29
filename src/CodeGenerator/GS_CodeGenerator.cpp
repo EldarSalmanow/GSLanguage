@@ -20,4 +20,11 @@ namespace GSLanguageCompiler::CodeGenerator {
                                       _unit);
     }
 
+    Void GS_Writer::Write(UString fileName,
+                          GSCodeHolderPtr codeHolder) {
+        _backend->Write(_session,
+                        std::move(fileName),
+                        std::move(codeHolder));
+    }
+
 }

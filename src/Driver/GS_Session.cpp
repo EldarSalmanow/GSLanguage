@@ -27,23 +27,27 @@ namespace GSLanguageCompiler::Driver {
                            IO::GSSourceManagerPtr sourceManager,
                            IO::GSMessageStreamManagerPtr messageStreamManager,
                            AST::GSASTContextPtr astContext,
-                           Semantic::GSTableOfSymbolsPtr tableOfSymbols)
+                           Semantic::GSTableOfSymbolsPtr tableOfSymbols,
+                           CodeGenerator::GSCGBackendPtr cgBackend)
             : _stdIOStreamManager(std::move(stdIOStreamManager)),
               _sourceManager(std::move(sourceManager)),
               _messageStreamManager(std::move(messageStreamManager)),
               _astContext(std::move(astContext)),
-              _tableOfSymbols(std::move(tableOfSymbols)) {}
+              _tableOfSymbols(std::move(tableOfSymbols)),
+              _cgBackend(std::move(cgBackend)) {}
 
     std::unique_ptr<GS_Session> GS_Session::Create(IO::GSStdIOStreamManagerPtr stdIOStreamManager,
                                                    IO::GSSourceManagerPtr sourceManager,
                                                    IO::GSMessageStreamManagerPtr messageStreamManager,
                                                    AST::GSASTContextPtr astContext,
-                                                   Semantic::GSTableOfSymbolsPtr tableOfSymbols) {
+                                                   Semantic::GSTableOfSymbolsPtr tableOfSymbols,
+                                                   CodeGenerator::GSCGBackendPtr cgBackend) {
         return std::make_unique<GS_Session>(std::move(stdIOStreamManager),
                                             std::move(sourceManager),
                                             std::move(messageStreamManager),
                                             std::move(astContext),
-                                            std::move(tableOfSymbols));
+                                            std::move(tableOfSymbols),
+                                            std::move(cgBackend));
     }
 
     std::unique_ptr<GS_Session> GS_Session::Create() {
@@ -52,13 +56,17 @@ namespace GSLanguageCompiler::Driver {
         auto messageStreamManager = IO::GS_MessageStreamManager::Create(*stdIOStreamManager,
                                                                         *sourceManager);
         auto astContext = AST::GS_ASTContext::Create();
+
         auto tableOfSymbols = Semantic::GS_TableOfSymbols::Create();
+
+        auto cgBackend = CodeGenerator::GS_LLVMCGBackend::Create();
 
         return GS_Session::Create(std::move(stdIOStreamManager),
                                   std::move(sourceManager),
                                   std::move(messageStreamManager),
                                   std::move(astContext),
-                                  std::move(tableOfSymbols));
+                                  std::move(tableOfSymbols),
+                                  std::move(cgBackend));
     }
 
     std::unique_ptr<GS_Session> GS_Session::Create(GS_Arguments arguments) {
@@ -105,20 +113,22 @@ namespace GSLanguageCompiler::Driver {
 
         std::vector<CodeGenerator::GSCodeHolderPtr> codeHolders;
 
-        auto backend = CodeGenerator::GS_LLVMCGBackend::Create();
-
         for (auto &translationUnitDeclaration : translationUnitDeclarations) {
             auto codeGenerator = CodeGenerator::GS_CodeGenerator::Create(*this,
                                                                          translationUnitDeclaration);
 
-            auto codeHolder = codeGenerator.Generate(backend);
+            auto codeHolder = codeGenerator.Generate(_cgBackend);
 
             codeHolders.emplace_back(codeHolder);
         }
 
-//        backend->Write(*this,
-//                       "main.o",
-//                       codeHolders[0]);
+        auto writer = CodeGenerator::GS_Writer::Create(*this,
+                                                       _cgBackend);
+
+        for (auto &codeHolder : codeHolders) {
+            writer.Write("main.o",
+                         codeHolder);
+        }
 
         return CompilingResult::Success;
     }
@@ -256,6 +266,10 @@ namespace GSLanguageCompiler::Driver {
 
     LRef<Semantic::GS_TableOfSymbols> GS_Session::GetTableOfSymbols() {
         return *_tableOfSymbols;
+    }
+
+    LRef<CodeGenerator::GSCGBackendPtr> GS_Session::GetCGBackend() {
+        return _cgBackend;
     }
 
 }

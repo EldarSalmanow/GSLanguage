@@ -78,6 +78,29 @@ namespace GSLanguageCompiler::CodeGenerator {
         AST::GSTranslationUnitDeclarationPtr _unit;
     };
 
+    class GS_Writer {
+    public:
+
+        GS_Writer(LRef<Driver::GS_Session> session,
+                  GSCGBackendPtr backend);
+
+    public:
+
+        static GS_Writer Create(LRef<Driver::GS_Session> session,
+                                GSCGBackendPtr backend);
+
+    public:
+
+        Void Write(UString fileName,
+                   GSCodeHolderPtr codeHolder);
+
+    private:
+
+        LRef<Driver::GS_Session> _session;
+
+        GSCGBackendPtr _backend;
+    };
+
 }
 
 #endif //GSLANGUAGE_GS_CODEGENERATOR_H

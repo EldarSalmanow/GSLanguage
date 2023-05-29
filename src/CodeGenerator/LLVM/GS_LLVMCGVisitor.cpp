@@ -86,26 +86,26 @@ namespace GSLanguageCompiler::CodeGenerator {
 //        return nullptr;
 //    }
 
-    std::map<Semantic::GSTypePtr, Ptr<llvm::Type>> LLVMTypes;
+    std::map<UString, Ptr<llvm::Type>> LLVMTypes;
     std::map<UString, Ptr<llvm::AllocaInst>> Variables;
 
     GS_LLVMCGVisitor::GS_LLVMCGVisitor(LRef<GS_LLVMCodeHolder> codeHolder)
             : _codeHolder(codeHolder),
               _builder(_codeHolder.GetContext()) {
-        LLVMTypes[Semantic::GS_VoidType::Create()]   = llvm::Type::getVoidTy(GetContext());
+        LLVMTypes["Void"_us]   = llvm::Type::getVoidTy(GetContext());
 
-        LLVMTypes[Semantic::GS_CharType::Create()]   = llvm::Type::getInt8Ty(GetContext());
+        LLVMTypes["Char"_us]   = llvm::Type::getInt8Ty(GetContext());
 
-        LLVMTypes[Semantic::GS_I8Type::Create()]     = llvm::Type::getInt8Ty(GetContext());
-        LLVMTypes[Semantic::GS_I16Type::Create()]    = llvm::Type::getInt16Ty(GetContext());
-        LLVMTypes[Semantic::GS_I32Type::Create()]    = llvm::Type::getInt32Ty(GetContext());
-        LLVMTypes[Semantic::GS_I64Type::Create()]    = llvm::Type::getInt64Ty(GetContext());
-        LLVMTypes[Semantic::GS_U8Type::Create()]     = llvm::Type::getInt8Ty(GetContext());
-        LLVMTypes[Semantic::GS_U16Type::Create()]    = llvm::Type::getInt16Ty(GetContext());
-        LLVMTypes[Semantic::GS_U32Type::Create()]    = llvm::Type::getInt32Ty(GetContext());
-        LLVMTypes[Semantic::GS_U64Type::Create()]    = llvm::Type::getInt64Ty(GetContext());
+        LLVMTypes["I8"_us]     = llvm::Type::getInt8Ty(GetContext());
+        LLVMTypes["I16"_us]    = llvm::Type::getInt16Ty(GetContext());
+        LLVMTypes["I32"_us]    = llvm::Type::getInt32Ty(GetContext());
+        LLVMTypes["I64"_us]    = llvm::Type::getInt64Ty(GetContext());
+        LLVMTypes["U8"_us]     = llvm::Type::getInt8Ty(GetContext());
+        LLVMTypes["U16"_us]    = llvm::Type::getInt16Ty(GetContext());
+        LLVMTypes["U32"_us]    = llvm::Type::getInt32Ty(GetContext());
+        LLVMTypes["U64"_us]    = llvm::Type::getInt64Ty(GetContext());
 
-        LLVMTypes[Semantic::GS_StringType::Create()] = llvm::Type::getInt8PtrTy(GetContext());
+        LLVMTypes["String"_us] = llvm::Type::getInt8PtrTy(GetContext());
     }
 
     Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateNode(LRef<Driver::GS_Session> session,
@@ -260,12 +260,12 @@ namespace GSLanguageCompiler::CodeGenerator {
         std::vector<Ptr<llvm::Type>> llvmParamTypes;
 
         for (auto &paramType : paramTypes) {
-            auto llvmParamType = LLVMTypes[paramType];
+            auto llvmParamType = LLVMTypes[paramType->GetName()];
 
             llvmParamTypes.emplace_back(llvmParamType);
         }
 
-        auto llvmReturnType = LLVMTypes[returnType];
+        auto llvmReturnType = LLVMTypes[returnType->GetName()];
 
         auto llvmFunctionType = llvm::FunctionType::get(llvmReturnType,
                                                         llvmParamTypes,
@@ -298,7 +298,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         auto type = variableDeclarationStatement->GetType();
         auto expression = variableDeclarationStatement->GetExpression();
 
-        auto llvmType = LLVMTypes[type];
+        auto llvmType = LLVMTypes[type->GetName()];
 
         auto llvmAllocaInstruction = _builder.CreateAlloca(llvmType);
 
@@ -344,7 +344,7 @@ namespace GSLanguageCompiler::CodeGenerator {
             case Semantic::TypeType::Char: {
                 auto symbol = literalValue->GetValueWithCast<USymbol>();
 
-                return llvm::ConstantInt::get(LLVMTypes[type],
+                return llvm::ConstantInt::get(LLVMTypes[type->GetName()],
                                               (I8) symbol.CodePoint());
             }
             case Semantic::TypeType::Integer: {
@@ -358,25 +358,25 @@ namespace GSLanguageCompiler::CodeGenerator {
                     case Semantic::IntegerType::I8: {
                         auto number = integerValue->GetValueWithCast<I8>();
 
-                        return llvm::ConstantInt::get(LLVMTypes[type],
+                        return llvm::ConstantInt::get(LLVMTypes[type->GetName()],
                                                       number);
                     }
                     case Semantic::IntegerType::I16: {
                         auto number = integerValue->GetValueWithCast<I16>();
 
-                        return llvm::ConstantInt::get(LLVMTypes[type],
+                        return llvm::ConstantInt::get(LLVMTypes[type->GetName()],
                                                       number);
                     }
                     case Semantic::IntegerType::I32: {
                         auto number = integerValue->GetValueWithCast<I32>();
 
-                        return llvm::ConstantInt::get(LLVMTypes[type],
+                        return llvm::ConstantInt::get(LLVMTypes[type->GetName()],
                                                       number);
                     }
                     case Semantic::IntegerType::I64: {
                         auto number = integerValue->GetValueWithCast<I64>();
 
-                        return llvm::ConstantInt::get(LLVMTypes[type],
+                        return llvm::ConstantInt::get(LLVMTypes[type->GetName()],
                                                       number);
                     }
                     case Semantic::IntegerType::User: {
@@ -395,25 +395,25 @@ namespace GSLanguageCompiler::CodeGenerator {
                     case Semantic::UIntegerType::U8: {
                         auto number = uIntegerValue->GetValueWithCast<I8>();
 
-                        return llvm::ConstantInt::get(LLVMTypes[type],
+                        return llvm::ConstantInt::get(LLVMTypes[type->GetName()],
                                                       number);
                     }
                     case Semantic::UIntegerType::U16: {
                         auto number = uIntegerValue->GetValueWithCast<I16>();
 
-                        return llvm::ConstantInt::get(LLVMTypes[type],
+                        return llvm::ConstantInt::get(LLVMTypes[type->GetName()],
                                                       number);
                     }
                     case Semantic::UIntegerType::U32: {
                         auto number = uIntegerValue->GetValueWithCast<I32>();
 
-                        return llvm::ConstantInt::get(LLVMTypes[type],
+                        return llvm::ConstantInt::get(LLVMTypes[type->GetName()],
                                                       number);
                     }
                     case Semantic::UIntegerType::U64: {
                         auto number = uIntegerValue->GetValueWithCast<I64>();
 
-                        return llvm::ConstantInt::get(LLVMTypes[type],
+                        return llvm::ConstantInt::get(LLVMTypes[type->GetName()],
                                                       number);
                     }
                     case Semantic::UIntegerType::User: {
