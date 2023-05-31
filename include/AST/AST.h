@@ -7,7 +7,7 @@
 
 /*
  *
- * AUDIT                                        - Pass (with rewrites)
+ * AUDIT                                        - Pass
  *
  * CMakeLists.txt                               - Pass
  * AST.h                                        - Pass
@@ -22,14 +22,14 @@
  * Statements/GS_VariableDeclarationStatement.h - Pass
  * Statements/GS_AssignmentStatement.h          - Pass
  * Statements/GS_ExpressionStatement.h          - Pass
- * Expressions/GS_ConstantExpression.h          - Rewrites
+ * Expressions/GS_ConstantExpression.h          - Pass
  * Expressions/GS_UnaryExpression.h             - Pass
  * Expressions/GS_BinaryExpression.h            - Pass
  * Expressions/GS_ArrayExpression.h             - Pass
  * Expressions/GS_VariableUsingExpression.h     - Pass
  * Expressions/GS_FunctionCallingExpression.h   - Pass
  * GS_Visitor.h                                 - Pass
- * GS_Pass.h                                    - Rewrites
+ * GS_Pass.h                                    - Pass
  *
  */
 

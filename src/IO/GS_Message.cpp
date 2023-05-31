@@ -150,12 +150,22 @@ namespace GSLanguageCompiler::IO {
         return _messages[_messages.size() - 1];
     }
 
+    Void GS_MessageQueue::Clear() {
+        _messages.clear();
+    }
+
     Void GS_MessageQueue::Flush() {
         for (auto &messages : _messages) {
             _messageStream << messages;
         }
 
-        _messages.clear();
+        Clear();
+    }
+
+    LRef<GS_MessageQueue> GS_MessageQueue::operator=(ConstLRef<GS_MessageQueue> messageQueue) {
+        _messages = messageQueue._messages;
+
+        return *this;
     }
 
     GS_MessageBuilder::GS_MessageBuilder(UString messageText,

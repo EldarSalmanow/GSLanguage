@@ -384,10 +384,32 @@ namespace GSLanguageCompiler::IO {
         ConstLRef<GS_Message> AddMessage(GS_Message message);
 
         /**
+         * Clearing queue
+         * @return Void return
+         */
+        Void Clear();
+
+        /**
          * Flush messages to message stream and clear it
          * @return Void return
          */
         Void Flush();
+
+    public:
+
+        /*
+         *
+         * GS_MessageQueue PUBLIC OPERATOR METHODS
+         *
+         */
+
+        /**
+         * Copy assignment operator for message queue.
+         * Operator copying only messages from queue because message stream is reference!
+         * @param messageQueue Message queue
+         * @return Message queue
+         */
+        LRef<GS_MessageQueue> operator=(ConstLRef<GS_MessageQueue> messageQueue);
 
     private:
 

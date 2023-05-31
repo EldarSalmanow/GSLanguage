@@ -7,83 +7,8 @@
 
 namespace GSLanguageCompiler::Parser {
 
-    /*
-     * TODO: Create Grammar file (GRAMMAR.md or Grammar.md in docs or Grammar.h in Parser module)
-     */
-
-    /**
-     *
-     * Program
-     *
-     * program -> translation_unit_decl
-     *
-     * translation_unit_decl -> decl...
-     *
-     */
-
-    /**
-     * Declaration
-     *
-     * decl -> func_decl (, translation_unit_decl (using only in compiler infrastructure, not in real programs!))
-     *
-     * func_decl -> 'func' id '(' ')' '{' stmt... '}'
-     *
-     */
-
-    /**
-     * Statement
-     *
-     * stmt -> var_decl_stmt, assignment_stmt, expr_stmt
-     *
-     * var_decl_stmt -> 'var' id (':' id) '=' rvalue_expr
-     *
-     * assignment_stmt -> lvalue_expr '=' rvalue_expr
-     *
-     * expr_stmt -> expr
-     *
-     */
-
-    /**
-     *
-     * Expression
-     *
-     * expr -> paren_expr (only in grammar), const_expr, unary_expr, binary_expr, array_expr, var_using_expr, func_call_expr
-     *
-     * paren_expr -> '(' expr ')'
-     *
-     * lvalue_expr -> var_using_expr
-     *
-     * rvalue_expr -> const_expr, unary_expr, binary_expr, array_expr, var_using_expr, func_call_expr
-     *
-     * const_expr -> num, str
-     *
-     * unary_expr -> unary_op expr
-     *
-     * unary_op -> '-'
-     *
-     * binary_expr -> expr binary_op expr
-     *
-     * binary_op -> '+', '-', '*', '/'
-     *
-     * array_expr -> '[' expr (, expr)... ']'
-     *
-     * var_using_expr -> id
-     *
-     * func_call_expr -> id '(' (expr...) ')'
-     *
-     * expr -> unary_expr binary_expr_rhs, array_expr
-     *
-     * unary_expr -> (unary_op) primary_expr
-     *
-     * binary_expr_rhs -> binary_op unary_expr
-     *
-     * primary_expr -> const_expr, var_using_expr, func_call_expr, paren_expr
-     *
-     */
-
     /**
      * Class for parsing and creating AST from tokens
-     * @todo Add to parser lexer?
      */
     class GS_Parser {
     public:
@@ -263,14 +188,14 @@ namespace GSLanguageCompiler::Parser {
          */
         template<typename ReturnT>
         inline ReturnT TryParse(ReturnT (GS_Parser::*method)()) {
-            auto messages = _messages;
+            auto messageQueue = _messageQueue;
 
             auto tokenIterator = _tokenIterator;
 
             auto result = (this->*method)();
 
             if (!result) {
-                _messages = messages;
+                _messageQueue = messageQueue;
 
                 _tokenIterator = tokenIterator;
 
@@ -327,7 +252,6 @@ namespace GSLanguageCompiler::Parser {
          * Adding new error message to message buffer with input text and current token location
          * @param messageText Message text
          * @return Void return
-         * @todo Change new return type?
          */
         Void ErrorMessage(UString messageText);
 
@@ -339,10 +263,9 @@ namespace GSLanguageCompiler::Parser {
         LRef<Driver::GS_Session> _session;
 
         /**
-         * Messages
-         * @todo Update message containing and flushing system
+         * Message queue
          */
-        IO::GSMessageArray _messages;
+        IO::GS_MessageQueue _messageQueue;
 
         /**
          * Token buffer
@@ -351,7 +274,6 @@ namespace GSLanguageCompiler::Parser {
 
         /**
          * Token buffer iterator (token cursor)
-         * @todo Create token and source cursors?
          */
         Lexer::GS_TokenBuffer::ConstIterator _tokenIterator;
 
@@ -359,6 +281,58 @@ namespace GSLanguageCompiler::Parser {
          * AST builder
          */
         AST::GSASTBuilderPtr _builder;
+    };
+
+    template<typename SourceT>
+    class Cursor {
+    public:
+
+        using Source = SourceT;
+
+        using SourceValue = typename Source::value_type;
+
+        using SourceIterator = typename Source::const_iterator;
+
+    public:
+
+        explicit Cursor(Source source)
+                : _currentIterator(source.begin()),
+                  _beginIterator(source.begin()),
+                  _endIterator(source.end()) {}
+
+    public:
+
+        ConstLRef<SourceValue> operator*() {
+            return *_currentIterator;
+        }
+
+        LRef<Cursor> operator++() {
+            ++_currentIterator;
+
+            if (_currentIterator >= _endIterator) {
+                throw std::out_of_range("Cursor out of range!");
+            }
+
+            return *this;
+        }
+
+        LRef<Cursor> operator--() {
+            --_currentIterator;
+
+            if (_currentIterator < _beginIterator) {
+                throw std::out_of_range("Cursor out of range!");
+            }
+
+            return *this;
+        }
+
+    private:
+
+        SourceIterator _currentIterator;
+
+        SourceIterator _beginIterator;
+
+        SourceIterator _endIterator;
     };
 
     /**

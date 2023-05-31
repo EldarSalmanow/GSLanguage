@@ -14,7 +14,7 @@ namespace GSLanguageCompiler::Parser {
     GS_Parser::GS_Parser(LRef<Driver::GS_Session> session,
                          ConstLRef<Lexer::GS_TokenBuffer> tokenBuffer)
             : _session(session),
-              _messages(IO::GSMessageArray()),
+              _messageQueue(IO::GS_MessageQueue::Create(_session.Out())),
               _tokenBuffer(tokenBuffer),
               _tokenIterator(_tokenBuffer.cbegin()),
               _builder(AST::GS_ASTBuilder::Create(_session.GetASTContext())) {}
@@ -39,9 +39,7 @@ namespace GSLanguageCompiler::Parser {
     AST::GSTranslationUnitDeclarationPtr GS_Parser::ParseProgram(UString programName) {
         auto translationUnitDeclaration = ParseTranslationUnitDeclaration(std::move(programName));
 
-        for (auto &message : _messages) {
-            _session.Out() << message;
-        }
+        _messageQueue.Flush();
 
         return translationUnitDeclaration;
     }
@@ -618,7 +616,7 @@ namespace GSLanguageCompiler::Parser {
                                .Location(TokenLocation())
                                .Message();
 
-        _messages.emplace_back(message);
+        _messageQueue.AddMessage(message);
     }
 
     AST::GSTranslationUnitDeclarationPtr ParseProgram(LRef<Driver::GS_Session> session,

@@ -7,50 +7,6 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    class GS_Cursor {
-    public:
-
-        explicit GS_Cursor(ConstLRef<IO::GS_Source> source);
-
-    public:
-
-        static GS_Cursor Create(ConstLRef<IO::GS_Source> source);
-
-    public:
-
-        USymbol CurrentSymbol();
-
-        Void PrevSymbol();
-
-        Void NextSymbol();
-
-        IO::GS_ByteSourceLocation CurrentLocation();
-
-    public:
-
-        ConstLRef<IO::GS_Source> GetSource() const;
-
-        IO::GS_Source::ConstIterator GetSourceIterator() const;
-
-        U64 GetCurrentPosition() const;
-
-    public:
-
-        LRef<GS_Cursor> operator++();
-
-        LRef<GS_Cursor> operator--();
-
-        USymbol operator*() const;
-
-    private:
-
-        ConstLRef<IO::GS_Source> _source;
-
-        IO::GS_Source::ConstIterator _sourceIterator;
-
-        U64 _currentPosition;
-    };
-
     /**
      * Class for tokenizing source code
      */
