@@ -46,14 +46,14 @@ namespace GSLanguageCompiler::CodeGenerator {
         return CGBackendType::LLVM;
     }
 
-    GS_LLVMCGBackend::GS_LLVMCGBackend() = default;
+    GS_LLVMCodeGenerator::GS_LLVMCodeGenerator() = default;
 
-    std::shared_ptr<GS_LLVMCGBackend> GS_LLVMCGBackend::Create() {
-        return std::make_shared<GS_LLVMCGBackend>();
+    std::shared_ptr<GS_LLVMCodeGenerator> GS_LLVMCodeGenerator::Create() {
+        return std::make_shared<GS_LLVMCodeGenerator>();
     }
 
-    GSCodeHolderPtr GS_LLVMCGBackend::Generate(LRef<Driver::GS_Session> session,
-                                               AST::GSTranslationUnitDeclarationPtr unit) {
+    GSCodeHolderPtr GS_LLVMCodeGenerator::Generate(LRef<Driver::GS_Session> session,
+                                                   AST::GSTranslationUnitDeclarationPtr unit) {
         auto codeHolder = GS_LLVMCodeHolder::Create();
 
         GS_LLVMCGVisitor visitor(*codeHolder);
@@ -64,9 +64,19 @@ namespace GSLanguageCompiler::CodeGenerator {
         return codeHolder;
     }
 
-    Void GS_LLVMCGBackend::Write(LRef<Driver::GS_Session> session,
-                                 UString fileName,
-                                 GSCodeHolderPtr codeHolder) {
+    CGBackendType GS_LLVMCodeGenerator::GetBackendType() const {
+        return CGBackendType::LLVM;
+    }
+
+    GS_LLVMCodeWriter::GS_LLVMCodeWriter() = default;
+
+    std::shared_ptr<GS_LLVMCodeWriter> GS_LLVMCodeWriter::Create() {
+        return std::make_shared<GS_LLVMCodeWriter>();
+    }
+
+    Void GS_LLVMCodeWriter::Write(LRef<Driver::GS_Session> session,
+                                  UString fileName,
+                                  GSCodeHolderPtr codeHolder) {
         auto llvmCodeHolder = std::reinterpret_pointer_cast<GS_LLVMCodeHolder>(codeHolder);
 
         auto &llvmModule = llvmCodeHolder->GetModule();
@@ -133,6 +143,24 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         passManager.run(llvmModule);
         output.flush();
+    }
+
+    CGBackendType GS_LLVMCodeWriter::GetBackendType() const {
+        return CGBackendType::LLVM;
+    }
+
+    GS_LLVMCGBackend::GS_LLVMCGBackend() = default;
+
+    std::shared_ptr<GS_LLVMCGBackend> GS_LLVMCGBackend::Create() {
+        return std::make_shared<GS_LLVMCGBackend>();
+    }
+
+    GSCodeGeneratorPtr GS_LLVMCGBackend::GetCodeGenerator() {
+        return GS_LLVMCodeGenerator::Create();
+    }
+
+    GSCodeWriterPtr GS_LLVMCGBackend::GetCodeWriter() {
+        return GS_LLVMCodeWriter::Create();
     }
 
     CGBackendType GS_LLVMCGBackend::GetBackendType() const {
