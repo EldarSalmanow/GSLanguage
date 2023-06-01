@@ -16,12 +16,12 @@ namespace GSLanguageCompiler {
         /**
          * Defining code generation backend for compiler session
          */
-        class GS_CGBackend;
+        class GS_Backend;
 
         /**
          * Defining code generation backend ptr type for compiler session
          */
-        using GSCGBackendPtr = std::shared_ptr<GS_CGBackend>;
+        using GSBackendPtr = std::shared_ptr<GS_Backend>;
 
     }
 
@@ -75,7 +75,7 @@ namespace GSLanguageCompiler {
                        IO::GSMessageStreamManagerPtr messageStreamManager,
                        AST::GSASTContextPtr astContext,
                        Semantic::GSTableOfSymbolsPtr tableOfSymbols,
-                       CodeGenerator::GSCGBackendPtr cgBackend);
+                       CodeGenerator::GSBackendPtr backend);
 
         public:
 
@@ -96,7 +96,7 @@ namespace GSLanguageCompiler {
              * @param messageStreamManager Message stream manager
              * @param astContext AST context
              * @param tableOfSymbols Table of symbols
-             * @param cgBackend Code generation backend
+             * @param backend Code generation backend
              * @return Compiler session ptr
              */
             static std::unique_ptr<GS_Session> Create(IO::GSStdIOStreamManagerPtr stdIOStreamManager,
@@ -104,7 +104,7 @@ namespace GSLanguageCompiler {
                                                       IO::GSMessageStreamManagerPtr messageStreamManager,
                                                       AST::GSASTContextPtr astContext,
                                                       Semantic::GSTableOfSymbolsPtr tableOfSymbols,
-                                                      CodeGenerator::GSCGBackendPtr cgBackend);
+                                                      CodeGenerator::GSBackendPtr backend);
 
             /**
              * Creating compiler session
@@ -357,7 +357,7 @@ namespace GSLanguageCompiler {
              * Getter for code generation backend
              * @return Code generation backend
              */
-            LRef<CodeGenerator::GSCGBackendPtr> GetCGBackend();
+            LRef<CodeGenerator::GSBackendPtr> GetBackend();
 
         private:
 
@@ -395,7 +395,7 @@ namespace GSLanguageCompiler {
             /**
              * Code generation backend
              */
-            CodeGenerator::GSCGBackendPtr _cgBackend;
+            CodeGenerator::GSBackendPtr _backend;
         };
 
         /**

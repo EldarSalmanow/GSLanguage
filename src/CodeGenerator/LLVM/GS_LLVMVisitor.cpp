@@ -1,6 +1,6 @@
 #include <map>
 
-#include <LLVM/GS_LLVMCGVisitor.h>
+#include <LLVM/GS_LLVMVisitor.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
@@ -89,7 +89,7 @@ namespace GSLanguageCompiler::CodeGenerator {
     std::map<UString, Ptr<llvm::Type>> LLVMTypes;
     std::map<UString, Ptr<llvm::AllocaInst>> Variables;
 
-    GS_LLVMCGVisitor::GS_LLVMCGVisitor(LRef<GS_LLVMCodeHolder> codeHolder)
+    GS_LLVMVisitor::GS_LLVMVisitor(LRef<GS_LLVMCodeHolder> codeHolder)
             : _codeHolder(codeHolder),
               _builder(_codeHolder.GetContext()) {
         LLVMTypes["Void"_us]   = llvm::Type::getVoidTy(GetContext());
@@ -108,8 +108,8 @@ namespace GSLanguageCompiler::CodeGenerator {
         LLVMTypes["String"_us] = llvm::Type::getInt8PtrTy(GetContext());
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateNode(LRef<Driver::GS_Session> session,
-                                                    LRef<AST::GSNodePtr> node) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateNode(LRef<Driver::GS_Session> session,
+                                                  LRef<AST::GSNodePtr> node) {
         if (node->IsDeclaration()) {
             auto declaration = AST::ToDeclaration(node);
 
@@ -134,8 +134,8 @@ namespace GSLanguageCompiler::CodeGenerator {
         return nullptr;
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateDeclaration(LRef<Driver::GS_Session> session,
-                                                           LRef<AST::GSDeclarationPtr> declaration) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateDeclaration(LRef<Driver::GS_Session> session,
+                                                         LRef<AST::GSDeclarationPtr> declaration) {
         auto declarationType = declaration->GetDeclarationType();
 
         switch (declarationType) {
@@ -156,8 +156,8 @@ namespace GSLanguageCompiler::CodeGenerator {
         return nullptr;
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateStatement(LRef<Driver::GS_Session> session,
-                                                         LRef<AST::GSStatementPtr> statement) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateStatement(LRef<Driver::GS_Session> session,
+                                                       LRef<AST::GSStatementPtr> statement) {
         auto statementType = statement->GetStatementType();
 
         switch (statementType) {
@@ -184,8 +184,8 @@ namespace GSLanguageCompiler::CodeGenerator {
         return nullptr;
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateExpression(LRef<Driver::GS_Session> session,
-                                                          LRef<AST::GSExpressionPtr> expression) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateExpression(LRef<Driver::GS_Session> session,
+                                                        LRef<AST::GSExpressionPtr> expression) {
         auto expressionType = expression->GetExpressionType();
 
         switch (expressionType) {
@@ -230,8 +230,8 @@ namespace GSLanguageCompiler::CodeGenerator {
         return nullptr;
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateTranslationUnitDeclaration(LRef<Driver::GS_Session> session,
-                                                                          AST::NodePtrLRef<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateTranslationUnitDeclaration(LRef<Driver::GS_Session> session,
+                                                                        AST::NodePtrLRef<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration) {
         auto name = translationUnitDeclaration->GetName();
         auto nodes = translationUnitDeclaration->GetNodes();
 
@@ -242,14 +242,14 @@ namespace GSLanguageCompiler::CodeGenerator {
                          node);
         }
 
-        GetModule().print(llvm::errs(),
+        GetModule().print(llvm::outs(),
                           nullptr);
 
         return nullptr;
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateFunctionDeclaration(LRef<Driver::GS_Session> session,
-                                                                   AST::NodePtrLRef<AST::GS_FunctionDeclaration> functionDeclaration) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateFunctionDeclaration(LRef<Driver::GS_Session> session,
+                                                                 AST::NodePtrLRef<AST::GS_FunctionDeclaration> functionDeclaration) {
         auto name = functionDeclaration->GetName();
         auto signature = functionDeclaration->GetSignature();
         auto body = functionDeclaration->GetBody();
@@ -292,8 +292,8 @@ namespace GSLanguageCompiler::CodeGenerator {
         return llvmFunction;
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateVariableDeclarationStatement(LRef<Driver::GS_Session> session,
-                                                                            AST::NodePtrLRef<AST::GS_VariableDeclarationStatement> variableDeclarationStatement) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateVariableDeclarationStatement(LRef<Driver::GS_Session> session,
+                                                                          AST::NodePtrLRef<AST::GS_VariableDeclarationStatement> variableDeclarationStatement) {
         auto name = variableDeclarationStatement->GetName();
         auto type = variableDeclarationStatement->GetType();
         auto expression = variableDeclarationStatement->GetExpression();
@@ -309,8 +309,8 @@ namespace GSLanguageCompiler::CodeGenerator {
                                     llvmAllocaInstruction);
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateAssignmentStatement(LRef<Driver::GS_Session> session,
-                                                                   AST::NodePtrLRef<AST::GS_AssignmentStatement> assignmentStatement) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateAssignmentStatement(LRef<Driver::GS_Session> session,
+                                                                 AST::NodePtrLRef<AST::GS_AssignmentStatement> assignmentStatement) {
         auto lvalueExpression = assignmentStatement->GetLValueExpression();
         auto rvalueExpression = assignmentStatement->GetRValueExpression();
 
@@ -320,16 +320,16 @@ namespace GSLanguageCompiler::CodeGenerator {
                                                        rvalueExpression));
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateExpressionStatement(LRef<Driver::GS_Session> session,
-                                                                   AST::NodePtrLRef<AST::GS_ExpressionStatement> expressionStatement) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateExpressionStatement(LRef<Driver::GS_Session> session,
+                                                                 AST::NodePtrLRef<AST::GS_ExpressionStatement> expressionStatement) {
         auto expression = expressionStatement->GetExpression();
 
         return GenerateExpression(session,
                                   expression);
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateConstantExpression(LRef<Driver::GS_Session> session,
-                                                                  AST::NodePtrLRef<AST::GS_ConstantExpression> constantExpression) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateConstantExpression(LRef<Driver::GS_Session> session,
+                                                                AST::NodePtrLRef<AST::GS_ConstantExpression> constantExpression) {
         auto value = constantExpression->GetValue();
 
         auto literalValue = AST::ToValue<AST::GS_LiteralValue>(value);
@@ -437,8 +437,8 @@ namespace GSLanguageCompiler::CodeGenerator {
         return nullptr;
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateUnaryExpression(LRef<Driver::GS_Session> session,
-                                                               AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateUnaryExpression(LRef<Driver::GS_Session> session,
+                                                             AST::NodePtrLRef<AST::GS_UnaryExpression> unaryExpression) {
         auto operation = unaryExpression->GetUnaryOperation();
         auto expression = unaryExpression->GetExpression();
 
@@ -452,8 +452,8 @@ namespace GSLanguageCompiler::CodeGenerator {
         return nullptr;
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateBinaryExpression(LRef<Driver::GS_Session> session,
-                                                                AST::NodePtrLRef<AST::GS_BinaryExpression> binaryExpression) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateBinaryExpression(LRef<Driver::GS_Session> session,
+                                                              AST::NodePtrLRef<AST::GS_BinaryExpression> binaryExpression) {
         auto operation = binaryExpression->GetBinaryOperation();
         auto firstExpression = binaryExpression->GetFirstExpression();
         auto secondExpression = binaryExpression->GetSecondExpression();
@@ -484,13 +484,13 @@ namespace GSLanguageCompiler::CodeGenerator {
         return nullptr;
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateArrayExpression(LRef<Driver::GS_Session> session,
-                                                               AST::NodePtrLRef<AST::GS_ArrayExpression> arrayExpression) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateArrayExpression(LRef<Driver::GS_Session> session,
+                                                             AST::NodePtrLRef<AST::GS_ArrayExpression> arrayExpression) {
         return nullptr;
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateVariableUsingExpression(LRef<Driver::GS_Session> session,
-                                                                       AST::NodePtrLRef<AST::GS_VariableUsingExpression> variableUsingExpression) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateVariableUsingExpression(LRef<Driver::GS_Session> session,
+                                                                     AST::NodePtrLRef<AST::GS_VariableUsingExpression> variableUsingExpression) {
         auto name = variableUsingExpression->GetName();
 
         auto llvmAllocaInstruction = Variables[name];
@@ -500,8 +500,8 @@ namespace GSLanguageCompiler::CodeGenerator {
                                    name.AsUTF8());
     }
 
-    Ptr<llvm::Value> GS_LLVMCGVisitor::GenerateFunctionCallingExpression(LRef<Driver::GS_Session> session,
-                                                                         AST::NodePtrLRef<AST::GS_FunctionCallingExpression> functionCallingExpression) {
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateFunctionCallingExpression(LRef<Driver::GS_Session> session,
+                                                                       AST::NodePtrLRef<AST::GS_FunctionCallingExpression> functionCallingExpression) {
         auto name = functionCallingExpression->GetName();
 
         auto llvmFunction = GetModule().getFunction(name.AsUTF8());
@@ -509,11 +509,11 @@ namespace GSLanguageCompiler::CodeGenerator {
         return _builder.CreateCall(llvmFunction);
     }
 
-    LRef<llvm::LLVMContext> GS_LLVMCGVisitor::GetContext() {
+    LRef<llvm::LLVMContext> GS_LLVMVisitor::GetContext() {
         return _codeHolder.GetContext();
     }
 
-    LRef<llvm::Module> GS_LLVMCGVisitor::GetModule() {
+    LRef<llvm::Module> GS_LLVMVisitor::GetModule() {
         return _codeHolder.GetModule();
     }
 

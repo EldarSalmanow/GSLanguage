@@ -3,28 +3,21 @@
 namespace GSLanguageCompiler::CodeGenerator {
 
     GS_CodeGenerator::GS_CodeGenerator(LRef<Driver::GS_Session> session,
-                                       AST::GSTranslationUnitDeclarationPtr unit)
+                                       AST::GSNodePtr node)
             : _session(session),
-              _unit(std::move(unit)) {}
+              _node(std::move(node)) {}
 
     GS_CodeGenerator GS_CodeGenerator::Create(LRef<Driver::GS_Session> session,
-                                              AST::GSTranslationUnitDeclarationPtr unit) {
+                                              AST::GSNodePtr node) {
         return GS_CodeGenerator(session,
-                                std::move(unit));
+                                std::move(node));
     }
 
-    GSCodeHolderPtr GS_CodeGenerator::Generate(GSCGBackendPtr backend) {
+    GSCodeHolderPtr GS_CodeGenerator::Generate(GSBackendPtr backend) {
         auto movedBackend = std::move(backend);
 
         return movedBackend->Generate(_session,
-                                      _unit);
-    }
-
-    Void GS_Writer::Write(UString fileName,
-                          GSCodeHolderPtr codeHolder) {
-        _backend->Write(_session,
-                        std::move(fileName),
-                        std::move(codeHolder));
+                                      _node);
     }
 
 }

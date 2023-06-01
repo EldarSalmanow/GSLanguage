@@ -1,25 +1,25 @@
-#ifndef GSLANGUAGE_GS_LLVMCGVISITOR_H
-#define GSLANGUAGE_GS_LLVMCGVISITOR_H
+#ifndef GSLANGUAGE_GS_LLVMVISITOR_H
+#define GSLANGUAGE_GS_LLVMVISITOR_H
 
 #include <llvm/IR/IRBuilder.h>
 
 #include <AST/GS_Visitor.h>
 
-#include <CodeGenerator/LLVM/GS_LLVMCGBackend.h>
+#include <CodeGenerator/LLVM/GS_LLVMBackend.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
     /**
      * Class for generating LLVM IR from AST
      */
-    class GS_LLVMCGVisitor {
+    class GS_LLVMVisitor {
     public:
 
         /**
          * Constructor for LLVM code generation visitor
          * @param codeHolder LLVM code holder
          */
-        explicit GS_LLVMCGVisitor(LRef<GS_LLVMCodeHolder> codeHolder);
+        explicit GS_LLVMVisitor(LRef<GS_LLVMCodeHolder> codeHolder);
 
     public:
 
@@ -187,4 +187,4 @@ namespace GSLanguageCompiler::CodeGenerator {
 
 }
 
-#endif //GSLANGUAGE_GS_LLVMCGVISITOR_H
+#endif //GSLANGUAGE_GS_LLVMVISITOR_H
