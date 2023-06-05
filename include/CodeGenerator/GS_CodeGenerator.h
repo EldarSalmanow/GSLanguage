@@ -20,10 +20,10 @@ namespace GSLanguageCompiler::CodeGenerator {
         /**
          * Constructor for code generator
          * @param session Session
-         * @param node Node
+         * @param backend Backend
          */
         GS_CodeGenerator(LRef<Driver::GS_Session> session,
-                         AST::GSNodePtr node); // TODO replace node to backend and backend to node?
+                         GSBackendPtr backend);
 
     public:
 
@@ -36,11 +36,11 @@ namespace GSLanguageCompiler::CodeGenerator {
         /**
          * Creating code generator
          * @param session Session
-         * @param node Node
+         * @param backend Backend
          * @return Code generator
          */
         static GS_CodeGenerator Create(LRef<Driver::GS_Session> session,
-                                       AST::GSNodePtr node);
+                                       GSBackendPtr backend);
 
     public:
 
@@ -52,10 +52,10 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         /**
          * Translating node to any programming language code in backend and returning it in code holder
-         * @param backend Code generation backend
+         * @param node Node
          * @return Code holder
          */
-        GSCodeHolderPtr Generate(GSBackendPtr backend);
+        GSCodeHolderPtr Generate(AST::GSNodePtr node);
 
     private:
 
@@ -71,9 +71,9 @@ namespace GSLanguageCompiler::CodeGenerator {
         LRef<Driver::GS_Session> _session;
 
         /**
-         * Node
+         * Code generation backend
          */
-        AST::GSNodePtr _node;
+        GSBackendPtr _backend;
     };
 
 }

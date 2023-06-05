@@ -7,6 +7,8 @@
 
 #include <Semantic/Semantic.h>
 
+#include <CodeGenerator/GS_Toolchain.h>
+
 #include <Driver/GS_Arguments.h>
 
 namespace GSLanguageCompiler {
@@ -68,14 +70,16 @@ namespace GSLanguageCompiler {
              * @param messageStreamManager Message stream manager
              * @param astContext AST context
              * @param tableOfSymbols Table of symbols
-             * @param cgBackend Code generation backend
+             * @param backend Code generation backend
+             * @param toolchain Toolchain
              */
             GS_Session(IO::GSStdIOStreamManagerPtr stdIOStreamManager,
                        IO::GSSourceManagerPtr sourceManager,
                        IO::GSMessageStreamManagerPtr messageStreamManager,
                        AST::GSASTContextPtr astContext,
                        Semantic::GSTableOfSymbolsPtr tableOfSymbols,
-                       CodeGenerator::GSBackendPtr backend);
+                       CodeGenerator::GSBackendPtr backend,
+                       CodeGenerator::GSToolchainPtr toolchain);
 
         public:
 
@@ -97,6 +101,7 @@ namespace GSLanguageCompiler {
              * @param astContext AST context
              * @param tableOfSymbols Table of symbols
              * @param backend Code generation backend
+             * @param toolchain Toolchain
              * @return Compiler session ptr
              */
             static std::unique_ptr<GS_Session> Create(IO::GSStdIOStreamManagerPtr stdIOStreamManager,
@@ -104,7 +109,8 @@ namespace GSLanguageCompiler {
                                                       IO::GSMessageStreamManagerPtr messageStreamManager,
                                                       AST::GSASTContextPtr astContext,
                                                       Semantic::GSTableOfSymbolsPtr tableOfSymbols,
-                                                      CodeGenerator::GSBackendPtr backend);
+                                                      CodeGenerator::GSBackendPtr backend,
+                                                      CodeGenerator::GSToolchainPtr toolchain);
 
             /**
              * Creating compiler session
@@ -130,7 +136,6 @@ namespace GSLanguageCompiler {
             /**
              * Run compiler session
              * @return Compiling result
-             * @todo Update
              */
             CompilingResult Run();
 
@@ -359,6 +364,12 @@ namespace GSLanguageCompiler {
              */
             LRef<CodeGenerator::GSBackendPtr> GetBackend();
 
+            /**
+             * Getter for toolchain
+             * @return Toolchain
+             */
+            LRef<CodeGenerator::GS_Toolchain> GetToolchain();
+
         private:
 
             /*
@@ -396,6 +407,11 @@ namespace GSLanguageCompiler {
              * Code generation backend
              */
             CodeGenerator::GSBackendPtr _backend;
+
+            /**
+             * Toolchain
+             */
+            CodeGenerator::GSToolchainPtr _toolchain;
         };
 
         /**

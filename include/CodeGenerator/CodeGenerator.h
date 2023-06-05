@@ -15,6 +15,7 @@
  * GS_Backend.h - Pass
  * LLVM/GS_LLVMBackend.h - Pass
  * LLVM/GS_LLVMVisitor.h - Pass
+ * GS_Toolchain.h - Pass
  *
  */
 
@@ -24,5 +25,7 @@
 
 #include <CodeGenerator/LLVM/GS_LLVMBackend.h>
 #include <CodeGenerator/LLVM/GS_LLVMVisitor.h>
+
+#include "GS_Toolchain.h"
 
 #endif //GSLANGUAGE_CODEGENERATOR_H

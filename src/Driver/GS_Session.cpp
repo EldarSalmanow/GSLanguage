@@ -8,9 +8,6 @@
 
 #include <GS_Session.h>
 
-// TODO move to code generation module?
-#include <lld/Common/Driver.h>
-
 namespace GSLanguageCompiler::Driver {
 
     Result ToResult(CompilingResult compilingResult) {
@@ -31,26 +28,30 @@ namespace GSLanguageCompiler::Driver {
                            IO::GSMessageStreamManagerPtr messageStreamManager,
                            AST::GSASTContextPtr astContext,
                            Semantic::GSTableOfSymbolsPtr tableOfSymbols,
-                           CodeGenerator::GSBackendPtr backend)
+                           CodeGenerator::GSBackendPtr backend,
+                           CodeGenerator::GSToolchainPtr toolchain)
             : _stdIOStreamManager(std::move(stdIOStreamManager)),
               _sourceManager(std::move(sourceManager)),
               _messageStreamManager(std::move(messageStreamManager)),
               _astContext(std::move(astContext)),
               _tableOfSymbols(std::move(tableOfSymbols)),
-              _backend(std::move(backend)) {}
+              _backend(std::move(backend)),
+              _toolchain(std::move(toolchain)) {}
 
     std::unique_ptr<GS_Session> GS_Session::Create(IO::GSStdIOStreamManagerPtr stdIOStreamManager,
                                                    IO::GSSourceManagerPtr sourceManager,
                                                    IO::GSMessageStreamManagerPtr messageStreamManager,
                                                    AST::GSASTContextPtr astContext,
                                                    Semantic::GSTableOfSymbolsPtr tableOfSymbols,
-                                                   CodeGenerator::GSBackendPtr backend) {
+                                                   CodeGenerator::GSBackendPtr backend,
+                                                   CodeGenerator::GSToolchainPtr toolchain) {
         return std::make_unique<GS_Session>(std::move(stdIOStreamManager),
                                             std::move(sourceManager),
                                             std::move(messageStreamManager),
                                             std::move(astContext),
                                             std::move(tableOfSymbols),
-                                            std::move(backend));
+                                            std::move(backend),
+                                            std::move(toolchain));
     }
 
     std::unique_ptr<GS_Session> GS_Session::Create() {
@@ -63,13 +64,15 @@ namespace GSLanguageCompiler::Driver {
         auto tableOfSymbols = Semantic::GS_TableOfSymbols::Create();
 
         auto backend = CodeGenerator::GS_LLVMBackend::Create();
+        auto toolchain = CodeGenerator::GS_Toolchain::Create();
 
         return GS_Session::Create(std::move(stdIOStreamManager),
                                   std::move(sourceManager),
                                   std::move(messageStreamManager),
                                   std::move(astContext),
                                   std::move(tableOfSymbols),
-                                  std::move(backend));
+                                  std::move(backend),
+                                  std::move(toolchain));
     }
 
     std::unique_ptr<GS_Session> GS_Session::Create(GS_Arguments arguments) {
@@ -99,50 +102,40 @@ namespace GSLanguageCompiler::Driver {
                                                                    *source);
 
             // TODO: Add GS_Semantic class for run semantic passes
-            Semantic::CreateSymbolsPlaceholderPass()->Run(*this,
-                                                          translationUnitDeclaration);
+//            Semantic::CreateSymbolsPlaceholderPass()->Run(*this,
+//                                                          translationUnitDeclaration);
 
 //            optimizer->Optimize(translationUnitDeclaration);
 
             Debug::DumpAST(translationUnitDeclaration,
                            *this);
 
-            Debug::DumpTableOfSymbols(*_tableOfSymbols);
+//            Debug::DumpTableOfSymbols(*_tableOfSymbols);
 
             translationUnitDeclarations.emplace_back(translationUnitDeclaration);
         }
 
         // TODO
 
-        std::vector<CodeGenerator::GSCodeHolderPtr> codeHolders;
+        std::vector<UString> objectFiles;
 
         for (auto &translationUnitDeclaration : translationUnitDeclarations) {
             auto codeGenerator = CodeGenerator::GS_CodeGenerator::Create(*this,
-                                                                         translationUnitDeclaration);
+                                                                         _backend);
 
-            auto codeHolder = codeGenerator.Generate(_backend);
+            auto codeHolder = codeGenerator.Generate(translationUnitDeclaration);
 
-            codeHolders.emplace_back(codeHolder);
+            _backend->Write(*this,
+                            translationUnitDeclaration->GetName() + ".o",
+                            codeHolder);
+
+            objectFiles.emplace_back(translationUnitDeclaration->GetName() + ".o");
         }
 
-        _backend->Write(*this,
-                        "main.o",
-                        codeHolders[0]);
+        auto linker = _toolchain->GetLinker();
 
-        std::vector<std::string> command;
-
-        command.emplace_back("GSLanguage.exe");
-        command.emplace_back("main.o");
-        command.emplace_back("/entry:main");
-        command.emplace_back("/out:main.exe");
-
-        std::vector<ConstPtr<C>> stringCommand;
-
-        for (auto &string : command) {
-            stringCommand.emplace_back(string.c_str());
-        }
-
-        auto linkResult = lld::coff::link(stringCommand, llvm::outs(), llvm::errs(), false, false);
+        linker->Link(objectFiles,
+                     "main.exe");
 
         return CompilingResult::Success;
     }
