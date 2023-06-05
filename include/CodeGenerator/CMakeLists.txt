@@ -8,9 +8,7 @@ set(GS_CODEGENERATOR_SOURCE
         ${CODEGENERATOR_DIR}/GS_Backend.cpp
 
         ${CODEGENERATOR_DIR}/LLVM/GS_LLVMBackend.cpp
-        ${CODEGENERATOR_DIR}/LLVM/GS_LLVMVisitor.cpp
-
-        ${CODEGENERATOR_DIR}/GS_Toolchain.cpp)
+        ${CODEGENERATOR_DIR}/LLVM/GS_LLVMVisitor.cpp)
 
 add_library(
 #       Library name

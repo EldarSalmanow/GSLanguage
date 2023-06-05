@@ -172,6 +172,17 @@ namespace GSLanguageCompiler::CodeGenerator {
                    UString fileName,
                    GSCodeHolderPtr codeHolder) override;
 
+        /**
+         * Linking files
+         * @param session Session
+         * @param inputFileNames Input filenames
+         * @param outputFileName Output filename
+         * @return Void return
+         */
+        Void Link(LRef<Driver::GS_Session> session,
+                  std::vector<UString> inputFileNames,
+                  UString outputFileName) override;
+
     public:
 
         /*

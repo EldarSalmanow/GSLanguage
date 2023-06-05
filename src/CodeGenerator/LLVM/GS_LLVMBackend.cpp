@@ -5,6 +5,8 @@
 #include <llvm/Support/TargetSelect.h>
 #include <llvm/Target/TargetMachine.h>
 
+#include <lld/Common/Driver.h>
+
 #include <LLVM/GS_LLVMBackend.h>
 
 #include <LLVM/GS_LLVMVisitor.h>
@@ -133,6 +135,33 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         passManager.run(llvmModule);
         output.flush();
+    }
+
+    Void GS_LLVMBackend::Link(LRef<Driver::GS_Session> session,
+                              std::vector<UString> inputFileNames,
+                              UString outputFileName) {
+        std::vector<std::string> command;
+
+        command.emplace_back("GSLanguage.exe");
+
+        for (auto &inputFile : inputFileNames) {
+            command.emplace_back(inputFile.AsUTF8());
+        }
+
+        command.emplace_back("/entry:main");
+        command.emplace_back("/out:" + outputFileName.AsUTF8());
+
+        std::vector<ConstPtr<C>> stringCommand;
+
+        for (auto &string : command) {
+            stringCommand.emplace_back(string.c_str());
+        }
+
+        auto linkResult = lld::coff::link(stringCommand,
+                                          llvm::outs(),
+                                          llvm::errs(),
+                                          false,
+                                          false);
     }
 
     BackendType GS_LLVMBackend::GetBackendType() const {

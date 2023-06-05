@@ -28,30 +28,26 @@ namespace GSLanguageCompiler::Driver {
                            IO::GSMessageStreamManagerPtr messageStreamManager,
                            AST::GSASTContextPtr astContext,
                            Semantic::GSTableOfSymbolsPtr tableOfSymbols,
-                           CodeGenerator::GSBackendPtr backend,
-                           CodeGenerator::GSToolchainPtr toolchain)
+                           CodeGenerator::GSBackendPtr backend)
             : _stdIOStreamManager(std::move(stdIOStreamManager)),
               _sourceManager(std::move(sourceManager)),
               _messageStreamManager(std::move(messageStreamManager)),
               _astContext(std::move(astContext)),
               _tableOfSymbols(std::move(tableOfSymbols)),
-              _backend(std::move(backend)),
-              _toolchain(std::move(toolchain)) {}
+              _backend(std::move(backend)) {}
 
     std::unique_ptr<GS_Session> GS_Session::Create(IO::GSStdIOStreamManagerPtr stdIOStreamManager,
                                                    IO::GSSourceManagerPtr sourceManager,
                                                    IO::GSMessageStreamManagerPtr messageStreamManager,
                                                    AST::GSASTContextPtr astContext,
                                                    Semantic::GSTableOfSymbolsPtr tableOfSymbols,
-                                                   CodeGenerator::GSBackendPtr backend,
-                                                   CodeGenerator::GSToolchainPtr toolchain) {
+                                                   CodeGenerator::GSBackendPtr backend) {
         return std::make_unique<GS_Session>(std::move(stdIOStreamManager),
                                             std::move(sourceManager),
                                             std::move(messageStreamManager),
                                             std::move(astContext),
                                             std::move(tableOfSymbols),
-                                            std::move(backend),
-                                            std::move(toolchain));
+                                            std::move(backend));
     }
 
     std::unique_ptr<GS_Session> GS_Session::Create() {
@@ -64,15 +60,13 @@ namespace GSLanguageCompiler::Driver {
         auto tableOfSymbols = Semantic::GS_TableOfSymbols::Create();
 
         auto backend = CodeGenerator::GS_LLVMBackend::Create();
-        auto toolchain = CodeGenerator::GS_Toolchain::Create();
 
         return GS_Session::Create(std::move(stdIOStreamManager),
                                   std::move(sourceManager),
                                   std::move(messageStreamManager),
                                   std::move(astContext),
                                   std::move(tableOfSymbols),
-                                  std::move(backend),
-                                  std::move(toolchain));
+                                  std::move(backend));
     }
 
     std::unique_ptr<GS_Session> GS_Session::Create(GS_Arguments arguments) {
@@ -120,10 +114,8 @@ namespace GSLanguageCompiler::Driver {
         std::vector<UString> objectFiles;
 
         for (auto &translationUnitDeclaration : translationUnitDeclarations) {
-            auto codeGenerator = CodeGenerator::GS_CodeGenerator::Create(*this,
-                                                                         _backend);
-
-            auto codeHolder = codeGenerator.Generate(translationUnitDeclaration);
+            auto codeHolder = _backend->Generate(*this,
+                                                 translationUnitDeclaration);
 
             _backend->Write(*this,
                             translationUnitDeclaration->GetName() + ".o",
@@ -132,10 +124,9 @@ namespace GSLanguageCompiler::Driver {
             objectFiles.emplace_back(translationUnitDeclaration->GetName() + ".o");
         }
 
-        auto linker = _toolchain->GetLinker();
-
-        linker->Link(objectFiles,
-                     "main.exe");
+        _backend->Link(*this,
+                       objectFiles,
+                       "main.exe");
 
         return CompilingResult::Success;
     }

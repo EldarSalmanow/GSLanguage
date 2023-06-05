@@ -93,8 +93,19 @@ namespace GSLanguageCompiler::CodeGenerator {
          * @return Void return
          */
         virtual Void Write(LRef<Driver::GS_Session> session,
-                           UString fileName, // TODO replace to output stream
+                           UString fileName,
                            GSCodeHolderPtr codeHolder) = 0;
+
+        /**
+         * Linking files
+         * @param session Session
+         * @param inputFileNames Input filenames
+         * @param outputFileName Output filename
+         * @return Void return
+         */
+        virtual Void Link(LRef<Driver::GS_Session> session,
+                          std::vector<UString> inputFileNames,
+                          UString outputFileName) = 0;
 
     public:
 
