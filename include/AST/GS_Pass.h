@@ -5,10 +5,6 @@
 
 namespace GSLanguageCompiler::AST {
 
-    /*
-     * TODO: Check and rewrite pass system
-     */
-
     /**
      * Class for run visitor on any nodes
      */
@@ -44,49 +40,13 @@ namespace GSLanguageCompiler::AST {
                          LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration);
 
         /**
-         * Run pass on node
+         * Run pass on function declaration
          * @param session Session
-         * @param node Node
+         * @param functionDeclaration Function declaration
          * @return Void return
          */
         virtual Void Run(LRef<Driver::GS_Session> session,
-                         LRef<GSNodePtr> node);
-
-        /**
-         * Run pass on nodes
-         * @param session Session
-         * @param nodes Nodes
-         * @return Void return
-         */
-        virtual Void Run(LRef<Driver::GS_Session> session,
-                         LRef<GSNodePtrArray> nodes);
-
-        /**
-         * Run pass on declarations
-         * @param session Session
-         * @param declarations Declarations
-         * @return Void return
-         */
-        virtual Void Run(LRef<Driver::GS_Session> session,
-                         LRef<GSDeclarationPtrArray> declarations);
-
-        /**
-         * Run pass on statements
-         * @param session Session
-         * @param statements Statements
-         * @return Void return
-         */
-        virtual Void Run(LRef<Driver::GS_Session> session,
-                         LRef<GSStatementPtrArray> statements);
-
-        /**
-         * Run pass on expressions
-         * @param session Session
-         * @param expressions Expressions
-         * @return Void return
-         */
-        virtual Void Run(LRef<Driver::GS_Session> session,
-                         LRef<GSExpressionPtrArray> expressions);
+                         NodePtrLRef<GS_FunctionDeclaration> functionDeclaration);
     };
 
     /**
@@ -141,81 +101,17 @@ namespace GSLanguageCompiler::AST {
         }
 
         /**
-         * Run pass on node
+         * Run pass on function declaration
          * @param session Session
-         * @param node Node
+         * @param functionDeclaration Function declaration
          * @return Void return
          */
         Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSNodePtr> node) override {
+                 NodePtrLRef<GS_FunctionDeclaration> functionDeclaration) override {
             VisitorT visitor;
 
-            visitor.VisitNode(session,
-                              node);
-        }
-
-        /**
-         * Run pass on nodes
-         * @param session Session
-         * @param nodes Nodes
-         * @return Void return
-         */
-        Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSNodePtrArray> nodes) override {
-            VisitorT visitor;
-
-            for (auto &node : nodes) {
-                visitor.VisitNode(session,
-                                  node);
-            }
-        }
-
-        /**
-         * Run pass on declarations
-         * @param session Session
-         * @param declarations Declarations
-         * @return Void return
-         */
-        Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSDeclarationPtrArray> declarations) override {
-            VisitorT visitor;
-
-            for (auto &declaration : declarations) {
-                visitor.VisitDeclaration(session,
-                                         declaration);
-            }
-        }
-
-        /**
-         * Run pass on statements
-         * @param session Session
-         * @param statements Statements
-         * @return Void return
-         */
-        Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSStatementPtrArray> statements) override {
-            VisitorT visitor;
-
-            for (auto &statement : statements) {
-                visitor.VisitStatement(session,
-                                       statement);
-            }
-        }
-
-        /**
-         * Run pass on expressions
-         * @param session Session
-         * @param expressions Expressions
-         * @return Void return
-         */
-        Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSExpressionPtrArray> expressions) override {
-            VisitorT visitor;
-
-            for (auto &expression : expressions) {
-                visitor.VisitExpression(session,
-                                        expression);
-            }
+            visitor.VisitFunctionDeclaration(session,
+                                             functionDeclaration);
         }
     };
 
@@ -261,81 +157,17 @@ namespace GSLanguageCompiler::AST {
         }
 
         /**
-         * Run pass on node
+         * Run pass on function declaration
          * @param session Session
-         * @param node Node
+         * @param functionDeclaration Function declaration
          * @return Void return
          */
         Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSNodePtr> node) override {
+                 NodePtrLRef<GS_FunctionDeclaration> functionDeclaration) override {
             TransformerT transformer;
 
-            node = transformer.TransformNode(session,
-                                             node);
-        }
-
-        /**
-         * Run pass on nodes
-         * @param session Session
-         * @param nodes Nodes
-         * @return Void return
-         */
-        Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSNodePtrArray> nodes) override {
-            TransformerT transformer;
-
-            for (auto &node : nodes) {
-                node = transformer.TransformNode(session,
-                                                 node);
-            }
-        }
-
-        /**
-         * Run pass on declarations
-         * @param session Session
-         * @param declarations Declarations
-         * @return Void return
-         */
-        Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSDeclarationPtrArray> declarations) override {
-            TransformerT transformer;
-
-            for (auto &declaration : declarations) {
-                declaration = ToDeclaration(transformer.TransformDeclaration(session,
-                                                                             declaration));
-            }
-        }
-
-        /**
-         * Run pass on statements
-         * @param session Session
-         * @param statements Statements
-         * @return Void return
-         */
-        Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSStatementPtrArray> statements) override {
-            TransformerT transformer;
-
-            for (auto &statement : statements) {
-                statement = ToStatement(transformer.TransformStatement(session,
-                                                                       statement));
-            }
-        }
-
-        /**
-         * Run pass on expressions
-         * @param session Session
-         * @param expressions Expressions
-         * @return Void return
-         */
-        Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSExpressionPtrArray> expressions) override {
-            TransformerT transformer;
-
-            for (auto &expression : expressions) {
-                expression = ToExpression(transformer.TransformExpression(session,
-                                                                          expression));
-            }
+            functionDeclaration = ToDeclaration<GS_FunctionDeclaration>(transformer.TransformFunctionDeclaration(session,
+                                                                                                                 functionDeclaration));
         }
     };
 
@@ -397,56 +229,20 @@ namespace GSLanguageCompiler::AST {
 
 
         /**
-         * Run passes on node
+         * Run passes on function declaration
          * @param session Session
-         * @param node Node
+         * @param functionDeclaration Function declaration
          * @return Void return
          */
         Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSNodePtr> node);
-
-        /**
-         * Run pass on nodes
-         * @param session Session
-         * @param nodes Nodes
-         * @return Void return
-         */
-        Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSNodePtrArray> nodes);
-
-        /**
-         * Run pass on declarations
-         * @param session Session
-         * @param declarations Declarations
-         * @return Void return
-         */
-        Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSDeclarationPtrArray> declarations);
-
-        /**
-         * Run pass on statements
-         * @param session Session
-         * @param statements Statements
-         * @return Void return
-         */
-        Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSStatementPtrArray> statements);
-
-        /**
-         * Run pass on expressions
-         * @param session Session
-         * @param expressions Expressions
-         * @return Void return
-         */
-        Void Run(LRef<Driver::GS_Session> session,
-                 LRef<GSExpressionPtrArray> expressions);
+                 NodePtrLRef<GS_FunctionDeclaration> functionDeclaration);
 
         /**
          * Add pass to pass list
          * @param pass Pass
          * @return Pass
          */
-        ConstLRef<GS_Pass> AddPass(GSPassPtr pass);
+        ConstLRef<GSPassPtr> AddPass(GSPassPtr pass);
 
     public:
 

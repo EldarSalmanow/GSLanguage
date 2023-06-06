@@ -22,11 +22,18 @@ namespace GSLanguageCompiler::Optimizer {
                                               optimizingPasses);
     }
 
-    Void GS_Optimizer::Optimize(LRef<AST::GSNodePtr> node) {
+    Void GS_Optimizer::Optimize(LRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration) {
         auto passManager = AST::GS_PassManager::Create(std::move(_optimizingPasses));
 
         passManager->Run(_session,
-                         node);
+                         translationUnitDeclaration);
+    }
+
+    Void GS_Optimizer::Optimize(AST::NodePtrLRef<AST::GS_FunctionDeclaration> functionDeclaration) {
+        auto passManager = AST::GS_PassManager::Create(std::move(_optimizingPasses));
+
+        passManager->Run(_session,
+                         functionDeclaration);
     }
 
 }

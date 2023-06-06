@@ -1,3 +1,5 @@
+#include <filesystem>
+
 #include <Parser/Parser.h>
 
 #include <Optimizer/Optimizer.h>
@@ -89,22 +91,19 @@ namespace GSLanguageCompiler::Driver {
 
         AST::GSTranslationUnitDeclarationPtrArray translationUnitDeclarations;
 
+        auto semanticAnalyzer = Semantic::GS_SemanticAnalyzer::Create(*this);
         auto optimizer = Optimizer::GS_Optimizer::Create(*this);
 
         for (auto &source : sources) {
             auto translationUnitDeclaration = Parser::ParseProgram(*this,
                                                                    *source);
 
-            // TODO: Add GS_Semantic class for run semantic passes
-//            Semantic::CreateSymbolsPlaceholderPass()->Run(*this,
-//                                                          translationUnitDeclaration);
-
-//            optimizer->Optimize(translationUnitDeclaration);
+            semanticAnalyzer->Analyze(translationUnitDeclaration);
+            optimizer->Optimize(translationUnitDeclaration);
 
             Debug::DumpAST(translationUnitDeclaration,
                            *this);
-
-//            Debug::DumpTableOfSymbols(*_tableOfSymbols);
+            Debug::DumpTableOfSymbols(*_tableOfSymbols);
 
             translationUnitDeclarations.emplace_back(translationUnitDeclaration);
         }
@@ -117,11 +116,16 @@ namespace GSLanguageCompiler::Driver {
             auto codeHolder = _backend->Generate(*this,
                                                  translationUnitDeclaration);
 
+            UStringStream fileNameStringStream;
+            fileNameStringStream << std::filesystem::path(translationUnitDeclaration->GetName().AsUTF8()).filename().string()
+                                 << ".o"_us;
+            auto fileName = fileNameStringStream.String();
+
             _backend->Write(*this,
-                            translationUnitDeclaration->GetName() + ".o",
+                            fileName,
                             codeHolder);
 
-            objectFiles.emplace_back(translationUnitDeclaration->GetName() + ".o");
+            objectFiles.emplace_back(fileName);
         }
 
         _backend->Link(*this,

@@ -7,8 +7,6 @@
 
 #include <Semantic/Semantic.h>
 
-#include <CodeGenerator/GS_Toolchain.h>
-
 #include <Driver/GS_Arguments.h>
 
 namespace GSLanguageCompiler {

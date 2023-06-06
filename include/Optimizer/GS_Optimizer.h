@@ -58,11 +58,19 @@ namespace GSLanguageCompiler::Optimizer {
          */
 
         /**
-         * Run optimizing passes for optimize node
-         * @param node Node
+         * Run optimizing passes on translation unit declaration
+         * @param translationUnitDeclaration Translation unit declaration
          * @return Void return
          */
-        Void Optimize(LRef<AST::GSNodePtr> node);
+        Void Optimize(LRef<AST::GSTranslationUnitDeclarationPtr> translationUnitDeclaration);
+
+
+        /**
+         * Run optimizing passes on function declaration
+         * @param functionDeclaration Function declaration
+         * @return Void return
+         */
+        Void Optimize(AST::NodePtrLRef<AST::GS_FunctionDeclaration> functionDeclaration);
 
     private:
 
