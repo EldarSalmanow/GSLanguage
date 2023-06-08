@@ -336,22 +336,8 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Constructor for message queue
-         * @param messageStream Message stream
          */
-        explicit GS_MessageQueue(LRef<GS_MessageStream> messageStream);
-
-    public:
-
-        /*
-         *
-         * GS_MessageQueue PUBLIC DESTRUCTORS
-         *
-         */
-
-        /**
-         * Destructor for message queue
-         */
-        ~GS_MessageQueue();
+        GS_MessageQueue();
 
     public:
 
@@ -363,10 +349,9 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Creating message queue
-         * @param messageStream Message stream
          * @return Message queue
          */
-        static GS_MessageQueue Create(LRef<GS_MessageStream> messageStream);
+        static GS_MessageQueue Create();
 
     public:
 
@@ -391,9 +376,24 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Flush messages to message stream and clear it
+         * @param messageStream Message stream
          * @return Void return
          */
-        Void Flush();
+        Void Flush(LRef<GS_MessageStream> messageStream);
+
+    public:
+
+        /*
+         *
+         * GS_MessageQueue PUBLIC GETTER METHODS
+         *
+         */
+
+        /**
+         * Getter for messages
+         * @return Messages
+         */
+        ConstLRef<std::deque<GS_Message>> GetMessages() const;
 
     public:
 
@@ -404,12 +404,11 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Copy assignment operator for message queue.
-         * Operator copying only messages from queue because message stream is reference!
-         * @param messageQueue Message queue
+         * Stream operator for adding message to message queue
+         * @param message Message
          * @return Message queue
          */
-        LRef<GS_MessageQueue> operator=(ConstLRef<GS_MessageQueue> messageQueue);
+        LRef<GS_MessageQueue> operator<<(ConstLRef<GS_Message> message);
 
     private:
 
@@ -422,12 +421,7 @@ namespace GSLanguageCompiler::IO {
         /**
          * Messages
          */
-        std::deque<GS_Message> _messages;
-
-        /**
-         * Message stream
-         */
-        LRef<GS_MessageStream> _messageStream;
+        std::deque<GS_Message> _messages; // TODO replace to array type?
     };
 
     /**
@@ -718,11 +712,18 @@ namespace GSLanguageCompiler::IO {
         LRef<GS_MessageStream> operator<<(ConstLRef<GS_Message> message);
 
         /**
-         * Stream operator for writing messages buffer in message handler
-         * @param messageBuffer Messages buffer
+         * Stream operator for writing message buffer in message handler
+         * @param messageBuffer Message buffer
          * @return Message stream
          */
         LRef<GS_MessageStream> operator<<(ConstLRef<GS_MessageBuffer> messageBuffer);
+
+        /**
+         * Stream operator for writing message queue in message handler
+         * @param messageQueue Message queue
+         * @return Message stream
+         */
+        LRef<GS_MessageStream> operator<<(ConstLRef<GS_MessageQueue> messageQueue);
 
         /**
          * Stream operator for writing message from message builder in message handler

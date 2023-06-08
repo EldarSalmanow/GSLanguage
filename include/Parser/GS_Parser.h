@@ -283,58 +283,6 @@ namespace GSLanguageCompiler::Parser {
         AST::GSASTBuilderPtr _builder;
     };
 
-    template<typename SourceT>
-    class Cursor {
-    public:
-
-        using Source = SourceT;
-
-        using SourceValue = typename Source::value_type;
-
-        using SourceIterator = typename Source::const_iterator;
-
-    public:
-
-        explicit Cursor(Source source)
-                : _currentIterator(source.begin()),
-                  _beginIterator(source.begin()),
-                  _endIterator(source.end()) {}
-
-    public:
-
-        ConstLRef<SourceValue> operator*() {
-            return *_currentIterator;
-        }
-
-        LRef<Cursor> operator++() {
-            ++_currentIterator;
-
-            if (_currentIterator >= _endIterator) {
-                throw std::out_of_range("Cursor out of range!");
-            }
-
-            return *this;
-        }
-
-        LRef<Cursor> operator--() {
-            --_currentIterator;
-
-            if (_currentIterator < _beginIterator) {
-                throw std::out_of_range("Cursor out of range!");
-            }
-
-            return *this;
-        }
-
-    private:
-
-        SourceIterator _currentIterator;
-
-        SourceIterator _beginIterator;
-
-        SourceIterator _endIterator;
-    };
-
     /**
      * Parsing program from source
      * @param session Session

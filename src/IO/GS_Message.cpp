@@ -132,16 +132,11 @@ namespace GSLanguageCompiler::IO {
         return _messages[index];
     }
 
-    GS_MessageQueue::GS_MessageQueue(LRef<GS_MessageStream> messageStream)
-            : _messages(),
-              _messageStream(messageStream) {}
+    GS_MessageQueue::GS_MessageQueue()
+            : _messages() {}
 
-    GS_MessageQueue::~GS_MessageQueue() {
-        Flush();
-    }
-
-    GS_MessageQueue GS_MessageQueue::Create(LRef<GS_MessageStream> messageStream) {
-        return GS_MessageQueue(messageStream);
+    GS_MessageQueue GS_MessageQueue::Create() {
+        return GS_MessageQueue();
     }
 
     ConstLRef<GS_Message> GS_MessageQueue::AddMessage(GS_Message message) {
@@ -154,16 +149,20 @@ namespace GSLanguageCompiler::IO {
         _messages.clear();
     }
 
-    Void GS_MessageQueue::Flush() {
-        for (auto &messages : _messages) {
-            _messageStream << messages;
+    Void GS_MessageQueue::Flush(LRef<GS_MessageStream> messageStream) {
+        for (auto &message : _messages) {
+            messageStream << message;
         }
 
         Clear();
     }
 
-    LRef<GS_MessageQueue> GS_MessageQueue::operator=(ConstLRef<GS_MessageQueue> messageQueue) {
-        _messages = messageQueue._messages;
+    ConstLRef<std::deque<GS_Message>> GS_MessageQueue::GetMessages() const {
+        return _messages;
+    }
+
+    LRef<GS_MessageQueue> GS_MessageQueue::operator<<(ConstLRef<GS_Message> message) {
+        AddMessage(message);
 
         return *this;
     }
@@ -419,6 +418,16 @@ namespace GSLanguageCompiler::IO {
 
     LRef<GS_MessageStream> GS_MessageStream::operator<<(ConstLRef<GS_MessageBuffer> messageBuffer) {
         for (auto &message : messageBuffer) {
+            *this << message;
+        }
+
+        return *this;
+    }
+
+    LRef<GS_MessageStream> GS_MessageStream::operator<<(ConstLRef<GS_MessageQueue> messageQueue) {
+        auto messages = messageQueue.GetMessages();
+
+        for (auto &message : messages) {
             *this << message;
         }
 

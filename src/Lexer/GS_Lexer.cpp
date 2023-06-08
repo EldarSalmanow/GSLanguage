@@ -47,7 +47,7 @@ namespace GSLanguageCompiler::Lexer {
     GS_Lexer::GS_Lexer(LRef<Driver::GS_Session> session,
                        ConstLRef<IO::GS_Source> source)
             : _session(session),
-              _messageQueue(_session.Out()),
+              _messageQueue(IO::GS_MessageQueue::Create()),
               _source(source),
               _sourceIterator(_source.cbegin()),
               _currentPosition(1) {
@@ -95,7 +95,7 @@ namespace GSLanguageCompiler::Lexer {
             token = GetToken();
         }
 
-        _messageQueue.Flush();
+        _messageQueue.Flush(_session.Out());
 
         auto tokenBuffer = GS_TokenBuffer::Create(std::move(tokens));
 
@@ -129,11 +129,21 @@ namespace GSLanguageCompiler::Lexer {
             // tokenizing string literal
 
             return TokenizeString();
+        } else if (_sourceIterator == _source.cend()) {
+            // end of file
+
+            return GS_Token::Create(TokenType::EndOfFile,
+                                    IO::GSByteSourceRange::Create(CurrentLocation(),
+                                                                  CurrentLocation()));
         }
 
-        // end of file
+        // unknown symbol
 
-        return GS_Token::Create(TokenType::EndOfFile,
+        _messageQueue << _session.ErrorMessage()
+                                 .Text("Unknown symbol '"_us + symbol + "'!"_us)
+                                 .Message();
+
+        return GS_Token::Create(TokenType::Unknown,
                                 IO::GSByteSourceRange::Create(CurrentLocation(),
                                                               CurrentLocation()));
     }
