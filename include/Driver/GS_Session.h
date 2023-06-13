@@ -9,6 +9,8 @@
 
 #include <Driver/GS_Arguments.h>
 
+#include <Driver/GS_QueryManager.h>
+
 namespace GSLanguageCompiler {
 
     namespace CodeGenerator {
@@ -132,6 +134,13 @@ namespace GSLanguageCompiler {
              * @return Compiling result
              */
             CompilingResult Run();
+
+            /*
+             * Defining queries
+             */
+
+            #define DEFINE_QUERY(name, argument, result) result name(argument key) { return _queryManager->name(*this, argument); }
+            #include <Driver/GS_Queries.def>
 
             /**
              * Getting standard input stream
@@ -323,6 +332,12 @@ namespace GSLanguageCompiler {
              */
 
             /**
+             * Getter for query manager
+             * @return Query manager
+             */
+            LRef<GS_QueryManager> GetQueryManager();
+
+            /**
              * Getter for standard IO stream manager
              * @return Standard IO stream manager
              */
@@ -355,6 +370,7 @@ namespace GSLanguageCompiler {
             /**
              * Getter for code generation backend
              * @return Code generation backend
+             * @todo Replace return type?
              */
             LRef<CodeGenerator::GSBackendPtr> GetBackend();
 
@@ -365,6 +381,12 @@ namespace GSLanguageCompiler {
              * GS_Session PRIVATE FIELDS
              *
              */
+
+            /**
+             * Query manager
+             * @todo Add query manager to arguments in constructor?
+             */
+            GSQueryManagerPtr _queryManager;
 
             /**
              * Standard IO stream manager

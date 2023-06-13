@@ -12,6 +12,7 @@
  * CMakeLists.txt      - Pass
  * Driver.h            - Pass
  * GS_Arguments.h      - Pass
+ * GS_QueryManager.h   - Pass
  * GS_Session.h        - Pass
  * GS_SessionManager.h - Pass
  * GS_Compiler.h       - Pass
@@ -20,6 +21,8 @@
  */
 
 #include <Driver/GS_Arguments.h>
+
+#include <Driver/GS_QueryManager.h>
 
 #include <Driver/GS_Session.h>
 #include <Driver/GS_SessionManager.h>

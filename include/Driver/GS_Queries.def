@@ -1,0 +1,13 @@
+#ifndef DEFINE_QUERY
+    #define DEFINE_QUERY(name, argument, result) virtual result name(LRef<Driver::GS_Session> session, argument key);
+#endif
+
+DEFINE_QUERY(Compile, UString, AST::GSTranslationUnitDeclarationPtr)
+
+DEFINE_QUERY(Parse, UString, AST::GSTranslationUnitDeclarationPtr)
+
+DEFINE_QUERY(Tokenize, UString, Lexer::GS_TokenBuffer)
+
+DEFINE_QUERY(Read, UString, ConstLRef<IO::GS_Source>)
+
+#undef DEFINE_QUERY
