@@ -31,7 +31,7 @@ namespace GSLanguageCompiler::Driver {
                            AST::GSASTContextPtr astContext,
                            Semantic::GSTableOfSymbolsPtr tableOfSymbols,
                            CodeGenerator::GSBackendPtr backend)
-            : _queryManager(GS_QueryManager::Create()),
+            : /*_queryManager(GS_QueryManager::Create()),*/
               _stdIOStreamManager(std::move(stdIOStreamManager)),
               _sourceManager(std::move(sourceManager)),
               _messageStreamManager(std::move(messageStreamManager)),
@@ -251,9 +251,9 @@ namespace GSLanguageCompiler::Driver {
         return Message().Fatal();
     }
 
-    LRef<GS_QueryManager> GS_Session::GetQueryManager() {
-        return *_queryManager;
-    }
+//    LRef<GS_QueryManager> GS_Session::GetQueryManager() {
+//        return *_queryManager;
+//    }
 
     LRef<IO::GS_StdIOStreamManager> GS_Session::GetStdIOStreamManager() {
         return *_stdIOStreamManager;

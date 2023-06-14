@@ -1,4 +1,4 @@
-#ifndef GS_TOKENTYPE
+#if !defined(GS_TOKENTYPE)
     #define GS_TOKENTYPE(name) name
 #endif
 

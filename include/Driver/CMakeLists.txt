@@ -5,7 +5,7 @@ set(DRIVER_DIR ${SOURCE_DIR}/Driver)
 set(GS_DRIVER_SOURCE
         ${DRIVER_DIR}/GS_Arguments.cpp
 
-        ${DRIVER_DIR}/GS_QueryManager.cpp
+#        ${DRIVER_DIR}/GS_QueryManager.cpp
 
         ${DRIVER_DIR}/GS_Session.cpp
         ${DRIVER_DIR}/GS_SessionManager.cpp

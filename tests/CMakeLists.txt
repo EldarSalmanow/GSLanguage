@@ -1,15 +1,11 @@
 add_executable(GSIOTests GS_IOTests.cpp)
 
-target_link_directories(GSIOTests PRIVATE ${CONAN_LIB_DIRS})
+target_link_libraries(GSIOTests PRIVATE ${EXTERNAL_LIBS})
 
-target_link_libraries(GSIOTests PRIVATE ${CONAN_LIBS})
-
-target_link_libraries(GSIOTests PRIVATE ${PROJECT_LIBRARIES})
+target_link_libraries(GSIOTests PRIVATE ${PROJECT_LIBS})
 
 add_executable(GSLexerTests GS_LexerTests.cpp)
 
-target_link_directories(GSLexerTests PRIVATE ${CONAN_LIB_DIRS})
+target_link_libraries(GSLexerTests PRIVATE ${EXTERNAL_LIBS})
 
-target_link_libraries(GSLexerTests PRIVATE ${CONAN_LIBS})
-
-target_link_libraries(GSLexerTests PRIVATE ${PROJECT_LIBRARIES})
+target_link_libraries(GSLexerTests PRIVATE ${PROJECT_LIBS})

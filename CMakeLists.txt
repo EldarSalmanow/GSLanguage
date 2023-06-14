@@ -53,6 +53,13 @@ find_package(GSCrossPlatform REQUIRED)
 set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${GSCrossPlatform_INCLUDE_DIRS})
 set(EXTERNAL_LIBS         ${EXTERNAL_LIBS}         ${GSCrossPlatform_LIBRARIES})
 
+# GTest
+
+find_package(GTest REQUIRED)
+
+set(EXTERNAL_INCLUDE_DIRS ${EXTERNAL_INCLUDE_DIRS} ${GTest_INCLUDE_DIRS})
+set(EXTERNAL_LIBS         ${EXTERNAL_LIBS}         ${GTest_LIBRARIES})
+
 # rang
 
 find_package(rang REQUIRED)
@@ -74,8 +81,7 @@ set(PROJECT_LIBS
         GSOptimizerLibrary
         GSSemanticLibrary
         GSCodeGeneratorLibrary
-        GSDebugLibrary
-        )
+        GSDebugLibrary)
 
 add_executable(${PROJECT_NAME}
         ${PROJECT_DIR}/main.cpp)
@@ -98,6 +104,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${EXTERNAL_LIBS})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_LIBS})
 
-#add_subdirectory(tests)
+add_subdirectory(tests)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${BINARY_DIR})

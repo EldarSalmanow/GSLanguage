@@ -1,7 +1,7 @@
 #ifndef GSLANGUAGE_GS_LEXER_H
 #define GSLANGUAGE_GS_LEXER_H
 
-#include <Driver/Driver.h>
+#include <Driver/GS_Session.h>
 
 #include <Lexer/GS_Token.h>
 

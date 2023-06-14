@@ -9,7 +9,7 @@
 
 #include <Driver/GS_Arguments.h>
 
-#include <Driver/GS_QueryManager.h>
+//#include <Driver/GS_QueryManager.h>
 
 namespace GSLanguageCompiler {
 
@@ -139,8 +139,8 @@ namespace GSLanguageCompiler {
              * Defining queries
              */
 
-            #define DEFINE_QUERY(name, argument, result) result name(argument key) { return _queryManager->name(*this, argument); }
-            #include <Driver/GS_Queries.def>
+//            #define DEFINE_QUERY(name, argument, result) result name(argument key) { return _queryManager->name(*this, key); }
+//            #include <Driver/GS_Queries.def>
 
             /**
              * Getting standard input stream
@@ -335,7 +335,7 @@ namespace GSLanguageCompiler {
              * Getter for query manager
              * @return Query manager
              */
-            LRef<GS_QueryManager> GetQueryManager();
+//            LRef<GS_QueryManager> GetQueryManager();
 
             /**
              * Getter for standard IO stream manager
@@ -386,7 +386,7 @@ namespace GSLanguageCompiler {
              * Query manager
              * @todo Add query manager to arguments in constructor?
              */
-            GSQueryManagerPtr _queryManager;
+//            GSQueryManagerPtr _queryManager;
 
             /**
              * Standard IO stream manager

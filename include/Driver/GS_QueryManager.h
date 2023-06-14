@@ -1,7 +1,11 @@
 #ifndef GSLANGUAGE_GS_QUERYMANAGER_H
 #define GSLANGUAGE_GS_QUERYMANAGER_H
 
-#include <GSCrossPlatform/CrossPlatform.h>
+//#include <GSCrossPlatform/CrossPlatform.h>
+
+#include <Lexer/Lexer.h>
+
+#include <AST/AST.h>
 
 namespace GSLanguageCompiler::Driver {
 
