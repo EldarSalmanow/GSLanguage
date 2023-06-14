@@ -4,48 +4,45 @@
 
 using namespace GSLanguageCompiler;
 
-class LexerTest : public ::testing::Test {
-public:
+TEST(LexerTest, Tokenizing) {
+    auto session = Driver::GS_Session::Create();
 
-    LexerTest()
-            : _inputContent("var a = 10"), _validTokens({
-                Lexer::GS_Token::Create(Lexer::TokenType::KeywordVar),
-                Lexer::GS_Token::Create(Lexer::TokenType::Identifier, "a"_us),
-                Lexer::GS_Token::Create(Lexer::TokenType::SymbolEq),
-                Lexer::GS_Token::Create(Lexer::TokenType::LiteralNumber, "10"_us),
-                Lexer::GS_Token::Create(Lexer::TokenType::EndOfFile)
-            }) {}
+    auto code = "func main() {\n"
+                "    println(\"Hello, World!\")\n"
+                "}"_us;
 
-protected:
+    Lexer::GSTokenArray validTokens = {
+            Lexer::GS_Token::Create(Lexer::TokenType::KeywordFunc),
+            Lexer::GS_Token::Create(Lexer::TokenType::Identifier, "main"_us),
+            Lexer::GS_Token::Create(Lexer::TokenType::SymbolLeftParen),
+            Lexer::GS_Token::Create(Lexer::TokenType::SymbolRightParen),
+            Lexer::GS_Token::Create(Lexer::TokenType::SymbolLeftBrace),
+            Lexer::GS_Token::Create(Lexer::TokenType::Identifier, "println"),
+            Lexer::GS_Token::Create(Lexer::TokenType::SymbolLeftParen),
+            Lexer::GS_Token::Create(Lexer::TokenType::LiteralString, "Hello, World!"),
+            Lexer::GS_Token::Create(Lexer::TokenType::SymbolRightParen),
+            Lexer::GS_Token::Create(Lexer::TokenType::SymbolRightBrace),
+            Lexer::GS_Token::Create(Lexer::TokenType::EndOfFile)
+    };
 
-    Void SetUp() override {
-        auto context = Driver::GS_Context::Create();
+    auto source = session->AddStringSource(code);
 
-        auto compilationUnit = Driver::GS_CompilationUnit::Create(IO::GS_Source::CreateString(_inputContent), context);
+    auto lexer = Lexer::GS_Lexer::Create(*session,
+                                         source);
 
-        _tokens = Lexer::GS_Lexer::Create(context).Tokenize(*compilationUnit);
-    }
+    auto tokens = lexer.Tokenize().GetTokens();
 
-protected:
+    ASSERT_EQ(tokens.size(), validTokens.size());
 
-    UString _inputContent;
-
-    Lexer::GSTokenArray _validTokens;
-
-    Lexer::GSTokenArray _tokens;
-};
-
-TEST_F(LexerTest, Tokenizing) {
-    ASSERT_EQ(_tokens.size(), _validTokens.size());
-
-    for (U64 index = 0; index < _tokens.size(); ++index) {
-        ASSERT_EQ(_tokens[index].GetType(), _validTokens[index].GetType());
-        ASSERT_EQ(_tokens[index].GetValue(), _validTokens[index].GetValue());
+    for (U64 index = 0; index < tokens.size(); ++index) {
+        EXPECT_EQ(tokens[index].GetType(), validTokens[index].GetType());
+        EXPECT_EQ(tokens[index].GetValue(), validTokens[index].GetValue());
+//        EXPECT_EQ(tokens[index].GetLocationRange(), validTokens[index].GetLocationRange());
     }
 }
 
-I32 main() {
-    ::testing::InitGoogleTest();
+I32 main(I32 argc, Ptr<Ptr<C>> argv) {
+    ::testing::InitGoogleTest(&argc, argv);
 
     return RUN_ALL_TESTS();
 }
