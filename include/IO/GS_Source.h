@@ -10,7 +10,7 @@
 namespace GSLanguageCompiler::IO {
 
     /*
-     * TODO: Check all position system and rewrite
+     * TODO: Check all position system and rewrite (remove line column source location?)
      */
 
     /**
