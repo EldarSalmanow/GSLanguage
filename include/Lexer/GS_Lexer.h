@@ -86,7 +86,6 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Tokenizing one token
          * @return Token
-         * @todo Add detecting end of file or unknown symbol
          */
         GS_Token GetToken();
 
@@ -133,14 +132,8 @@ namespace GSLanguageCompiler::Lexer {
         USymbol CurrentSymbol();
 
         /**
-         * Setting cursor to previous symbol in source
-         * @return
-         */
-        Void PrevSymbol();
-
-        /**
          * Setting cursor to next symbol in source
-         * @return
+         * @return Void return
          */
         Void NextSymbol();
 
@@ -149,31 +142,6 @@ namespace GSLanguageCompiler::Lexer {
          * @return Current byte source location
          */
         IO::GS_ByteSourceLocation CurrentLocation() const;
-
-        /**
-         * Getting previous byte source location
-         * @return Previous byte source location
-         */
-        IO::GS_ByteSourceLocation PrevLocation() const;
-
-        /**
-         * Getting next byte source location
-         * @return Next byte source location
-         */
-        IO::GS_ByteSourceLocation NextLocation() const;
-
-        /**
-         * Getting byte source location with position
-         * @param position Byte position
-         * @return Byte source location with position
-         */
-        IO::GS_ByteSourceLocation Location(I64 position) const;
-
-        /**
-         * Getting invalid byte source location
-         * @return Invalid byte source location
-         */
-        IO::GS_ByteSourceLocation Location() const;
 
     private:
 

@@ -168,16 +168,16 @@ namespace GSLanguageCompiler::Lexer {
             UString string;
 
             auto startPosition = CurrentLocation(),
-                 endPosition = Location();
+                 endPosition = CurrentLocation();
 
             while (true) {
                 string += CurrentSymbol();
 
+                endPosition = CurrentLocation();
+
                 NextSymbol();
 
                 if (!CurrentSymbol().IsIDContinue()) {
-                    endPosition = PrevLocation();
-
                     break;
                 }
             }
@@ -219,16 +219,16 @@ namespace GSLanguageCompiler::Lexer {
             UString string;
 
             auto startPosition = CurrentLocation(),
-                 endPosition = Location();
+                 endPosition = CurrentLocation();
 
             while (true) {
                 string += CurrentSymbol();
 
+                endPosition = CurrentLocation();
+
                 NextSymbol();
 
                 if (!CurrentSymbol().IsDigit()) {
-                    endPosition = PrevLocation();
-
                     break;
                 }
             }
@@ -247,7 +247,9 @@ namespace GSLanguageCompiler::Lexer {
             UString string;
 
             auto startPosition = CurrentLocation(),
-                 endPosition = Location();
+                 endPosition = CurrentLocation();
+
+            NextSymbol();
 
             string += CurrentSymbol();
 
@@ -257,9 +259,9 @@ namespace GSLanguageCompiler::Lexer {
                 Driver::GlobalContext().Exit();
             }
 
-            NextSymbol();
+            endPosition = CurrentLocation();
 
-            endPosition = PrevLocation();
+            NextSymbol();
 
             return GS_Token::Create(TokenType::LiteralSymbol,
                                     string,
@@ -275,7 +277,7 @@ namespace GSLanguageCompiler::Lexer {
             UString string;
 
             auto startPosition = CurrentLocation(),
-                 endPosition = Location();
+                 endPosition = CurrentLocation();
 
             NextSymbol();
 
@@ -287,7 +289,7 @@ namespace GSLanguageCompiler::Lexer {
                 if (CurrentSymbol() == '\"') {
                     NextSymbol();
 
-                    endPosition = PrevLocation();
+                    endPosition = CurrentLocation();
 
                     break;
                 }
@@ -306,12 +308,6 @@ namespace GSLanguageCompiler::Lexer {
         return *_sourceIterator;
     }
 
-    Void GS_Lexer::PrevSymbol() {
-        --_sourceIterator;
-
-        --_currentPosition;
-    }
-
     Void GS_Lexer::NextSymbol() {
         ++_sourceIterator;
 
@@ -319,24 +315,8 @@ namespace GSLanguageCompiler::Lexer {
     }
 
     IO::GS_ByteSourceLocation GS_Lexer::CurrentLocation() const {
-        return Location(_currentPosition);
-    }
-
-    IO::GS_ByteSourceLocation GS_Lexer::PrevLocation() const {
-        return Location(_currentPosition - 1);
-    }
-
-    IO::GS_ByteSourceLocation GS_Lexer::NextLocation() const {
-        return Location(_currentPosition + 1);
-    }
-
-    IO::GS_ByteSourceLocation GS_Lexer::Location(I64 position) const {
-        return IO::GS_ByteSourceLocation::Create(position,
+        return IO::GS_ByteSourceLocation::Create(_currentPosition,
                                                  _source.GetHash());
-    }
-
-    IO::GS_ByteSourceLocation GS_Lexer::Location() const {
-        return IO::GS_ByteSourceLocation::Create();
     }
 
 }

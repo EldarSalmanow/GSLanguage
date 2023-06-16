@@ -13,7 +13,7 @@ namespace GSLanguageCompiler::Driver {
     /**
      * Default signal handler function
      * @param signal Signal
-     * @return No return
+     * @return Void return
      */
     GS_NORETURN Void DefaultSignalHandler(I32 signal);
 
@@ -114,7 +114,7 @@ namespace GSLanguageCompiler::Driver {
          * Exiting from program with exit message and exit code
          * @param exitMessage Exit message
          * @param exitCode Exit code
-         * @return No return
+         * @return Void return
          */
         GS_NORETURN Void Exit(UString exitMessage,
                               I32 exitCode);
@@ -122,20 +122,20 @@ namespace GSLanguageCompiler::Driver {
         /**
          * Exiting from program with exit message and Err result
          * @param exitMessage Exit message
-         * @return No return
+         * @return Void return
          */
         GS_NORETURN Void Exit(UString exitMessage);
 
         /**
          * Exiting from program with void exit message and exit code
          * @param exitCode Exit code
-         * @return No return
+         * @return Void return
          */
         GS_NORETURN Void Exit(I32 exitCode);
 
         /**
          * Exiting from program with Err result
-         * @return No return
+         * @return Void return
          */
         GS_NORETURN Void Exit();
 
