@@ -4,14 +4,14 @@ namespace GSLanguageCompiler::Lexer {
 
     GS_Token::GS_Token(TokenType type,
                        UString value,
-                       IO::GSByteSourceRange locationRange)
+                       IO::GS_SourceRange locationRange)
             : _type(type),
               _value(std::move(value)),
               _locationRange(locationRange) {}
 
     GS_Token GS_Token::Create(TokenType type,
                               UString value,
-                              IO::GSByteSourceRange locationRange) {
+                              IO::GS_SourceRange locationRange) {
         return GS_Token(type,
                         std::move(value),
                         locationRange);
@@ -21,11 +21,11 @@ namespace GSLanguageCompiler::Lexer {
                               UString value) {
         return GS_Token::Create(type,
                                 std::move(value),
-                                IO::GSByteSourceRange::Create());
+                                IO::GS_SourceRange::Create());
     }
 
     GS_Token GS_Token::Create(TokenType type,
-                              IO::GSByteSourceRange locationRange) {
+                              IO::GS_SourceRange locationRange) {
         return GS_Token::Create(type,
                                 UString(),
                                 locationRange);
@@ -34,13 +34,13 @@ namespace GSLanguageCompiler::Lexer {
     GS_Token GS_Token::Create(TokenType type) {
         return GS_Token::Create(type,
                                 UString(),
-                                IO::GSByteSourceRange::Create());
+                                IO::GS_SourceRange::Create());
     }
 
     GS_Token GS_Token::Create() {
         return GS_Token::Create(TokenType::Unknown,
                                 UString(),
-                                IO::GSByteSourceRange::Create());
+                                IO::GS_SourceRange::Create());
     }
 
     TokenType GS_Token::GetType() const {
@@ -51,7 +51,7 @@ namespace GSLanguageCompiler::Lexer {
         return _value;
     }
 
-    IO::GSByteSourceRange GS_Token::GetLocationRange() const {
+    IO::GS_SourceRange GS_Token::GetLocationRange() const {
         return _locationRange;
     }
 

@@ -602,7 +602,7 @@ namespace GSLanguageCompiler::Parser {
         return CurrentToken().GetValue();
     }
 
-    IO::GSByteSourceRange GS_Parser::TokenLocation() {
+    IO::GS_SourceRange GS_Parser::TokenLocation() {
         return CurrentToken().GetLocationRange();
     }
 

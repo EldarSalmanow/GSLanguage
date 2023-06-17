@@ -138,10 +138,10 @@ namespace GSLanguageCompiler::Lexer {
         Void NextSymbol();
 
         /**
-         * Getting current byte source location
-         * @return Current byte source location
+         * Getting current source location
+         * @return Current source location
          */
-        IO::GS_ByteSourceLocation CurrentLocation() const;
+        IO::GS_SourceLocation CurrentLocation() const;
 
     private:
 

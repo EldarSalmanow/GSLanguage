@@ -22,10 +22,10 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for variable using expression
          * @param name Variable name
-         * @param nameLocationRange Variable name byte source location range
+         * @param nameLocationRange Variable name source location range
          */
         GS_VariableUsingExpression(UString name,
-                                   IO::GSByteSourceRange nameLocationRange);
+                                   IO::GS_SourceRange nameLocationRange);
 
     public:
 
@@ -38,11 +38,11 @@ namespace GSLanguageCompiler::AST {
         /**
          * Creating variable using expression
          * @param name Variable name
-         * @param nameLocation Variable name byte source location range
+         * @param nameLocation Variable name source location range
          * @return Variable using expression ptr
          */
         static std::shared_ptr<GS_VariableUsingExpression> Create(UString name,
-                                                                  IO::GSByteSourceRange nameLocationRange);
+                                                                  IO::GS_SourceRange nameLocationRange);
 
         /**
          * Creating variable using expression
@@ -66,10 +66,10 @@ namespace GSLanguageCompiler::AST {
         LRef<UString> GetName();
 
         /**
-         * Getter for variable name byte source location range
-         * @return Variable name byte source location range
+         * Getter for variable name source location range
+         * @return Variable name source location range
          */
-        ConstLRef<IO::GSByteSourceRange> GetNameLocationRange() const;
+        ConstLRef<IO::GS_SourceRange> GetNameLocationRange() const;
 
     public:
 
@@ -99,9 +99,9 @@ namespace GSLanguageCompiler::AST {
         UString _name;
 
         /**
-         * Variable name byte source location range
+         * Variable name source location range
          */
-        IO::GSByteSourceRange _nameLocationRange;
+        IO::GS_SourceRange _nameLocationRange;
     };
 
 }

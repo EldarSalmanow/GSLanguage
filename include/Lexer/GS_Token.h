@@ -32,7 +32,7 @@ namespace GSLanguageCompiler::Lexer {
          */
         GS_Token(TokenType type,
                  UString value,
-                 IO::GSByteSourceRange locationRange);
+                 IO::GS_SourceRange locationRange);
 
     public:
 
@@ -51,7 +51,7 @@ namespace GSLanguageCompiler::Lexer {
          */
         static GS_Token Create(TokenType type,
                                UString value,
-                               IO::GSByteSourceRange locationRange);
+                               IO::GS_SourceRange locationRange);
 
         /**
          * Creating token
@@ -69,7 +69,7 @@ namespace GSLanguageCompiler::Lexer {
          * @return Token
          */
         static GS_Token Create(TokenType type,
-                               IO::GSByteSourceRange locationRange);
+                               IO::GS_SourceRange locationRange);
 
         /**
          * Creating token
@@ -108,7 +108,7 @@ namespace GSLanguageCompiler::Lexer {
          * Getter for source location range
          * @return Source location range
          */
-        IO::GSByteSourceRange GetLocationRange() const;
+        IO::GS_SourceRange GetLocationRange() const;
 
     private:
 
@@ -131,7 +131,7 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Token source location range
          */
-        IO::GSByteSourceRange _locationRange;
+        IO::GS_SourceRange _locationRange;
     };
 
     /**

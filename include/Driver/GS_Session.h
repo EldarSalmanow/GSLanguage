@@ -251,23 +251,23 @@ namespace GSLanguageCompiler {
              * Creating message builder for creating message
              * @param messageText Message text
              * @param messageLevel Message level
-             * @param messageLocationRange Optional message byte source location range
+             * @param messageLocationRange Optional message source location range
              * @return Message builder
              */
             IO::GS_MessageBuilder Message(UString messageText,
                                           IO::MessageLevel messageLevel,
-                                          std::optional<IO::GSByteSourceRange> messageLocationRange) const;
+                                          std::optional<IO::GS_SourceRange> messageLocationRange) const;
 
             /**
              * Creating message builder for creating message
              * @param messageText Message text
              * @param messageLevel Message level
-             * @param messageLocationRange Message byte source location range
+             * @param messageLocationRange Message source location range
              * @return Message builder
              */
             IO::GS_MessageBuilder Message(UString messageText,
                                           IO::MessageLevel messageLevel,
-                                          IO::GSByteSourceRange messageLocationRange) const;
+                                          IO::GS_SourceRange messageLocationRange) const;
 
             /**
              * Creating message builder for creating message
@@ -278,7 +278,7 @@ namespace GSLanguageCompiler {
              */
             IO::GS_MessageBuilder Message(UString messageText,
                                           IO::MessageLevel messageLevel,
-                                          IO::GS_ByteSourceLocation messageSourceLocation) const;
+                                          IO::GS_SourceLocation messageSourceLocation) const;
 
             /**
              * Creating message builder for creating message

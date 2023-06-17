@@ -133,8 +133,8 @@ namespace GSLanguageCompiler::Lexer {
             // end of file
 
             return GS_Token::Create(TokenType::EndOfFile,
-                                    IO::GSByteSourceRange::Create(CurrentLocation(),
-                                                                  CurrentLocation()));
+                                    IO::GS_SourceRange::Create(CurrentLocation(),
+                                                               CurrentLocation()));
         }
 
         // unknown symbol
@@ -144,8 +144,8 @@ namespace GSLanguageCompiler::Lexer {
                                  .Message();
 
         return GS_Token::Create(TokenType::Unknown,
-                                IO::GSByteSourceRange::Create(CurrentLocation(),
-                                                              CurrentLocation()));
+                                IO::GS_SourceRange::Create(CurrentLocation(),
+                                                           CurrentLocation()));
     }
 
     GS_Token GS_Lexer::TokenizeWhitespace() {
@@ -156,8 +156,8 @@ namespace GSLanguageCompiler::Lexer {
             NextSymbol();
 
             return GS_Token::Create(TokenType::SymbolSpace,
-                                    IO::GSByteSourceRange::Create(startPosition,
-                                                                  endPosition));
+                                    IO::GS_SourceRange::Create(startPosition,
+                                                               endPosition));
         }
 
         return GS_Token::Create();
@@ -184,14 +184,14 @@ namespace GSLanguageCompiler::Lexer {
 
             if (ReservedWordType(string) != TokenType::Unknown) {
                 return GS_Token::Create(ReservedWordType(string),
-                                        IO::GSByteSourceRange::Create(startPosition,
-                                                                      endPosition));
+                                        IO::GS_SourceRange::Create(startPosition,
+                                                                   endPosition));
             }
 
             return GS_Token::Create(TokenType::Identifier,
                                     string,
-                                    IO::GSByteSourceRange::Create(startPosition,
-                                                                  endPosition));
+                                    IO::GS_SourceRange::Create(startPosition,
+                                                               endPosition));
         }
 
         return GS_Token::Create();
@@ -207,8 +207,8 @@ namespace GSLanguageCompiler::Lexer {
             NextSymbol();
 
             return GS_Token::Create(type,
-                                    IO::GSByteSourceRange::Create(startPosition,
-                                                                  endPosition));
+                                    IO::GS_SourceRange::Create(startPosition,
+                                                               endPosition));
         }
 
         return GS_Token::Create();
@@ -235,8 +235,8 @@ namespace GSLanguageCompiler::Lexer {
 
             return GS_Token::Create(TokenType::LiteralNumber,
                                     string,
-                                    IO::GSByteSourceRange::Create(startPosition,
-                                                                  endPosition));
+                                    IO::GS_SourceRange::Create(startPosition,
+                                                               endPosition));
         }
 
         return GS_Token::Create();
@@ -265,8 +265,8 @@ namespace GSLanguageCompiler::Lexer {
 
             return GS_Token::Create(TokenType::LiteralSymbol,
                                     string,
-                                    IO::GSByteSourceRange::Create(startPosition,
-                                                                  endPosition));
+                                    IO::GS_SourceRange::Create(startPosition,
+                                                               endPosition));
         }
 
         return GS_Token::Create();
@@ -297,8 +297,8 @@ namespace GSLanguageCompiler::Lexer {
 
             return GS_Token::Create(TokenType::LiteralString,
                                     string,
-                                    IO::GSByteSourceRange::Create(startPosition,
-                                                                  endPosition));
+                                    IO::GS_SourceRange::Create(startPosition,
+                                                               endPosition));
         }
 
         return GS_Token::Create();
@@ -314,9 +314,9 @@ namespace GSLanguageCompiler::Lexer {
         ++_currentPosition;
     }
 
-    IO::GS_ByteSourceLocation GS_Lexer::CurrentLocation() const {
-        return IO::GS_ByteSourceLocation::Create(_currentPosition,
-                                                 _source.GetHash());
+    IO::GS_SourceLocation GS_Lexer::CurrentLocation() const {
+        return IO::GS_SourceLocation::Create(_currentPosition,
+                                             _source.GetHash());
     }
 
 }

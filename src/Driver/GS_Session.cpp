@@ -203,7 +203,7 @@ namespace GSLanguageCompiler::Driver {
 
     IO::GS_MessageBuilder GS_Session::Message(UString messageText,
                                               IO::MessageLevel messageLevel,
-                                              std::optional<IO::GSByteSourceRange> messageLocationRange) const {
+                                              std::optional<IO::GS_SourceRange> messageLocationRange) const {
         return IO::GS_MessageBuilder::Create(std::move(messageText),
                                              messageLevel,
                                              messageLocationRange);
@@ -211,7 +211,7 @@ namespace GSLanguageCompiler::Driver {
 
     IO::GS_MessageBuilder GS_Session::Message(UString messageText,
                                               IO::MessageLevel messageLevel,
-                                              IO::GSByteSourceRange messageLocationRange) const {
+                                              IO::GS_SourceRange messageLocationRange) const {
         return IO::GS_MessageBuilder::Create(std::move(messageText),
                                              messageLevel,
                                              messageLocationRange);
@@ -219,7 +219,7 @@ namespace GSLanguageCompiler::Driver {
 
     IO::GS_MessageBuilder GS_Session::Message(UString messageText,
                                               IO::MessageLevel messageLevel,
-                                              IO::GS_ByteSourceLocation messageSourceLocation) const {
+                                              IO::GS_SourceLocation messageSourceLocation) const {
         return IO::GS_MessageBuilder::Create(std::move(messageText),
                                              messageLevel,
                                              messageSourceLocation);

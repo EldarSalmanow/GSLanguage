@@ -18,14 +18,14 @@ namespace GSLanguageCompiler::IO {
 
     GS_Message::GS_Message(UString text,
                            MessageLevel level,
-                           std::optional<GSByteSourceRange> locationRange)
+                           std::optional<GS_SourceRange> locationRange)
             : _text(std::move(text)),
               _level(level),
               _locationRange(locationRange) {}
 
     GS_Message GS_Message::Create(UString text,
                                   MessageLevel level,
-                                  std::optional<GSByteSourceRange> locationRange) {
+                                  std::optional<GS_SourceRange> locationRange) {
         return GS_Message(std::move(text),
                           level,
                           locationRange);
@@ -33,7 +33,7 @@ namespace GSLanguageCompiler::IO {
 
     GS_Message GS_Message::Create(UString text,
                                   MessageLevel level,
-                                  GSByteSourceRange locationRange) {
+                                  GS_SourceRange locationRange) {
         return GS_Message::Create(std::move(text),
                                   level,
                                   std::make_optional(locationRange));
@@ -41,15 +41,15 @@ namespace GSLanguageCompiler::IO {
 
     GS_Message GS_Message::Create(UString text,
                                   MessageLevel level,
-                                  GS_ByteSourceLocation sourceLocation) {
+                                  GS_SourceLocation sourceLocation) {
         auto sourceHash = sourceLocation.GetSourceHash();
         auto position = sourceLocation.GetPosition();
 
-        auto endSourceLocation = GS_ByteSourceLocation::Create(position + 1,
-                                                               sourceHash);
+        auto endSourceLocation = GS_SourceLocation::Create(position + 1,
+                                                           sourceHash);
 
-        auto locationRange = GSByteSourceRange::Create(sourceLocation,
-                                                       endSourceLocation);
+        auto locationRange = GS_SourceRange::Create(sourceLocation,
+                                                    endSourceLocation);
 
         return GS_Message::Create(std::move(text),
                                   level,
@@ -71,7 +71,7 @@ namespace GSLanguageCompiler::IO {
         return _level;
     }
 
-    std::optional<GSByteSourceRange> GS_Message::GetLocationRange() const {
+    std::optional<GS_SourceRange> GS_Message::GetLocationRange() const {
         return _locationRange;
     }
 
@@ -169,14 +169,14 @@ namespace GSLanguageCompiler::IO {
 
     GS_MessageBuilder::GS_MessageBuilder(UString messageText,
                                          MessageLevel messageLevel,
-                                         std::optional<GSByteSourceRange> messageLocationRange)
+                                         std::optional<GS_SourceRange> messageLocationRange)
             : _messageText(std::move(messageText)),
               _messageLevel(messageLevel),
               _messageLocationRange(messageLocationRange) {}
 
     GS_MessageBuilder GS_MessageBuilder::Create(UString messageText,
                                                 MessageLevel messageLevel,
-                                                std::optional<GSByteSourceRange> messageLocationRange) {
+                                                std::optional<GS_SourceRange> messageLocationRange) {
         return GS_MessageBuilder(std::move(messageText),
                                  messageLevel,
                                  messageLocationRange);
@@ -184,7 +184,7 @@ namespace GSLanguageCompiler::IO {
 
     GS_MessageBuilder GS_MessageBuilder::Create(UString messageText,
                                                 MessageLevel messageLevel,
-                                                GSByteSourceRange messageLocationRange) {
+                                                GS_SourceRange messageLocationRange) {
         return GS_MessageBuilder::Create(std::move(messageText),
                                          messageLevel,
                                          std::make_optional(messageLocationRange));
@@ -192,15 +192,15 @@ namespace GSLanguageCompiler::IO {
 
     GS_MessageBuilder GS_MessageBuilder::Create(UString messageText,
                                                 MessageLevel messageLevel,
-                                                GS_ByteSourceLocation messageSourceLocation) {
+                                                GS_SourceLocation messageSourceLocation) {
         auto messageSourceHash = messageSourceLocation.GetSourceHash();
         auto messagePosition = messageSourceLocation.GetPosition();
 
-        auto endSourceLocation = GS_ByteSourceLocation::Create(messagePosition + 1,
-                                                               messageSourceHash);
+        auto endSourceLocation = GS_SourceLocation::Create(messagePosition + 1,
+                                                           messageSourceHash);
 
-        auto locationRange = GSByteSourceRange::Create(messageSourceLocation,
-                                                       endSourceLocation);
+        auto locationRange = GS_SourceRange::Create(messageSourceLocation,
+                                                    endSourceLocation);
 
         return GS_MessageBuilder::Create(std::move(messageText),
                                          messageLevel,
@@ -248,21 +248,21 @@ namespace GSLanguageCompiler::IO {
         return Level(MessageLevel::Fatal);
     }
 
-    LRef<GS_MessageBuilder> GS_MessageBuilder::Location(GSByteSourceRange messageLocationRange) {
+    LRef<GS_MessageBuilder> GS_MessageBuilder::Location(GS_SourceRange messageLocationRange) {
         _messageLocationRange = messageLocationRange;
 
         return *this;
     }
 
-    LRef<GS_MessageBuilder> GS_MessageBuilder::Location(GS_ByteSourceLocation messageSourceLocation) {
+    LRef<GS_MessageBuilder> GS_MessageBuilder::Location(GS_SourceLocation messageSourceLocation) {
         auto messageSourceHash = messageSourceLocation.GetSourceHash();
         auto messagePosition = messageSourceLocation.GetPosition();
 
-        auto endMessageSourceLocation = GS_ByteSourceLocation::Create(messagePosition + 1,
-                                                                      messageSourceHash);
+        auto endMessageSourceLocation = GS_SourceLocation::Create(messagePosition + 1,
+                                                                  messageSourceHash);
 
-        auto messageLocationRange = GSByteSourceRange::Create(messageSourceLocation,
-                                                              endMessageSourceLocation);
+        auto messageLocationRange = GS_SourceRange::Create(messageSourceLocation,
+                                                           endMessageSourceLocation);
 
         return Location(messageLocationRange);
     }
@@ -287,7 +287,7 @@ namespace GSLanguageCompiler::IO {
         return _messageLevel;
     }
 
-    std::optional<GSByteSourceRange> GS_MessageBuilder::GetMessageLocationRange() const {
+    std::optional<GS_SourceRange> GS_MessageBuilder::GetMessageLocationRange() const {
         return _messageLocationRange;
     }
 
@@ -369,16 +369,12 @@ namespace GSLanguageCompiler::IO {
 
             auto &source = optionalSource.value();
 
-            auto startLineColumnLocation = ToSourceLocation<GS_LineColumnSourceLocation>(startByteLocation,
-                                                                                         source);
-
             auto sourceName = source.GetName();
-            auto line = startLineColumnLocation.GetLine();
-            auto column = startLineColumnLocation.GetColumn();
+            auto [line, column, _] = ToLineColumnLocation(startByteLocation);
 
             UString lineCode;
 
-            for (auto iterator = source.GetIteratorByLocation(GS_LineColumnSourceLocation::Create(line, 1)); *iterator != '\n'; ++iterator) {
+            for (auto iterator = source.GetIteratorByLocation(ToByteLocation(line, 1, sourceHash)); *iterator != '\n'; ++iterator) {
                 lineCode += *iterator;
             }
 
