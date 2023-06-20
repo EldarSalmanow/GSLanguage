@@ -3,10 +3,6 @@ project(GSASTLibrary)
 set(AST_DIR ${SOURCE_DIR}/AST)
 
 set(GS_AST_SOURCE
-        ${AST_DIR}/GS_ASTContext.cpp
-
-        ${AST_DIR}/GS_ASTBuilder.cpp
-
         ${AST_DIR}/GS_Node.cpp
 
         ${AST_DIR}/GS_Declaration.cpp
@@ -29,7 +25,11 @@ set(GS_AST_SOURCE
 
         ${AST_DIR}/GS_Visitor.cpp
 
-        ${AST_DIR}/GS_Pass.cpp)
+        ${AST_DIR}/GS_Pass.cpp
+
+        ${AST_DIR}/GS_ASTContext.cpp
+
+        ${AST_DIR}/GS_ASTBuilder.cpp)
 
 add_library(
 #       Library name

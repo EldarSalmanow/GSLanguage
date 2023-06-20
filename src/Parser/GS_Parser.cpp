@@ -75,6 +75,19 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::NodePtr<AST::GS_FunctionDeclaration> GS_Parser::ParseFunctionDeclaration() {
+        UString functionName;
+        AST::GSFunctionParamArray params;
+        Semantic::GSTypePtr returnType;
+        AST::ExternType externType;
+
+        if (IsTokenType(Lexer::TokenType::KeywordExtern)) {
+            externType = AST::ExternType::Yes;
+
+            NextToken(); // skip 'extern'
+        } else {
+            externType = AST::ExternType::No;
+        }
+
         if (!IsTokenType(Lexer::TokenType::KeywordFunc)) {
             ErrorMessage("Missed keyword 'func' in function declaration!"_us);
 
@@ -89,7 +102,7 @@ namespace GSLanguageCompiler::Parser {
             return nullptr;
         }
 
-        auto functionName = TokenValue();
+        functionName = TokenValue();
 
         NextToken(); // skip function name
 
@@ -101,35 +114,75 @@ namespace GSLanguageCompiler::Parser {
 
         NextToken(); // skip '('
 
-        if (!IsTokenType(Lexer::TokenType::SymbolRightParen)) {
-            ErrorMessage("Missed symbol ')' in function declaration!"_us);
+        while (!IsTokenType(Lexer::TokenType::SymbolRightParen)) {
+            if (!IsTokenType(Lexer::TokenType::Identifier)) {
+                ErrorMessage("Invalid function param declaring in function declaration!");
 
-            return nullptr;
+                return nullptr;
+            }
+
+            auto name = TokenValue();
+
+            NextToken(); // skip param name
+
+            if (!IsTokenType(Lexer::TokenType::SymbolColon)) {
+                ErrorMessage("Missed ':' in function param type declaring in function declaration!");
+
+                return nullptr;
+            }
+
+            NextToken(); // skip ':'
+
+            auto type = ParseType();
+
+            auto param = _builder->CreateFunctionParam(name,
+                                                       type);
+
+            params.emplace_back(param);
+
+            if (!IsTokenType(Lexer::TokenType::SymbolRightParen)) {
+                if (!IsTokenType(Lexer::TokenType::SymbolComma)) {
+                    ErrorMessage("Missed ',' after function param or ')' in function declaration!");
+
+                    return nullptr;
+                }
+
+                NextToken(); // skip ','
+            }
         }
 
         NextToken(); // skip ')'
 
-        if (!IsTokenType(Lexer::TokenType::SymbolLeftBrace)) {
-            ErrorMessage("Missed symbol '{' in function declaration!"_us);
+        if (IsTokenType(Lexer::TokenType::SymbolColon)) {
+            NextToken(); // skip ':'
 
-            return nullptr;
+            returnType = ParseType();
+        } else {
+            returnType = nullptr;
         }
 
-        NextToken(); // skip '{'
+        auto functionQualifiers = _builder->CreateFunctionQualifiers(externType);
+        auto functionSignature = _builder->CreateFunctionSignature(params,
+                                                                   returnType,
+                                                                   functionQualifiers);
+        auto function = _builder->CreateFunctionDeclaration(functionName,
+                                                            functionSignature);
 
-        auto function = _builder->CreateFunctionDeclaration(functionName);
+        if (IsTokenType(Lexer::TokenType::SymbolLeftBrace)) {
+            NextToken(); // skip '{'
 
-        while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
-            auto statement = ParseStatement();
+            while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
+                auto statement = ParseStatement();
 
-            if (!statement) {
-                return nullptr;
+                if (!statement) {
+                    return nullptr;
+                }
+
+                function->AddStatement(statement);
             }
 
-            function->AddStatement(statement);
+            NextToken(); // skip '}'
         }
-
-        NextToken(); // skip '}'
 
         return function;
     }
@@ -439,6 +492,16 @@ namespace GSLanguageCompiler::Parser {
             auto param = ParseExpression();
 
             params.emplace_back(param);
+
+            if (!IsTokenType(Lexer::TokenType::SymbolRightParen)) {
+                if (!IsTokenType(Lexer::TokenType::SymbolComma)) {
+                    ErrorMessage("Missed ',' after function argument or ')' in function calling expression!");
+
+                    return nullptr;
+                }
+
+                NextToken(); // skip ','
+            }
         }
 
         NextToken(); // skip ')'
@@ -499,7 +562,13 @@ namespace GSLanguageCompiler::Parser {
     }
 
     AST::GSValuePtr GS_Parser::ParseValue() {
-        if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
+        if (IsTokenType(Lexer::TokenType::LiteralSymbol)) {
+            auto symbol = TokenValue()[0];
+
+            NextToken();
+
+            return _builder->CreateCharValue(symbol);
+        } else if (IsTokenType(Lexer::TokenType::LiteralNumber)) {
             auto number = std::stoi(TokenValue().AsUTF8());
 
             NextToken(); // skip number
@@ -560,8 +629,24 @@ namespace GSLanguageCompiler::Parser {
 
             if (stringVariableType == "Void"_us) {
                 variableType = _builder->CreateVoidType();
+            } else if (stringVariableType == "Char"_us) {
+                variableType = _builder->CreateCharType();
+            } else if (stringVariableType == "I8"_us) {
+                variableType = _builder->CreateI8Type();
+            } else if (stringVariableType == "I16"_us) {
+                variableType = _builder->CreateI16Type();
             } else if (stringVariableType == "I32"_us) {
                 variableType = _builder->CreateI32Type();
+            } else if (stringVariableType == "I64"_us) {
+                variableType = _builder->CreateI64Type();
+            } else if (stringVariableType == "U8"_us) {
+                variableType = _builder->CreateU8Type();
+            } else if (stringVariableType == "U16"_us) {
+                variableType = _builder->CreateU16Type();
+            } else if (stringVariableType == "U32"_us) {
+                variableType = _builder->CreateU32Type();
+            } else if (stringVariableType == "U64"_us) {
+                variableType = _builder->CreateU64Type();
             } else if (stringVariableType == "String"_us) {
                 variableType = _builder->CreateStringType();
             } else {

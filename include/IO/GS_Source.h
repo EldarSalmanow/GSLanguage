@@ -131,22 +131,31 @@ namespace GSLanguageCompiler::IO {
     };
 
     /**
+     * Declaring source for converting location functions
+     */
+    class GS_Source;
+
+    /**
      * Converting byte source location to line column source location
      * @param sourceLocation Byte source location
+     * @param source Source
      * @return Line column source location
      */
-    std::tuple<U64, U64, U64> ToLineColumnLocation(ConstLRef<GS_SourceLocation> sourceLocation);
+    std::tuple<U64, U64, U64> ToLineColumnLocation(ConstLRef<GS_SourceLocation> sourceLocation,
+                                                   ConstLRef<GS_Source> source);
 
     /**
      * Converting line column source location to byte source location
      * @param line Line
      * @param column Column
      * @param sourceHash Source hash
+     * @param source Source
      * @return Byte source location
      */
     GS_SourceLocation ToByteLocation(U64 line,
                                      U64 column,
-                                     U64 sourceHash);
+                                     U64 sourceHash,
+                                     ConstLRef<GS_Source> source);
 
     /**
      * Class for containing source location range
@@ -166,20 +175,7 @@ namespace GSLanguageCompiler::IO {
          * @param endLocation End source location
          */
         GS_SourceRange(GS_SourceLocation startLocation,
-                       GS_SourceLocation endLocation)
-                : _startLocation(startLocation),
-                  _endLocation(endLocation) {
-            if (_startLocation.GetSourceHash() != _endLocation.GetSourceHash()) {
-                Driver::GlobalContext().Exit("Can`t create source location range with different source hash in source locations!");
-            }
-
-            if (_startLocation.GetPosition() != InvalidPosition && _startLocation.GetSourceHash() != InvalidHash
-             && _endLocation.GetPosition() != InvalidPosition && _endLocation.GetSourceHash() != InvalidHash) {
-                if (_startLocation > _endLocation) {
-                    Driver::GlobalContext().Exit("Can`t create source range with start location \"bigger\" than end location!");
-                }
-            }
-        }
+                       GS_SourceLocation endLocation);
 
     public:
 
@@ -196,19 +192,13 @@ namespace GSLanguageCompiler::IO {
          * @return Source location range [startLocation..endLocation]
          */
         static GS_SourceRange Create(GS_SourceLocation startLocation,
-                                     GS_SourceLocation endLocation) {
-            return GS_SourceRange(startLocation,
-                                  endLocation);
-        }
+                                     GS_SourceLocation endLocation);
 
         /**
          * Creating invalid source location range
          * @return Source location range
          */
-        static GS_SourceRange Create() {
-            return GS_SourceRange::Create(GS_SourceLocation::Create(),
-                                          GS_SourceLocation::Create());
-        }
+        static GS_SourceRange Create();
 
     public:
 
@@ -222,17 +212,13 @@ namespace GSLanguageCompiler::IO {
          * Getter for start source location
          * @return Start source location
          */
-        GS_SourceLocation GetStartLocation() const {
-            return _startLocation;
-        }
+        GS_SourceLocation GetStartLocation() const;
 
         /**
          * Getter for end source location
          * @return End source location
          */
-        GS_SourceLocation GetEndLocation() const {
-            return _endLocation;
-        }
+        GS_SourceLocation GetEndLocation() const;
 
     public:
 
@@ -247,10 +233,7 @@ namespace GSLanguageCompiler::IO {
          * @param locationRange Source location range
          * @return Is equal source location ranges
          */
-        Bool operator==(ConstLRef<GS_SourceRange> locationRange) const {
-            return _startLocation == locationRange.GetStartLocation()
-                && _endLocation == locationRange.GetEndLocation();
-        }
+        Bool operator==(ConstLRef<GS_SourceRange> locationRange) const;
 
     private:
 
@@ -349,21 +332,7 @@ namespace GSLanguageCompiler::IO {
          * @param locationRange Source location range
          * @return Code in range [startLocation..endLocation)
          */
-        UString GetCodeInRange(ConstLRef<GS_SourceRange> locationRange) const {
-            auto startLocation = locationRange.GetStartLocation();
-            auto endLocation = locationRange.GetEndLocation();
-
-            auto startIterator = GetIteratorByLocation(startLocation);
-            auto endIterator = GetIteratorByLocation(endLocation);
-
-            UString code;
-
-            for (; startIterator != endIterator; ++startIterator) {
-                code += *startIterator;
-            }
-
-            return code;
-        }
+        UString GetCodeInRange(GS_SourceRange locationRange) const;
 
     public:
 
@@ -714,27 +683,21 @@ namespace GSLanguageCompiler::IO {
          * @param sourceLocation Source location
          * @return Source code iterator
          */
-        Iterator GetIteratorByLocation(GS_SourceLocation sourceLocation) {
-            return _buffer.GetIteratorByLocation(sourceLocation);
-        }
+        Iterator GetIteratorByLocation(GS_SourceLocation sourceLocation);
 
         /**
          * Getting source code const iterator by source location
          * @param sourceLocation Source location
          * @return Source code const iterator
          */
-        ConstIterator GetIteratorByLocation(GS_SourceLocation sourceLocation) const {
-            return _buffer.GetIteratorByLocation(sourceLocation);
-        }
+        ConstIterator GetIteratorByLocation(GS_SourceLocation sourceLocation) const;
 
         /**
          * Getting code from source in source location range
          * @param locationRange Source location range
          * @return Code in range [startLocation..endLocation)
          */
-        UString GetCodeInRange(GS_SourceRange locationRange) const {
-            return _buffer.GetCodeInRange(locationRange);
-        }
+        UString GetCodeInRange(GS_SourceRange locationRange) const;
 
     public:
 

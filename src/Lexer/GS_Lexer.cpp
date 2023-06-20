@@ -7,6 +7,8 @@ namespace GSLanguageCompiler::Lexer {
             return TokenType::KeywordVar;
         } else if (string == "func"_us) {
             return TokenType::KeywordFunc;
+        } else if (string == "extern"_us) {
+            return TokenType::KeywordExtern;
         }
 
         return TokenType::Unknown;

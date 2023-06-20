@@ -370,11 +370,11 @@ namespace GSLanguageCompiler::IO {
             auto &source = optionalSource.value();
 
             auto sourceName = source.GetName();
-            auto [line, column, _] = ToLineColumnLocation(startByteLocation);
+            auto [line, column, _] = ToLineColumnLocation(startByteLocation, source);
 
             UString lineCode;
 
-            for (auto iterator = source.GetIteratorByLocation(ToByteLocation(line, 1, sourceHash)); *iterator != '\n'; ++iterator) {
+            for (auto iterator = source.GetIteratorByLocation(ToByteLocation(line, 1, sourceHash, source)); *iterator != '\n'; ++iterator) {
                 lineCode += *iterator;
             }
 

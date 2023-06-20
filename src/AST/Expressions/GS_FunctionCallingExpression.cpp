@@ -3,22 +3,22 @@
 namespace GSLanguageCompiler::AST {
 
     GS_FunctionCallingExpression::GS_FunctionCallingExpression(UString name,
-                                                               GSExpressionPtrArray params)
+                                                               GSExpressionPtrArray arguments)
             : _name(std::move(name)),
-              _params(std::move(params)) {}
+              _arguments(std::move(arguments)) {}
 
     std::shared_ptr<GS_FunctionCallingExpression> GS_FunctionCallingExpression::Create(UString name,
-                                                                                       GSExpressionPtrArray params) {
+                                                                                       GSExpressionPtrArray arguments) {
         return std::make_shared<GS_FunctionCallingExpression>(std::move(name),
-                                                              std::move(params));
+                                                              std::move(arguments));
     }
 
     LRef<UString> GS_FunctionCallingExpression::GetName() {
         return _name;
     }
 
-    LRef<GSExpressionPtrArray> GS_FunctionCallingExpression::GetParams() {
-        return _params;
+    LRef<GSExpressionPtrArray> GS_FunctionCallingExpression::GetArguments() {
+        return _arguments;
     }
 
     ExpressionType GS_FunctionCallingExpression::GetExpressionType() const {

@@ -1,26 +1,27 @@
-Program
+**Program**
 
 program -> translation_unit_decl
 
 translation_unit_decl -> decl...
 
-Declaration
+**Declaration**
 
 decl -> func_decl (, translation_unit_decl (using only in compiler infrastructure, not in real programs!))
 
-func_decl -> 'func' id '(' ')' '{' stmt... '}'
+func_decl -> ('extern') 'func' id '(' (id ':' id)... ')' '{' stmt... '}'
 
-Statement
+**Statement**
 
 stmt -> var_decl_stmt, assignment_stmt, expr_stmt
 
-var_decl_stmt -> 'var' id (':' id) '=' rvalue_expr
+var_decl_stmt -> 'var' id (':' id) '=' rvalue_expr 
+               | 'var' id ':' id
 
 assignment_stmt -> lvalue_expr '=' rvalue_expr 
 
 expr_stmt -> expr
 
-Expression
+**Expression**
 
 expr -> paren_expr (only in grammar), const_expr, unary_expr, binary_expr, array_expr, var_using_expr, func_call_expr
 

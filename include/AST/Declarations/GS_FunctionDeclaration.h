@@ -6,7 +6,117 @@
 #include <AST/GS_Declaration.h>
 #include <AST/GS_Statement.h>
 
+#include <AST/GS_Qualifiers.h>
+
 namespace GSLanguageCompiler::AST {
+
+    /**
+     * Class for containing function qualifiers
+     */
+    class GS_FunctionQualifiers {
+    public:
+
+        /**
+         * Constructor for function qualifiers
+         * @param externType Extern type
+         */
+        explicit GS_FunctionQualifiers(ExternType externType);
+
+    public:
+
+        /**
+         * Creating function qualifiers
+         * @param externType Extern type
+         * @return Function qualifiers
+         */
+        static GS_FunctionQualifiers Create(ExternType externType);
+
+        /**
+         * Creating function qualifiers
+         * @return Function qualifiers
+         */
+        static GS_FunctionQualifiers Create();
+
+    public:
+
+        /**
+         * Has extern qualifier
+         * @return Has extern qualifier
+         */
+        Bool IsExtern() const;
+
+    public:
+
+        /**
+         * Getter for extern type
+         * @return Extern type
+         */
+        ExternType GetExternType() const;
+
+    private:
+
+        /**
+         * Extern type
+         */
+        ExternType _externType;
+    };
+
+    /**
+     * CLass for containing information about function param
+     */
+    class GS_FunctionParam {
+    public:
+
+        /**
+         * Constructor for function param
+         * @param name Name
+         * @param type Type
+         */
+        GS_FunctionParam(UString name,
+                         Semantic::GSTypePtr type);
+
+    public:
+
+        /**
+         * Creating function param
+         * @param name Name
+         * @param type Type
+         * @return Function param
+         */
+        static GS_FunctionParam Create(UString name,
+                                       Semantic::GSTypePtr type);
+
+    public:
+
+        /**
+         * Getter for name
+         * @return Name
+         */
+        ConstLRef<UString> GetName() const;
+
+        /**
+         * Getter for type
+         * @return Type
+         */
+        ConstLRef<Semantic::GSTypePtr> GetType() const;
+
+    private:
+
+        /**
+         * Name
+         */
+        UString _name;
+
+        /**
+         * Type
+         */
+        Semantic::GSTypePtr _type;
+    };
+
+    /**
+     * Function param array type
+     */
+    using GSFunctionParamArray = std::vector<GS_FunctionParam>;
 
     /**
      * Class for containing information about function signature
@@ -22,11 +132,13 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Constructor for function signature
-         * @param paramTypes Param types
+         * @param params Params
          * @param returnType Return type
+         * @param qualifiers Qualifiers
          */
-        GS_FunctionSignature(Semantic::GSTypePtrArray paramTypes,
-                             Semantic::GSTypePtr returnType);
+        GS_FunctionSignature(GSFunctionParamArray params,
+                             Semantic::GSTypePtr returnType,
+                             GS_FunctionQualifiers qualifiers);
 
     public:
 
@@ -38,19 +150,30 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Creating function signature
-         * @param paramTypes Param types
+         * @param params Params
+         * @param returnType Return type
+         * @param qualifiers Qualifiers
+         * @return Function signature
+         */
+        static GS_FunctionSignature Create(GSFunctionParamArray params,
+                                           Semantic::GSTypePtr returnType,
+                                           GS_FunctionQualifiers qualifiers);
+
+        /**
+         * Creating function signature
+         * @param params Params
          * @param returnType Return type
          * @return Function signature
          */
-        static GS_FunctionSignature Create(Semantic::GSTypePtrArray paramTypes,
+        static GS_FunctionSignature Create(GSFunctionParamArray params,
                                            Semantic::GSTypePtr returnType);
 
         /**
          * Creating function signature
-         * @param paramTypes Param types
+         * @param params Params
          * @return Function signature
          */
-        static GS_FunctionSignature Create(Semantic::GSTypePtrArray paramTypes);
+        static GS_FunctionSignature Create(GSFunctionParamArray params);
 
         /**
          * Creating function signature
@@ -74,16 +197,22 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Getter for param types
-         * @return Param types
+         * Getter for params
+         * @return Params
          */
-        ConstLRef<Semantic::GSTypePtrArray> GetParamTypes() const;
+        ConstLRef<GSFunctionParamArray> GetParams() const;
 
         /**
          * Getter for return type
          * @return Return type
          */
         ConstLRef<Semantic::GSTypePtr> GetReturnType() const;
+
+        /**
+         * Getter for qualifiers
+         * @return Qualifiers
+         */
+        ConstLRef<GS_FunctionQualifiers> GetQualifiers() const;
 
     private:
 
@@ -94,14 +223,19 @@ namespace GSLanguageCompiler::AST {
          */
 
         /**
-         * Param types
+         * Params
          */
-        Semantic::GSTypePtrArray _paramTypes;
+        GSFunctionParamArray _params;
 
         /**
          * Return type
          */
         Semantic::GSTypePtr _returnType;
+
+        /**
+         * Qualifiers
+         */
+        GS_FunctionQualifiers _qualifiers;
     };
 
     /**

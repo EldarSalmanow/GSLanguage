@@ -117,14 +117,36 @@ namespace GSLanguageCompiler::AST {
         return GS_TranslationUnitDeclaration::Create(std::move(name));
     }
 
-    GS_FunctionSignature GS_ASTBuilder::CreateFunctionSignature(Semantic::GSTypePtrArray paramTypes,
+    GS_FunctionQualifiers GS_ASTBuilder::CreateFunctionQualifiers(ExternType externType) {
+        return GS_FunctionQualifiers::Create(externType);
+    }
+
+    GS_FunctionQualifiers GS_ASTBuilder::CreateFunctionQualifiers() {
+        return GS_FunctionQualifiers::Create();
+    }
+
+    GS_FunctionParam GS_ASTBuilder::CreateFunctionParam(UString name,
+                                                        Semantic::GSTypePtr type) {
+        return GS_FunctionParam::Create(std::move(name),
+                                        std::move(type));
+    }
+
+    GS_FunctionSignature GS_ASTBuilder::CreateFunctionSignature(GSFunctionParamArray params,
+                                                                Semantic::GSTypePtr returnType,
+                                                                GS_FunctionQualifiers qualifiers) {
+        return GS_FunctionSignature::Create(std::move(params),
+                                            std::move(returnType),
+                                            qualifiers);
+    }
+
+    GS_FunctionSignature GS_ASTBuilder::CreateFunctionSignature(GSFunctionParamArray params,
                                                                 Semantic::GSTypePtr returnType) {
-        return GS_FunctionSignature::Create(std::move(paramTypes),
+        return GS_FunctionSignature::Create(std::move(params),
                                             std::move(returnType));
     }
 
-    GS_FunctionSignature GS_ASTBuilder::CreateFunctionSignature(Semantic::GSTypePtrArray paramTypes) {
-        return GS_FunctionSignature::Create(std::move(paramTypes));
+    GS_FunctionSignature GS_ASTBuilder::CreateFunctionSignature(GSFunctionParamArray params) {
+        return GS_FunctionSignature::Create(std::move(params));
     }
 
     GS_FunctionSignature GS_ASTBuilder::CreateFunctionSignature(Semantic::GSTypePtr returnType) {

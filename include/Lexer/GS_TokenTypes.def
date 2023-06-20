@@ -43,6 +43,11 @@ GS_TOKENTYPE(KeywordFunc),
 GS_TOKENTYPE(KeywordVar),
 
 /**
+ * Extern keyword ( extern )
+ */
+GS_TOKENTYPE(KeywordExtern),
+
+/**
  * Left paren symbol ( ( )
  */
 GS_TOKENTYPE(SymbolLeftParen),

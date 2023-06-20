@@ -11,14 +11,14 @@
  *
  * CMakeLists.txt                  - Pass
  * Optimizer.h                     - Pass
- * GS_Optimizer.h                  - Pass
  * Passes/OptimizingPasses.h       - Pass
  * Passes/GS_ConstantFoldingPass.h - Pass
+ * GS_Optimizer.h                  - Pass
  *
  */
 
-#include <Optimizer/GS_Optimizer.h>
-
 #include <Optimizer/Passes/OptimizingPasses.h>
+
+#include <Optimizer/GS_Optimizer.h>
 
 #endif //GSLANGUAGE_OPTIMIZER_H

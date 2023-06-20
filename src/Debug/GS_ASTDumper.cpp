@@ -47,13 +47,13 @@ namespace GSLanguageCompiler::Debug {
 
             auto signature = functionDeclaration->GetSignature();
 
-            auto paramTypes = signature.GetParamTypes();
+            auto paramTypes = signature.GetParams();
             auto returnType = signature.GetReturnType();
 
             auto signatureMessage = "Signature: ("_us;
 
             for (auto &paramType : paramTypes) {
-                signatureMessage += paramType->GetName() + " "_us;
+                signatureMessage += paramType.GetName() + " "_us;
             }
 
             signatureMessage += ") -> "_us + returnType->GetName();
@@ -323,7 +323,7 @@ namespace GSLanguageCompiler::Debug {
 
             IncTab();
 
-            for (auto &param : functionCallingExpression->GetParams()) {
+            for (auto &param : functionCallingExpression->GetArguments()) {
                 VisitExpression(session,
                                 param);
             }

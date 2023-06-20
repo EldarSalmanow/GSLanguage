@@ -10,6 +10,7 @@
  * AUDIT          - Pass
  *
  * CMakeLists.txt - Pass
+ * GRAMMAR.md     - Pass
  * Parser.h       - Pass
  * GS_Parser.h    - Pass
  *

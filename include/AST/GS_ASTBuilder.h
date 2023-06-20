@@ -236,20 +236,53 @@ namespace GSLanguageCompiler::AST {
         GSTranslationUnitDeclarationPtr CreateTranslationUnitDeclaration(UString name);
 
         /**
+         * Create function qualifiers
+         * @param externType Extern type
+         * @return Function qualifiers
+         */
+        GS_FunctionQualifiers CreateFunctionQualifiers(ExternType externType);
+
+        /**
+         * Create function qualifiers
+         * @return Function qualifiers
+         */
+        GS_FunctionQualifiers CreateFunctionQualifiers();
+
+        /**
+         * Create function param
+         * @param name Name
+         * @param type Type
+         * @return Function param
+         */
+        GS_FunctionParam CreateFunctionParam(UString name,
+                                             Semantic::GSTypePtr type);
+
+        /**
          * Create function signature
-         * @param paramTypes Param types
+         * @param params Params
+         * @param returnType Return type
+         * @param qualifiers Qualifiers
+         * @return Function signature
+         */
+        GS_FunctionSignature CreateFunctionSignature(GSFunctionParamArray params,
+                                                     Semantic::GSTypePtr returnType,
+                                                     GS_FunctionQualifiers qualifiers);
+
+        /**
+         * Create function signature
+         * @param params Params
          * @param returnType Return type
          * @return Function signature
          */
-        GS_FunctionSignature CreateFunctionSignature(Semantic::GSTypePtrArray paramTypes,
+        GS_FunctionSignature CreateFunctionSignature(GSFunctionParamArray params,
                                                      Semantic::GSTypePtr returnType);
 
         /**
          * Create function signature
-         * @param paramTypes Param types
+         * @param params Params
          * @return Function signature
          */
-        GS_FunctionSignature CreateFunctionSignature(Semantic::GSTypePtrArray paramTypes);
+        GS_FunctionSignature CreateFunctionSignature(GSFunctionParamArray params);
 
         /**
          * Create function signature

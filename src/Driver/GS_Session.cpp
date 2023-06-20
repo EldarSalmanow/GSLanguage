@@ -102,9 +102,9 @@ namespace GSLanguageCompiler::Driver {
             semanticAnalyzer->Analyze(translationUnitDeclaration);
             optimizer->Optimize(translationUnitDeclaration);
 
-            Debug::DumpAST(translationUnitDeclaration,
-                           *this);
-            Debug::DumpTableOfSymbols(*_tableOfSymbols);
+//            Debug::DumpAST(translationUnitDeclaration,
+//                           *this);
+//            Debug::DumpTableOfSymbols(*_tableOfSymbols);
 
             translationUnitDeclarations.emplace_back(translationUnitDeclaration);
         }

@@ -20,10 +20,10 @@ namespace GSLanguageCompiler::AST {
         /**
          * Constructor for function calling expression
          * @param name Function name
-         * @param params Function params
+         * @param arguments Function arguments
          */
         GS_FunctionCallingExpression(UString name,
-                                     GSExpressionPtrArray params);
+                                     GSExpressionPtrArray arguments);
 
     public:
 
@@ -36,11 +36,11 @@ namespace GSLanguageCompiler::AST {
         /**
          * Creating function calling expression
          * @param name Function name
-         * @param params Function params
+         * @param arguments Function arguments
          * @return Function calling expression ptr
          */
         static std::shared_ptr<GS_FunctionCallingExpression> Create(UString name,
-                                                                    GSExpressionPtrArray params);
+                                                                    GSExpressionPtrArray arguments);
 
     public:
 
@@ -57,10 +57,10 @@ namespace GSLanguageCompiler::AST {
         LRef<UString> GetName();
 
         /**
-         * Getter for params
-         * @return Params
+         * Getter for arguments
+         * @return Arguments
          */
-        LRef<GSExpressionPtrArray> GetParams();
+        LRef<GSExpressionPtrArray> GetArguments();
 
     public:
 
@@ -90,9 +90,9 @@ namespace GSLanguageCompiler::AST {
         UString _name;
 
         /**
-         * Params for calling function
+         * arguments for calling function
          */
-        GSExpressionPtrArray _params;
+        GSExpressionPtrArray _arguments;
     };
 
 }

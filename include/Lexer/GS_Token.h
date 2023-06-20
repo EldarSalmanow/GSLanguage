@@ -135,7 +135,7 @@ namespace GSLanguageCompiler::Lexer {
     };
 
     /**
-     * Token ptr array type
+     * Token array type
      */
     using GSTokenArray = std::vector<GS_Token>;
 
