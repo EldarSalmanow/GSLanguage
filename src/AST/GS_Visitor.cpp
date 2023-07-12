@@ -157,6 +157,54 @@ namespace GSLanguageCompiler::AST {
                         rvalueExpression);
     }
 
+    Void GS_Visitor::SuperIfStatement(LRef<Driver::GS_Session> session,
+                                      NodePtrLRef<GS_IfStatement> ifStatement) {
+        auto condition = ifStatement->GetCondition();
+        auto ifBody = ifStatement->GetIfBody();
+        auto elseBody = ifStatement->GetElseBody();
+
+        VisitExpression(session,
+                        condition);
+
+        for (auto &statement : ifBody) {
+            VisitStatement(session,
+                           statement);
+        }
+
+        for (auto &statement : elseBody) {
+            VisitStatement(session,
+                           statement);
+        }
+    }
+
+    Void GS_Visitor::SuperForStatement(LRef<Driver::GS_Session> session,
+                                       NodePtrLRef<GS_ForStatement> forStatement) {
+        auto expression = forStatement->GetExpression();
+        auto body = forStatement->GetBody();
+
+        VisitExpression(session,
+                        expression);
+
+        for (auto &statement : body) {
+            VisitStatement(session,
+                           statement);
+        }
+    }
+
+    Void GS_Visitor::SuperWhileStatement(LRef<Driver::GS_Session> session,
+                                         NodePtrLRef<GS_WhileStatement> whileStatement) {
+        auto condition = whileStatement->GetCondition();
+        auto body = whileStatement->GetBody();
+
+        VisitExpression(session,
+                        condition);
+
+        for (auto &statement : body) {
+            VisitStatement(session,
+                           statement);
+        }
+    }
+
     Void GS_Visitor::SuperExpressionStatement(LRef<Driver::GS_Session> session,
                                               NodePtrLRef<GS_ExpressionStatement> expressionStatement) {
         auto expression = expressionStatement->GetExpression();
@@ -255,6 +303,24 @@ namespace GSLanguageCompiler::AST {
                                               NodePtrLRef<GS_AssignmentStatement> assignmentStatement) {
         SuperAssignmentStatement(session,
                                  assignmentStatement);
+    }
+
+    Void GS_Visitor::VisitIfStatement(LRef<Driver::GS_Session> session,
+                                      NodePtrLRef<GS_IfStatement> ifStatement) {
+        SuperIfStatement(session,
+                         ifStatement);
+    }
+
+    Void GS_Visitor::VisitForStatement(LRef<Driver::GS_Session> session,
+                                       NodePtrLRef<GS_ForStatement> forStatement) {
+        SuperForStatement(session,
+                          forStatement);
+    }
+
+    Void GS_Visitor::VisitWhileStatement(LRef<Driver::GS_Session> session,
+                                         NodePtrLRef<GS_WhileStatement> whileStatement) {
+        SuperWhileStatement(session,
+                            whileStatement);
     }
 
     Void GS_Visitor::VisitExpressionStatement(LRef<Driver::GS_Session> session,
@@ -479,6 +545,74 @@ namespace GSLanguageCompiler::AST {
         return assignmentStatement;
     }
 
+    GSNodePtr GS_Transformer::SuperIfStatement(LRef<Driver::GS_Session> session,
+                                               NodePtrLRef<GS_IfStatement> ifStatement) {
+        auto &condition = ifStatement->GetCondition();
+        auto &ifBody = ifStatement->GetIfBody();
+        auto &elseBody = ifStatement->GetElseBody();
+
+        auto transformedCondition = ToExpression(TransformExpression(session,
+                                                                     condition));
+
+        condition.swap(transformedCondition);
+
+        for (auto &statement : ifBody) {
+            auto transformedStatement = ToStatement(TransformStatement(session,
+                                                                       statement));
+
+            statement.swap(transformedStatement);
+        }
+
+        for (auto &statement : elseBody) {
+            auto transformedStatement = ToStatement(TransformStatement(session,
+                                                                       statement));
+
+            statement.swap(transformedStatement);
+        }
+
+        return ifStatement;
+    }
+
+    GSNodePtr GS_Transformer::SuperForStatement(LRef<Driver::GS_Session> session,
+                                                NodePtrLRef<GS_ForStatement> forStatement) {
+        auto &expression = forStatement->GetExpression();
+        auto &body = forStatement->GetBody();
+
+        auto transformedExpression = ToExpression(TransformExpression(session,
+                                                                      expression));
+
+        expression.swap(transformedExpression);
+
+        for (auto &statement : body) {
+            auto transformedStatement = ToStatement(TransformStatement(session,
+                                                                       statement));
+
+            statement.swap(transformedStatement);
+        }
+
+        return forStatement;
+    }
+
+    GSNodePtr GS_Transformer::SuperWhileStatement(LRef<Driver::GS_Session> session,
+                                                  NodePtrLRef<GS_WhileStatement> whileStatement) {
+        auto &condition = whileStatement->GetCondition();
+        auto &body = whileStatement->GetBody();
+
+        auto transformedCondition = ToExpression(TransformExpression(session,
+                                                                     condition));
+
+        condition.swap(transformedCondition);
+
+        for (auto &statement : body) {
+            auto transformedStatement = ToStatement(TransformStatement(session,
+                                                                       statement));
+
+            statement.swap(transformedStatement);
+        }
+
+        return whileStatement;
+    }
+
     GSNodePtr GS_Transformer::SuperExpressionStatement(LRef<Driver::GS_Session> session,
                                                        NodePtrLRef<GS_ExpressionStatement> expressionStatement) {
         auto &expression = expressionStatement->GetExpression();
@@ -594,6 +728,24 @@ namespace GSLanguageCompiler::AST {
                                                            NodePtrLRef<GS_AssignmentStatement> assignmentStatement) {
         return SuperAssignmentStatement(session,
                                         assignmentStatement);
+    }
+
+    GSNodePtr GS_Transformer::TransformIfStatement(LRef<Driver::GS_Session> session,
+                                                   NodePtrLRef<GS_IfStatement> ifStatement) {
+        return SuperIfStatement(session,
+                                ifStatement);
+    }
+
+    GSNodePtr GS_Transformer::TransformForStatement(LRef<Driver::GS_Session> session,
+                                                    NodePtrLRef<GS_ForStatement> forStatement) {
+        return SuperForStatement(session,
+                                 forStatement);
+    }
+
+    GSNodePtr GS_Transformer::TransformWhileStatement(LRef<Driver::GS_Session> session,
+                                                      NodePtrLRef<GS_WhileStatement> whileStatement) {
+        return SuperWhileStatement(session,
+                                   whileStatement);
     }
 
     GSNodePtr GS_Transformer::TransformExpressionStatement(LRef<Driver::GS_Session> session,

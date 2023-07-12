@@ -2,18 +2,6 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    inline TokenType ReservedWordType(ConstLRef<UString> string) {
-        if (string == "var"_us) {
-            return TokenType::KeywordVar;
-        } else if (string == "func"_us) {
-            return TokenType::KeywordFunc;
-        } else if (string == "extern"_us) {
-            return TokenType::KeywordExtern;
-        }
-
-        return TokenType::Unknown;
-    }
-
     inline TokenType ReservedSymbolType(ConstLRef<USymbol> symbol) {
         if (symbol == '(') {
             return TokenType::SymbolLeftParen;
@@ -39,6 +27,20 @@ namespace GSLanguageCompiler::Lexer {
             return TokenType::SymbolStar;
         } else if (symbol == '/') {
             return TokenType::SymbolSlash;
+        } else if (symbol == '%') {
+            return TokenType::SymbolPercent;
+        } else if (symbol == '&') {
+            return TokenType::SymbolAnd;
+        } else if (symbol == '|') {
+            return TokenType::SymbolOr;
+        } else if (symbol == '^') {
+            return TokenType::SymbolCaret;
+        } else if (symbol == '>') {
+            return TokenType::SymbolGt;
+        } else if (symbol == '<') {
+            return TokenType::SymbolLt;
+        } else if (symbol == '!') {
+            return TokenType::SymbolNot;
         } else if (symbol == '=') {
             return TokenType::SymbolEq;
         }
@@ -110,48 +112,6 @@ namespace GSLanguageCompiler::Lexer {
         if (symbol.IsWhitespace()) {
             // tokenizing whitespace
 
-            return TokenizeWhitespace();
-        } else if (symbol.IsIDStart()) {
-            // tokenizing word
-
-            return TokenizeWord();
-        } else if (ReservedSymbolType(symbol) != TokenType::Unknown) {
-            // tokenizing reserved symbol
-
-            return TokenizeReservedSymbol();
-        } else if (symbol.IsDigit()) {
-            // tokenizing digit literal
-
-            return TokenizeDigit();
-        } else if (symbol == '\'') {
-            // tokenizing symbol literal
-
-            return TokenizeSymbol();
-        } else if (symbol == '\"') {
-            // tokenizing string literal
-
-            return TokenizeString();
-        } else if (_sourceIterator == _source.cend()) {
-            // end of file
-
-            return GS_Token::Create(TokenType::EndOfFile,
-                                    IO::GS_SourceRange::Create(CurrentLocation(),
-                                                               CurrentLocation()));
-        }
-
-        // unknown symbol
-
-        _messageQueue << _session.ErrorMessage()
-                                 .Text("Unknown symbol '"_us + symbol + "'!"_us)
-                                 .Message();
-
-        return GS_Token::Create(TokenType::Unknown,
-                                IO::GS_SourceRange::Create(CurrentLocation(),
-                                                           CurrentLocation()));
-    }
-
-    GS_Token GS_Lexer::TokenizeWhitespace() {
-        if (CurrentSymbol().IsWhitespace()) {
             auto startPosition = CurrentLocation(),
                  endPosition = CurrentLocation();
 
@@ -160,13 +120,9 @@ namespace GSLanguageCompiler::Lexer {
             return GS_Token::Create(TokenType::SymbolSpace,
                                     IO::GS_SourceRange::Create(startPosition,
                                                                endPosition));
-        }
+        } else if (symbol.IsIDStart()) {
+            // tokenizing word
 
-        return GS_Token::Create();
-    }
-
-    GS_Token GS_Lexer::TokenizeWord() {
-        if (CurrentSymbol().IsIDStart()) {
             UString string;
 
             auto startPosition = CurrentLocation(),
@@ -184,40 +140,146 @@ namespace GSLanguageCompiler::Lexer {
                 }
             }
 
-            if (ReservedWordType(string) != TokenType::Unknown) {
-                return GS_Token::Create(ReservedWordType(string),
+            TokenType tokenType = TokenType::Identifier;
+
+            if (string == "func") {
+                tokenType = TokenType::KeywordFunc;
+            } else if (string == "var") {
+                tokenType = TokenType::KeywordVar;
+            } else if (string == "if") {
+                tokenType = TokenType::KeywordIf;
+            } else if (string == "for") {
+                tokenType = TokenType::KeywordFor;
+            } else if (string == "while") {
+                tokenType = TokenType::KeywordWhile;
+            } else if (string == "extern") {
+                tokenType = TokenType::KeywordExtern;
+            }
+
+            if (tokenType == TokenType::Identifier) {
+                return GS_Token::Create(TokenType::Identifier,
+                                        string,
                                         IO::GS_SourceRange::Create(startPosition,
                                                                    endPosition));
             }
 
-            return GS_Token::Create(TokenType::Identifier,
-                                    string,
+            return GS_Token::Create(tokenType,
                                     IO::GS_SourceRange::Create(startPosition,
                                                                endPosition));
-        }
+        } else if (ReservedSymbolType(symbol) != TokenType::Unknown) {
+            // tokenizing reserved symbol
 
-        return GS_Token::Create();
-    }
-
-    GS_Token GS_Lexer::TokenizeReservedSymbol() {
-        if (ReservedSymbolType(CurrentSymbol()) != TokenType::Unknown) {
             auto startPosition = CurrentLocation(),
                  endPosition = CurrentLocation();
 
-            auto type = ReservedSymbolType(CurrentSymbol());
-
             NextSymbol();
+
+            auto type = TokenType::Unknown;
+
+            if (symbol == '(') {
+                type = TokenType::SymbolLeftParen;
+            } else if (symbol == ')') {
+                type = TokenType::SymbolRightParen;
+            } else if (symbol == '{') {
+                type = TokenType::SymbolLeftBrace;
+            } else if (symbol == '}') {
+                type = TokenType::SymbolRightBrace;
+            } else if (symbol == '[') {
+                type = TokenType::SymbolLeftBracket;
+            } else if (symbol == ']') {
+                type = TokenType::SymbolRightBracket;
+            } else if (symbol == ':') {
+                type = TokenType::SymbolColon;
+            } else if (symbol == ',') {
+                type = TokenType::SymbolComma;
+            } else if (symbol == '+') {
+                type = TokenType::SymbolPlus;
+            } else if (symbol == '-') {
+                type = TokenType::SymbolMinus;
+            } else if (symbol == '*') {
+                type = TokenType::SymbolStar;
+            } else if (symbol == '/') {
+                type = TokenType::SymbolSlash;
+            } else if (symbol == '%') {
+                type = TokenType::SymbolPercent;
+            } else if (symbol == '&') {
+                NextSymbol();
+
+                if (CurrentSymbol() == '&') {
+                    type = TokenType::SymbolAndAnd;
+
+                    endPosition = CurrentLocation();
+                } else {
+                    type = TokenType::SymbolAnd;
+                }
+            } else if (symbol == '|') {
+                NextSymbol();
+
+                if (CurrentSymbol() == '|') {
+                    type = TokenType::SymbolOrOr;
+
+                    endPosition = CurrentLocation();
+                } else {
+                    type = TokenType::SymbolOr;
+                }
+            } else if (symbol == '^') {
+                type = TokenType::SymbolCaret;
+            } else if (symbol == '>') {
+                NextSymbol();
+
+                if (CurrentSymbol() == '>') {
+                    type = TokenType::SymbolGtGt;
+
+                    endPosition = CurrentLocation();
+                } else if (CurrentSymbol() == '=') {
+                    type = TokenType::SymbolGtEq;
+
+                    endPosition = CurrentLocation();
+                } else {
+                    type = TokenType::SymbolGt;
+                }
+            } else if (symbol == '<') {
+                NextSymbol();
+
+                if (CurrentSymbol() == '<') {
+                    type = TokenType::SymbolLtLt;
+
+                    endPosition = CurrentLocation();
+                } else if (CurrentSymbol() == '=') {
+                    type = TokenType::SymbolLtEq;
+
+                    endPosition = CurrentLocation();
+                } else {
+                    type = TokenType::SymbolLt;
+                }
+            } else if (symbol == '!') {
+                NextSymbol();
+
+                if (CurrentSymbol() == '=') {
+                    type = TokenType::SymbolNotEq;
+
+                    endPosition = CurrentLocation();
+                } else {
+                    type = TokenType::SymbolNot;
+                }
+            } else if (symbol == '=') {
+                NextSymbol();
+
+                if (CurrentSymbol() == '=') {
+                    type = TokenType::SymbolEqEq;
+
+                    endPosition = CurrentLocation();
+                } else {
+                    type = TokenType::SymbolEq;
+                }
+            }
 
             return GS_Token::Create(type,
                                     IO::GS_SourceRange::Create(startPosition,
                                                                endPosition));
-        }
+        } else if (symbol.IsDigit()) {
+            // tokenizing digit literal
 
-        return GS_Token::Create();
-    }
-
-    GS_Token GS_Lexer::TokenizeDigit() {
-        if (CurrentSymbol().IsDigit()) {
             UString string;
 
             auto startPosition = CurrentLocation(),
@@ -239,13 +301,9 @@ namespace GSLanguageCompiler::Lexer {
                                     string,
                                     IO::GS_SourceRange::Create(startPosition,
                                                                endPosition));
-        }
+        } else if (symbol == '\'') {
+            // tokenizing symbol literal
 
-        return GS_Token::Create();
-    }
-
-    GS_Token GS_Lexer::TokenizeSymbol() {
-        if (CurrentSymbol() == '\'') {
             UString string;
 
             auto startPosition = CurrentLocation(),
@@ -269,13 +327,9 @@ namespace GSLanguageCompiler::Lexer {
                                     string,
                                     IO::GS_SourceRange::Create(startPosition,
                                                                endPosition));
-        }
+        } else if (symbol == '\"') {
+            // tokenizing string literal
 
-        return GS_Token::Create();
-    }
-
-    GS_Token GS_Lexer::TokenizeString() {
-        if (CurrentSymbol() == '\"') {
             UString string;
 
             auto startPosition = CurrentLocation(),
@@ -301,9 +355,23 @@ namespace GSLanguageCompiler::Lexer {
                                     string,
                                     IO::GS_SourceRange::Create(startPosition,
                                                                endPosition));
+        } else if (_sourceIterator == _source.cend()) {
+            // end of file
+
+            return GS_Token::Create(TokenType::EndOfFile,
+                                    IO::GS_SourceRange::Create(CurrentLocation(),
+                                                               CurrentLocation()));
         }
 
-        return GS_Token::Create();
+        // unknown symbol
+
+        _messageQueue << _session.ErrorMessage()
+                                 .Text("Unknown symbol '"_us + symbol + "'!"_us)
+                                 .Message();
+
+        return GS_Token::Create(TokenType::Unknown,
+                                IO::GS_SourceRange::Create(CurrentLocation(),
+                                                           CurrentLocation()));
     }
 
     USymbol GS_Lexer::CurrentSymbol() {

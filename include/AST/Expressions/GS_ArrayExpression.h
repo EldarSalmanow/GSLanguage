@@ -6,7 +6,7 @@
 namespace GSLanguageCompiler::AST {
 
     /**
-     * Class for array expressions
+     * Class for array expression in language grammar
      */
     class GS_ArrayExpression : public GS_Expression {
     public:

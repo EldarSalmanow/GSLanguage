@@ -2,7 +2,8 @@
 
 namespace GSLanguageCompiler::Semantic {
 
-    GS_SemanticAnalyzer::GS_SemanticAnalyzer(LRef<Driver::GS_Session> session, AST::GSPassPtrArray semanticPasses)
+    GS_SemanticAnalyzer::GS_SemanticAnalyzer(LRef<Driver::GS_Session> session,
+                                             AST::GSPassPtrArray semanticPasses)
             : _session(session),
               _semanticPasses(std::move(semanticPasses)) {}
 

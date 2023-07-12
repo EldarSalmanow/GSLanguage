@@ -13,6 +13,12 @@ namespace GSLanguageCompiler::Parser {
     class GS_Parser {
     public:
 
+        /*
+         *
+         * GS_Parser PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for parser
          * @param session Session
@@ -22,6 +28,12 @@ namespace GSLanguageCompiler::Parser {
                   ConstLRef<Lexer::GS_TokenBuffer> tokenBuffer);
 
     public:
+
+        /*
+         *
+         * GS_Parser PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating parser
@@ -33,6 +45,12 @@ namespace GSLanguageCompiler::Parser {
                                 ConstLRef<Lexer::GS_TokenBuffer> tokenBuffer);
 
     public:
+
+        /*
+         *
+         * GS_Parser PUBLIC STATIC METHODS
+         *
+         */
 
         /**
          * Creating parser and parsing tokens
@@ -47,6 +65,12 @@ namespace GSLanguageCompiler::Parser {
 
     public:
 
+        /*
+         *
+         * GS_Parser PUBLIC METHODS
+         *
+         */
+
         /**
          * Parsing program
          * @param programName Program name
@@ -55,6 +79,12 @@ namespace GSLanguageCompiler::Parser {
         AST::GSTranslationUnitDeclarationPtr ParseProgram(UString programName);
 
     private:
+
+        /*
+         *
+         * GS_Parser PRIVATE METHODS
+         *
+         */
 
         /**
          * Parsing translation unit declaration
@@ -92,6 +122,24 @@ namespace GSLanguageCompiler::Parser {
          * @return Assignment statement
          */
         AST::NodePtr<AST::GS_AssignmentStatement> ParseAssignmentStatement();
+
+        /**
+         * Parsing if statement
+         * @return If statement
+         */
+        AST::NodePtr<AST::GS_IfStatement> ParseIfStatement();
+
+        /**
+         * Parsing for statement
+         * @return For statement
+         */
+        AST::NodePtr<AST::GS_ForStatement> ParseForStatement();
+
+        /**
+         * Parsing while statement
+         * @return While statement
+         */
+        AST::NodePtr<AST::GS_WhileStatement> ParseWhileStatement();
 
         /**
          * Parsing expression statement
@@ -256,6 +304,12 @@ namespace GSLanguageCompiler::Parser {
         Void ErrorMessage(UString messageText);
 
     private:
+
+        /*
+         *
+         * GS_Parser PRIVATE FIELDS
+         *
+         */
 
         /**
          * Session

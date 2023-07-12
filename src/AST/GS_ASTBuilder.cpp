@@ -17,6 +17,10 @@ namespace GSLanguageCompiler::AST {
         return _context.GetVoidType();
     }
 
+    Semantic::TypePtr<Semantic::GS_BoolType> GS_ASTBuilder::CreateBoolType() {
+        return _context.GetBoolType();
+    }
+
     Semantic::TypePtr<Semantic::GS_CharType> GS_ASTBuilder::CreateCharType() {
         return _context.GetCharType();
     }
@@ -67,44 +71,48 @@ namespace GSLanguageCompiler::AST {
         return GS_Value::Create(std::move(type));
     }
 
-    ValuePtr<GS_CharValue> GS_ASTBuilder::CreateCharValue(USymbol symbol) {
-        return GS_CharValue::Create(std::move(symbol));
+    ValuePtr<GS_BoolValue> GS_ASTBuilder::CreateBoolValue(Bool value) {
+        return GS_BoolValue::Create(value);
     }
 
-    ValuePtr<GS_I8Value> GS_ASTBuilder::CreateI8Value(I8 number) {
-        return GS_I8Value::Create(number);
+    ValuePtr<GS_CharValue> GS_ASTBuilder::CreateCharValue(USymbol value) {
+        return GS_CharValue::Create(std::move(value));
     }
 
-    ValuePtr<GS_I16Value> GS_ASTBuilder::CreateI16Value(I16 number) {
-        return GS_I16Value::Create(number);
+    ValuePtr<GS_I8Value> GS_ASTBuilder::CreateI8Value(I8 value) {
+        return GS_I8Value::Create(value);
     }
 
-    ValuePtr<GS_I32Value> GS_ASTBuilder::CreateI32Value(I32 number) {
-        return GS_I32Value::Create(number);
+    ValuePtr<GS_I16Value> GS_ASTBuilder::CreateI16Value(I16 value) {
+        return GS_I16Value::Create(value);
     }
 
-    ValuePtr<GS_I64Value> GS_ASTBuilder::CreateI64Value(I64 number) {
-        return GS_I64Value::Create(number);
+    ValuePtr<GS_I32Value> GS_ASTBuilder::CreateI32Value(I32 value) {
+        return GS_I32Value::Create(value);
     }
 
-    ValuePtr<GS_U8Value> GS_ASTBuilder::CreateU8Value(U8 number) {
-        return GS_U8Value::Create(number);
+    ValuePtr<GS_I64Value> GS_ASTBuilder::CreateI64Value(I64 value) {
+        return GS_I64Value::Create(value);
     }
 
-    ValuePtr<GS_U16Value> GS_ASTBuilder::CreateU16Value(U16 number) {
-        return GS_U16Value::Create(number);
+    ValuePtr<GS_U8Value> GS_ASTBuilder::CreateU8Value(U8 value) {
+        return GS_U8Value::Create(value);
     }
 
-    ValuePtr<GS_U32Value> GS_ASTBuilder::CreateU32Value(U32 number) {
-        return GS_U32Value::Create(number);
+    ValuePtr<GS_U16Value> GS_ASTBuilder::CreateU16Value(U16 value) {
+        return GS_U16Value::Create(value);
     }
 
-    ValuePtr<GS_U64Value> GS_ASTBuilder::CreateU64Value(U64 number) {
-        return GS_U64Value::Create(number);
+    ValuePtr<GS_U32Value> GS_ASTBuilder::CreateU32Value(U32 value) {
+        return GS_U32Value::Create(value);
     }
 
-    ValuePtr<GS_StringValue> GS_ASTBuilder::CreateStringValue(UString string) {
-        return GS_StringValue::Create(std::move(string));
+    ValuePtr<GS_U64Value> GS_ASTBuilder::CreateU64Value(U64 value) {
+        return GS_U64Value::Create(value);
+    }
+
+    ValuePtr<GS_StringValue> GS_ASTBuilder::CreateStringValue(UString value) {
+        return GS_StringValue::Create(std::move(value));
     }
 
     GSTranslationUnitDeclarationPtr GS_ASTBuilder::CreateTranslationUnitDeclaration(UString name,
@@ -207,6 +215,48 @@ namespace GSLanguageCompiler::AST {
                                               std::move(rvalueExpression));
     }
 
+    NodePtr<GS_IfStatement> GS_ASTBuilder::CreateIfStatement(GSExpressionPtr condition,
+                                                             GSStatementPtrArray ifBody,
+                                                             GSStatementPtrArray elseBody) {
+        return GS_IfStatement::Create(std::move(condition),
+                                      std::move(ifBody),
+                                      std::move(elseBody));
+    }
+
+    NodePtr<GS_IfStatement> GS_ASTBuilder::CreateIfStatement(GSExpressionPtr condition,
+                                                             GSStatementPtrArray ifBody) {
+        return GS_IfStatement::Create(std::move(condition),
+                                      std::move(ifBody));
+    }
+
+    NodePtr<GS_IfStatement> GS_ASTBuilder::CreateIfStatement(GSExpressionPtr condition) {
+        return GS_IfStatement::Create(std::move(condition));
+    }
+
+    NodePtr<GS_ForStatement> GS_ASTBuilder::CreateForStatement(UString name,
+                                                               GSExpressionPtr expression,
+                                                               GSStatementPtrArray body) {
+        return GS_ForStatement::Create(std::move(name),
+                                       std::move(expression),
+                                       std::move(body));
+    }
+
+    NodePtr<GS_ForStatement> GS_ASTBuilder::CreateForStatement(UString name,
+                                                               GSExpressionPtr expression) {
+        return GS_ForStatement::Create(std::move(name),
+                                       std::move(expression));
+    }
+
+    NodePtr<GS_WhileStatement> GS_ASTBuilder::CreateWhileStatement(GSExpressionPtr condition,
+                                                                   GSStatementPtrArray body) {
+        return GS_WhileStatement::Create(std::move(condition),
+                                         std::move(body));
+    }
+
+    NodePtr<GS_WhileStatement> GS_ASTBuilder::CreateWhileStatement(GSExpressionPtr condition) {
+        return GS_WhileStatement::Create(std::move(condition));
+    }
+
     NodePtr<GS_ExpressionStatement> GS_ASTBuilder::CreateExpressionStatement(GSExpressionPtr expression) {
         return GS_ExpressionStatement::Create(std::move(expression));
     }
@@ -215,44 +265,48 @@ namespace GSLanguageCompiler::AST {
         return GS_ConstantExpression::Create(std::move(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(USymbol symbol) {
-        return CreateConstantExpression(CreateCharValue(std::move(symbol)));
+    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(Bool value) {
+        return CreateConstantExpression(CreateBoolValue(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(I8 number) {
-        return CreateConstantExpression(CreateI8Value(number));
+    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(USymbol value) {
+        return CreateConstantExpression(CreateCharValue(std::move(value)));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(I16 number) {
-        return CreateConstantExpression(CreateI16Value(number));
+    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(I8 value) {
+        return CreateConstantExpression(CreateI8Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(I32 number) {
-        return CreateConstantExpression(CreateI32Value(number));
+    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(I16 value) {
+        return CreateConstantExpression(CreateI16Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(I64 number) {
-        return CreateConstantExpression(CreateI64Value(number));
+    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(I32 value) {
+        return CreateConstantExpression(CreateI32Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(U8 number) {
-        return CreateConstantExpression(CreateU8Value(number));
+    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(I64 value) {
+        return CreateConstantExpression(CreateI64Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(U16 number) {
-        return CreateConstantExpression(CreateU16Value(number));
+    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(U8 value) {
+        return CreateConstantExpression(CreateU8Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(U32 number) {
-        return CreateConstantExpression(CreateU32Value(number));
+    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(U16 value) {
+        return CreateConstantExpression(CreateU16Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(U64 number) {
-        return CreateConstantExpression(CreateU64Value(number));
+    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(U32 value) {
+        return CreateConstantExpression(CreateU32Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(UString string) {
-        return CreateConstantExpression(CreateStringValue(std::move(string)));
+    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(U64 value) {
+        return CreateConstantExpression(CreateU64Value(value));
+    }
+
+    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(UString value) {
+        return CreateConstantExpression(CreateStringValue(std::move(value)));
     }
 
     NodePtr<GS_UnaryExpression> GS_ASTBuilder::CreateUnaryExpression(UnaryOperation operation,

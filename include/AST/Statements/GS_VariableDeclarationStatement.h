@@ -9,7 +9,7 @@
 namespace GSLanguageCompiler::AST {
 
     /**
-     * Class for variable declarations in language
+     * Class for variable declaration statement in language grammar
      */
     class GS_VariableDeclarationStatement : public GS_Statement {
     public:

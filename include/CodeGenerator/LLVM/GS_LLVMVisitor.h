@@ -96,6 +96,33 @@ namespace GSLanguageCompiler::CodeGenerator {
                                                      AST::NodePtrLRef<AST::GS_AssignmentStatement> assignmentStatement);
 
         /**
+         * Generate if statement
+         * @param session Session
+         * @param ifStatement If statement
+         * @return Generated if statement
+         */
+        Ptr<llvm::Value> GenerateIfStatement(LRef<Driver::GS_Session> session,
+                                             AST::NodePtrLRef<AST::GS_IfStatement> ifStatement);
+
+        /**
+         * Generate for statement
+         * @param session Session
+         * @param forStatement statement
+         * @return Generated for statement
+         */
+        Ptr<llvm::Value> GenerateForStatement(LRef<Driver::GS_Session> session,
+                                              AST::NodePtrLRef<AST::GS_ForStatement> forStatement);
+
+        /**
+         * Generate while statement
+         * @param session Session
+         * @param whileStatement While statement
+         * @return Generated while statement
+         */
+        Ptr<llvm::Value> GenerateWhileStatement(LRef<Driver::GS_Session> session,
+                                                AST::NodePtrLRef<AST::GS_WhileStatement> whileStatement);
+
+        /**
          * Generate expression statement
          * @param session Session
          * @param expressionStatement Expression statement

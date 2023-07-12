@@ -7,7 +7,7 @@
 namespace GSLanguageCompiler::AST {
 
     /**
-     * Class for containing expression in statement
+     * Class for expression statement in language grammar
      */
     class GS_ExpressionStatement : public GS_Statement {
     public:

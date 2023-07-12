@@ -5,10 +5,35 @@
 namespace GSLanguageCompiler::Parser {
 
     std::map<Lexer::TokenType, I32> OperatorsPrecedence = {
-            {Lexer::TokenType::SymbolStar,  2},
-            {Lexer::TokenType::SymbolSlash, 2},
-            {Lexer::TokenType::SymbolPlus,  1},
-            {Lexer::TokenType::SymbolMinus, 1}
+            {Lexer::TokenType::SymbolStar,    10},
+            {Lexer::TokenType::SymbolSlash,   10},
+            {Lexer::TokenType::SymbolPercent, 10},
+
+            {Lexer::TokenType::SymbolPlus,    9},
+            {Lexer::TokenType::SymbolMinus,   9},
+
+            {Lexer::TokenType::SymbolLtLt,    8},
+            {Lexer::TokenType::SymbolGtGt,    8},
+
+            {Lexer::TokenType::SymbolAnd,     7},
+
+            {Lexer::TokenType::SymbolCaret,   6},
+
+            {Lexer::TokenType::SymbolOr,      5},
+
+            {Lexer::TokenType::SymbolGtGt,    4},
+            {Lexer::TokenType::SymbolGtGt,    4},
+
+            {Lexer::TokenType::SymbolEqEq,    3},
+            {Lexer::TokenType::SymbolNotEq,   3},
+            {Lexer::TokenType::SymbolGt,      3},
+            {Lexer::TokenType::SymbolGtEq,    3},
+            {Lexer::TokenType::SymbolLt,      3},
+            {Lexer::TokenType::SymbolLtEq,    3},
+
+            {Lexer::TokenType::SymbolAndAnd,  2},
+
+            {Lexer::TokenType::SymbolOrOr,    1}
     };
 
     GS_Parser::GS_Parser(LRef<Driver::GS_Session> session,
@@ -281,6 +306,88 @@ namespace GSLanguageCompiler::Parser {
         return assignmentStatement;
     }
 
+    AST::NodePtr<AST::GS_IfStatement> GS_Parser::ParseIfStatement() {
+        if (!IsTokenType(Lexer::TokenType::KeywordIf)) {
+            ErrorMessage("");
+
+            return nullptr;
+        }
+
+        NextToken(); // skip 'if'
+
+        auto condition = ParseExpression();
+
+        auto ifStatement = _builder->CreateIfStatement(condition);
+
+        if (!IsTokenType(Lexer::TokenType::SymbolLeftBrace)) {
+            ErrorMessage("");
+
+            return nullptr;
+        }
+
+        NextToken(); // skip '{'
+
+        while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
+            auto statement = ParseStatement();
+
+            if (!statement) {
+                return nullptr;
+            }
+
+            ifStatement->AddIfStatement(statement);
+        }
+
+        NextToken(); // skip '}'
+
+        return ifStatement;
+    }
+
+    AST::NodePtr<AST::GS_ForStatement> GS_Parser::ParseForStatement() {
+        if (!IsTokenType(Lexer::TokenType::KeywordFor)) {
+            ErrorMessage("");
+
+            return nullptr;
+        }
+
+        return nullptr;
+    }
+
+    AST::NodePtr<AST::GS_WhileStatement> GS_Parser::ParseWhileStatement() {
+        if (!IsTokenType(Lexer::TokenType::KeywordWhile)) {
+            ErrorMessage("");
+
+            return nullptr;
+        }
+
+        NextToken(); // skip 'while'
+
+        auto condition = ParseExpression();
+
+        auto whileStatement = _builder->CreateWhileStatement(condition);
+
+        if (!IsTokenType(Lexer::TokenType::SymbolLeftBrace)) {
+            ErrorMessage("");
+
+            return nullptr;
+        }
+
+        NextToken(); // skip '{'
+
+        while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
+            auto statement = ParseStatement();
+
+            if (!statement) {
+                return nullptr;
+            }
+
+            whileStatement->AddStatement(statement);
+        }
+
+        NextToken(); // skip '}'
+
+        return whileStatement;
+    }
+
     AST::NodePtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement() {
         auto expression = ParseExpression();
 
@@ -361,7 +468,14 @@ namespace GSLanguageCompiler::Parser {
 
             auto expression = ParsePrimaryExpression();
 
-            return _builder->CreateUnaryExpression(AST::UnaryOperation::Minus,
+            return _builder->CreateUnaryExpression(AST::UnaryOperation::Neg,
+                                                   expression);
+        } else if (IsTokenType(Lexer::TokenType::SymbolNot)) {
+            NextToken(); // skip '!'
+
+            auto expression = ParsePrimaryExpression();
+
+            return _builder->CreateUnaryExpression(AST::UnaryOperation::Not,
                                                    expression);
         }
 
@@ -383,19 +497,75 @@ namespace GSLanguageCompiler::Parser {
 
             switch (tokenType) {
                 case Lexer::TokenType::SymbolPlus:
-                    binaryOperator = AST::BinaryOperation::Plus;
+                    binaryOperator = AST::BinaryOperation::Add;
 
                     break;
                 case Lexer::TokenType::SymbolMinus:
-                    binaryOperator = AST::BinaryOperation::Minus;
+                    binaryOperator = AST::BinaryOperation::Sub;
 
                     break;
                 case Lexer::TokenType::SymbolStar:
-                    binaryOperator = AST::BinaryOperation::Star;
+                    binaryOperator = AST::BinaryOperation::Mul;
 
                     break;
                 case Lexer::TokenType::SymbolSlash:
-                    binaryOperator = AST::BinaryOperation::Slash;
+                    binaryOperator = AST::BinaryOperation::Div;
+
+                    break;
+                case Lexer::TokenType::SymbolPercent:
+                    binaryOperator = AST::BinaryOperation::Rem;
+
+                    break;
+                case Lexer::TokenType::SymbolAndAnd:
+                    binaryOperator = AST::BinaryOperation::And;
+
+                    break;
+                case Lexer::TokenType::SymbolOrOr:
+                    binaryOperator = AST::BinaryOperation::Or;
+
+                    break;
+                case Lexer::TokenType::SymbolCaret:
+                    binaryOperator = AST::BinaryOperation::BitXor;
+
+                    break;
+                case Lexer::TokenType::SymbolAnd:
+                    binaryOperator = AST::BinaryOperation::BitAnd;
+
+                    break;
+                case Lexer::TokenType::SymbolOr:
+                    binaryOperator = AST::BinaryOperation::BitOr;
+
+                    break;
+                case Lexer::TokenType::SymbolLtLt:
+                    binaryOperator = AST::BinaryOperation::Shl;
+
+                    break;
+                case Lexer::TokenType::SymbolGtGt:
+                    binaryOperator = AST::BinaryOperation::Shr;
+
+                    break;
+                case Lexer::TokenType::SymbolEqEq:
+                    binaryOperator = AST::BinaryOperation::Eq;
+
+                    break;
+                case Lexer::TokenType::SymbolNotEq:
+                    binaryOperator = AST::BinaryOperation::Ne;
+
+                    break;
+                case Lexer::TokenType::SymbolGt:
+                    binaryOperator = AST::BinaryOperation::Gt;
+
+                    break;
+                case Lexer::TokenType::SymbolGtEq:
+                    binaryOperator = AST::BinaryOperation::Ge;
+
+                    break;
+                case Lexer::TokenType::SymbolLt:
+                    binaryOperator = AST::BinaryOperation::Lt;
+
+                    break;
+                case Lexer::TokenType::SymbolLtEq:
+                    binaryOperator = AST::BinaryOperation::Le;
 
                     break;
                 default:

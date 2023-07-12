@@ -12,6 +12,8 @@
 
 #include <rang.hpp>
 
+#include <Driver/GS_GlobalContext.h>
+
 #include <GS_Message.h>
 
 namespace GSLanguageCompiler::IO {
@@ -132,11 +134,15 @@ namespace GSLanguageCompiler::IO {
         return _messages[index];
     }
 
-    GS_MessageQueue::GS_MessageQueue()
-            : _messages() {}
+    GS_MessageQueue::GS_MessageQueue(GSMessageArray messages)
+            : _messages(std::move(messages)) {}
+
+    GS_MessageQueue GS_MessageQueue::Create(GSMessageArray messages) {
+        return GS_MessageQueue(std::move(messages));
+    }
 
     GS_MessageQueue GS_MessageQueue::Create() {
-        return GS_MessageQueue();
+        return GS_MessageQueue::Create(GSMessageArray());
     }
 
     ConstLRef<GS_Message> GS_MessageQueue::AddMessage(GS_Message message) {
@@ -157,7 +163,7 @@ namespace GSLanguageCompiler::IO {
         Clear();
     }
 
-    ConstLRef<std::deque<GS_Message>> GS_MessageQueue::GetMessages() const {
+    ConstLRef<GSMessageArray> GS_MessageQueue::GetMessages() const {
         return _messages;
     }
 

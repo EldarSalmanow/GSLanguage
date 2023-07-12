@@ -61,6 +61,12 @@ namespace GSLanguageCompiler::AST {
         Semantic::TypePtr<Semantic::GS_VoidType> GetVoidType() const;
 
         /**
+         * Getter for default Bool type
+         * @return Bool type
+         */
+        Semantic::TypePtr<Semantic::GS_BoolType> GetBoolType() const;
+
+        /**
          * Getter for default Char type
          * @return Char type
          */

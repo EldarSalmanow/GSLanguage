@@ -1,5 +1,7 @@
 #include <fstream>
 
+#include <Driver/GS_GlobalContext.h>
+
 #include <GS_Reader.h>
 
 #include <GS_Source.h>
@@ -358,10 +360,18 @@ namespace GSLanguageCompiler::IO {
     }
 
     std::unique_ptr<GS_Source> GS_Source::CreateFile(UString name) {
-        std::ifstream fileStream(name.AsUTF8());
+        auto movedName = std::move(name);
+
+        std::ifstream fileStream(movedName.AsUTF8());
 
         if (!fileStream.is_open()) {
-            Driver::GlobalContext().Exit();
+            UStringStream stringStream;
+
+            stringStream << "Can`t open file with name '"_us
+                         << movedName
+                         << "'!"_us;
+
+            Driver::GlobalContext().Exit(stringStream.String());
         }
 
         auto reader = IO::GS_Reader::Create(fileStream);
@@ -369,7 +379,7 @@ namespace GSLanguageCompiler::IO {
         auto source = reader.Read();
 
         return GS_Source::Create(GS_SourceBuffer::Create(source),
-                                 GS_SourceName::CreateFile(std::move(name)));
+                                 GS_SourceName::CreateFile(std::move(movedName)));
     }
 
     std::unique_ptr<GS_Source> GS_Source::CreateString(UString source) {

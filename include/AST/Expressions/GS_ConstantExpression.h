@@ -228,6 +228,54 @@ namespace GSLanguageCompiler::AST {
     };
 
     /**
+     * Bool value
+     */
+    class GS_BoolValue : public GS_LiteralValue {
+    public:
+
+        /*
+         *
+         * GS_BoolValue PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
+         * Constructor for Bool value
+         * @param value Bool value
+         */
+        explicit GS_BoolValue(Bool value);
+
+    public:
+
+        /*
+         *
+         * GS_BoolValue PUBLIC STATIC CREATE METHODS
+         *
+         */
+
+        /**
+         * Creating Bool value
+         * @param value Bool value
+         * @return Bool value ptr
+         */
+        static std::shared_ptr<GS_BoolValue> Create(Bool value);
+
+    public:
+
+        /*
+         *
+         * GS_BoolValue PUBLIC METHODS
+         *
+         */
+
+        /**
+         * Getting Bool value
+         * @return Bool value
+         */
+        Bool GetBoolValue() const;
+    };
+
+    /**
      * Char value
      */
     class GS_CharValue : public GS_LiteralValue {
@@ -241,9 +289,9 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Constructor for Char value
-         * @param symbol Char value
+         * @param value Char value
          */
-        explicit GS_CharValue(USymbol symbol);
+        explicit GS_CharValue(USymbol value);
 
     public:
 
@@ -255,10 +303,10 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Creating Char value
-         * @param symbol Char value
+         * @param value Char value
          * @return Char value ptr
          */
-        static std::shared_ptr<GS_CharValue> Create(USymbol symbol);
+        static std::shared_ptr<GS_CharValue> Create(USymbol value);
 
     public:
 
@@ -855,8 +903,8 @@ namespace GSLanguageCompiler::AST {
         auto type = value->GetType();
         auto typeType = type->GetType();
 
-        // TODO
-        if constexpr (std::is_same_v<GS_LiteralValue, ValueT>) {
+        if constexpr (std::is_same_v<GS_LiteralValue, ValueT>
+                   && value->IsLiteralValue()) {
             return std::reinterpret_pointer_cast<ValueT>(value);
         }
 
@@ -981,7 +1029,7 @@ namespace GSLanguageCompiler::AST {
     }
 
     /**
-     * Class for all constants in language grammar
+     * Class for constant expression in language grammar
      */
     class GS_ConstantExpression : public GS_Expression {
     public:

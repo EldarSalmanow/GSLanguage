@@ -11,6 +11,9 @@ namespace GSLanguageCompiler::AST {
     enum class StatementType {
         VariableDeclarationStatement,
         AssignmentStatement,
+        IfStatement,
+        ForStatement,
+        WhileStatement,
         ExpressionStatement
     };
 
@@ -82,6 +85,9 @@ namespace GSLanguageCompiler::AST {
      */
     class GS_VariableDeclarationStatement;
     class GS_AssignmentStatement;
+    class GS_IfStatement;
+    class GS_ForStatement;
+    class GS_WhileStatement;
     class GS_ExpressionStatement;
 
     /**
@@ -113,6 +119,27 @@ namespace GSLanguageCompiler::AST {
             }
             case StatementType::AssignmentStatement: {
                 if constexpr (!std::is_same_v<GS_AssignmentStatement, StatementT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case StatementType::IfStatement: {
+                if constexpr (!std::is_same_v<GS_IfStatement, StatementT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case StatementType::ForStatement: {
+                if constexpr (!std::is_same_v<GS_ForStatement, StatementT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case StatementType::WhileStatement: {
+                if constexpr (!std::is_same_v<GS_WhileStatement, StatementT>) {
                     return nullptr;
                 }
 

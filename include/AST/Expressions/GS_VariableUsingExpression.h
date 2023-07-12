@@ -8,7 +8,7 @@
 namespace GSLanguageCompiler::AST {
 
     /**
-     * Class for variable using in language grammar
+     * Class for variable using expression in language grammar
      */
     class GS_VariableUsingExpression : public GS_Expression {
     public:

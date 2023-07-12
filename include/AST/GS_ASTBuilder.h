@@ -6,6 +6,9 @@
 
 #include <AST/Statements/GS_VariableDeclarationStatement.h>
 #include <AST/Statements/GS_AssignmentStatement.h>
+#include <AST/Statements/GS_IfStatement.h>
+#include <AST/Statements/GS_ForStatement.h>
+#include <AST/Statements/GS_WhileStatement.h>
 #include <AST/Statements/GS_ExpressionStatement.h>
 
 #include <AST/Expressions/GS_ConstantExpression.h>
@@ -72,6 +75,12 @@ namespace GSLanguageCompiler::AST {
          * @return Void type
          */
         Semantic::TypePtr<Semantic::GS_VoidType> CreateVoidType();
+
+        /**
+         * Create Bool type
+         * @return Bool type
+         */
+        Semantic::TypePtr<Semantic::GS_BoolType> CreateBoolType();
 
         /**
          * Create Char type
@@ -150,74 +159,81 @@ namespace GSLanguageCompiler::AST {
         GSValuePtr CreateValue(Semantic::GSTypePtr type);
 
         /**
+         * Create Bool value
+         * @param value Bool value
+         * @return Bool value
+         */
+        ValuePtr<GS_BoolValue> CreateBoolValue(Bool value);
+
+        /**
          * Create Char value
-         * @param symbol Symbol
+         * @param value Char value
          * @return Char value
          */
-        ValuePtr<GS_CharValue> CreateCharValue(USymbol symbol);
+        ValuePtr<GS_CharValue> CreateCharValue(USymbol value);
 
         /**
          * Create I8 value
-         * @param number Number
+         * @param value I8 value
          * @return I8 value
          */
-        ValuePtr<GS_I8Value> CreateI8Value(I8 number);
+        ValuePtr<GS_I8Value> CreateI8Value(I8 value);
 
         /**
          * Create I16 value
-         * @param number Number
+         * @param value I16 value
          * @return I16 value
          */
-        ValuePtr<GS_I16Value> CreateI16Value(I16 number);
+        ValuePtr<GS_I16Value> CreateI16Value(I16 value);
 
         /**
          * Create I32 value
-         * @param number Number
+         * @param value I32 value
          * @return I32 value
          */
-        ValuePtr<GS_I32Value> CreateI32Value(I32 number);
+        ValuePtr<GS_I32Value> CreateI32Value(I32 value);
 
         /**
          * Create I64 value
-         * @param number Number
+         * @param value I64 value
          * @return I64 value
          */
-        ValuePtr<GS_I64Value> CreateI64Value(I64 number);
+        ValuePtr<GS_I64Value> CreateI64Value(I64 value);
 
         /**
          * Create U8 value
-         * @param number Number
+         * @param value U8 value
          * @return U8 value
          */
-        ValuePtr<GS_U8Value> CreateU8Value(U8 number);
+        ValuePtr<GS_U8Value> CreateU8Value(U8 value);
 
         /**
          * Create U16 value
-         * @param number Number
+         * @param value U16 value
          * @return U16 value
          */
-        ValuePtr<GS_U16Value> CreateU16Value(U16 number);
+        ValuePtr<GS_U16Value> CreateU16Value(U16 value);
 
         /**
          * Create U32 value
-         * @param number Number
+         * @param value U32 value
          * @return U32 value
          */
-        ValuePtr<GS_U32Value> CreateU32Value(U32 number);
+        ValuePtr<GS_U32Value> CreateU32Value(U32 value);
 
         /**
          * Create U64 value
-         * @param number Number
+         * @param value U64 value
          * @return U64 value
          */
-        ValuePtr<GS_U64Value> CreateU64Value(U64 number);
+        ValuePtr<GS_U64Value> CreateU64Value(U64 value);
 
         /**
          * Create String value
-         * @param string String
+         * @param value String value
          * @return String value
          */
-        ValuePtr<GS_StringValue> CreateStringValue(UString string);
+        ValuePtr<GS_StringValue> CreateStringValue(UString value);
 
         /**
          * Create translation unit declaration
@@ -372,6 +388,69 @@ namespace GSLanguageCompiler::AST {
                                                                   GSExpressionPtr rvalueExpression);
 
         /**
+         * Create if statement
+         * @param condition Condition
+         * @param ifBody If body
+         * @param elseBody Else body
+         * @return If statement
+         */
+        NodePtr<GS_IfStatement> CreateIfStatement(GSExpressionPtr condition,
+                                                  GSStatementPtrArray ifBody,
+                                                  GSStatementPtrArray elseBody);
+
+        /**
+         * Create if statement
+         * @param condition Condition
+         * @param ifBody If body
+         * @return If statement
+         */
+        NodePtr<GS_IfStatement> CreateIfStatement(GSExpressionPtr condition,
+                                                  GSStatementPtrArray ifBody);
+
+        /**
+         * Create if statement
+         * @param condition Condition
+         * @return If statement
+         */
+        NodePtr<GS_IfStatement> CreateIfStatement(GSExpressionPtr condition);
+
+        /**
+         * Create for statement
+         * @param name Name
+         * @param expression Expression
+         * @param body Body
+         * @return For statement
+         */
+        NodePtr<GS_ForStatement> CreateForStatement(UString name,
+                                                    GSExpressionPtr expression,
+                                                    GSStatementPtrArray body);
+
+        /**
+         * Create for statement
+         * @param name Name
+         * @param expression Expression
+         * @return For statement
+         */
+        NodePtr<GS_ForStatement> CreateForStatement(UString name,
+                                                    GSExpressionPtr expression);
+
+        /**
+         * Create while statement
+         * @param condition Condition
+         * @param body Body
+         * @return While statement
+         */
+        NodePtr<GS_WhileStatement> CreateWhileStatement(GSExpressionPtr condition,
+                                                        GSStatementPtrArray body);
+
+        /**
+         * Create while statement
+         * @param condition Condition
+         * @return While statement
+         */
+        NodePtr<GS_WhileStatement> CreateWhileStatement(GSExpressionPtr condition);
+
+        /**
          * Create expression statement
          * @param expression Expression
          * @return Expression statement
@@ -387,73 +466,80 @@ namespace GSLanguageCompiler::AST {
 
         /**
          * Create constant expression
-         * @param symbol Symbol
+         * @param value Bool value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(USymbol symbol);
+        NodePtr<GS_ConstantExpression> CreateConstantExpression(Bool value);
 
         /**
          * Create constant expression
-         * @param number Number
+         * @param value Char value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(I8 number);
+        NodePtr<GS_ConstantExpression> CreateConstantExpression(USymbol value);
 
         /**
          * Create constant expression
-         * @param number Number
+         * @param value I8 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(I16 number);
+        NodePtr<GS_ConstantExpression> CreateConstantExpression(I8 value);
 
         /**
          * Create constant expression
-         * @param number Number
+         * @param value I16 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(I32 number);
+        NodePtr<GS_ConstantExpression> CreateConstantExpression(I16 value);
 
         /**
          * Create constant expression
-         * @param number Number
+         * @param value I32 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(I64 number);
+        NodePtr<GS_ConstantExpression> CreateConstantExpression(I32 value);
 
         /**
          * Create constant expression
-         * @param number Number
+         * @param value I64 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(U8 number);
+        NodePtr<GS_ConstantExpression> CreateConstantExpression(I64 value);
 
         /**
          * Create constant expression
-         * @param number Number
+         * @param value U8 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(U16 number);
+        NodePtr<GS_ConstantExpression> CreateConstantExpression(U8 value);
 
         /**
          * Create constant expression
-         * @param number Number
+         * @param value U16 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(U32 number);
+        NodePtr<GS_ConstantExpression> CreateConstantExpression(U16 value);
 
         /**
          * Create constant expression
-         * @param number Number
+         * @param value U32 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(U64 number);
+        NodePtr<GS_ConstantExpression> CreateConstantExpression(U32 value);
 
         /**
          * Create constant expression
-         * @param string String
+         * @param value U64 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(UString string);
+        NodePtr<GS_ConstantExpression> CreateConstantExpression(U64 value);
+
+        /**
+         * Create constant expression
+         * @param value String value
+         * @return Constant expression
+         */
+        NodePtr<GS_ConstantExpression> CreateConstantExpression(UString value);
 
         /**
          * Create unary expression

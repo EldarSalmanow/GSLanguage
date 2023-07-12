@@ -239,7 +239,7 @@ namespace GSLanguageCompiler::AST {
     };
 
     /**
-     * Class for function declarations in language
+     * Class for function declaration in language grammar
      */
     class GS_FunctionDeclaration : public GS_Declaration {
     public:
@@ -320,7 +320,7 @@ namespace GSLanguageCompiler::AST {
         LRef<GSStatementPtr> AddStatement(GSStatementPtr statement);
 
         /**
-         * Creating and adding new statement to body and return it
+         * Creating and adding new statement to function body and return it
          * @tparam StatementT Type of statement for creating
          * @tparam StatementArgs Argument types for creating statement
          * @param args Arguments for creating statement

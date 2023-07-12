@@ -9,14 +9,31 @@ namespace GSLanguageCompiler::AST {
      * Supported binary operations
      */
     enum class BinaryOperation {
-        Plus,
-        Minus,
-        Star,
-        Slash
+        Add,    // +
+        Sub,    // -
+        Mul,    // *
+        Div,    // /
+        Rem,    // %
+
+        And,    // &&
+        Or,     // ||
+
+        BitXor, // ^
+        BitAnd, // &
+        BitOr,  // |
+        Shl,    // <<
+        Shr,    // >>
+
+        Eq,     // ==
+        Ne,     // !=
+        Gt,     // >
+        Ge,     // >=
+        Lt,     // <
+        Le      // <=
     };
 
     /**
-     * Class for binary expressions in language grammar
+     * Class for binary expression in language grammar
      */
     class GS_BinaryExpression : public GS_Expression {
     public:

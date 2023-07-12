@@ -6,7 +6,7 @@
 namespace GSLanguageCompiler::AST {
 
     /**
-     * Class for translation units
+     * Class for translation unit in language grammar
      */
     class GS_TranslationUnitDeclaration : public GS_Declaration {
     public:

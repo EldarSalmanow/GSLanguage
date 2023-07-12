@@ -6,8 +6,10 @@
 
 namespace GSLanguageCompiler::AST {
 
+    // TODO add compound assignment statement
+
     /**
-     * Class for all assignments in language grammar
+     * Class for assignment statement in language grammar
      */
     class GS_AssignmentStatement : public GS_Statement {
     public:

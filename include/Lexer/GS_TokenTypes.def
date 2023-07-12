@@ -43,6 +43,21 @@ GS_TOKENTYPE(KeywordFunc),
 GS_TOKENTYPE(KeywordVar),
 
 /**
+ * If keyword ( if )
+ */
+GS_TOKENTYPE(KeywordIf),
+
+/**
+ * For keyword ( for )
+ */
+GS_TOKENTYPE(KeywordFor),
+
+/**
+ * While keyword ( while )
+ */
+GS_TOKENTYPE(KeywordWhile),
+
+/**
  * Extern keyword ( extern )
  */
 GS_TOKENTYPE(KeywordExtern),
@@ -106,6 +121,81 @@ GS_TOKENTYPE(SymbolStar),
  * Slash symbol ( / )
  */
 GS_TOKENTYPE(SymbolSlash),
+
+/**
+ * Percent symbol ( % )
+ */
+GS_TOKENTYPE(SymbolPercent),
+
+/**
+ * And and (logic and) symbol ( && )
+ */
+GS_TOKENTYPE(SymbolAndAnd),
+
+/**
+ * Or or (logical or) symbol ( || )
+ */
+GS_TOKENTYPE(SymbolOrOr),
+
+/**
+ * And (bitwise and) symbol ( & )
+ */
+GS_TOKENTYPE(SymbolAnd),
+
+/**
+ * Or (bitwise or) symbol ( | )
+ */
+GS_TOKENTYPE(SymbolOr),
+
+/**
+ * Caret symbol ( ^ )
+ */
+GS_TOKENTYPE(SymbolCaret),
+
+/**
+ * Gt gt (right shift) symbol ( >> )
+ */
+GS_TOKENTYPE(SymbolGtGt),
+
+/**
+ * Lt lt (left shift) symbol ( << )
+ */
+GS_TOKENTYPE(SymbolLtLt),
+
+/**
+ * Gt (greater than) symbol ( > )
+ */
+GS_TOKENTYPE(SymbolGt),
+
+/**
+ * Gt eq (greater than or equals) symbol ( >= )
+ */
+GS_TOKENTYPE(SymbolGtEq),
+
+/**
+ * Lt (less than) symbol ( < )
+ */
+GS_TOKENTYPE(SymbolLt),
+
+/**
+ * Lt eq (less than or equals) symbol ( <= )
+ */
+GS_TOKENTYPE(SymbolLtEq),
+
+/**
+ * Not symbol ( ! )
+ */
+GS_TOKENTYPE(SymbolNot),
+
+/**
+ * Eq eq symbol (equals) symbol ( == )
+ */
+GS_TOKENTYPE(SymbolEqEq),
+
+/**
+ * Not eq (not equals) symbol ( != )
+ */
+GS_TOKENTYPE(SymbolNotEq),
 
 /**
  * Eq symbol ( = )

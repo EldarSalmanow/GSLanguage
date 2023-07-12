@@ -9,11 +9,13 @@ namespace GSLanguageCompiler::AST {
      * Supported unary operations
      */
     enum class UnaryOperation {
-        Minus
+        Neg, // -
+
+        Not  // !
     };
 
     /**
-     * Class for unary expressions in language grammar
+     * Class for unary expression in language grammar
      */
     class GS_UnaryExpression : public GS_Expression {
     public:

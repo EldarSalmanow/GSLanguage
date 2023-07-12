@@ -6,6 +6,9 @@
 
 #include <AST/Statements/GS_VariableDeclarationStatement.h>
 #include <AST/Statements/GS_AssignmentStatement.h>
+#include <AST/Statements/GS_IfStatement.h>
+#include <AST/Statements/GS_ForStatement.h>
+#include <AST/Statements/GS_WhileStatement.h>
 #include <AST/Statements/GS_ExpressionStatement.h>
 
 #include <AST/Expressions/GS_ConstantExpression.h>
@@ -124,6 +127,33 @@ namespace GSLanguageCompiler {
              */
             Void SuperAssignmentStatement(LRef<Driver::GS_Session> session,
                                           NodePtrLRef<GS_AssignmentStatement> assignmentStatement);
+
+            /**
+             * Default visit if statement
+             * @param session Session
+             * @param ifStatement If statement
+             * @return Void return
+             */
+            Void SuperIfStatement(LRef<Driver::GS_Session> session,
+                                  NodePtrLRef<GS_IfStatement> ifStatement);
+
+            /**
+             * Default visit for statement
+             * @param session Session
+             * @param forStatement For statement
+             * @return Void return
+             */
+            Void SuperForStatement(LRef<Driver::GS_Session> session,
+                                   NodePtrLRef<GS_ForStatement> forStatement);
+
+            /**
+             * Default visit while statement
+             * @param session Session
+             * @param whileStatement While statement
+             * @return Void return
+             */
+            Void SuperWhileStatement(LRef<Driver::GS_Session> session,
+                                     NodePtrLRef<GS_WhileStatement> whileStatement);
 
             /**
              * Default visit expression statement
@@ -267,6 +297,33 @@ namespace GSLanguageCompiler {
              */
             virtual Void VisitAssignmentStatement(LRef<Driver::GS_Session> session,
                                                   NodePtrLRef<GS_AssignmentStatement> assignmentStatement);
+
+            /**
+             * Visit if statement
+             * @param session Session
+             * @param ifStatement If statement
+             * @return Void return
+             */
+            virtual Void VisitIfStatement(LRef<Driver::GS_Session> session,
+                                          NodePtrLRef<GS_IfStatement> ifStatement);
+
+            /**
+             * Visit for statement
+             * @param session Session
+             * @param forStatement For statement
+             * @return Void return
+             */
+            virtual Void VisitForStatement(LRef<Driver::GS_Session> session,
+                                           NodePtrLRef<GS_ForStatement> forStatement);
+
+            /**
+             * Visit while statement
+             * @param session Session
+             * @param whileStatement While statement
+             * @return Void return
+             */
+            virtual Void VisitWhileStatement(LRef<Driver::GS_Session> session,
+                                             NodePtrLRef<GS_WhileStatement> whileStatement);
 
             /**
              * Visit expression statement
@@ -430,6 +487,33 @@ namespace GSLanguageCompiler {
                                                NodePtrLRef<GS_AssignmentStatement> assignmentStatement);
 
             /**
+             * Default transform if statement
+             * @param session Session
+             * @param ifStatement If statement
+             * @return Transformed if statement
+             */
+            GSNodePtr SuperIfStatement(LRef<Driver::GS_Session> session,
+                                       NodePtrLRef<GS_IfStatement> ifStatement);
+
+            /**
+             * Default transform for statement
+             * @param session Session
+             * @param forStatement For statement
+             * @return Transformed for statement
+             */
+            GSNodePtr SuperForStatement(LRef<Driver::GS_Session> session,
+                                        NodePtrLRef<GS_ForStatement> forStatement);
+
+            /**
+             * Default transform while statement
+             * @param session Session
+             * @param whileStatement While statement
+             * @return Transformed while statement
+             */
+            GSNodePtr SuperWhileStatement(LRef<Driver::GS_Session> session,
+                                          NodePtrLRef<GS_WhileStatement> whileStatement);
+
+            /**
              * Default transform expression statement
              * @param session Session
              * @param expressionStatement Expression statement
@@ -571,6 +655,33 @@ namespace GSLanguageCompiler {
              */
             virtual GSNodePtr TransformAssignmentStatement(LRef<Driver::GS_Session> session,
                                                            NodePtrLRef<GS_AssignmentStatement> assignmentStatement);
+
+            /**
+             * Transform if statement
+             * @param session Session
+             * @param ifStatement If statement
+             * @return Transformed if statement
+             */
+            virtual GSNodePtr TransformIfStatement(LRef<Driver::GS_Session> session,
+                                                   NodePtrLRef<GS_IfStatement> ifStatement);
+
+            /**
+             * Transform for statement
+             * @param session Session
+             * @param forStatement For statement
+             * @return Transformed for statement
+             */
+            virtual GSNodePtr TransformForStatement(LRef<Driver::GS_Session> session,
+                                                    NodePtrLRef<GS_ForStatement> forStatement);
+
+            /**
+             * Transform while statement
+             * @param session Session
+             * @param whileStatement While statement
+             * @return Transformed while statement
+             */
+            virtual GSNodePtr TransformWhileStatement(LRef<Driver::GS_Session> session,
+                                                      NodePtrLRef<GS_WhileStatement> whileStatement);
 
             /**
              * Transform expression statement

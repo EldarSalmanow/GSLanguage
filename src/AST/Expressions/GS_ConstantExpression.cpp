@@ -27,12 +27,24 @@ namespace GSLanguageCompiler::AST {
         return true;
     }
 
-    GS_CharValue::GS_CharValue(USymbol symbol)
-            : GS_LiteralValue(std::move(symbol),
+    GS_BoolValue::GS_BoolValue(Bool value)
+            : GS_LiteralValue(value,
+                              Semantic::GS_BoolType::Create()) {}
+
+    std::shared_ptr<GS_BoolValue> GS_BoolValue::Create(Bool value) {
+        return std::make_shared<GS_BoolValue>(value);
+    }
+
+    Bool GS_BoolValue::GetBoolValue() const {
+        return GetValueWithCast<Bool>();
+    }
+
+    GS_CharValue::GS_CharValue(USymbol value)
+            : GS_LiteralValue(std::move(value),
                               Semantic::GS_CharType::Create()) {}
 
-    std::shared_ptr<GS_CharValue> GS_CharValue::Create(USymbol symbol) {
-        return std::make_shared<GS_CharValue>(std::move(symbol));
+    std::shared_ptr<GS_CharValue> GS_CharValue::Create(USymbol value) {
+        return std::make_shared<GS_CharValue>(std::move(value));
     }
 
     USymbol GS_CharValue::GetCharValue() const {

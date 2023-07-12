@@ -5,7 +5,7 @@
 
 #include <optional>
 
-#include <Driver/GS_GlobalContext.h>
+#include <GSCrossPlatform/CrossPlatform.h>
 
 namespace GSLanguageCompiler::IO {
 
@@ -593,7 +593,7 @@ namespace GSLanguageCompiler::IO {
     };
 
     /**
-     * Class for containing source code
+     * Class for containing source code and information about it
      */
     class GS_Source {
     public:

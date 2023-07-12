@@ -323,6 +323,15 @@ namespace GSLanguageCompiler::CodeGenerator {
                                                        rvalueExpression));
     }
 
+    Ptr<llvm::Value> GS_LLVMVisitor::GenerateIfStatement(LRef<Driver::GS_Session> session,
+                                                         AST::NodePtrLRef<AST::GS_IfStatement> ifStatement) {
+        auto condition = ifStatement->GetCondition();
+        auto ifBody = ifStatement->GetIfBody();
+        auto elseBody = ifStatement->GetElseBody();
+
+
+    }
+
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateExpressionStatement(LRef<Driver::GS_Session> session,
                                                                  AST::NodePtrLRef<AST::GS_ExpressionStatement> expressionStatement) {
         auto expression = expressionStatement->GetExpression();

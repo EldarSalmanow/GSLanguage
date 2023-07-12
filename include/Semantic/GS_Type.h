@@ -13,6 +13,8 @@ namespace GSLanguageCompiler::Semantic {
     enum class TypeType {
         Void,
 
+        Bool,
+
         Char,
         Integer,
         UInteger,
@@ -169,6 +171,52 @@ namespace GSLanguageCompiler::Semantic {
         /*
          *
          * GS_VoidType PUBLIC OVERRIDE METHODS
+         *
+         */
+
+        /**
+         * Getter for type of type
+         * @return Type of type
+         */
+        TypeType GetType() const override;
+    };
+
+    /**
+     * Builtin Bool type
+     */
+    class GS_BoolType : public GS_Type {
+    public:
+
+        /*
+         *
+         * GS_BoolType PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
+         * Constructor for Bool type
+         */
+        GS_BoolType();
+
+    public:
+
+        /*
+         *
+         * GS_BoolType PUBLIC STATIC CREATE METHODS
+         *
+         */
+
+        /**
+         * Creating Bool type
+         * @return Bool type ptr
+         */
+        static std::shared_ptr<GS_BoolType> Create();
+
+    public:
+
+        /*
+         *
+         * GS_BoolType PUBLIC OVERRIDE METHODS
          *
          */
 
@@ -898,6 +946,13 @@ namespace GSLanguageCompiler::Semantic {
 
                 break;
             }
+            case TypeType::Bool: {
+                if constexpr (!std::is_same_v<GS_BoolType, TypeT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
             case TypeType::Char: {
                 if constexpr (!std::is_same_v<GS_CharType, TypeT>) {
                     return nullptr;
@@ -1063,6 +1118,12 @@ namespace GSLanguageCompiler::Semantic {
          * @return Void type
          */
         TypePtr<GS_VoidType> GetVoidType() const;
+
+        /**
+         * Getter for default Bool type
+         * @return Bool type
+         */
+        TypePtr<GS_BoolType> GetBoolType() const;
 
         /**
          * Getter for default Char type

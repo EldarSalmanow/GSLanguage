@@ -30,6 +30,17 @@ namespace GSLanguageCompiler::Semantic {
         return TypeType::Void;
     }
 
+    GS_BoolType::GS_BoolType()
+            : GS_Type("Bool"_us) {}
+
+    std::shared_ptr<GS_BoolType> GS_BoolType::Create() {
+        return std::make_shared<GS_BoolType>();
+    }
+
+    TypeType GS_BoolType::GetType() const {
+        return TypeType::Bool;
+    }
+
     GS_CharType::GS_CharType()
             : GS_Type("Char"_us) {}
 
@@ -202,6 +213,10 @@ namespace GSLanguageCompiler::Semantic {
 
     TypePtr<GS_VoidType> GS_TypeContext::GetVoidType() const {
         return GS_VoidType::Create();
+    }
+
+    TypePtr<GS_BoolType> GS_TypeContext::GetBoolType() const {
+        return GS_BoolType::Create();
     }
 
     TypePtr<GS_CharType> GS_TypeContext::GetCharType() const {

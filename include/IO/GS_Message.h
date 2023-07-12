@@ -1,8 +1,6 @@
 #ifndef GSLANGUAGE_GS_MESSAGE_H
 #define GSLANGUAGE_GS_MESSAGE_H
 
-#include <deque>
-
 #include <IO/GS_Source.h>
 
 namespace GSLanguageCompiler::IO {
@@ -336,8 +334,9 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Constructor for message queue
+         * @param messages Messages
          */
-        GS_MessageQueue();
+        explicit GS_MessageQueue(GSMessageArray messages);
 
     public:
 
@@ -346,6 +345,13 @@ namespace GSLanguageCompiler::IO {
          * GS_MessageQueue PUBLIC STATIC CREATE METHODS
          *
          */
+
+        /**
+         * Creating message queue
+         * @param messages Messages
+         * @return Message queue
+         */
+        static GS_MessageQueue Create(GSMessageArray messages);
 
         /**
          * Creating message queue
@@ -393,7 +399,7 @@ namespace GSLanguageCompiler::IO {
          * Getter for messages
          * @return Messages
          */
-        ConstLRef<std::deque<GS_Message>> GetMessages() const;
+        ConstLRef<GSMessageArray> GetMessages() const;
 
     public:
 
@@ -421,7 +427,7 @@ namespace GSLanguageCompiler::IO {
         /**
          * Messages
          */
-        std::deque<GS_Message> _messages; // TODO replace to array type?
+        GSMessageArray _messages;
     };
 
     /**

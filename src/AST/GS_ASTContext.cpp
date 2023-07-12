@@ -17,6 +17,10 @@ namespace GSLanguageCompiler::AST {
         return _typeContext->GetVoidType();
     }
 
+    Semantic::TypePtr<Semantic::GS_BoolType> GS_ASTContext::GetBoolType() const {
+        return _typeContext->GetBoolType();
+    }
+
     Semantic::TypePtr<Semantic::GS_CharType> GS_ASTContext::GetCharType() const {
         return _typeContext->GetCharType();
     }

@@ -90,42 +90,6 @@ namespace GSLanguageCompiler::Lexer {
         GS_Token GetToken();
 
         /**
-         * Tokenizing whitespace
-         * @return Tokenized whitespace or error token
-         */
-        GS_Token TokenizeWhitespace();
-
-        /**
-         * Tokenizing word
-         * @return Tokenized word or error token
-         */
-        GS_Token TokenizeWord();
-
-        /**
-         * Tokenizing reserved symbol
-         * @return Tokenized reserved symbol or error token
-         */
-        GS_Token TokenizeReservedSymbol();
-
-        /**
-         * Tokenizing digit literal
-         * @return Tokenized digit literal or error token
-         */
-        GS_Token TokenizeDigit();
-
-        /**
-         * Tokenizing symbol literal
-         * @return Tokenized symbol literal or error token
-         */
-        GS_Token TokenizeSymbol();
-
-        /**
-         * Tokenizing string literal
-         * @return Tokenized string literal or error token
-         */
-        GS_Token TokenizeString();
-
-        /**
          * Getting current symbol from cursor
          * @return Current symbol value
          */
@@ -144,6 +108,12 @@ namespace GSLanguageCompiler::Lexer {
         IO::GS_SourceLocation CurrentLocation() const;
 
     private:
+
+        /*
+         *
+         * GS_Lexer PRIVATE FIELDS
+         *
+         */
 
         /**
          * Session
