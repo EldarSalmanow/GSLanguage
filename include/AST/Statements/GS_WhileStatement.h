@@ -6,14 +6,6 @@
 
 namespace GSLanguageCompiler::AST {
 
-    /*
-     *
-     * while <condition> {
-     *     <body>
-     * }
-     *
-     */
-
     /**
      * Class for while statement in language grammar
      */

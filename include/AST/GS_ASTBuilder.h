@@ -11,7 +11,7 @@
 #include <AST/Statements/GS_WhileStatement.h>
 #include <AST/Statements/GS_ExpressionStatement.h>
 
-#include <AST/Expressions/GS_ConstantExpression.h>
+#include <AST/Expressions/GS_LiteralExpression.h>
 #include <AST/Expressions/GS_UnaryExpression.h>
 #include <AST/Expressions/GS_BinaryExpression.h>
 #include <AST/Expressions/GS_ArrayExpression.h>
@@ -462,84 +462,84 @@ namespace GSLanguageCompiler::AST {
          * @param value Value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(GSValuePtr value);
+        NodePtr<GS_LiteralExpression> CreateConstantExpression(GSValuePtr value);
 
         /**
          * Create constant expression
          * @param value Bool value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(Bool value);
+        NodePtr<GS_LiteralExpression> CreateConstantExpression(Bool value);
 
         /**
          * Create constant expression
          * @param value Char value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(USymbol value);
+        NodePtr<GS_LiteralExpression> CreateConstantExpression(USymbol value);
 
         /**
          * Create constant expression
          * @param value I8 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(I8 value);
+        NodePtr<GS_LiteralExpression> CreateConstantExpression(I8 value);
 
         /**
          * Create constant expression
          * @param value I16 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(I16 value);
+        NodePtr<GS_LiteralExpression> CreateConstantExpression(I16 value);
 
         /**
          * Create constant expression
          * @param value I32 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(I32 value);
+        NodePtr<GS_LiteralExpression> CreateConstantExpression(I32 value);
 
         /**
          * Create constant expression
          * @param value I64 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(I64 value);
+        NodePtr<GS_LiteralExpression> CreateConstantExpression(I64 value);
 
         /**
          * Create constant expression
          * @param value U8 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(U8 value);
+        NodePtr<GS_LiteralExpression> CreateConstantExpression(U8 value);
 
         /**
          * Create constant expression
          * @param value U16 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(U16 value);
+        NodePtr<GS_LiteralExpression> CreateConstantExpression(U16 value);
 
         /**
          * Create constant expression
          * @param value U32 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(U32 value);
+        NodePtr<GS_LiteralExpression> CreateConstantExpression(U32 value);
 
         /**
          * Create constant expression
          * @param value U64 value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(U64 value);
+        NodePtr<GS_LiteralExpression> CreateConstantExpression(U64 value);
 
         /**
          * Create constant expression
          * @param value String value
          * @return Constant expression
          */
-        NodePtr<GS_ConstantExpression> CreateConstantExpression(UString value);
+        NodePtr<GS_LiteralExpression> CreateConstantExpression(UString value);
 
         /**
          * Create unary expression

@@ -6,21 +6,17 @@
 
 namespace GSLanguageCompiler::AST {
 
-    /*
-     *
-     * TODO add this blocks to all ast nodes
-     *
-     * for <id> in <expr> {
-     *     <body>
-     * }
-     *
-     */
-
     /**
      * Class for for statement in language grammar
      */
     class GS_ForStatement : public GS_Statement {
     public:
+
+        /*
+         *
+         * GS_ForStatement PUBLIC CONSTRUCTORS
+         *
+         */
 
         /**
          * Constructor for for statement

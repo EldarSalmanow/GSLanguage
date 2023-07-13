@@ -16,6 +16,12 @@ namespace GSLanguageCompiler::AST {
     class GS_FunctionQualifiers {
     public:
 
+        /*
+         *
+         * GS_FunctionQualifiers PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for function qualifiers
          * @param externType Extern type
@@ -23,6 +29,12 @@ namespace GSLanguageCompiler::AST {
         explicit GS_FunctionQualifiers(ExternType externType);
 
     public:
+
+        /*
+         *
+         * GS_FunctionQualifiers PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating function qualifiers
@@ -39,6 +51,12 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_FunctionQualifiers PUBLIC METHODS
+         *
+         */
+
         /**
          * Has extern qualifier
          * @return Has extern qualifier
@@ -47,6 +65,12 @@ namespace GSLanguageCompiler::AST {
 
     public:
 
+        /*
+         *
+         * GS_FunctionQualifiers PUBLIC GETTER METHODS
+         *
+         */
+
         /**
          * Getter for extern type
          * @return Extern type
@@ -54,6 +78,12 @@ namespace GSLanguageCompiler::AST {
         ExternType GetExternType() const;
 
     private:
+
+        /*
+         *
+         * GS_FunctionQualifiers PRIVATE FIELDS
+         *
+         */
 
         /**
          * Extern type
@@ -67,6 +97,12 @@ namespace GSLanguageCompiler::AST {
     class GS_FunctionParam {
     public:
 
+        /*
+         *
+         * GS_FunctionParam PUBLIC CONSTRUCTORS
+         *
+         */
+
         /**
          * Constructor for function param
          * @param name Name
@@ -76,6 +112,12 @@ namespace GSLanguageCompiler::AST {
                          Semantic::GSTypePtr type);
 
     public:
+
+        /*
+         *
+         * GS_FunctionParam PUBLIC STATIC CREATE METHODS
+         *
+         */
 
         /**
          * Creating function param
@@ -87,6 +129,12 @@ namespace GSLanguageCompiler::AST {
                                        Semantic::GSTypePtr type);
 
     public:
+
+        /*
+         *
+         * GS_FunctionParam PUBLIC GETTER METHODS
+         *
+         */
 
         /**
          * Getter for name
@@ -101,6 +149,12 @@ namespace GSLanguageCompiler::AST {
         ConstLRef<Semantic::GSTypePtr> GetType() const;
 
     private:
+
+        /*
+         *
+         * GS_FunctionParam PRIVATE FIELDS
+         *
+         */
 
         /**
          * Name

@@ -1,4 +1,4 @@
-#include <Expressions/GS_ConstantExpression.h>
+#include <Expressions/GS_LiteralExpression.h>
 
 namespace GSLanguageCompiler::AST {
 
@@ -159,19 +159,19 @@ namespace GSLanguageCompiler::AST {
         return GetValueWithCast<UString>();
     }
 
-    GS_ConstantExpression::GS_ConstantExpression(GSValuePtr value)
+    GS_LiteralExpression::GS_LiteralExpression(GSValuePtr value)
             : _value(std::move(value)) {}
 
-    std::shared_ptr<GS_ConstantExpression> GS_ConstantExpression::Create(GSValuePtr value) {
-        return std::make_shared<GS_ConstantExpression>(std::move(value));
+    std::shared_ptr<GS_LiteralExpression> GS_LiteralExpression::Create(GSValuePtr value) {
+        return std::make_shared<GS_LiteralExpression>(std::move(value));
     }
 
-    LRef<GSValuePtr> GS_ConstantExpression::GetValue() {
+    LRef<GSValuePtr> GS_LiteralExpression::GetValue() {
         return _value;
     }
 
-    ExpressionType GS_ConstantExpression::GetExpressionType() const {
-        return ExpressionType::ConstantExpression;
+    ExpressionType GS_LiteralExpression::GetExpressionType() const {
+        return ExpressionType::LiteralExpression;
     }
 
 }

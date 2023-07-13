@@ -153,8 +153,8 @@ namespace GSLanguageCompiler::Debug {
         }
 
         Void VisitConstantExpression(LRef<Driver::GS_Session> session,
-                                     AST::NodePtrLRef<AST::GS_ConstantExpression> constantExpression) override {
-            Print("ConstantExpression: {"_us, session);
+                                     AST::NodePtrLRef<AST::GS_LiteralExpression> constantExpression) override {
+            Print("LiteralExpression: {"_us, session);
 
             IncTab();
 

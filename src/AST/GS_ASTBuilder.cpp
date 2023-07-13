@@ -261,51 +261,51 @@ namespace GSLanguageCompiler::AST {
         return GS_ExpressionStatement::Create(std::move(expression));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(GSValuePtr value) {
-        return GS_ConstantExpression::Create(std::move(value));
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(GSValuePtr value) {
+        return GS_LiteralExpression::Create(std::move(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(Bool value) {
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(Bool value) {
         return CreateConstantExpression(CreateBoolValue(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(USymbol value) {
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(USymbol value) {
         return CreateConstantExpression(CreateCharValue(std::move(value)));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(I8 value) {
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(I8 value) {
         return CreateConstantExpression(CreateI8Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(I16 value) {
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(I16 value) {
         return CreateConstantExpression(CreateI16Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(I32 value) {
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(I32 value) {
         return CreateConstantExpression(CreateI32Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(I64 value) {
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(I64 value) {
         return CreateConstantExpression(CreateI64Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(U8 value) {
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(U8 value) {
         return CreateConstantExpression(CreateU8Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(U16 value) {
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(U16 value) {
         return CreateConstantExpression(CreateU16Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(U32 value) {
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(U32 value) {
         return CreateConstantExpression(CreateU32Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(U64 value) {
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(U64 value) {
         return CreateConstantExpression(CreateU64Value(value));
     }
 
-    NodePtr<GS_ConstantExpression> GS_ASTBuilder::CreateConstantExpression(UString value) {
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(UString value) {
         return CreateConstantExpression(CreateStringValue(std::move(value)));
     }
 

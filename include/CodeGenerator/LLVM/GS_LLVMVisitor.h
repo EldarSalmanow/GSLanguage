@@ -138,7 +138,7 @@ namespace GSLanguageCompiler::CodeGenerator {
          * @return Generated constant expression
          */
         Ptr<llvm::Value> GenerateConstantExpression(LRef<Driver::GS_Session> session,
-                                                    AST::NodePtrLRef<AST::GS_ConstantExpression> constantExpression);
+                                                    AST::NodePtrLRef<AST::GS_LiteralExpression> constantExpression);
 
         /**
          * Generate unary expression

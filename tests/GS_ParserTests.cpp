@@ -40,7 +40,7 @@ TEST(ParserTest, Parsing) {
     auto arguments = functionCallingExpression->GetArguments();
     ASSERT_EQ(arguments.size(), 1);
 
-    auto constantExpression = AST::ToExpression<AST::GS_ConstantExpression>(arguments[0]);
+    auto constantExpression = AST::ToExpression<AST::GS_LiteralExpression>(arguments[0]);
     ASSERT_NE(constantExpression, nullptr);
 
     auto value = constantExpression->GetValue();

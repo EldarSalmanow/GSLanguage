@@ -5,6 +5,10 @@
 
 namespace GSLanguageCompiler::Lexer {
 
+    /*
+     * TODO: Create GS_TokenLocation class
+     */
+
     /**
      * Type of token
      */

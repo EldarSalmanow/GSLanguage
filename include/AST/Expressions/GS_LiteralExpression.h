@@ -1,5 +1,5 @@
-#ifndef GSLANGUAGE_GS_CONSTANTEXPRESSION_H
-#define GSLANGUAGE_GS_CONSTANTEXPRESSION_H
+#ifndef GSLANGUAGE_GS_LITERALEXPRESSION_H
+#define GSLANGUAGE_GS_LITERALEXPRESSION_H
 
 #include <any>
 
@@ -903,11 +903,6 @@ namespace GSLanguageCompiler::AST {
         auto type = value->GetType();
         auto typeType = type->GetType();
 
-        if constexpr (std::is_same_v<GS_LiteralValue, ValueT>
-                   && value->IsLiteralValue()) {
-            return std::reinterpret_pointer_cast<ValueT>(value);
-        }
-
         switch (typeType) {
             case Semantic::TypeType::Void: {
                 return nullptr;
@@ -1029,43 +1024,57 @@ namespace GSLanguageCompiler::AST {
     }
 
     /**
-     * Class for constant expression in language grammar
+     * Casting value to literal value
+     * @param value Value
+     * @return Literal value or null
      */
-    class GS_ConstantExpression : public GS_Expression {
+    template<>
+    inline ValuePtr<GS_LiteralValue> ToValue(ConstLRef<GSValuePtr> value) {
+        if (!value->IsLiteralValue()) {
+            return nullptr;
+        }
+
+        return std::reinterpret_pointer_cast<GS_LiteralValue>(value);
+    }
+
+    /**
+     * Class for literal expression in language grammar
+     */
+    class GS_LiteralExpression : public GS_Expression {
     public:
 
         /*
          *
-         * GS_ConstantExpression PUBLIC CONSTRUCTORS
+         * GS_LiteralExpression PUBLIC CONSTRUCTORS
          *
          */
 
         /**
-         * Constructor for constant expression
+         * Constructor for literal expression
          * @param value Value
          */
-        explicit GS_ConstantExpression(GSValuePtr value);
+        explicit GS_LiteralExpression(GSValuePtr value);
 
     public:
 
         /*
          *
-         * GS_ConstantExpression PUBLIC STATIC CREATE METHODS
+         * GS_LiteralExpression PUBLIC STATIC CREATE METHODS
          *
          */
 
         /**
-         * Creating constant expression
+         * Creating literal expression
          * @param value Value
-         * @return Constant expression ptr
+         * @return Literal expression ptr
          */
-        static std::shared_ptr<GS_ConstantExpression> Create(GSValuePtr value);
+        static std::shared_ptr<GS_LiteralExpression> Create(GSValuePtr value);
 
     public:
 
         /*
          *
-         * GS_ConstantExpression PUBLIC GETTER METHODS
+         * GS_LiteralExpression PUBLIC GETTER METHODS
          *
          */
 
@@ -1079,7 +1088,7 @@ namespace GSLanguageCompiler::AST {
 
         /*
          *
-         * GS_ConstantExpression PUBLIC OVERRIDE METHODS
+         * GS_LiteralExpression PUBLIC OVERRIDE METHODS
          *
          */
 
@@ -1093,7 +1102,7 @@ namespace GSLanguageCompiler::AST {
 
         /*
          *
-         * GS_ConstantExpression PRIVATE FIELDS
+         * GS_LiteralExpression PRIVATE FIELDS
          *
          */
 
@@ -1105,4 +1114,4 @@ namespace GSLanguageCompiler::AST {
 
 }
 
-#endif //GSLANGUAGE_GS_CONSTANTEXPRESSION_H
+#endif //GSLANGUAGE_GS_LITERALEXPRESSION_H

@@ -6,7 +6,9 @@
 
 namespace GSLanguageCompiler::AST {
 
-    // TODO add compound assignment statement
+    /*
+     * TODO: Add compound assignment statement
+     */
 
     /**
      * Class for assignment statement in language grammar

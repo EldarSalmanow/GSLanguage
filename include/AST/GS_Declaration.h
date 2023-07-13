@@ -10,6 +10,8 @@ namespace GSLanguageCompiler::AST {
      */
     enum class DeclarationType {
         TranslationUnitDeclaration,
+        ModuleDeclaration,
+        ImportDeclaration,
         FunctionDeclaration
     };
 
@@ -80,6 +82,8 @@ namespace GSLanguageCompiler::AST {
      * Declaring declarations for cast function
      */
     class GS_TranslationUnitDeclaration;
+    class GS_ModuleDeclaration;
+    class GS_ImportDeclaration;
     class GS_FunctionDeclaration;
 
     /**
@@ -104,6 +108,20 @@ namespace GSLanguageCompiler::AST {
         switch (declarationType) {
             case DeclarationType::TranslationUnitDeclaration: {
                 if constexpr (!std::is_same_v<GS_TranslationUnitDeclaration, DeclarationT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case DeclarationType::ModuleDeclaration: {
+                if constexpr (!std::is_same_v<GS_ModuleDeclaration, DeclarationT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case DeclarationType::ImportDeclaration: {
+                if constexpr (!std::is_same_v<GS_ImportDeclaration, DeclarationT>) {
                     return nullptr;
                 }
 

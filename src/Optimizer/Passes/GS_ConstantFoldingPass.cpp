@@ -115,7 +115,7 @@ namespace GSLanguageCompiler::Optimizer {
         auto expression = unaryExpression->GetExpression();
         auto operation  = unaryExpression->GetUnaryOperation();
 
-        if (auto constantExpression = AST::ToExpression<AST::GS_ConstantExpression>(expression)) {
+        if (auto constantExpression = AST::ToExpression<AST::GS_LiteralExpression>(expression)) {
             auto value = constantExpression->GetValue();
 
             if (auto result = FoldConstants(session,
@@ -137,8 +137,8 @@ namespace GSLanguageCompiler::Optimizer {
         auto secondExpression = binaryExpression->GetSecondExpression();
         auto operation = binaryExpression->GetBinaryOperation();
 
-        if (auto firstConstantExpression = AST::ToExpression<AST::GS_ConstantExpression>(firstExpression)) {
-            if (auto secondConstantExpression = AST::ToExpression<AST::GS_ConstantExpression>(secondExpression)) {
+        if (auto firstConstantExpression = AST::ToExpression<AST::GS_LiteralExpression>(firstExpression)) {
+            if (auto secondConstantExpression = AST::ToExpression<AST::GS_LiteralExpression>(secondExpression)) {
                 auto firstValue = firstConstantExpression->GetValue();
                 auto secondValue = secondConstantExpression->GetValue();
 

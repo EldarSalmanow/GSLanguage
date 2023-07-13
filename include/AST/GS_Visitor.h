@@ -2,6 +2,8 @@
 #define GSLANGUAGE_GS_VISITOR_H
 
 #include <AST/Declarations/GS_TranslationUnitDeclaration.h>
+#include <AST/Declarations/GS_ModuleDeclaration.h>
+#include <AST/Declarations/GS_ImportDeclaration.h>
 #include <AST/Declarations/GS_FunctionDeclaration.h>
 
 #include <AST/Statements/GS_VariableDeclarationStatement.h>
@@ -9,12 +11,17 @@
 #include <AST/Statements/GS_IfStatement.h>
 #include <AST/Statements/GS_ForStatement.h>
 #include <AST/Statements/GS_WhileStatement.h>
+#include <AST/Statements/GS_MatchStatement.h>
+#include <AST/Statements/GS_ReturnStatement.h>
 #include <AST/Statements/GS_ExpressionStatement.h>
 
-#include <AST/Expressions/GS_ConstantExpression.h>
+#include <AST/Expressions/GS_LiteralExpression.h>
+#include <AST/Expressions/GS_ArrayExpression.h>
+#include <AST/Expressions/GS_RangeExpression.h>
 #include <AST/Expressions/GS_UnaryExpression.h>
 #include <AST/Expressions/GS_BinaryExpression.h>
-#include <AST/Expressions/GS_ArrayExpression.h>
+#include <AST/Expressions/GS_IndexExpression.h>
+#include <AST/Expressions/GS_CastExpression.h>
 #include <AST/Expressions/GS_VariableUsingExpression.h>
 #include <AST/Expressions/GS_FunctionCallingExpression.h>
 
@@ -102,6 +109,24 @@ namespace GSLanguageCompiler {
                                                  NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration);
 
             /**
+             * Default visit module declaration
+             * @param session Session
+             * @param moduleDeclaration Module declaration
+             * @return Void return
+             */
+            Void SuperModuleDeclaration(LRef<Driver::GS_Session> session,
+                                        NodePtrLRef<GS_ModuleDeclaration> moduleDeclaration);
+
+            /**
+             * Default visit import declaration
+             * @param session Session
+             * @param importDeclaration Import declaration
+             * @return Void return
+             */
+            Void SuperImportDeclaration(LRef<Driver::GS_Session> session,
+                                        NodePtrLRef<GS_ImportDeclaration> importDeclaration);
+
+            /**
              * Default visit function declaration
              * @param session Session
              * @param functionDeclaration Function declaration
@@ -171,7 +196,7 @@ namespace GSLanguageCompiler {
              * @return Void return
              */
             Void SuperConstantExpression(LRef<Driver::GS_Session> session,
-                                         NodePtrLRef<GS_ConstantExpression> constantExpression);
+                                         NodePtrLRef<GS_LiteralExpression> constantExpression);
 
             /**
              * Default visit unary expression
@@ -272,6 +297,24 @@ namespace GSLanguageCompiler {
                                                          NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration);
 
             /**
+             * Visit module declaration
+             * @param session Session
+             * @param moduleDeclaration Module declaration
+             * @return Void return
+             */
+            virtual Void VisitModuleDeclaration(LRef<Driver::GS_Session> session,
+                                                NodePtrLRef<GS_ModuleDeclaration> moduleDeclaration);
+
+            /**
+             * Visit import declaration
+             * @param session Session
+             * @param importDeclaration Import declaration
+             * @return Void return
+             */
+            virtual Void VisitImportDeclaration(LRef<Driver::GS_Session> session,
+                                                NodePtrLRef<GS_ImportDeclaration> importDeclaration);
+
+            /**
              * Visit function declaration
              * @param session Session
              * @param functionDeclaration Function declaration
@@ -341,7 +384,7 @@ namespace GSLanguageCompiler {
              * @return Void return
              */
             virtual Void VisitConstantExpression(LRef<Driver::GS_Session> session,
-                                                 NodePtrLRef<GS_ConstantExpression> constantExpression);
+                                                 NodePtrLRef<GS_LiteralExpression> constantExpression);
 
             /**
              * Visit unary expression
@@ -529,7 +572,7 @@ namespace GSLanguageCompiler {
              * @return Transformed constant expression
              */
             GSNodePtr SuperConstantExpression(LRef<Driver::GS_Session> session,
-                                              NodePtrLRef<GS_ConstantExpression> constantExpression);
+                                              NodePtrLRef<GS_LiteralExpression> constantExpression);
 
             /**
              * Default transform unary expression
@@ -699,7 +742,7 @@ namespace GSLanguageCompiler {
              * @return Transformed constant expression
              */
             virtual GSNodePtr TransformConstantExpression(LRef<Driver::GS_Session> session,
-                                                          NodePtrLRef<GS_ConstantExpression> constantExpression);
+                                                          NodePtrLRef<GS_LiteralExpression> constantExpression);
 
             /**
              * Transform unary expression

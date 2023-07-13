@@ -3,14 +3,14 @@
 namespace GSLanguageCompiler::AST {
 
     GS_VariableUsingExpression::GS_VariableUsingExpression(UString name,
-                                                           IO::GS_SourceRange nameLocationRange)
+                                                           IO::GS_SourceRange nameLocation)
             : _name(std::move(name)),
-              _nameLocationRange(nameLocationRange) {}
+              _nameLocation(nameLocation) {}
 
     std::shared_ptr<GS_VariableUsingExpression> GS_VariableUsingExpression::Create(UString name,
-                                                                                   IO::GS_SourceRange nameLocationRange) {
+                                                                                   IO::GS_SourceRange nameLocation) {
         return std::make_shared<GS_VariableUsingExpression>(std::move(name),
-                                                            nameLocationRange);
+                                                            nameLocation);
     }
 
     std::shared_ptr<GS_VariableUsingExpression> GS_VariableUsingExpression::Create(UString name) {
@@ -22,8 +22,8 @@ namespace GSLanguageCompiler::AST {
         return _name;
     }
 
-    ConstLRef<IO::GS_SourceRange> GS_VariableUsingExpression::GetNameLocationRange() const {
-        return _nameLocationRange;
+    LRef<IO::GS_SourceRange> GS_VariableUsingExpression::GetNameLocation() {
+        return _nameLocation;
     }
 
     ExpressionType GS_VariableUsingExpression::GetExpressionType() const {

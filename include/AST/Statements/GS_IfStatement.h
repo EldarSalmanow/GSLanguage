@@ -6,22 +6,6 @@
 
 namespace GSLanguageCompiler::AST {
 
-    /*
-     *
-     * if <condition> {
-     *     <ifBody>
-     * }
-     *
-     * OR
-     *
-     * if <condition> {
-     *     <ifBody>
-     * } else {
-     *     <elseBody>
-     * }
-     *
-     */
-
     /**
      * Class for if statement in language grammar
      */
@@ -136,7 +120,7 @@ namespace GSLanguageCompiler::AST {
 
             auto statement = StatementT::Create(args...);
 
-            auto statementRef = AddIfStatement(statement);
+            auto statementRef = AddElseStatement(statement);
 
             return statementRef;
         }

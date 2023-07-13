@@ -152,8 +152,10 @@ namespace GSLanguageCompiler::AST {
                  LRef<GSTranslationUnitDeclarationPtr> translationUnitDeclaration) override {
             TransformerT transformer;
 
-            translationUnitDeclaration = ToDeclaration<GS_TranslationUnitDeclaration>(transformer.TransformTranslationUnitDeclaration(session,
-                                                                                                                                      translationUnitDeclaration));
+            auto transformedTranslationUnitDeclaration = transformer.TransformTranslationUnitDeclaration(session,
+                                                                                                         translationUnitDeclaration);
+
+            translationUnitDeclaration = ToDeclaration<GS_TranslationUnitDeclaration>(transformedTranslationUnitDeclaration);
         }
 
         /**
@@ -166,8 +168,10 @@ namespace GSLanguageCompiler::AST {
                  NodePtrLRef<GS_FunctionDeclaration> functionDeclaration) override {
             TransformerT transformer;
 
-            functionDeclaration = ToDeclaration<GS_FunctionDeclaration>(transformer.TransformFunctionDeclaration(session,
-                                                                                                                 functionDeclaration));
+            auto transformedFunctionDeclaration = transformer.TransformFunctionDeclaration(session,
+                                                                                           functionDeclaration);
+
+            functionDeclaration = ToDeclaration<GS_FunctionDeclaration>(transformedFunctionDeclaration);
         }
     };
 

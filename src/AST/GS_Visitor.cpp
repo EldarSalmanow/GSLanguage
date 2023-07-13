@@ -39,6 +39,18 @@ namespace GSLanguageCompiler::AST {
                 return VisitTranslationUnitDeclaration(session,
                                                        translationUnitDeclaration);
             }
+            case DeclarationType::ModuleDeclaration: {
+                auto moduleDeclaration = ToDeclaration<GS_ModuleDeclaration>(declaration);
+
+                return VisitModuleDeclaration(session,
+                                              moduleDeclaration);
+            }
+            case DeclarationType::ImportDeclaration: {
+                auto importDeclaration = ToDeclaration<GS_ImportDeclaration>(declaration);
+
+                return VisitImportDeclaration(session,
+                                              importDeclaration);
+            }
             case DeclarationType::FunctionDeclaration: {
                 auto functionDeclaration = ToDeclaration<GS_FunctionDeclaration>(declaration);
 
@@ -79,8 +91,8 @@ namespace GSLanguageCompiler::AST {
         auto expressionType = expression->GetExpressionType();
 
         switch (expressionType) {
-            case ExpressionType::ConstantExpression: {
-                auto constantExpression = ToExpression<GS_ConstantExpression>(expression);
+            case ExpressionType::LiteralExpression: {
+                auto constantExpression = ToExpression<GS_LiteralExpression>(expression);
 
                 return VisitConstantExpression(session,
                                                constantExpression);
@@ -128,11 +140,26 @@ namespace GSLanguageCompiler::AST {
         }
     }
 
+    Void GS_Visitor::SuperModuleDeclaration(LRef<Driver::GS_Session> session,
+                                            NodePtrLRef<GS_ModuleDeclaration> moduleDeclaration) {
+        auto body = moduleDeclaration->GetBody();
+
+        for (auto &declaration : body) {
+            VisitDeclaration(session,
+                             declaration);
+        }
+    }
+
+    Void GS_Visitor::SuperImportDeclaration(LRef<Driver::GS_Session> session,
+                                            NodePtrLRef<GS_ImportDeclaration> importDeclaration) {
+
+    }
+
     Void GS_Visitor::SuperFunctionDeclaration(LRef<Driver::GS_Session> session,
                                               NodePtrLRef<GS_FunctionDeclaration> functionDeclaration) {
-        auto statements = functionDeclaration->GetBody();
+        auto body = functionDeclaration->GetBody();
 
-        for (auto &statement: statements) {
+        for (auto &statement : body) {
             VisitStatement(session,
                            statement);
         }
@@ -214,7 +241,7 @@ namespace GSLanguageCompiler::AST {
     }
 
     Void GS_Visitor::SuperConstantExpression(LRef<Driver::GS_Session> session,
-                                             NodePtrLRef<GS_ConstantExpression> constantExpression) {
+                                             NodePtrLRef<GS_LiteralExpression> constantExpression) {
 
     }
 
@@ -287,6 +314,18 @@ namespace GSLanguageCompiler::AST {
                                         translationUnitDeclaration);
     }
 
+    Void GS_Visitor::VisitModuleDeclaration(LRef<Driver::GS_Session> session,
+                                            NodePtrLRef<GS_ModuleDeclaration> moduleDeclaration) {
+        SuperModuleDeclaration(session,
+                               moduleDeclaration);
+    }
+
+    Void GS_Visitor::VisitImportDeclaration(LRef<Driver::GS_Session> session,
+                                            NodePtrLRef<GS_ImportDeclaration> importDeclaration) {
+        SuperImportDeclaration(session,
+                               importDeclaration);
+    }
+
     Void GS_Visitor::VisitFunctionDeclaration(LRef<Driver::GS_Session> session,
                                               NodePtrLRef<GS_FunctionDeclaration> functionDeclaration) {
         SuperFunctionDeclaration(session,
@@ -330,7 +369,7 @@ namespace GSLanguageCompiler::AST {
     }
 
     Void GS_Visitor::VisitConstantExpression(LRef<Driver::GS_Session> session,
-                                             NodePtrLRef<GS_ConstantExpression> constantExpression) {
+                                             NodePtrLRef<GS_LiteralExpression> constantExpression) {
         SuperConstantExpression(session,
                                 constantExpression);
     }
@@ -448,8 +487,8 @@ namespace GSLanguageCompiler::AST {
         auto expressionType = expression->GetExpressionType();
 
         switch (expressionType) {
-            case ExpressionType::ConstantExpression: {
-                auto constantExpression = ToExpression<GS_ConstantExpression>(expression);
+            case ExpressionType::LiteralExpression: {
+                auto constantExpression = ToExpression<GS_LiteralExpression>(expression);
 
                 return TransformConstantExpression(session,
                                                    constantExpression);
@@ -626,7 +665,7 @@ namespace GSLanguageCompiler::AST {
     }
 
     GSNodePtr GS_Transformer::SuperConstantExpression(LRef<Driver::GS_Session> session,
-                                                      NodePtrLRef<GS_ConstantExpression> constantExpression) {
+                                                      NodePtrLRef<GS_LiteralExpression> constantExpression) {
         return constantExpression;
     }
 
@@ -755,7 +794,7 @@ namespace GSLanguageCompiler::AST {
     }
 
     GSNodePtr GS_Transformer::TransformConstantExpression(LRef<Driver::GS_Session> session,
-                                                          NodePtrLRef<GS_ConstantExpression> constantExpression) {
+                                                          NodePtrLRef<GS_LiteralExpression> constantExpression) {
         return SuperConstantExpression(session,
                                        constantExpression);
     }

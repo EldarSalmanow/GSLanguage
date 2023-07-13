@@ -10,16 +10,26 @@ set(GS_AST_SOURCE
         ${AST_DIR}/GS_Expression.cpp
 
         ${AST_DIR}/Declarations/GS_TranslationUnitDeclaration.cpp
+        ${AST_DIR}/Declarations/GS_ModuleDeclaration.cpp
+        ${AST_DIR}/Declarations/GS_ImportDeclaration.cpp
         ${AST_DIR}/Declarations/GS_FunctionDeclaration.cpp
 
         ${AST_DIR}/Statements/GS_VariableDeclarationStatement.cpp
         ${AST_DIR}/Statements/GS_AssignmentStatement.cpp
+        ${AST_DIR}/Statements/GS_IfStatement.cpp
+        ${AST_DIR}/Statements/GS_ForStatement.cpp
+        ${AST_DIR}/Statements/GS_WhileStatement.cpp
+        ${AST_DIR}/Statements/GS_MatchStatement.cpp
+        ${AST_DIR}/Statements/GS_ReturnStatement.cpp
         ${AST_DIR}/Statements/GS_ExpressionStatement.cpp
 
-        ${AST_DIR}/Expressions/GS_ConstantExpression.cpp
+        ${AST_DIR}/Expressions/GS_LiteralExpression.cpp
+        ${AST_DIR}/Expressions/GS_ArrayExpression.cpp
+        ${AST_DIR}/Expressions/GS_RangeExpression.cpp
         ${AST_DIR}/Expressions/GS_UnaryExpression.cpp
         ${AST_DIR}/Expressions/GS_BinaryExpression.cpp
-        ${AST_DIR}/Expressions/GS_ArrayExpression.cpp
+        ${AST_DIR}/Expressions/GS_IndexExpression.cpp
+        ${AST_DIR}/Expressions/GS_CastExpression.cpp
         ${AST_DIR}/Expressions/GS_VariableUsingExpression.cpp
         ${AST_DIR}/Expressions/GS_FunctionCallingExpression.cpp
 

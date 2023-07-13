@@ -6,12 +6,6 @@
 
 namespace GSLanguageCompiler::AST {
 
-    /*
-     *
-     * return <expression>
-     *
-     */
-
     /**
      * Class for return statement in language grammar
      */

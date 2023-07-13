@@ -172,8 +172,8 @@ namespace GSLanguageCompiler::CodeGenerator {
         auto expressionType = expression->GetExpressionType();
 
         switch (expressionType) {
-            case AST::ExpressionType::ConstantExpression: {
-                auto constantExpression = AST::ToExpression<AST::GS_ConstantExpression>(expression);
+            case AST::ExpressionType::LiteralExpression: {
+                auto constantExpression = AST::ToExpression<AST::GS_LiteralExpression>(expression);
 
                 return GenerateConstantExpression(session,
                                                   constantExpression);
@@ -341,7 +341,7 @@ namespace GSLanguageCompiler::CodeGenerator {
     }
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateConstantExpression(LRef<Driver::GS_Session> session,
-                                                                AST::NodePtrLRef<AST::GS_ConstantExpression> constantExpression) {
+                                                                AST::NodePtrLRef<AST::GS_LiteralExpression> constantExpression) {
         auto value = constantExpression->GetValue();
 
         auto literalValue = AST::ToValue<AST::GS_LiteralValue>(value);

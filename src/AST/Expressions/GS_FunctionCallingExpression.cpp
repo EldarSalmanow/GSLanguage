@@ -13,6 +13,11 @@ namespace GSLanguageCompiler::AST {
                                                               std::move(arguments));
     }
 
+    std::shared_ptr<GS_FunctionCallingExpression> GS_FunctionCallingExpression::Create(UString name) {
+        return GS_FunctionCallingExpression::Create(std::move(name),
+                                                    GSExpressionPtrArray());
+    }
+
     LRef<UString> GS_FunctionCallingExpression::GetName() {
         return _name;
     }

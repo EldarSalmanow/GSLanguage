@@ -14,6 +14,8 @@ namespace GSLanguageCompiler::AST {
         IfStatement,
         ForStatement,
         WhileStatement,
+        MatchStatement,
+        ReturnStatement,
         ExpressionStatement
     };
 
@@ -88,6 +90,8 @@ namespace GSLanguageCompiler::AST {
     class GS_IfStatement;
     class GS_ForStatement;
     class GS_WhileStatement;
+    class GS_MatchStatement;
+    class GS_ReturnStatement;
     class GS_ExpressionStatement;
 
     /**
@@ -140,6 +144,20 @@ namespace GSLanguageCompiler::AST {
             }
             case StatementType::WhileStatement: {
                 if constexpr (!std::is_same_v<GS_WhileStatement, StatementT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case StatementType::MatchStatement: {
+                if constexpr (!std::is_same_v<GS_MatchStatement, StatementT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case StatementType::ReturnStatement: {
+                if constexpr (!std::is_same_v<GS_ReturnStatement, StatementT>) {
                     return nullptr;
                 }
 

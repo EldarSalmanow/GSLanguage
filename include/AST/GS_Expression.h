@@ -9,10 +9,13 @@ namespace GSLanguageCompiler::AST {
      * Expression type
      */
     enum class ExpressionType {
-        ConstantExpression,
+        LiteralExpression,
+        ArrayExpression,
+        RangeExpression,
         UnaryExpression,
         BinaryExpression,
-        ArrayExpression,
+        IndexExpression,
+        CastExpression,
         VariableUsingExpression,
         FunctionCallingExpression
     };
@@ -83,10 +86,13 @@ namespace GSLanguageCompiler::AST {
     /**
      * Declaring expressions for cast function
      */
-    class GS_ConstantExpression;
+    class GS_LiteralExpression;
+    class GS_ArrayExpression;
+    class GS_RangeExpression;
     class GS_UnaryExpression;
     class GS_BinaryExpression;
-    class GS_ArrayExpression;
+    class GS_IndexExpression;
+    class GS_CastExpression;
     class GS_VariableUsingExpression;
     class GS_FunctionCallingExpression;
 
@@ -110,8 +116,22 @@ namespace GSLanguageCompiler::AST {
         auto expressionType = expression->GetExpressionType();
 
         switch (expressionType) {
-            case ExpressionType::ConstantExpression: {
-                if constexpr (!std::is_same_v<GS_ConstantExpression, ExpressionT>) {
+            case ExpressionType::LiteralExpression: {
+                if constexpr (!std::is_same_v<GS_LiteralExpression, ExpressionT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case ExpressionType::ArrayExpression: {
+                if constexpr (!std::is_same_v<GS_ArrayExpression, ExpressionT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case ExpressionType::RangeExpression: {
+                if constexpr (!std::is_same_v<GS_RangeExpression, ExpressionT>) {
                     return nullptr;
                 }
 
@@ -131,8 +151,15 @@ namespace GSLanguageCompiler::AST {
 
                 break;
             }
-            case ExpressionType::ArrayExpression: {
-                if constexpr (!std::is_same_v<GS_ArrayExpression, ExpressionT>) {
+            case ExpressionType::IndexExpression: {
+                if constexpr (!std::is_same_v<GS_IndexExpression, ExpressionT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
+            case ExpressionType::CastExpression: {
+                if constexpr (!std::is_same_v<GS_CastExpression, ExpressionT>) {
                     return nullptr;
                 }
 
@@ -169,6 +196,7 @@ namespace GSLanguageCompiler::AST {
         auto expressionType = expression->GetExpressionType();
 
         switch (expressionType) {
+            case ExpressionType::IndexExpression:
             case ExpressionType::VariableUsingExpression:
                 return true;
             default:
@@ -185,10 +213,13 @@ namespace GSLanguageCompiler::AST {
         auto expressionType = expression->GetExpressionType();
 
         switch (expressionType) {
-            case ExpressionType::ConstantExpression:
+            case ExpressionType::LiteralExpression:
+            case ExpressionType::ArrayExpression:
+            case ExpressionType::RangeExpression:
             case ExpressionType::UnaryExpression:
             case ExpressionType::BinaryExpression:
-            case ExpressionType::ArrayExpression:
+            case ExpressionType::IndexExpression:
+            case ExpressionType::CastExpression:
             case ExpressionType::VariableUsingExpression:
             case ExpressionType::FunctionCallingExpression:
                 return true;
