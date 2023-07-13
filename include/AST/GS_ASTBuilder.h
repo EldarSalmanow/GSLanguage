@@ -2,6 +2,8 @@
 #define GSLANGUAGE_GS_ASTBUILDER_H
 
 #include <AST/Declarations/GS_TranslationUnitDeclaration.h>
+#include <AST/Declarations/GS_ModuleDeclaration.h>
+#include <AST/Declarations/GS_ImportDeclaration.h>
 #include <AST/Declarations/GS_FunctionDeclaration.h>
 
 #include <AST/Statements/GS_VariableDeclarationStatement.h>
@@ -9,18 +11,27 @@
 #include <AST/Statements/GS_IfStatement.h>
 #include <AST/Statements/GS_ForStatement.h>
 #include <AST/Statements/GS_WhileStatement.h>
+#include <AST/Statements/GS_MatchStatement.h>
+#include <AST/Statements/GS_ReturnStatement.h>
 #include <AST/Statements/GS_ExpressionStatement.h>
 
 #include <AST/Expressions/GS_LiteralExpression.h>
+#include <AST/Expressions/GS_ArrayExpression.h>
+#include <AST/Expressions/GS_RangeExpression.h>
 #include <AST/Expressions/GS_UnaryExpression.h>
 #include <AST/Expressions/GS_BinaryExpression.h>
-#include <AST/Expressions/GS_ArrayExpression.h>
+#include <AST/Expressions/GS_IndexExpression.h>
+#include <AST/Expressions/GS_CastExpression.h>
 #include <AST/Expressions/GS_VariableUsingExpression.h>
 #include <AST/Expressions/GS_FunctionCallingExpression.h>
 
 #include <AST/GS_ASTContext.h>
 
 namespace GSLanguageCompiler::AST {
+
+    /*
+     * TODO: Create simple way for AST nodes creating
+     */
 
     /**
      * Class for smart creating AST nodes
@@ -252,6 +263,29 @@ namespace GSLanguageCompiler::AST {
         GSTranslationUnitDeclarationPtr CreateTranslationUnitDeclaration(UString name);
 
         /**
+         * Create module declaration
+         * @param name Name
+         * @param body Body
+         * @return Module declaration
+         */
+        NodePtr<GS_ModuleDeclaration> CreateModuleDeclaration(UString name,
+                                                              GSDeclarationPtrArray body);
+
+        /**
+         * Create module declaration
+         * @param name Name
+         * @return Module declaration
+         */
+        NodePtr<GS_ModuleDeclaration> CreateModuleDeclaration(UString name);
+
+        /**
+         * Create import declaration
+         * @param path Path
+         * @return Import declaration
+         */
+        NodePtr<GS_ImportDeclaration> CreateImportDeclaration(UString path);
+
+        /**
          * Create function qualifiers
          * @param externType Extern type
          * @return Function qualifiers
@@ -451,6 +485,51 @@ namespace GSLanguageCompiler::AST {
         NodePtr<GS_WhileStatement> CreateWhileStatement(GSExpressionPtr condition);
 
         /**
+         * Create match arm
+         * @param pattern Pattern
+         * @param body Body
+         * @return Match arm
+         */
+        GS_MatchArm CreteMatchArm(GSExpressionPtr pattern,
+                                  GSStatementPtrArray body);
+
+        /**
+         * Create match arm
+         * @param pattern Pattern
+         * @return Match arm
+         */
+        GS_MatchArm CreateMatchArm(GSExpressionPtr pattern);
+
+        /**
+         * Create match statement
+         * @param expression Expression
+         * @param arms Arms
+         * @return Match statement
+         */
+        NodePtr<GS_MatchStatement> CreateMatchStatement(GSExpressionPtr expression,
+                                                        GSMatchArmArray arms);
+
+        /**
+         * Create match statement
+         * @param expression Expression
+         * @return Match statement
+         */
+        NodePtr<GS_MatchStatement> CreateMatchStatement(GSExpressionPtr expression);
+
+        /**
+         * Create return statement
+         * @param expression Expression
+         * @return Return statement
+         */
+        NodePtr<GS_ReturnStatement> CreateReturnStatement(GSExpressionPtr expression);
+
+        /**
+         * Create return statement
+         * @return Return statement
+         */
+        NodePtr<GS_ReturnStatement> CreateReturnStatement();
+
+        /**
          * Create expression statement
          * @param expression Expression
          * @return Expression statement
@@ -458,88 +537,104 @@ namespace GSLanguageCompiler::AST {
         NodePtr<GS_ExpressionStatement> CreateExpressionStatement(GSExpressionPtr expression);
 
         /**
-         * Create constant expression
+         * Create literal expression
          * @param value Value
-         * @return Constant expression
+         * @return Literal expression
          */
-        NodePtr<GS_LiteralExpression> CreateConstantExpression(GSValuePtr value);
+        NodePtr<GS_LiteralExpression> CreateLiteralExpression(GSValuePtr value);
 
         /**
-         * Create constant expression
+         * Create literal expression
          * @param value Bool value
-         * @return Constant expression
+         * @return Literal expression
          */
-        NodePtr<GS_LiteralExpression> CreateConstantExpression(Bool value);
+        NodePtr<GS_LiteralExpression> CreateLiteralExpression(Bool value);
 
         /**
-         * Create constant expression
+         * Create literal expression
          * @param value Char value
-         * @return Constant expression
+         * @return Literal expression
          */
-        NodePtr<GS_LiteralExpression> CreateConstantExpression(USymbol value);
+        NodePtr<GS_LiteralExpression> CreateLiteralExpression(USymbol value);
 
         /**
-         * Create constant expression
+         * Create literal expression
          * @param value I8 value
-         * @return Constant expression
+         * @return Literal expression
          */
-        NodePtr<GS_LiteralExpression> CreateConstantExpression(I8 value);
+        NodePtr<GS_LiteralExpression> CreateLiteralExpression(I8 value);
 
         /**
-         * Create constant expression
+         * Create literal expression
          * @param value I16 value
-         * @return Constant expression
+         * @return Literal expression
          */
-        NodePtr<GS_LiteralExpression> CreateConstantExpression(I16 value);
+        NodePtr<GS_LiteralExpression> CreateLiteralExpression(I16 value);
 
         /**
-         * Create constant expression
+         * Create literal expression
          * @param value I32 value
-         * @return Constant expression
+         * @return Literal expression
          */
-        NodePtr<GS_LiteralExpression> CreateConstantExpression(I32 value);
+        NodePtr<GS_LiteralExpression> CreateLiteralExpression(I32 value);
 
         /**
-         * Create constant expression
+         * Create literal expression
          * @param value I64 value
-         * @return Constant expression
+         * @return Literal expression
          */
-        NodePtr<GS_LiteralExpression> CreateConstantExpression(I64 value);
+        NodePtr<GS_LiteralExpression> CreateLiteralExpression(I64 value);
 
         /**
-         * Create constant expression
+         * Create literal expression
          * @param value U8 value
-         * @return Constant expression
+         * @return Literal expression
          */
-        NodePtr<GS_LiteralExpression> CreateConstantExpression(U8 value);
+        NodePtr<GS_LiteralExpression> CreateLiteralExpression(U8 value);
 
         /**
-         * Create constant expression
+         * Create literal expression
          * @param value U16 value
-         * @return Constant expression
+         * @return Literal expression
          */
-        NodePtr<GS_LiteralExpression> CreateConstantExpression(U16 value);
+        NodePtr<GS_LiteralExpression> CreateLiteralExpression(U16 value);
 
         /**
-         * Create constant expression
+         * Create literal expression
          * @param value U32 value
-         * @return Constant expression
+         * @return Literal expression
          */
-        NodePtr<GS_LiteralExpression> CreateConstantExpression(U32 value);
+        NodePtr<GS_LiteralExpression> CreateLiteralExpression(U32 value);
 
         /**
-         * Create constant expression
+         * Create literal expression
          * @param value U64 value
-         * @return Constant expression
+         * @return Literal expression
          */
-        NodePtr<GS_LiteralExpression> CreateConstantExpression(U64 value);
+        NodePtr<GS_LiteralExpression> CreateLiteralExpression(U64 value);
 
         /**
-         * Create constant expression
+         * Create literal expression
          * @param value String value
-         * @return Constant expression
+         * @return Literal expression
          */
-        NodePtr<GS_LiteralExpression> CreateConstantExpression(UString value);
+        NodePtr<GS_LiteralExpression> CreateLiteralExpression(UString value);
+
+        /**
+         * Create array expression
+         * @param expressions Expressions
+         * @return Array expression
+         */
+        NodePtr<GS_ArrayExpression> CreateArrayExpression(GSExpressionPtrArray expressions);
+
+        /**
+         * Create range expression
+         * @param startExpression Start expression
+         * @param endExpression End expression
+         * @return Range expression
+         */
+        NodePtr<GS_RangeExpression> CreateRangeExpression(GSExpressionPtr startExpression,
+                                                          GSExpressionPtr endExpression);
 
         /**
          * Create unary expression
@@ -562,11 +657,22 @@ namespace GSLanguageCompiler::AST {
                                                             GSExpressionPtr secondExpression);
 
         /**
-         * Create array expression
-         * @param expressions Expressions
-         * @return Array expression
+         * Create index expression
+         * @param expression Expression
+         * @param index Index
+         * @return Index expression
          */
-        NodePtr<GS_ArrayExpression> CreateArrayExpression(GSExpressionPtrArray expressions);
+        NodePtr<GS_IndexExpression> CreateIndexExpression(GSExpressionPtr expression,
+                                                          GSExpressionPtr index);
+
+        /**
+         * Create cast expression
+         * @param expression Expression
+         * @param type Type
+         * @return Cast expression
+         */
+        NodePtr<GS_CastExpression> CreateCastExpression(GSExpressionPtr expression,
+                                                        Semantic::GSTypePtr type);
 
         /**
          * Create variable using expression

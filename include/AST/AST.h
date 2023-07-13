@@ -45,16 +45,4 @@
 
 #include <AST/GS_ASTBuilder.h>
 
-namespace GSLanguageCompiler::AST {
-
-    void f() {
-        auto ms = GS_MatchStatement::Create(GS_LiteralExpression::Create(GS_I32Value::Create(1)));
-
-        auto arm = ms->AddArm(GS_MatchArm::Create(GS_LiteralExpression::Create(GS_I32Value::Create(1))));
-
-        arm.AddStatement(GS_ExpressionStatement::Create(GS_FunctionCallingExpression::Create("IO::PrintLn", {GS_LiteralExpression::Create(GS_StringValue::Create("1 value")) })));
-    }
-
-}
-
 #endif //GSLANGUAGE_AST_H

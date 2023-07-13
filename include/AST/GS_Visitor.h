@@ -38,6 +38,10 @@ namespace GSLanguageCompiler {
 
     namespace AST {
 
+        /*
+         * TODO: Create type visitor?
+         */
+
         /**
          * Class for visiting AST nodes without result
          */
@@ -181,6 +185,24 @@ namespace GSLanguageCompiler {
                                      NodePtrLRef<GS_WhileStatement> whileStatement);
 
             /**
+             * Default visit match statement
+             * @param session Session
+             * @param matchStatement Match statement
+             * @return Void return
+             */
+            Void SuperMatchStatement(LRef<Driver::GS_Session> session,
+                                     NodePtrLRef<GS_MatchStatement> matchStatement);
+
+            /**
+             * Default visit return statement
+             * @param session Session
+             * @param returnStatement Return statement
+             * @return Void return
+             */
+            Void SuperReturnStatement(LRef<Driver::GS_Session> session,
+                                      NodePtrLRef<GS_ReturnStatement> returnStatement);
+
+            /**
              * Default visit expression statement
              * @param session Session
              * @param expressionStatement Expression statement
@@ -190,13 +212,31 @@ namespace GSLanguageCompiler {
                                           NodePtrLRef<GS_ExpressionStatement> expressionStatement);
 
             /**
-             * Default visit constant expression
+             * Default visit literal expression
              * @param session Session
-             * @param constantExpression Constant expression
+             * @param literalExpression Literal expression
              * @return Void return
              */
-            Void SuperConstantExpression(LRef<Driver::GS_Session> session,
-                                         NodePtrLRef<GS_LiteralExpression> constantExpression);
+            Void SuperLiteralExpression(LRef<Driver::GS_Session> session,
+                                        NodePtrLRef<GS_LiteralExpression> literalExpression);
+
+            /**
+             * Default visit array expression
+             * @param session Session
+             * @param arrayExpression Array expression
+             * @return Void return
+             */
+            Void SuperArrayExpression(LRef<Driver::GS_Session> session,
+                                      NodePtrLRef<GS_ArrayExpression> arrayExpression);
+
+            /**
+             * Default visit range expression
+             * @param session Session
+             * @param rangeExpression Range expression
+             * @return Void return
+             */
+            Void SuperRangeExpression(LRef<Driver::GS_Session> session,
+                                      NodePtrLRef<GS_RangeExpression> rangeExpression);
 
             /**
              * Default visit unary expression
@@ -217,13 +257,22 @@ namespace GSLanguageCompiler {
                                        NodePtrLRef<GS_BinaryExpression> binaryExpression);
 
             /**
-             * Default visit array expression
+             * Default visit index expression
              * @param session Session
-             * @param arrayExpression Array expression
+             * @param indexExpression Index expression
              * @return Void return
              */
-            Void SuperArrayExpression(LRef<Driver::GS_Session> session,
-                                      NodePtrLRef<GS_ArrayExpression> arrayExpression);
+            Void SuperIndexExpression(LRef<Driver::GS_Session> session,
+                                      NodePtrLRef<GS_IndexExpression> indexExpression);
+
+            /**
+             * Default visit cast expression
+             * @param session Session
+             * @param castExpression Cast expression
+             * @return Void return
+             */
+            Void SuperCastExpression(LRef<Driver::GS_Session> session,
+                                     NodePtrLRef<GS_CastExpression> castExpression);
 
             /**
              * Default visit variable using expression
@@ -369,6 +418,24 @@ namespace GSLanguageCompiler {
                                              NodePtrLRef<GS_WhileStatement> whileStatement);
 
             /**
+             * Visit match statement
+             * @param session Session
+             * @param matchStatement Match statement
+             * @return Void return
+             */
+            virtual Void VisitMatchStatement(LRef<Driver::GS_Session> session,
+                                             NodePtrLRef<GS_MatchStatement> matchStatement);
+
+            /**
+             * Visit return statement
+             * @param session Session
+             * @param returnStatement Return statement
+             * @return Void return
+             */
+            virtual Void VisitReturnStatement(LRef<Driver::GS_Session> session,
+                                              NodePtrLRef<GS_ReturnStatement> returnStatement);
+
+            /**
              * Visit expression statement
              * @param session Session
              * @param expressionStatement Expression statement
@@ -378,13 +445,31 @@ namespace GSLanguageCompiler {
                                                   NodePtrLRef<GS_ExpressionStatement> expressionStatement);
 
             /**
-             * Visit constant expression
+             * Visit literal expression
              * @param session Session
-             * @param constantExpression Constant expression
+             * @param literalExpression Literal expression
              * @return Void return
              */
-            virtual Void VisitConstantExpression(LRef<Driver::GS_Session> session,
-                                                 NodePtrLRef<GS_LiteralExpression> constantExpression);
+            virtual Void VisitLiteralExpression(LRef<Driver::GS_Session> session,
+                                                NodePtrLRef<GS_LiteralExpression> literalExpression);
+
+            /**
+             * Visit array expression
+             * @param session Session
+             * @param arrayExpression Array expression
+             * @return Void return
+             */
+            virtual Void VisitArrayExpression(LRef<Driver::GS_Session> session,
+                                              NodePtrLRef<GS_ArrayExpression> arrayExpression);
+
+            /**
+             * Visit range expression
+             * @param session Session
+             * @param rangeExpression Range expression
+             * @return Void return
+             */
+            virtual Void VisitRangeExpression(LRef<Driver::GS_Session> session,
+                                              NodePtrLRef<GS_RangeExpression> rangeExpression);
 
             /**
              * Visit unary expression
@@ -405,13 +490,22 @@ namespace GSLanguageCompiler {
                                                NodePtrLRef<GS_BinaryExpression> binaryExpression);
 
             /**
-             * Visit array expression
+             * Visit index expression
              * @param session Session
-             * @param arrayExpression Array expression
+             * @param indexExpression Index expression
              * @return Void return
              */
-            virtual Void VisitArrayExpression(LRef<Driver::GS_Session> session,
-                                              NodePtrLRef<GS_ArrayExpression> arrayExpression);
+            virtual Void VisitIndexExpression(LRef<Driver::GS_Session> session,
+                                              NodePtrLRef<GS_IndexExpression> indexExpression);
+
+            /**
+             * Visit cast expression
+             * @param session Session
+             * @param castExpression Cast expression
+             * @return Void return
+             */
+            virtual Void VisitCastExpression(LRef<Driver::GS_Session> session,
+                                             NodePtrLRef<GS_CastExpression> castExpression);
 
             /**
              * Visit variable using expression
@@ -503,6 +597,24 @@ namespace GSLanguageCompiler {
                                                       NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration);
 
             /**
+             * Default transform module declaration
+             * @param session Session
+             * @param moduleDeclaration Module declaration
+             * @return Transformed module declaration
+             */
+            GSNodePtr SuperModuleDeclaration(LRef<Driver::GS_Session> session,
+                                             NodePtrLRef<GS_ModuleDeclaration> moduleDeclaration);
+
+            /**
+             * Default transform import declaration
+             * @param session Session
+             * @param importDeclaration Import declaration
+             * @return Transformed import declaration
+             */
+            GSNodePtr SuperImportDeclaration(LRef<Driver::GS_Session> session,
+                                             NodePtrLRef<GS_ImportDeclaration> importDeclaration);
+
+            /**
              * Default transform function declaration
              * @param session Session
              * @param functionDeclaration Function declaration
@@ -557,6 +669,24 @@ namespace GSLanguageCompiler {
                                           NodePtrLRef<GS_WhileStatement> whileStatement);
 
             /**
+             * Default transform match statement
+             * @param session Session
+             * @param matchStatement Match statement
+             * @return Transformed match statement
+             */
+            GSNodePtr SuperMatchStatement(LRef<Driver::GS_Session> session,
+                                          NodePtrLRef<GS_MatchStatement> matchStatement);
+
+            /**
+             * Default transform return statement
+             * @param session Session
+             * @param returnStatement Return statement
+             * @return Transformed return statement
+             */
+            GSNodePtr SuperReturnStatement(LRef<Driver::GS_Session> session,
+                                           NodePtrLRef<GS_ReturnStatement> returnStatement);
+
+            /**
              * Default transform expression statement
              * @param session Session
              * @param expressionStatement Expression statement
@@ -566,13 +696,31 @@ namespace GSLanguageCompiler {
                                                NodePtrLRef<GS_ExpressionStatement> expressionStatement);
 
             /**
-             * Default transform constant expression
+             * Default transform literal expression
              * @param session Session
-             * @param constantExpression Constant expression
-             * @return Transformed constant expression
+             * @param literalExpression Literal expression
+             * @return Transformed literal expression
              */
-            GSNodePtr SuperConstantExpression(LRef<Driver::GS_Session> session,
-                                              NodePtrLRef<GS_LiteralExpression> constantExpression);
+            GSNodePtr SuperLiteralExpression(LRef<Driver::GS_Session> session,
+                                             NodePtrLRef<GS_LiteralExpression> literalExpression);
+
+            /**
+             * Default transform array expression
+             * @param session Session
+             * @param arrayExpression Array expression
+             * @return Transformed array expression
+             */
+            GSNodePtr SuperArrayExpression(LRef<Driver::GS_Session> session,
+                                           NodePtrLRef<GS_ArrayExpression> arrayExpression);
+
+            /**
+             * Default transform range expression
+             * @param session Session
+             * @param rangeExpression Range expression
+             * @return Transformed range expression
+             */
+            GSNodePtr SuperRangeExpression(LRef<Driver::GS_Session> session,
+                                           NodePtrLRef<GS_RangeExpression> rangeExpression);
 
             /**
              * Default transform unary expression
@@ -593,13 +741,22 @@ namespace GSLanguageCompiler {
                                             NodePtrLRef<GS_BinaryExpression> binaryExpression);
 
             /**
-             * Default transform array expression
+             * Default transform index expression
              * @param session Session
-             * @param arrayExpression Array expression
-             * @return Transformed array expression
+             * @param indexExpression Index expression
+             * @return Transformed index expression
              */
-            GSNodePtr SuperArrayExpression(LRef<Driver::GS_Session> session,
-                                           NodePtrLRef<GS_ArrayExpression> arrayExpression);
+            GSNodePtr SuperIndexExpression(LRef<Driver::GS_Session> session,
+                                           NodePtrLRef<GS_IndexExpression> indexExpression);
+
+            /**
+             * Default transform cast expression
+             * @param session Session
+             * @param castExpression Cast expression
+             * @return Transformed cast expression
+             */
+            GSNodePtr SuperCastExpression(LRef<Driver::GS_Session> session,
+                                          NodePtrLRef<GS_CastExpression> castExpression);
 
             /**
              * Default transform variable using expression
@@ -673,6 +830,24 @@ namespace GSLanguageCompiler {
                                                                   NodePtrLRef<GS_TranslationUnitDeclaration> translationUnitDeclaration);
 
             /**
+             * Transform module declaration
+             * @param session Session
+             * @param moduleDeclaration Module declaration
+             * @return Transformed module declaration
+             */
+            virtual GSNodePtr TransformModuleDeclaration(LRef<Driver::GS_Session> session,
+                                                         NodePtrLRef<GS_ModuleDeclaration> moduleDeclaration);
+
+            /**
+             * Transform import declaration
+             * @param session Session
+             * @param importDeclaration Import declaration
+             * @return Transformed import declaration
+             */
+            virtual GSNodePtr TransformImportDeclaration(LRef<Driver::GS_Session> session,
+                                                         NodePtrLRef<GS_ImportDeclaration> importDeclaration);
+
+            /**
              * Transform function declaration
              * @param session Session
              * @param functionDeclaration Function declaration
@@ -727,6 +902,24 @@ namespace GSLanguageCompiler {
                                                       NodePtrLRef<GS_WhileStatement> whileStatement);
 
             /**
+             * Transform match statement
+             * @param session Session
+             * @param matchStatement Match statement
+             * @return Transformed match statement
+             */
+            virtual GSNodePtr TransformMatchStatement(LRef<Driver::GS_Session> session,
+                                                      NodePtrLRef<GS_MatchStatement> matchStatement);
+
+            /**
+             * Transform return statement
+             * @param session Session
+             * @param returnStatement Return statement
+             * @return Transformed return statement
+             */
+            virtual GSNodePtr TransformReturnStatement(LRef<Driver::GS_Session> session,
+                                                       NodePtrLRef<GS_ReturnStatement> returnStatement);
+
+            /**
              * Transform expression statement
              * @param session Session
              * @param expressionStatement Expression statement
@@ -736,13 +929,31 @@ namespace GSLanguageCompiler {
                                                            NodePtrLRef<GS_ExpressionStatement> expressionStatement);
 
             /**
-             * Transform constant expression
+             * Transform literal expression
              * @param session Session
-             * @param constantExpression Constant expression
-             * @return Transformed constant expression
+             * @param literalExpression Literal expression
+             * @return Transformed literal expression
              */
-            virtual GSNodePtr TransformConstantExpression(LRef<Driver::GS_Session> session,
-                                                          NodePtrLRef<GS_LiteralExpression> constantExpression);
+            virtual GSNodePtr TransformLiteralExpression(LRef<Driver::GS_Session> session,
+                                                         NodePtrLRef<GS_LiteralExpression> literalExpression);
+
+            /**
+             * Transform array expression
+             * @param session Session
+             * @param arrayExpression Array expression
+             * @return Transformed array expression
+             */
+            virtual GSNodePtr TransformArrayExpression(LRef<Driver::GS_Session> session,
+                                                       NodePtrLRef<GS_ArrayExpression> arrayExpression);
+
+            /**
+             * Transform range expression
+             * @param session Session
+             * @param rangeExpression Range expression
+             * @return Transformed range expression
+             */
+            virtual GSNodePtr TransformRangeExpression(LRef<Driver::GS_Session> session,
+                                                       NodePtrLRef<GS_RangeExpression> rangeExpression);
 
             /**
              * Transform unary expression
@@ -763,13 +974,22 @@ namespace GSLanguageCompiler {
                                                         NodePtrLRef<GS_BinaryExpression> binaryExpression);
 
             /**
-             * Transform array expression
+             * Transform index expression
              * @param session Session
-             * @param arrayExpression Array expression
-             * @return Transformed array expression
+             * @param indexExpression Index expression
+             * @return Transformed index expression
              */
-            virtual GSNodePtr TransformArrayExpression(LRef<Driver::GS_Session> session,
-                                                       NodePtrLRef<GS_ArrayExpression> arrayExpression);
+            virtual GSNodePtr TransformIndexExpression(LRef<Driver::GS_Session> session,
+                                                       NodePtrLRef<GS_IndexExpression> indexExpression);
+
+            /**
+             * Transform cast expression
+             * @param session Session
+             * @param castExpression Cast expression
+             * @return Transformed cast expression
+             */
+            virtual GSNodePtr TransformCastExpression(LRef<Driver::GS_Session> session,
+                                                      NodePtrLRef<GS_CastExpression> castExpression);
 
             /**
              * Transform variable using expression

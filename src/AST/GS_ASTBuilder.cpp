@@ -125,6 +125,20 @@ namespace GSLanguageCompiler::AST {
         return GS_TranslationUnitDeclaration::Create(std::move(name));
     }
 
+    NodePtr<GS_ModuleDeclaration> GS_ASTBuilder::CreateModuleDeclaration(UString name,
+                                                                         GSDeclarationPtrArray body) {
+        return GS_ModuleDeclaration::Create(std::move(name),
+                                            std::move(body));
+    }
+
+    NodePtr<GS_ModuleDeclaration> GS_ASTBuilder::CreateModuleDeclaration(UString name) {
+        return GS_ModuleDeclaration::Create(std::move(name));
+    }
+
+    NodePtr<GS_ImportDeclaration> GS_ASTBuilder::CreateImportDeclaration(UString path) {
+        return GS_ImportDeclaration::Create(std::move(path));
+    }
+
     GS_FunctionQualifiers GS_ASTBuilder::CreateFunctionQualifiers(ExternType externType) {
         return GS_FunctionQualifiers::Create(externType);
     }
@@ -257,56 +271,94 @@ namespace GSLanguageCompiler::AST {
         return GS_WhileStatement::Create(std::move(condition));
     }
 
+    GS_MatchArm GS_ASTBuilder::CreteMatchArm(GSExpressionPtr pattern,
+                                             GSStatementPtrArray body) {
+        return GS_MatchArm::Create(std::move(pattern),
+                                   std::move(body));
+    }
+
+    GS_MatchArm GS_ASTBuilder::CreateMatchArm(GSExpressionPtr pattern) {
+        return GS_MatchArm::Create(std::move(pattern));
+    }
+
+    NodePtr<GS_MatchStatement> GS_ASTBuilder::CreateMatchStatement(GSExpressionPtr expression,
+                                                                   GSMatchArmArray arms) {
+        return GS_MatchStatement::Create(std::move(expression),
+                                         std::move(arms));
+    }
+
+    NodePtr<GS_MatchStatement> GS_ASTBuilder::CreateMatchStatement(GSExpressionPtr expression) {
+        return GS_MatchStatement::Create(std::move(expression));
+    }
+
+    NodePtr<GS_ReturnStatement> GS_ASTBuilder::CreateReturnStatement(GSExpressionPtr expression) {
+        return GS_ReturnStatement::Create(std::move(expression));
+    }
+
+    NodePtr<GS_ReturnStatement> GS_ASTBuilder::CreateReturnStatement() {
+        return GS_ReturnStatement::Create();
+    }
+
     NodePtr<GS_ExpressionStatement> GS_ASTBuilder::CreateExpressionStatement(GSExpressionPtr expression) {
         return GS_ExpressionStatement::Create(std::move(expression));
     }
 
-    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(GSValuePtr value) {
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateLiteralExpression(GSValuePtr value) {
         return GS_LiteralExpression::Create(std::move(value));
     }
 
-    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(Bool value) {
-        return CreateConstantExpression(CreateBoolValue(value));
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateLiteralExpression(Bool value) {
+        return CreateLiteralExpression(CreateBoolValue(value));
     }
 
-    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(USymbol value) {
-        return CreateConstantExpression(CreateCharValue(std::move(value)));
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateLiteralExpression(USymbol value) {
+        return CreateLiteralExpression(CreateCharValue(std::move(value)));
     }
 
-    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(I8 value) {
-        return CreateConstantExpression(CreateI8Value(value));
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateLiteralExpression(I8 value) {
+        return CreateLiteralExpression(CreateI8Value(value));
     }
 
-    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(I16 value) {
-        return CreateConstantExpression(CreateI16Value(value));
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateLiteralExpression(I16 value) {
+        return CreateLiteralExpression(CreateI16Value(value));
     }
 
-    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(I32 value) {
-        return CreateConstantExpression(CreateI32Value(value));
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateLiteralExpression(I32 value) {
+        return CreateLiteralExpression(CreateI32Value(value));
     }
 
-    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(I64 value) {
-        return CreateConstantExpression(CreateI64Value(value));
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateLiteralExpression(I64 value) {
+        return CreateLiteralExpression(CreateI64Value(value));
     }
 
-    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(U8 value) {
-        return CreateConstantExpression(CreateU8Value(value));
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateLiteralExpression(U8 value) {
+        return CreateLiteralExpression(CreateU8Value(value));
     }
 
-    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(U16 value) {
-        return CreateConstantExpression(CreateU16Value(value));
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateLiteralExpression(U16 value) {
+        return CreateLiteralExpression(CreateU16Value(value));
     }
 
-    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(U32 value) {
-        return CreateConstantExpression(CreateU32Value(value));
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateLiteralExpression(U32 value) {
+        return CreateLiteralExpression(CreateU32Value(value));
     }
 
-    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(U64 value) {
-        return CreateConstantExpression(CreateU64Value(value));
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateLiteralExpression(U64 value) {
+        return CreateLiteralExpression(CreateU64Value(value));
     }
 
-    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateConstantExpression(UString value) {
-        return CreateConstantExpression(CreateStringValue(std::move(value)));
+    NodePtr<GS_LiteralExpression> GS_ASTBuilder::CreateLiteralExpression(UString value) {
+        return CreateLiteralExpression(CreateStringValue(std::move(value)));
+    }
+
+    NodePtr<GS_ArrayExpression> GS_ASTBuilder::CreateArrayExpression(GSExpressionPtrArray expressions) {
+        return GS_ArrayExpression::Create(std::move(expressions));
+    }
+
+    NodePtr<GS_RangeExpression> GS_ASTBuilder::CreateRangeExpression(GSExpressionPtr startExpression,
+                                                                     GSExpressionPtr endExpression) {
+        return GS_RangeExpression::Create(std::move(startExpression),
+                                          std::move(endExpression));
     }
 
     NodePtr<GS_UnaryExpression> GS_ASTBuilder::CreateUnaryExpression(UnaryOperation operation,
@@ -323,8 +375,16 @@ namespace GSLanguageCompiler::AST {
                                            std::move(secondExpression));
     }
 
-    NodePtr<GS_ArrayExpression> GS_ASTBuilder::CreateArrayExpression(GSExpressionPtrArray expressions) {
-        return GS_ArrayExpression::Create(std::move(expressions));
+    NodePtr<GS_IndexExpression> GS_ASTBuilder::CreateIndexExpression(GSExpressionPtr expression,
+                                                                     GSExpressionPtr index) {
+        return GS_IndexExpression::Create(std::move(expression),
+                                          std::move(index));
+    }
+
+    NodePtr<GS_CastExpression> GS_ASTBuilder::CreateCastExpression(GSExpressionPtr expression,
+                                                                   Semantic::GSTypePtr type) {
+        return GS_CastExpression::Create(std::move(expression),
+                                         std::move(type));
     }
 
     NodePtr<GS_VariableUsingExpression> GS_ASTBuilder::CreateVariableUsingExpression(UString name) {
