@@ -17,7 +17,7 @@ namespace GSLanguageCompiler::Optimizer {
             I8 result;
 
             switch (operation) {
-                case AST::UnaryOperation::Minus:
+                case AST::UnaryOperation::Neg:
                     result = -number;
 
                     break;
@@ -30,7 +30,7 @@ namespace GSLanguageCompiler::Optimizer {
             I16 result;
 
             switch (operation) {
-                case AST::UnaryOperation::Minus:
+                case AST::UnaryOperation::Neg:
                     result = -number;
 
                     break;
@@ -43,7 +43,7 @@ namespace GSLanguageCompiler::Optimizer {
             I32 result;
 
             switch (operation) {
-                case AST::UnaryOperation::Minus:
+                case AST::UnaryOperation::Neg:
                     result = -number;
 
                     break;
@@ -56,7 +56,7 @@ namespace GSLanguageCompiler::Optimizer {
             I64 result;
 
             switch (operation) {
-                case AST::UnaryOperation::Minus:
+                case AST::UnaryOperation::Neg:
                     result = -number;
 
                     break;
@@ -80,19 +80,19 @@ namespace GSLanguageCompiler::Optimizer {
                 I32 result;
 
                 switch (operation) {
-                    case AST::BinaryOperation::Plus:
+                    case AST::BinaryOperation::Add:
                         result = firstNumber + secondNumber;
 
                         break;
-                    case AST::BinaryOperation::Minus:
+                    case AST::BinaryOperation::Sub:
                         result = firstNumber - secondNumber;
 
                         break;
-                    case AST::BinaryOperation::Star:
+                    case AST::BinaryOperation::Mul:
                         result = firstNumber * secondNumber;
 
                         break;
-                    case AST::BinaryOperation::Slash:
+                    case AST::BinaryOperation::Div:
                         result = firstNumber / secondNumber;
 
                         break;
@@ -121,7 +121,7 @@ namespace GSLanguageCompiler::Optimizer {
             if (auto result = FoldConstants(session,
                                             operation,
                                             value)) {
-                return AST::GS_ASTBuilder::Create(session.GetASTContext())->CreateConstantExpression(result);
+                return AST::GS_ASTBuilder::Create(session.GetASTContext())->CreateLiteralExpression(result);
             }
         }
 
@@ -146,7 +146,7 @@ namespace GSLanguageCompiler::Optimizer {
                                                 operation,
                                                 firstValue,
                                                 secondValue)) {
-                    return AST::GS_ASTBuilder::Create(session.GetASTContext())->CreateConstantExpression(result);
+                    return AST::GS_ASTBuilder::Create(session.GetASTContext())->CreateLiteralExpression(result);
                 }
             }
         }

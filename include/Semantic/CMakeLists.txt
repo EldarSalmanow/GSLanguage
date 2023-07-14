@@ -8,6 +8,7 @@ set(GS_SEMANTIC_SOURCE
         ${SEMANTIC_DIR}/GS_TableOfSymbols.cpp
 
         ${SEMANTIC_DIR}/Passes/GS_SymbolsPlaceholderPass.cpp
+        ${SEMANTIC_DIR}/Passes/GS_TypeInferencePass.cpp
 
         ${SEMANTIC_DIR}/GS_SemanticAnalyzer.cpp)
 

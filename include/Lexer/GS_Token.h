@@ -138,6 +138,19 @@ namespace GSLanguageCompiler::Lexer {
         IO::GS_SourceRange _locationRange;
     };
 
+    /*
+     *
+     * Identifier(abc),
+     * KeywordModule(module), KeywordImport(import), KeywordFunc(func),
+     * KeywordVar(var), KeywordIf(if), KeywordElse(else), KeywordFor(for), KeywordWhile(while), KeywordMatch(match), KeywordReturn(return),
+     * KeywordIn(in), KeywordAs(as),
+     * KeywordExtern(extern),
+     * LiteralSymbol('c'), LiteralNumber (123), LiteralString("hi"),
+     * EndOfFile,
+     * Unknown
+     *
+     */
+
     /**
      * Token array type
      */

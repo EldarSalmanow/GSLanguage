@@ -66,7 +66,41 @@ module Std {
 
 import Std::IO
 
+enum NodeKind {
+    IntLit,
+    BinExpr
+}
+
+class Node {
+    abstract func kind(): NodeKind
+}
+
+class IntLit from Node {
+    var num: I32
+
+    override func kind(): NodeKind {
+        return NodeKind::IntLit
+    }
+}
+
+enum BinOp {
+    Add,
+    Sub
+}
+
+class BinExpr from Node {
+    var lhs: Node
+    var rhs: Node
+    var op: BinOp
+
+    override func kind(): NodeKind {
+        return NodeKind::BinExpr
+    }
+}
+
 func main() {
+    var ns: [Node, 2] = [IntLit { 1 }, BinExpr { IntLit { 2 }, IntLit { 3 }, BinOp::Add }]
+
     var x: I32 = 10
 
     IO::PrintLn("Hello!")

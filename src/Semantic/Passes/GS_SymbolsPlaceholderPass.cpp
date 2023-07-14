@@ -1,6 +1,6 @@
 #include <Driver/GS_Session.h>
 
-#include <Semantic/Passes/GS_SymbolsPlaceholderPass.h>
+#include <Passes/GS_SymbolsPlaceholderPass.h>
 
 namespace GSLanguageCompiler::Semantic {
 

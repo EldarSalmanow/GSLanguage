@@ -6,5 +6,6 @@
  */
 
 #include <Semantic/Passes/GS_SymbolsPlaceholderPass.h>
+#include <Semantic/Passes/GS_TypeInferencePass.h>
 
 #endif //GSLANGUAGE_SEMANTICPASSES_H
