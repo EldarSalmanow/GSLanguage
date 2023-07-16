@@ -5,6 +5,8 @@
 namespace GSLanguageCompiler::Parser {
 
     std::map<Lexer::TokenType, I32> OperatorsPrecedence = {
+            {Lexer::TokenType::KeywordAs,     11},
+
             {Lexer::TokenType::SymbolStar,    10},
             {Lexer::TokenType::SymbolSlash,   10},
             {Lexer::TokenType::SymbolPercent, 10},
@@ -88,6 +90,18 @@ namespace GSLanguageCompiler::Parser {
     AST::GSDeclarationPtr GS_Parser::ParseDeclaration() {
         AST::GSDeclarationPtr declaration;
 
+        declaration = TryParse(&GS_Parser::ParseModuleDeclaration);
+
+        if (declaration) {
+            return declaration;
+        }
+
+        declaration = TryParse(&GS_Parser::ParseImportDeclaration);
+
+        if (declaration) {
+            return declaration;
+        }
+
         declaration = TryParse(&GS_Parser::ParseFunctionDeclaration);
 
         if (declaration) {
@@ -99,18 +113,82 @@ namespace GSLanguageCompiler::Parser {
         return nullptr;
     }
 
+    AST::NodePtr<AST::GS_ModuleDeclaration> GS_Parser::ParseModuleDeclaration() {
+        if (!IsTokenType(Lexer::TokenType::KeywordModule)) {
+            ErrorMessage("Missed keyword 'module' in module declaration!"_us);
+
+            return nullptr;
+        }
+
+        NextToken(); // skip 'module'
+
+        if (!IsTokenType(Lexer::TokenType::Identifier)) {
+            ErrorMessage("Missed identifier in module declaration!"_us);
+
+            return nullptr;
+        }
+
+        auto name = TokenValue();
+
+        NextToken(); // skip module name
+
+        if (!IsTokenType(Lexer::TokenType::SymbolLeftBrace)) {
+            ErrorMessage("Missed symbol '{' in module declaration!"_us);
+
+            return nullptr;
+        }
+
+        NextToken(); // skip '{'
+
+        auto moduleDeclaration = _builder->CreateModuleDeclaration(name);
+
+        while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
+            auto declaration = ParseDeclaration();
+
+            if (!declaration) {
+                return nullptr;
+            }
+
+            moduleDeclaration->AddDeclaration(declaration);
+        }
+
+        NextToken(); // skip '}'
+
+        return moduleDeclaration;
+    }
+
+    AST::NodePtr<AST::GS_ImportDeclaration> GS_Parser::ParseImportDeclaration() {
+        if (!IsTokenType(Lexer::TokenType::KeywordImport)) {
+            ErrorMessage("Missed keyword 'import' in import declaration!");
+
+            return nullptr;
+        }
+
+        NextToken(); // skip 'import'
+
+        if (!IsTokenType(Lexer::TokenType::Identifier)) {
+            ErrorMessage("Missed identifier in import declaration!");
+
+            return nullptr;
+        }
+
+        auto path = TokenValue();
+
+        NextToken(); // skip import path
+
+        return _builder->CreateImportDeclaration(path);
+    }
+
     AST::NodePtr<AST::GS_FunctionDeclaration> GS_Parser::ParseFunctionDeclaration() {
         UString functionName;
         AST::GSFunctionParamArray params;
         Semantic::GSTypePtr returnType;
-        AST::ExternType externType;
+        AST::ExternType externType = AST::ExternType::No;
 
         if (IsTokenType(Lexer::TokenType::KeywordExtern)) {
             externType = AST::ExternType::Yes;
 
             NextToken(); // skip 'extern'
-        } else {
-            externType = AST::ExternType::No;
         }
 
         if (!IsTokenType(Lexer::TokenType::KeywordFunc)) {
@@ -227,6 +305,36 @@ namespace GSLanguageCompiler::Parser {
             return statement;
         }
 
+        statement = TryParse(&GS_Parser::ParseIfStatement);
+
+        if (statement) {
+            return statement;
+        }
+
+        statement = TryParse(&GS_Parser::ParseForStatement);
+
+        if (statement) {
+            return statement;
+        }
+
+        statement = TryParse(&GS_Parser::ParseWhileStatement);
+
+        if (statement) {
+            return statement;
+        }
+
+        statement = TryParse(&GS_Parser::ParseMatchStatement);
+
+        if (statement) {
+            return statement;
+        }
+
+        statement = TryParse(&GS_Parser::ParseReturnStatement);
+
+        if (statement) {
+            return statement;
+        }
+
         statement = TryParse(&GS_Parser::ParseExpressionStatement);
 
         if (statement) {
@@ -308,7 +416,7 @@ namespace GSLanguageCompiler::Parser {
 
     AST::NodePtr<AST::GS_IfStatement> GS_Parser::ParseIfStatement() {
         if (!IsTokenType(Lexer::TokenType::KeywordIf)) {
-            ErrorMessage("");
+            ErrorMessage("Missed keyword 'if' in if statement!");
 
             return nullptr;
         }
@@ -317,15 +425,15 @@ namespace GSLanguageCompiler::Parser {
 
         auto condition = ParseExpression();
 
-        auto ifStatement = _builder->CreateIfStatement(condition);
-
         if (!IsTokenType(Lexer::TokenType::SymbolLeftBrace)) {
-            ErrorMessage("");
+            ErrorMessage("Missed symbol '{' in if statement!");
 
             return nullptr;
         }
 
         NextToken(); // skip '{'
+
+        auto ifStatement = _builder->CreateIfStatement(condition);
 
         while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
             auto statement = ParseStatement();
@@ -344,17 +452,62 @@ namespace GSLanguageCompiler::Parser {
 
     AST::NodePtr<AST::GS_ForStatement> GS_Parser::ParseForStatement() {
         if (!IsTokenType(Lexer::TokenType::KeywordFor)) {
-            ErrorMessage("");
+            ErrorMessage("Missed keyword 'for' in for statement!");
 
             return nullptr;
         }
 
-        return nullptr;
+        NextToken(); // skip 'for'
+
+        if (!IsTokenType(Lexer::TokenType::Identifier)) {
+            ErrorMessage("Missed identifier in for statement!");
+
+            return nullptr;
+        }
+
+        auto name = TokenValue();
+
+        NextToken(); // skip name
+
+        if (!IsTokenType(Lexer::TokenType::KeywordIn)) {
+            ErrorMessage("Missed keyword 'in' in for statement!");
+
+            return nullptr;
+        }
+
+        NextToken(); // skip 'in'
+
+        auto expression = ParseRangeExpression();
+
+        if (!IsTokenType(Lexer::TokenType::SymbolLeftBrace)) {
+            ErrorMessage("Missed symbol '{' in for statement!");
+
+            return nullptr;
+        }
+
+        NextToken(); // skip '{'
+
+        auto forStatement = _builder->CreateForStatement(name,
+                                                         expression);
+
+        while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
+            auto statement = ParseStatement();
+
+            if (!statement) {
+                return nullptr;
+            }
+
+            forStatement->AddStatement(statement);
+        }
+
+        NextToken(); // skip '}'
+
+        return forStatement;
     }
 
     AST::NodePtr<AST::GS_WhileStatement> GS_Parser::ParseWhileStatement() {
         if (!IsTokenType(Lexer::TokenType::KeywordWhile)) {
-            ErrorMessage("");
+            ErrorMessage("Missed keyword 'while' in while statement!");
 
             return nullptr;
         }
@@ -363,15 +516,15 @@ namespace GSLanguageCompiler::Parser {
 
         auto condition = ParseExpression();
 
-        auto whileStatement = _builder->CreateWhileStatement(condition);
-
         if (!IsTokenType(Lexer::TokenType::SymbolLeftBrace)) {
-            ErrorMessage("");
+            ErrorMessage("Missed symbol '{' in while statement!");
 
             return nullptr;
         }
 
         NextToken(); // skip '{'
+
+        auto whileStatement = _builder->CreateWhileStatement(condition);
 
         while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
             auto statement = ParseStatement();
@@ -388,6 +541,84 @@ namespace GSLanguageCompiler::Parser {
         return whileStatement;
     }
 
+    AST::NodePtr<AST::GS_MatchStatement> GS_Parser::ParseMatchStatement() {
+        if (!IsTokenType(Lexer::TokenType::KeywordMatch)) {
+            ErrorMessage("Missed keyword 'match' in match statement!");
+
+            return nullptr;
+        }
+
+        NextToken(); // skip 'match'
+
+        auto expression = ParseExpression();
+
+        if (!IsTokenType(Lexer::TokenType::SymbolLeftBrace)) {
+            ErrorMessage("Missed symbol '{' in match statement!");
+
+            return nullptr;
+        }
+
+        auto matchStatement = _builder->CreateMatchStatement(expression);
+
+        while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
+            auto pattern = ParseExpression();
+
+            if (!IsTokenType(Lexer::TokenType::SymbolEqGt)) {
+                ErrorMessage("Missed symbol '=>' in match statement!");
+
+                return nullptr;
+            }
+
+            NextToken(); // skip '=>'
+
+            if (!IsTokenType(Lexer::TokenType::SymbolLeftBrace)) {
+                ErrorMessage("Missed symbol '{' in match statement!");
+
+                return nullptr;
+            }
+
+            NextToken(); // skip '{'
+
+            auto arm = _builder->CreateMatchArm(pattern);
+
+            while (!IsTokenType(Lexer::TokenType::SymbolRightBrace)) {
+                auto statement = ParseStatement();
+
+                if (!statement) {
+                    return nullptr;
+                }
+
+                arm.AddStatement(statement);
+            }
+
+            NextToken(); // skip '}'
+
+            matchStatement->AddArm(arm);
+        }
+
+        NextToken(); // skip '}'
+
+        return matchStatement;
+    }
+
+    AST::NodePtr<AST::GS_ReturnStatement> GS_Parser::ParseReturnStatement() {
+        if (!IsTokenType(Lexer::TokenType::KeywordReturn)) {
+            ErrorMessage("Missed keyword 'return' in return statement!");
+
+            return nullptr;
+        }
+
+        AST::GSExpressionPtr expression;
+
+        expression = TryParse(&GS_Parser::ParseExpression);
+
+        if (!expression) {
+            return _builder->CreateReturnStatement();
+        }
+
+        return _builder->CreateReturnStatement(expression);
+    }
+
     AST::NodePtr<AST::GS_ExpressionStatement> GS_Parser::ParseExpressionStatement() {
         auto expression = ParseExpression();
 
@@ -399,13 +630,7 @@ namespace GSLanguageCompiler::Parser {
     AST::GSExpressionPtr GS_Parser::ParseExpression() {
         AST::GSExpressionPtr expression;
 
-        expression = TryParse(&GS_Parser::ParseArrayExpression);
-
-        if (expression) {
-            return expression;
-        }
-
-        expression = TryParse(&GS_Parser::ParseUnaryExpression);
+        expression = TryParse(&GS_Parser::ParseCastExpression);
 
         if (expression) {
             return ParseBinaryExpression(0,
@@ -419,6 +644,12 @@ namespace GSLanguageCompiler::Parser {
 
     AST::GSExpressionPtr GS_Parser::ParseLValueExpression() {
         AST::GSExpressionPtr expression;
+
+        expression = TryParse(&GS_Parser::ParseIndexExpression);
+
+        if (expression) {
+            return expression;
+        }
 
         expression = TryParse(&GS_Parser::ParseVariableUsingExpression);
 
@@ -434,13 +665,7 @@ namespace GSLanguageCompiler::Parser {
     AST::GSExpressionPtr GS_Parser::ParseRValueExpression() {
         AST::GSExpressionPtr expression;
 
-        expression = TryParse(&GS_Parser::ParseArrayExpression);
-
-        if (expression) {
-            return expression;
-        }
-
-        expression = TryParse(&GS_Parser::ParseUnaryExpression);
+        expression = TryParse(&GS_Parser::ParseCastExpression);
 
         if (expression) {
             return ParseBinaryExpression(0,
@@ -452,14 +677,63 @@ namespace GSLanguageCompiler::Parser {
         return nullptr;
     }
 
-    AST::GSExpressionPtr GS_Parser::ParseConstantExpression() {
+    AST::GSExpressionPtr GS_Parser::ParseLiteralExpression() {
         auto value = ParseValue();
 
         if (!value) {
             return nullptr;
         }
 
-        return _builder->CreateConstantExpression(value);
+        return _builder->CreateLiteralExpression(value);
+    }
+
+    AST::NodePtr<AST::GS_ArrayExpression> GS_Parser::ParseArrayExpression() {
+        if (!IsTokenType(Lexer::TokenType::SymbolLeftBracket)) {
+            ErrorMessage("Missed symbol ']' in array expression!"_us);
+
+            return nullptr;
+        }
+
+        NextToken(); // skip '['
+
+        AST::GSExpressionPtrArray expressions;
+
+        while (!IsTokenType(Lexer::TokenType::SymbolRightBracket)) {
+            auto expression = ParseExpression();
+
+            if (IsTokenType(Lexer::TokenType::SymbolComma)) {
+                NextToken(); // skip ','
+
+                if (IsTokenType(Lexer::TokenType::SymbolRightBracket)) {
+                    ErrorMessage("Missed expression after ',' in array expression!"_us);
+
+                    return nullptr;
+                }
+            }
+
+            expressions.emplace_back(expression);
+        }
+
+        NextToken(); // skip ']'
+
+        return _builder->CreateArrayExpression(expressions);
+    }
+
+    AST::NodePtr<AST::GS_RangeExpression> GS_Parser::ParseRangeExpression() {
+        auto startExpression = ParseExpression();
+
+        if (!IsTokenType(Lexer::TokenType::SymbolDotDot)) {
+            ErrorMessage("Missed symbol '..' in range expression!");
+
+            return nullptr;
+        }
+
+        NextToken(); // skip '..'
+
+        auto endExpression = ParseExpression();
+
+        return _builder->CreateRangeExpression(startExpression,
+                                               endExpression);
     }
 
     AST::GSExpressionPtr GS_Parser::ParseUnaryExpression() {
@@ -576,7 +850,7 @@ namespace GSLanguageCompiler::Parser {
 
             NextToken(); // skip binary operator
 
-            auto secondExpression = ParseUnaryExpression();
+            auto secondExpression = ParseCastExpression();
 
             auto nextTokenPrecedence = TokenPrecedence();
 
@@ -591,36 +865,48 @@ namespace GSLanguageCompiler::Parser {
         }
     }
 
-    AST::NodePtr<AST::GS_ArrayExpression> GS_Parser::ParseArrayExpression() {
+    AST::NodePtr<AST::GS_IndexExpression> GS_Parser::ParseIndexExpression() {
+        auto expression = ParseExpression();
+
         if (!IsTokenType(Lexer::TokenType::SymbolLeftBracket)) {
-            ErrorMessage("Missed symbol ']' in array expression!"_us);
+            ErrorMessage("Missed symbol '[' in index expression!");
 
             return nullptr;
         }
 
         NextToken(); // skip '['
 
-        AST::GSExpressionPtrArray expressions;
+        auto index = ParseExpression();
 
-        while (!IsTokenType(Lexer::TokenType::SymbolRightBracket)) {
-            auto expression = ParseExpression();
+        if (!IsTokenType(Lexer::TokenType::SymbolRightBracket)) {
+            ErrorMessage("Missed symbol ']' in index expression!");
 
-            if (IsTokenType(Lexer::TokenType::SymbolComma)) {
-                NextToken(); // skip ','
-
-                if (IsTokenType(Lexer::TokenType::SymbolRightBracket)) {
-                    ErrorMessage("Missed expression after ',' in array expression!"_us);
-
-                    return nullptr;
-                }
-            }
-
-            expressions.emplace_back(expression);
+            return nullptr;
         }
 
         NextToken(); // skip ']'
 
-        return _builder->CreateArrayExpression(expressions);
+        return _builder->CreateIndexExpression(expression,
+                                               index);
+    }
+
+    AST::GSExpressionPtr GS_Parser::ParseCastExpression() {
+        auto expression = ParseUnaryExpression();
+
+        if (IsTokenType(Lexer::TokenType::KeywordAs)) {
+            NextToken(); // skip 'as'
+
+            auto type = ParseType();
+
+            return _builder->CreateCastExpression(expression,
+                                                  type);
+
+//            ErrorMessage("Missed keyword 'as' in cast expression!");
+//
+//            return nullptr;
+        }
+
+        return expression;
     }
 
     AST::NodePtr<AST::GS_VariableUsingExpression> GS_Parser::ParseVariableUsingExpression() {
@@ -656,12 +942,12 @@ namespace GSLanguageCompiler::Parser {
 
         NextToken(); // skip '('
 
-        AST::GSExpressionPtrArray params;
+        auto functionCallingExpression = _builder->CreateFunctionCallingExpression(name);
 
         while (!IsTokenType(Lexer::TokenType::SymbolRightParen)) {
-            auto param = ParseExpression();
+            auto argument = ParseExpression();
 
-            params.emplace_back(param);
+            functionCallingExpression->AddArgument(argument);
 
             if (!IsTokenType(Lexer::TokenType::SymbolRightParen)) {
                 if (!IsTokenType(Lexer::TokenType::SymbolComma)) {
@@ -676,7 +962,7 @@ namespace GSLanguageCompiler::Parser {
 
         NextToken(); // skip ')'
 
-        return _builder->CreateFunctionCallingExpression(name, params);
+        return functionCallingExpression;
     }
 
     AST::GSExpressionPtr GS_Parser::ParseParenExpression() {
@@ -702,6 +988,30 @@ namespace GSLanguageCompiler::Parser {
     AST::GSExpressionPtr GS_Parser::ParsePrimaryExpression() {
         AST::GSExpressionPtr expression;
 
+        expression = TryParse(&GS_Parser::ParseLiteralExpression);
+
+        if (expression) {
+            return expression;
+        }
+
+        expression = TryParse(&GS_Parser::ParseArrayExpression);
+
+        if (expression) {
+            return expression;
+        }
+
+        expression = TryParse(&GS_Parser::ParseRangeExpression);
+
+        if (expression) {
+            return expression;
+        }
+
+        expression = TryParse(&GS_Parser::ParseIndexExpression);
+
+        if (expression) {
+            return expression;
+        }
+
         expression = TryParse(&GS_Parser::ParseFunctionCallingExpression);
 
         if (expression) {
@@ -709,12 +1019,6 @@ namespace GSLanguageCompiler::Parser {
         }
 
         expression = TryParse(&GS_Parser::ParseVariableUsingExpression);
-
-        if (expression) {
-            return expression;
-        }
-
-        expression = TryParse(&GS_Parser::ParseConstantExpression);
 
         if (expression) {
             return expression;

@@ -403,6 +403,10 @@ namespace GSLanguageCompiler::AST {
                                                     std::move(params));
     }
 
+    NodePtr<GS_FunctionCallingExpression> GS_ASTBuilder::CreateFunctionCallingExpression(UString name) {
+        return GS_FunctionCallingExpression::Create(std::move(name));
+    }
+
     LRef<GS_ASTContext> GS_ASTBuilder::GetContext() {
         return _context;
     }

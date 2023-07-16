@@ -18,6 +18,12 @@ namespace GSLanguageCompiler::AST {
                                                     GSExpressionPtrArray());
     }
 
+    LRef<GSExpressionPtr> GS_FunctionCallingExpression::AddArgument(GSExpressionPtr argument) {
+        _arguments.emplace_back(std::move(argument));
+
+        return _arguments[_arguments.size() - 1];
+    }
+
     LRef<UString> GS_FunctionCallingExpression::GetName() {
         return _name;
     }

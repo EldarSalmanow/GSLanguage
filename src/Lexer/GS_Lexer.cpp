@@ -19,6 +19,8 @@ namespace GSLanguageCompiler::Lexer {
             return TokenType::SymbolColon;
         } else if (symbol == ',') {
             return TokenType::SymbolComma;
+        } else if (symbol == '.') {
+            return TokenType::SymbolDot;
         } else if (symbol == '+') {
             return TokenType::SymbolPlus;
         } else if (symbol == '-') {
@@ -142,16 +144,30 @@ namespace GSLanguageCompiler::Lexer {
 
             TokenType tokenType = TokenType::Identifier;
 
-            if (string == "func") {
+            if (string == "module") {
+                tokenType = TokenType::KeywordModule;
+            } else if (string == "import") {
+                tokenType = TokenType::KeywordImport;
+            } else if (string == "func") {
                 tokenType = TokenType::KeywordFunc;
             } else if (string == "var") {
                 tokenType = TokenType::KeywordVar;
             } else if (string == "if") {
                 tokenType = TokenType::KeywordIf;
+            } else if (string == "else") {
+                tokenType = TokenType::KeywordElse;
             } else if (string == "for") {
                 tokenType = TokenType::KeywordFor;
             } else if (string == "while") {
                 tokenType = TokenType::KeywordWhile;
+            } else if (string == "match") {
+                tokenType = TokenType::KeywordMatch;
+            } else if (string == "return") {
+                tokenType = TokenType::KeywordReturn;
+            } else if (string == "in") {
+                tokenType = TokenType::KeywordIn;
+            } else if (string == "as") {
+                tokenType = TokenType::KeywordAs;
             } else if (string == "extern") {
                 tokenType = TokenType::KeywordExtern;
             }
@@ -192,21 +208,97 @@ namespace GSLanguageCompiler::Lexer {
                 type = TokenType::SymbolColon;
             } else if (symbol == ',') {
                 type = TokenType::SymbolComma;
+            } else if (symbol == '.') {
+                NextSymbol();
+
+                if (CurrentSymbol() == '.') {
+                    type = TokenType::SymbolDotDot;
+
+                    endPosition = CurrentLocation();
+                } else {
+                    type = TokenType::SymbolDot;
+                }
             } else if (symbol == '+') {
-                type = TokenType::SymbolPlus;
+                NextSymbol();
+
+                if (CurrentSymbol() == '+') {
+                    type = TokenType::SymbolPlusPlus;
+
+                    endPosition = CurrentLocation();
+                } else if (CurrentSymbol() == '=') {
+                    type = TokenType::SymbolPlusEq;
+
+                    endPosition = CurrentLocation();
+                } else {
+                    type = TokenType::SymbolPlus;
+                }
             } else if (symbol == '-') {
-                type = TokenType::SymbolMinus;
+                NextSymbol();
+
+                if (CurrentSymbol() == '-') {
+                    type = TokenType::SymbolMinusMinus;
+
+                    endPosition = CurrentLocation();
+                } else if (CurrentSymbol() == '=') {
+                    type = TokenType::SymbolMinusEq;
+
+                    endPosition = CurrentLocation();
+                } else {
+                    type = TokenType::SymbolMinus;
+                }
             } else if (symbol == '*') {
-                type = TokenType::SymbolStar;
+                NextSymbol();
+
+                if (CurrentSymbol() == '*') {
+                    type = TokenType::SymbolStarStar;
+
+                    endPosition = CurrentLocation();
+                } else if (CurrentSymbol() == '=') {
+                    type = TokenType::SymbolStarEq;
+
+                    endPosition = CurrentLocation();
+                } else {
+                    type = TokenType::SymbolStar;
+                }
             } else if (symbol == '/') {
-                type = TokenType::SymbolSlash;
+                NextSymbol();
+
+                if (CurrentSymbol() == '=') {
+                    type = TokenType::SymbolSlashEq;
+
+                    endPosition = CurrentLocation();
+                } else {
+                    type = TokenType::SymbolSlash;
+                }
             } else if (symbol == '%') {
-                type = TokenType::SymbolPercent;
+                NextSymbol();
+
+                if (CurrentSymbol() == '=') {
+                    type = TokenType::SymbolPercentEq;
+
+                    endPosition = CurrentLocation();
+                } else {
+                    type = TokenType::SymbolPercent;
+                }
+            } else if (symbol == '^') {
+                NextSymbol();
+
+                if (CurrentSymbol() == '=') {
+                    type = TokenType::SymbolCaretEq;
+
+                    endPosition = CurrentLocation();
+                } else {
+                    type = TokenType::SymbolCaret;
+                }
             } else if (symbol == '&') {
                 NextSymbol();
 
                 if (CurrentSymbol() == '&') {
                     type = TokenType::SymbolAndAnd;
+
+                    endPosition = CurrentLocation();
+                } else if (CurrentSymbol() == '=') {
+                    type = TokenType::SymbolAndEq;
 
                     endPosition = CurrentLocation();
                 } else {
@@ -219,11 +311,13 @@ namespace GSLanguageCompiler::Lexer {
                     type = TokenType::SymbolOrOr;
 
                     endPosition = CurrentLocation();
+                } else if (CurrentSymbol() == '=') {
+                    type = TokenType::SymbolOrEq;
+
+                    endPosition = CurrentLocation();
                 } else {
                     type = TokenType::SymbolOr;
                 }
-            } else if (symbol == '^') {
-                type = TokenType::SymbolCaret;
             } else if (symbol == '>') {
                 NextSymbol();
 
@@ -267,6 +361,10 @@ namespace GSLanguageCompiler::Lexer {
 
                 if (CurrentSymbol() == '=') {
                     type = TokenType::SymbolEqEq;
+
+                    endPosition = CurrentLocation();
+                } else if (CurrentSymbol() == '>') {
+                    type = TokenType::SymbolEqGt;
 
                     endPosition = CurrentLocation();
                 } else {

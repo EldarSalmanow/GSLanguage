@@ -100,6 +100,18 @@ namespace GSLanguageCompiler::Parser {
         AST::GSDeclarationPtr ParseDeclaration();
 
         /**
+         * Parsing module declaration
+         * @return Module declaration
+         */
+        AST::NodePtr<AST::GS_ModuleDeclaration> ParseModuleDeclaration();
+
+        /**
+         * Parsing import declaration
+         * @return Import declaration
+         */
+        AST::NodePtr<AST::GS_ImportDeclaration> ParseImportDeclaration();
+
+        /**
          * Parsing function declaration
          * @return Function declaration
          */
@@ -142,6 +154,18 @@ namespace GSLanguageCompiler::Parser {
         AST::NodePtr<AST::GS_WhileStatement> ParseWhileStatement();
 
         /**
+         * Parsing match statement
+         * @return Match statement
+         */
+        AST::NodePtr<AST::GS_MatchStatement> ParseMatchStatement();
+
+        /**
+         * Parsing return statement
+         * @return Return statement
+         */
+        AST::NodePtr<AST::GS_ReturnStatement> ParseReturnStatement();
+
+        /**
          * Parsing expression statement
          * @return Expression statement
          */
@@ -166,10 +190,22 @@ namespace GSLanguageCompiler::Parser {
         AST::GSExpressionPtr ParseRValueExpression();
 
         /**
-         * Parsing constant expression
-         * @return Constant expression
+         * Parsing literal expression
+         * @return Literal expression
          */
-        AST::GSExpressionPtr ParseConstantExpression();
+        AST::GSExpressionPtr ParseLiteralExpression();
+
+        /**
+         * Parsing array expression
+         * @return Array expression
+         */
+        AST::NodePtr<AST::GS_ArrayExpression> ParseArrayExpression();
+
+        /**
+         * Parsing range expression
+         * @return Range expression
+         */
+        AST::NodePtr<AST::GS_RangeExpression> ParseRangeExpression();
 
         /**
          * Parsing unary expression
@@ -187,10 +223,16 @@ namespace GSLanguageCompiler::Parser {
                                                    LRef<AST::GSExpressionPtr> expression);
 
         /**
-         * Parsing array expression
-         * @return Array expression
+         * Parsing index expression
+         * @return Index expression
          */
-        AST::NodePtr<AST::GS_ArrayExpression> ParseArrayExpression();
+        AST::NodePtr<AST::GS_IndexExpression> ParseIndexExpression();
+
+        /**
+         * Parsing cast expression
+         * @return Cast expression
+         */
+        AST::GSExpressionPtr ParseCastExpression();
 
         /**
          * Parsing variable using expression
@@ -206,7 +248,7 @@ namespace GSLanguageCompiler::Parser {
 
         /**
          * Parsing paren expression
-         * @return Paren expression (expression)
+         * @return Paren expression
          */
         AST::GSExpressionPtr ParseParenExpression();
 

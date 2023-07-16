@@ -98,7 +98,19 @@ class BinExpr from Node {
     }
 }
 
+enum NodeKind {
+    IntLit(I32),
+    BinExpr(BinOp, Node, Node)
+}
+
 func main() {
+    var n: NodeKind = NodeKind::IntLit(1)
+
+    match n {
+        NodeKind::IntLit(x) -> IO::PrintLn(x)
+        _ -> return 0
+    }
+
     var ns: [Node, 2] = [IntLit { 1 }, BinExpr { IntLit { 2 }, IntLit { 3 }, BinOp::Add }]
 
     var x: I32 = 10

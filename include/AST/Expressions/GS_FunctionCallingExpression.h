@@ -53,6 +53,21 @@ namespace GSLanguageCompiler::AST {
 
         /*
          *
+         * GS_FunctionCallingExpression PUBLIC METHODS
+         *
+         */
+
+        /**
+         * Adding argument to arguments
+         * @param argument Argument
+         * @return Argument
+         */
+        LRef<GSExpressionPtr> AddArgument(GSExpressionPtr argument);
+
+    public:
+
+        /*
+         *
          * GS_FunctionCallingExpression PUBLIC GETTER METHODS
          *
          */
@@ -97,7 +112,7 @@ namespace GSLanguageCompiler::AST {
         UString _name;
 
         /**
-         * arguments for calling function
+         * Arguments for calling function
          */
         GSExpressionPtrArray _arguments;
     };

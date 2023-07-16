@@ -1,58 +1,191 @@
-[//]: # (TODO update)
+# Grammar of GSLanguage
 
-**Program**
+Program - one file.
 
-program -> translation_unit_decl
+## **Program**
+    program ::= translation_unit_decl
 
-translation_unit_decl -> decl...
+    translation_unit_decl ::= decls
 
-**Declaration**
+## **Declarations**
 
-decl -> func_decl (, translation_unit_decl (using only in compiler infrastructure, not in real programs!))
+    decls ::= decl decls 
+            | empty
 
-func_decl -> ('extern') 'func' id '(' (id ':' id)... ')' '{' stmt... '}'
+    decl ::= module_decl 
+           | import_decl 
+           | func_decl
 
-**Statement**
+    module_decl ::= 'module' id '{' decls '}'
 
-stmt -> var_decl_stmt, assignment_stmt, expr_stmt
+    import_decl ::= 'import' id
 
-var_decl_stmt -> 'var' id (':' id) '=' rvalue_expr 
-               | 'var' id ':' id
+    func_decl ::= qualifiers 'func' id '(' params ')' '{' stmts '}'
 
-assignment_stmt -> lvalue_expr '=' rvalue_expr 
+    qualifiers ::= qualifier qualifiers 
+                 | empty
 
-expr_stmt -> expr
+    qualifier ::= 'extern'
 
-**Expression**
+    params ::= param 
+             | param ',' params 
+             | empty
 
-expr -> paren_expr (only in grammar), const_expr, unary_expr, binary_expr, array_expr, var_using_expr, func_call_expr
+    param ::= id ':' id
 
-paren_expr -> '(' expr ')'
+[//]: # (TODO: Add compound assignment statement)
+[//]: # (TODO: Add else branch in if statement)
+[//]: # (TODO: Replace 'range_expr' to 'expr' in for statement)
+[//]: # (TODO: Add simplified match arm in match statement)
+[//]: # (TODO: Add underscore '_' to valid pattern in match statement)
+## **Statements**
 
-lvalue_expr -> var_using_expr
+    stmts ::= stmt stmts 
+            | empty
 
-rvalue_expr -> const_expr, unary_expr, binary_expr, array_expr, var_using_expr, func_call_expr
+    stmt ::= var_decl_stmt 
+           | assignment_stmt 
+           | if_stmt 
+           | for_stmt 
+           | while_stmt 
+           | match_stmt 
+           | return_stmt 
+           | expr_stmt
 
-const_expr -> num, str
+    var_decl_stmt ::= 'var' id ':' id '=' rvalue_expr 
+                    | 'var' id '=' rvalue_expr
+                    | 'var' id ':' id
 
-unary_expr -> unary_op expr
+    assignment_stmt ::= lvalue_expr '=' rvalue_expr
 
-unary_op -> '-'
+    if_stmt ::= 'if' expr '{' stmts '}'
 
-binary_expr -> expr binary_op expr
+    for_stmt ::= 'for' id 'in' range_expr '{' stmts '}'
 
-binary_op -> '+', '-', '*', '/'
+    while_stmt ::= 'while' expr '{' stmts '}'
 
-array_expr -> '[' expr (, expr)... ']'
+    match_stmt ::= 'match' expr '{' match_arms '}'
 
-var_using_expr -> id
+    match_arms ::= match_arm match_arms 
+                 | emtpy
 
-func_call_expr -> id '(' (expr...) ')'
+    match_arm ::= expr '=>' '{' stmts '}'
 
-expr -> unary_expr binary_expr_rhs, array_expr
+    return_stmt ::= 'return' expr
 
-unary_expr -> (unary_op) primary_expr
+    expr_stmt ::= expr
 
-binary_expr_rhs -> binary_op unary_expr
+[//]: # (TODO: Rewrite expression)
+## **Expression**
 
-primary_expr -> const_expr, var_using_expr, func_call_expr, paren_expr
+    exprs ::= expr exprs 
+            | empty
+
+    expr ::= literal_expr
+           | array_expr
+           | range_expr
+           | unary_expr
+           | binary_expr
+           | index_expr
+           | cast_expr
+           | var_using_expr
+           | func_call_expr 
+           | paren_expr
+
+    lvalue_expr ::= index_expr 
+                  | var_using_expr 
+                  | paren_expr
+
+    rvalue_expr ::= literal_expr 
+                  | array_expr 
+                  | range_expr 
+                  | unary_expr 
+                  | binary_expr 
+                  | index_expr 
+                  | cast_expr 
+                  | var_using_expr 
+                  | func_call_expr 
+                  | paren_expr
+
+    primary_expr ::= literal_expr 
+                   | array_expr 
+                   | range_expr 
+                   | index_expr 
+                   | var_using_expr 
+                   | func_call_expr 
+                   | paren_expr
+
+    literal_expr ::= symbol 
+                   | num 
+                   | str
+
+    array_expr ::= '[' array_values ']'
+
+    array_values ::= expr 
+                   | expr ',' array_values 
+                   | empty
+
+    range_expr ::= expr '..' expr
+
+    unary_expr ::= unary_op primary_expr
+    
+    unary_op ::= '-' 
+               | '!'
+
+    binary_expr ::= cast_expr binary_op cast_expr
+
+    binary_op ::= '+' 
+                | '-' 
+                | '*' 
+                | '/' 
+                | '%' 
+                | '^' 
+                | '&' 
+                | '|' 
+                | '>' 
+                | '<' 
+                | '!' 
+                | '='
+                | '++'
+                | '--'
+                | '**'
+                | '&&'
+                | '||'
+                | '>>'
+                | '<<'
+                | '>='
+                | '<='
+                | '=='
+                | '!='
+                | '+='
+                | '-='
+                | '*='
+                | '/='
+                | '%='
+                | '^='
+                | '&='
+                | '|='
+
+    index_expr ::= expr '[' expr ']'
+
+    cast_expr ::= unary_expr 'as' id
+
+    var_using_expr ::= id
+
+    func_call_expr ::= id '(' args ')'
+
+    args ::= expr
+           | expr ',' args 
+           | empty
+
+    paren_expr ::= '(' expr ')'
+
+## **Lexical**
+
+    id ::= id_start [id_continue]*
+
+    symbol ::= ''' any_symbol '''
+
+    num ::= '0'..'9' ['0'..'9']*
+
+    str ::= '"' all_symbols '"'

@@ -18,19 +18,14 @@ GS_TOKENTYPE(EndOfFile),
 GS_TOKENTYPE(Identifier),
 
 /**
- * Symbol literal ( 'a' )
+ * Module keyword ( module )
  */
-GS_TOKENTYPE(LiteralSymbol),
+GS_TOKENTYPE(KeywordModule),
 
 /**
- * Number literal ( 123 )
+ * Import keyword ( import )
  */
-GS_TOKENTYPE(LiteralNumber),
-
-/**
- * String literal ( "abc" )
- */
-GS_TOKENTYPE(LiteralString),
+GS_TOKENTYPE(KeywordImport),
 
 /**
  * Func keyword ( func )
@@ -48,6 +43,11 @@ GS_TOKENTYPE(KeywordVar),
 GS_TOKENTYPE(KeywordIf),
 
 /**
+ * Else keyword ( else )
+ */
+GS_TOKENTYPE(KeywordElse),
+
+/**
  * For keyword ( for )
  */
 GS_TOKENTYPE(KeywordFor),
@@ -58,9 +58,44 @@ GS_TOKENTYPE(KeywordFor),
 GS_TOKENTYPE(KeywordWhile),
 
 /**
+ * Match keyword ( match )
+ */
+GS_TOKENTYPE(KeywordMatch),
+
+/**
+ * Return keyword ( return )
+ */
+GS_TOKENTYPE(KeywordReturn),
+
+/**
+ * In keyword ( in )
+ */
+GS_TOKENTYPE(KeywordIn),
+
+/**
+ * As keyword ( as )
+ */
+GS_TOKENTYPE(KeywordAs),
+
+/**
  * Extern keyword ( extern )
  */
 GS_TOKENTYPE(KeywordExtern),
+
+/**
+ * Symbol literal ( 'a' )
+ */
+GS_TOKENTYPE(LiteralSymbol),
+
+/**
+ * Number literal ( 123 )
+ */
+GS_TOKENTYPE(LiteralNumber),
+
+/**
+ * String literal ( "abc" )
+ */
+GS_TOKENTYPE(LiteralString),
 
 /**
  * Left paren symbol ( ( )
@@ -103,6 +138,11 @@ GS_TOKENTYPE(SymbolColon),
 GS_TOKENTYPE(SymbolComma),
 
 /**
+ * Dot symbol ( . )
+ */
+GS_TOKENTYPE(SymbolDot),
+
+/**
  * Plus symbol ( + )
  */
 GS_TOKENTYPE(SymbolPlus),
@@ -128,14 +168,9 @@ GS_TOKENTYPE(SymbolSlash),
 GS_TOKENTYPE(SymbolPercent),
 
 /**
- * And and (logic and) symbol ( && )
+ * Caret symbol ( ^ )
  */
-GS_TOKENTYPE(SymbolAndAnd),
-
-/**
- * Or or (logical or) symbol ( || )
- */
-GS_TOKENTYPE(SymbolOrOr),
+GS_TOKENTYPE(SymbolCaret),
 
 /**
  * And (bitwise and) symbol ( & )
@@ -148,9 +183,59 @@ GS_TOKENTYPE(SymbolAnd),
 GS_TOKENTYPE(SymbolOr),
 
 /**
- * Caret symbol ( ^ )
+ * Gt (greater than) symbol ( > )
  */
-GS_TOKENTYPE(SymbolCaret),
+GS_TOKENTYPE(SymbolGt),
+
+/**
+ * Lt (less than) symbol ( < )
+ */
+GS_TOKENTYPE(SymbolLt),
+
+/**
+ * Not symbol ( ! )
+ */
+GS_TOKENTYPE(SymbolNot),
+
+/**
+ * Eq symbol ( = )
+ */
+GS_TOKENTYPE(SymbolEq),
+
+/**
+ * Dot dot symbol ( .. )
+ */
+GS_TOKENTYPE(SymbolDotDot),
+
+/**
+ * Eq gt symbol ( => )
+ */
+GS_TOKENTYPE(SymbolEqGt),
+
+/**
+ * Plus plus symbol ( ++ )
+ */
+GS_TOKENTYPE(SymbolPlusPlus),
+
+/**
+ * Minus minus symbol ( -- )
+ */
+GS_TOKENTYPE(SymbolMinusMinus),
+
+/**
+ * Star star symbol ( ** )
+ */
+GS_TOKENTYPE(SymbolStarStar),
+
+/**
+ * And and (logic and) symbol ( && )
+ */
+GS_TOKENTYPE(SymbolAndAnd),
+
+/**
+ * Or or (logical or) symbol ( || )
+ */
+GS_TOKENTYPE(SymbolOrOr),
 
 /**
  * Gt gt (right shift) symbol ( >> )
@@ -163,29 +248,14 @@ GS_TOKENTYPE(SymbolGtGt),
 GS_TOKENTYPE(SymbolLtLt),
 
 /**
- * Gt (greater than) symbol ( > )
- */
-GS_TOKENTYPE(SymbolGt),
-
-/**
  * Gt eq (greater than or equals) symbol ( >= )
  */
 GS_TOKENTYPE(SymbolGtEq),
 
 /**
- * Lt (less than) symbol ( < )
- */
-GS_TOKENTYPE(SymbolLt),
-
-/**
  * Lt eq (less than or equals) symbol ( <= )
  */
 GS_TOKENTYPE(SymbolLtEq),
-
-/**
- * Not symbol ( ! )
- */
-GS_TOKENTYPE(SymbolNot),
 
 /**
  * Eq eq symbol (equals) symbol ( == )
@@ -198,9 +268,44 @@ GS_TOKENTYPE(SymbolEqEq),
 GS_TOKENTYPE(SymbolNotEq),
 
 /**
- * Eq symbol ( = )
+ * Plus eq symbol ( += )
  */
-GS_TOKENTYPE(SymbolEq),
+GS_TOKENTYPE(SymbolPlusEq),
+
+/**
+ * Minus eq symbol ( -= )
+ */
+GS_TOKENTYPE(SymbolMinusEq),
+
+/**
+ * Star eq symbol ( *= )
+ */
+GS_TOKENTYPE(SymbolStarEq),
+
+/**
+ * Slash eq symbol ( /= )
+ */
+GS_TOKENTYPE(SymbolSlashEq),
+
+/**
+ * Percent eq symbol ( %= )
+ */
+GS_TOKENTYPE(SymbolPercentEq),
+
+/**
+ * Caret eq symbol ( ^= )
+ */
+GS_TOKENTYPE(SymbolCaretEq),
+
+/**
+ * And eq symbol ( &= )
+ */
+GS_TOKENTYPE(SymbolAndEq),
+
+/**
+ * Or eq symbol ( |= )
+ */
+GS_TOKENTYPE(SymbolOrEq),
 
 /**
  * Space symbol (   )

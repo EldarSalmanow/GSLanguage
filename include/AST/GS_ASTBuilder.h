@@ -699,6 +699,13 @@ namespace GSLanguageCompiler::AST {
         NodePtr<GS_FunctionCallingExpression> CreateFunctionCallingExpression(UString name,
                                                                               GSExpressionPtrArray params);
 
+        /**
+         * Create function calling expression
+         * @param name Name
+         * @return Function calling expression
+         */
+        NodePtr<GS_FunctionCallingExpression> CreateFunctionCallingExpression(UString name);
+
     public:
 
         /*
