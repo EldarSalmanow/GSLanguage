@@ -69,6 +69,24 @@ namespace GSLanguageCompiler::CodeGenerator {
                                                             AST::NodePtrLRef<AST::GS_TranslationUnitDeclaration> translationUnitDeclaration);
 
         /**
+         * Generate module declaration
+         * @param session Session
+         * @param moduleDeclaration Module declaration
+         * @return Generated module declaration
+         */
+        Ptr<llvm::Value> GenerateModuleDeclaration(LRef<Driver::GS_Session> session,
+                                                   AST::NodePtrLRef<AST::GS_ModuleDeclaration> moduleDeclaration);
+
+        /**
+         * Generate import declaration
+         * @param session Session
+         * @param importDeclaration Import declaration
+         * @return Generated import declaration
+         */
+        Ptr<llvm::Value> GenerateImportDeclaration(LRef<Driver::GS_Session> session,
+                                                   AST::NodePtrLRef<AST::GS_ImportDeclaration> importDeclaration);
+
+        /**
          * Generate function declaration
          * @param session Session
          * @param functionDeclaration Function declaration
@@ -123,6 +141,24 @@ namespace GSLanguageCompiler::CodeGenerator {
                                                 AST::NodePtrLRef<AST::GS_WhileStatement> whileStatement);
 
         /**
+         * Generate match statement
+         * @param session Session
+         * @param matchStatement Match statement
+         * @return Generated match statement
+         */
+        Ptr<llvm::Value> GenerateMatchStatement(LRef<Driver::GS_Session> session,
+                                                AST::NodePtrLRef<AST::GS_MatchStatement> matchStatement);
+
+        /**
+         * Generate return statement
+         * @param session Session
+         * @param returnStatement Return statement
+         * @return Generated return statement
+         */
+        Ptr<llvm::Value> GenerateReturnStatement(LRef<Driver::GS_Session> session,
+                                                 AST::NodePtrLRef<AST::GS_ReturnStatement> returnStatement);
+
+        /**
          * Generate expression statement
          * @param session Session
          * @param expressionStatement Expression statement
@@ -132,13 +168,31 @@ namespace GSLanguageCompiler::CodeGenerator {
                                                      AST::NodePtrLRef<AST::GS_ExpressionStatement> expressionStatement);
 
         /**
-         * Generate constant expression
+         * Generate literal expression
          * @param session Session
-         * @param constantExpression Constant expression
-         * @return Generated constant expression
+         * @param literalExpression Literal expression
+         * @return Generated literal expression
          */
-        Ptr<llvm::Value> GenerateConstantExpression(LRef<Driver::GS_Session> session,
-                                                    AST::NodePtrLRef<AST::GS_LiteralExpression> constantExpression);
+        Ptr<llvm::Value> GenerateLiteralExpression(LRef<Driver::GS_Session> session,
+                                                   AST::NodePtrLRef<AST::GS_LiteralExpression> literalExpression);
+
+        /**
+         * Generate array expression
+         * @param session Session
+         * @param arrayExpression Array expression
+         * @return Generated array expression
+         */
+        Ptr<llvm::Value> GenerateArrayExpression(LRef<Driver::GS_Session> session,
+                                                 AST::NodePtrLRef<AST::GS_ArrayExpression> arrayExpression);
+
+        /**
+         * Generate range expression
+         * @param session Session
+         * @param rangeExpression Range expression
+         * @return Generated range expression
+         */
+        Ptr<llvm::Value> GenerateRangeExpression(LRef<Driver::GS_Session> session,
+                                                 AST::NodePtrLRef<AST::GS_RangeExpression> rangeExpression);
 
         /**
          * Generate unary expression
@@ -159,13 +213,22 @@ namespace GSLanguageCompiler::CodeGenerator {
                                                   AST::NodePtrLRef<AST::GS_BinaryExpression> binaryExpression);
 
         /**
-         * Generate array expression
+         * Generate index expression
          * @param session Session
-         * @param arrayExpression Array expression
-         * @return Generated array expression
+         * @param indexExpression Index expression
+         * @return Generated index expression
          */
-        Ptr<llvm::Value> GenerateArrayExpression(LRef<Driver::GS_Session> session,
-                                                 AST::NodePtrLRef<AST::GS_ArrayExpression> arrayExpression);
+        Ptr<llvm::Value> GenerateIndexExpression(LRef<Driver::GS_Session> session,
+                                                 AST::NodePtrLRef<AST::GS_IndexExpression> indexExpression);
+
+        /**
+         * Generate cast expression
+         * @param session Session
+         * @param castExpression Cast expression
+         * @return Generated cast expression
+         */
+        Ptr<llvm::Value> GenerateCastExpression(LRef<Driver::GS_Session> session,
+                                                AST::NodePtrLRef<AST::GS_CastExpression> castExpression);
 
         /**
          * Generate variable using expression

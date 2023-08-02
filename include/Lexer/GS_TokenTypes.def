@@ -143,74 +143,14 @@ GS_TOKENTYPE(SymbolComma),
 GS_TOKENTYPE(SymbolDot),
 
 /**
- * Plus symbol ( + )
- */
-GS_TOKENTYPE(SymbolPlus),
-
-/**
- * Minus symbol ( - )
- */
-GS_TOKENTYPE(SymbolMinus),
-
-/**
- * Star symbol ( * )
- */
-GS_TOKENTYPE(SymbolStar),
-
-/**
- * Slash symbol ( / )
- */
-GS_TOKENTYPE(SymbolSlash),
-
-/**
- * Percent symbol ( % )
- */
-GS_TOKENTYPE(SymbolPercent),
-
-/**
- * Caret symbol ( ^ )
- */
-GS_TOKENTYPE(SymbolCaret),
-
-/**
- * And (bitwise and) symbol ( & )
- */
-GS_TOKENTYPE(SymbolAnd),
-
-/**
- * Or (bitwise or) symbol ( | )
- */
-GS_TOKENTYPE(SymbolOr),
-
-/**
- * Gt (greater than) symbol ( > )
- */
-GS_TOKENTYPE(SymbolGt),
-
-/**
- * Lt (less than) symbol ( < )
- */
-GS_TOKENTYPE(SymbolLt),
-
-/**
- * Not symbol ( ! )
- */
-GS_TOKENTYPE(SymbolNot),
-
-/**
- * Eq symbol ( = )
- */
-GS_TOKENTYPE(SymbolEq),
-
-/**
  * Dot dot symbol ( .. )
  */
 GS_TOKENTYPE(SymbolDotDot),
 
 /**
- * Eq gt symbol ( => )
+ * Plus symbol ( + )
  */
-GS_TOKENTYPE(SymbolEqGt),
+GS_TOKENTYPE(SymbolPlus),
 
 /**
  * Plus plus symbol ( ++ )
@@ -218,59 +158,19 @@ GS_TOKENTYPE(SymbolEqGt),
 GS_TOKENTYPE(SymbolPlusPlus),
 
 /**
- * Minus minus symbol ( -- )
- */
-GS_TOKENTYPE(SymbolMinusMinus),
-
-/**
- * Star star symbol ( ** )
- */
-GS_TOKENTYPE(SymbolStarStar),
-
-/**
- * And and (logic and) symbol ( && )
- */
-GS_TOKENTYPE(SymbolAndAnd),
-
-/**
- * Or or (logical or) symbol ( || )
- */
-GS_TOKENTYPE(SymbolOrOr),
-
-/**
- * Gt gt (right shift) symbol ( >> )
- */
-GS_TOKENTYPE(SymbolGtGt),
-
-/**
- * Lt lt (left shift) symbol ( << )
- */
-GS_TOKENTYPE(SymbolLtLt),
-
-/**
- * Gt eq (greater than or equals) symbol ( >= )
- */
-GS_TOKENTYPE(SymbolGtEq),
-
-/**
- * Lt eq (less than or equals) symbol ( <= )
- */
-GS_TOKENTYPE(SymbolLtEq),
-
-/**
- * Eq eq symbol (equals) symbol ( == )
- */
-GS_TOKENTYPE(SymbolEqEq),
-
-/**
- * Not eq (not equals) symbol ( != )
- */
-GS_TOKENTYPE(SymbolNotEq),
-
-/**
  * Plus eq symbol ( += )
  */
 GS_TOKENTYPE(SymbolPlusEq),
+
+/**
+ * Minus symbol ( - )
+ */
+GS_TOKENTYPE(SymbolMinus),
+
+/**
+ * Minus minus symbol ( -- )
+ */
+GS_TOKENTYPE(SymbolMinusMinus),
 
 /**
  * Minus eq symbol ( -= )
@@ -278,9 +178,24 @@ GS_TOKENTYPE(SymbolPlusEq),
 GS_TOKENTYPE(SymbolMinusEq),
 
 /**
+ * Star symbol ( * )
+ */
+GS_TOKENTYPE(SymbolStar),
+
+/**
+ * Star star symbol ( ** )
+ */
+GS_TOKENTYPE(SymbolStarStar),
+
+/**
  * Star eq symbol ( *= )
  */
 GS_TOKENTYPE(SymbolStarEq),
+
+/**
+ * Slash symbol ( / )
+ */
+GS_TOKENTYPE(SymbolSlash),
 
 /**
  * Slash eq symbol ( /= )
@@ -288,9 +203,19 @@ GS_TOKENTYPE(SymbolStarEq),
 GS_TOKENTYPE(SymbolSlashEq),
 
 /**
+ * Percent symbol ( % )
+ */
+GS_TOKENTYPE(SymbolPercent),
+
+/**
  * Percent eq symbol ( %= )
  */
 GS_TOKENTYPE(SymbolPercentEq),
+
+/**
+ * Caret symbol ( ^ )
+ */
+GS_TOKENTYPE(SymbolCaret),
 
 /**
  * Caret eq symbol ( ^= )
@@ -298,14 +223,89 @@ GS_TOKENTYPE(SymbolPercentEq),
 GS_TOKENTYPE(SymbolCaretEq),
 
 /**
+ * And (bitwise and) symbol ( & )
+ */
+GS_TOKENTYPE(SymbolAnd),
+
+/**
+ * And and (logic and) symbol ( && )
+ */
+GS_TOKENTYPE(SymbolAndAnd),
+
+/**
  * And eq symbol ( &= )
  */
 GS_TOKENTYPE(SymbolAndEq),
 
 /**
+ * Or (bitwise or) symbol ( | )
+ */
+GS_TOKENTYPE(SymbolOr),
+
+/**
+ * Or or (logical or) symbol ( || )
+ */
+GS_TOKENTYPE(SymbolOrOr),
+
+/**
  * Or eq symbol ( |= )
  */
 GS_TOKENTYPE(SymbolOrEq),
+
+/**
+ * Gt (greater than) symbol ( > )
+ */
+GS_TOKENTYPE(SymbolGt),
+
+/**
+ * Gt gt (right shift) symbol ( >> )
+ */
+GS_TOKENTYPE(SymbolGtGt),
+
+/**
+ * Gt eq (greater than or equals) symbol ( >= )
+ */
+GS_TOKENTYPE(SymbolGtEq),
+
+/**
+ * Lt (less than) symbol ( < )
+ */
+GS_TOKENTYPE(SymbolLt),
+
+/**
+ * Lt lt (left shift) symbol ( << )
+ */
+GS_TOKENTYPE(SymbolLtLt),
+
+/**
+ * Lt eq (less than or equals) symbol ( <= )
+ */
+GS_TOKENTYPE(SymbolLtEq),
+
+/**
+ * Not symbol ( ! )
+ */
+GS_TOKENTYPE(SymbolNot),
+
+/**
+ * Not eq (not equals) symbol ( != )
+ */
+GS_TOKENTYPE(SymbolNotEq),
+
+/**
+ * Eq symbol ( = )
+ */
+GS_TOKENTYPE(SymbolEq),
+
+/**
+ * Eq eq symbol (equals) symbol ( == )
+ */
+GS_TOKENTYPE(SymbolEqEq),
+
+/**
+ * Eq gt symbol ( => )
+ */
+GS_TOKENTYPE(SymbolEqGt),
 
 /**
  * Space symbol (   )

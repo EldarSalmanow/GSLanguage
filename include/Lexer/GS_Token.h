@@ -5,10 +5,6 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    /*
-     * TODO: Create GS_TokenLocation class
-     */
-
     /**
      * Type of token
      */
@@ -32,11 +28,11 @@ namespace GSLanguageCompiler::Lexer {
          * Constructor for token
          * @param type Type
          * @param value Value
-         * @param locationRange Source location range
+         * @param location Location
          */
         GS_Token(TokenType type,
                  UString value,
-                 IO::GS_SourceRange locationRange);
+                 IO::GS_SourceLocation location);
 
     public:
 
@@ -50,12 +46,12 @@ namespace GSLanguageCompiler::Lexer {
          * Create token
          * @param type Type
          * @param value Value
-         * @param locationRange Source location range
+         * @param location Location
          * @return Token
          */
         static GS_Token Create(TokenType type,
                                UString value,
-                               IO::GS_SourceRange locationRange);
+                               IO::GS_SourceLocation location);
 
         /**
          * Creating token
@@ -69,11 +65,11 @@ namespace GSLanguageCompiler::Lexer {
         /**
          * Creating token
          * @param type Type
-         * @param locationRange Source location range
+         * @param location Location
          * @return Token
          */
         static GS_Token Create(TokenType type,
-                               IO::GS_SourceRange locationRange);
+                               IO::GS_SourceLocation location);
 
         /**
          * Creating token
@@ -109,10 +105,10 @@ namespace GSLanguageCompiler::Lexer {
         ConstLRef<UString> GetValue() const;
 
         /**
-         * Getter for source location range
-         * @return Source location range
+         * Getter for location
+         * @return Location
          */
-        IO::GS_SourceRange GetLocationRange() const;
+        IO::GS_SourceLocation GetLocation() const;
 
     private:
 
@@ -133,9 +129,9 @@ namespace GSLanguageCompiler::Lexer {
         UString _value;
 
         /**
-         * Token source location range
+         * Token location
          */
-        IO::GS_SourceRange _locationRange;
+        IO::GS_SourceLocation _location;
     };
 
     /**
@@ -264,6 +260,163 @@ namespace GSLanguageCompiler::Lexer {
          * Tokens
          */
         GSTokenArray _tokens;
+    };
+
+    /**
+     * Class for smart creating tokens
+     */
+    class GS_TokenBuilder {
+    public:
+
+        /*
+         *
+         * GS_TokenBuilder PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
+         * Constructor for token builder
+         * @param tokenType Token type
+         * @param tokenValue Token value
+         * @param tokenLocation Token location
+         */
+        GS_TokenBuilder(TokenType tokenType,
+                        UString tokenValue,
+                        IO::GS_SourceLocation tokenLocation);
+
+    public:
+
+        /*
+         *
+         * GS_TokenBuilder PUBLIC STATIC CREATE METHODS
+         *
+         */
+
+        /**
+         * Creating token builder
+         * @param tokenType Token type
+         * @param tokenValue Token value
+         * @param tokenLocation Token location
+         * @return Token builder
+         */
+        static GS_TokenBuilder Create(TokenType tokenType,
+                                      UString tokenValue,
+                                      IO::GS_SourceLocation tokenLocation);
+
+        /**
+         * Creating token builder
+         * @param tokenType Token type
+         * @param tokenValue Token value
+         * @return Token builder
+         */
+        static GS_TokenBuilder Create(TokenType tokenType,
+                                      UString tokenValue);
+
+        /**
+         * Creating token builder
+         * @param tokenType Token type
+         * @param tokenLocation Token location
+         * @return Token builder
+         */
+        static GS_TokenBuilder Create(TokenType tokenType,
+                                      IO::GS_SourceLocation tokenLocation);
+
+        /**
+         * Creating token builder
+         * @param tokenType Token type
+         * @return Token builder
+         */
+        static GS_TokenBuilder Create(TokenType tokenType);
+
+        /**
+         * Creating token builder
+         * @return Token builder
+         */
+        static GS_TokenBuilder Create();
+
+    public:
+
+        /*
+         *
+         * GS_TokenBuilder PUBLIC METHODS
+         *
+         */
+
+        /**
+         * Setting token type in token
+         * @param tokenType Token type
+         * @return Token builder
+         */
+        LRef<GS_TokenBuilder> Type(TokenType tokenType);
+
+        /**
+         * Setting token value in token
+         * @param tokenValue Token value
+         * @return Token builder
+         */
+        LRef<GS_TokenBuilder> Value(UString tokenValue);
+
+        /**
+         * Setting token location in token
+         * @param tokenLocation Token location
+         * @return Token builder
+         */
+        LRef<GS_TokenBuilder> Location(IO::GS_SourceLocation tokenLocation);
+
+        /**
+         * Creating token
+         * @return Token
+         */
+        GS_Token Token();
+
+    public:
+
+        /*
+         *
+         * GS_TokenBuilder PUBLIC GETTER METHODS
+         *
+         */
+
+        /**
+         * Getter for token type
+         * @return Token type
+         */
+        TokenType GetTokenType() const;
+
+        /**
+         * Getter for token value
+         * @return Token value
+         */
+        ConstLRef<UString> GetTokenValue() const;
+
+        /**
+         * Getter for token location
+         * @return Token location
+         */
+        IO::GS_SourceLocation GetTokenLocation() const;
+
+    private:
+
+        /*
+         *
+         * GS_TokenBuilder PRIVATE FIELDS
+         *
+         */
+
+        /**
+         * Token type
+         */
+        TokenType _tokenType;
+
+        /**
+         * Token value
+         */
+        UString _tokenValue;
+
+        /**
+         * Token location
+         */
+        IO::GS_SourceLocation _tokenLocation;
     };
 
 }

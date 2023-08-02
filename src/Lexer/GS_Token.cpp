@@ -4,43 +4,43 @@ namespace GSLanguageCompiler::Lexer {
 
     GS_Token::GS_Token(TokenType type,
                        UString value,
-                       IO::GS_SourceRange locationRange)
+                       IO::GS_SourceLocation location)
             : _type(type),
               _value(std::move(value)),
-              _locationRange(locationRange) {}
+              _location(location) {}
 
     GS_Token GS_Token::Create(TokenType type,
                               UString value,
-                              IO::GS_SourceRange locationRange) {
+                              IO::GS_SourceLocation location) {
         return GS_Token(type,
                         std::move(value),
-                        locationRange);
+                        location);
     }
 
     GS_Token GS_Token::Create(TokenType type,
                               UString value) {
         return GS_Token::Create(type,
                                 std::move(value),
-                                IO::GS_SourceRange::Create());
+                                IO::GS_SourceLocation::Create());
     }
 
     GS_Token GS_Token::Create(TokenType type,
-                              IO::GS_SourceRange locationRange) {
+                              IO::GS_SourceLocation location) {
         return GS_Token::Create(type,
                                 UString(),
-                                locationRange);
+                                location);
     }
 
     GS_Token GS_Token::Create(TokenType type) {
         return GS_Token::Create(type,
                                 UString(),
-                                IO::GS_SourceRange::Create());
+                                IO::GS_SourceLocation::Create());
     }
 
     GS_Token GS_Token::Create() {
         return GS_Token::Create(TokenType::Unknown,
                                 UString(),
-                                IO::GS_SourceRange::Create());
+                                IO::GS_SourceLocation::Create());
     }
 
     TokenType GS_Token::GetType() const {
@@ -51,8 +51,8 @@ namespace GSLanguageCompiler::Lexer {
         return _value;
     }
 
-    IO::GS_SourceRange GS_Token::GetLocationRange() const {
-        return _locationRange;
+    IO::GS_SourceLocation GS_Token::GetLocation() const {
+        return _location;
     }
 
     GS_TokenBuffer::GS_TokenBuffer(GSTokenArray tokens)
@@ -88,6 +88,89 @@ namespace GSLanguageCompiler::Lexer {
 
     ConstLRef<GSTokenArray> GS_TokenBuffer::GetTokens() const {
         return _tokens;
+    }
+
+    GS_TokenBuilder::GS_TokenBuilder(TokenType tokenType,
+                                     UString tokenValue,
+                                     IO::GS_SourceLocation tokenLocation)
+            : _tokenType(tokenType),
+              _tokenValue(std::move(tokenValue)),
+              _tokenLocation(tokenLocation) {}
+
+    GS_TokenBuilder GS_TokenBuilder::Create(TokenType tokenType,
+                                            UString tokenValue,
+                                            IO::GS_SourceLocation tokenLocation) {
+        return GS_TokenBuilder(tokenType,
+                               std::move(tokenValue),
+                               tokenLocation);
+    }
+
+    GS_TokenBuilder GS_TokenBuilder::Create(TokenType tokenType,
+                                            UString tokenValue) {
+        return GS_TokenBuilder::Create(tokenType,
+                                       std::move(tokenValue),
+                                       IO::GS_SourceLocation::Create());
+    }
+
+    GS_TokenBuilder GS_TokenBuilder::Create(TokenType tokenType,
+                                            IO::GS_SourceLocation tokenLocation) {
+        return GS_TokenBuilder::Create(tokenType,
+                                       UString(),
+                                       tokenLocation);
+    }
+
+    GS_TokenBuilder GS_TokenBuilder::Create(TokenType tokenType) {
+        return GS_TokenBuilder::Create(tokenType,
+                                       UString(),
+                                       IO::GS_SourceLocation::Create());
+    }
+
+    GS_TokenBuilder GS_TokenBuilder::Create() {
+        return GS_TokenBuilder::Create(TokenType::Unknown,
+                                       UString(),
+                                       IO::GS_SourceLocation::Create());
+    }
+
+    LRef<GS_TokenBuilder> GS_TokenBuilder::Type(TokenType tokenType) {
+        _tokenType = tokenType;
+
+        return *this;
+    }
+
+    LRef<GS_TokenBuilder> GS_TokenBuilder::Value(UString tokenValue) {
+        _tokenValue = std::move(tokenValue);
+
+        return *this;
+    }
+
+    LRef<GS_TokenBuilder> GS_TokenBuilder::Location(IO::GS_SourceLocation tokenLocation) {
+        _tokenLocation = tokenLocation;
+
+        return *this;
+    }
+
+    GS_Token GS_TokenBuilder::Token() {
+        auto token = GS_Token::Create(_tokenType,
+                                      _tokenValue,
+                                      _tokenLocation);
+
+        _tokenType = TokenType::Unknown;
+        _tokenValue = UString();
+        _tokenLocation = IO::GS_SourceLocation::Create();
+
+        return token;
+    }
+
+    TokenType GS_TokenBuilder::GetTokenType() const {
+        return _tokenType;
+    }
+
+    ConstLRef<UString> GS_TokenBuilder::GetTokenValue() const {
+        return _tokenValue;
+    }
+
+    IO::GS_SourceLocation GS_TokenBuilder::GetTokenLocation() const {
+        return _tokenLocation;
     }
 
 }

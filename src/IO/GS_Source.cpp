@@ -9,48 +9,54 @@
 namespace GSLanguageCompiler::IO {
 
     GS_SourceLocation::GS_SourceLocation(U64 position,
+                                         U64 length,
                                          U64 sourceHash)
             : _position(position),
+              _length(length),
               _sourceHash(sourceHash) {}
 
-    GS_SourceLocation GS_SourceLocation::Create(U64 position,
-                                                U64 sourceHash) {
+    GS_SourceLocation GS_SourceLocation::Create(U64 position, U64 length, U64 sourceHash) {
         return GS_SourceLocation(position,
+                                 length,
                                  sourceHash);
     }
 
-    GS_SourceLocation GS_SourceLocation::Create(U64 position) {
+    GS_SourceLocation GS_SourceLocation::Create(U64 position,
+                                                U64 sourceHash) {
         return GS_SourceLocation::Create(position,
-                                         InvalidHash);
+                                         1,
+                                         sourceHash);
     }
 
     GS_SourceLocation GS_SourceLocation::Create() {
-        return GS_SourceLocation::Create(InvalidPosition);
+        return GS_SourceLocation::Create(InvalidPosition,
+                                         InvalidHash);
+    }
+
+    U64 GS_SourceLocation::GetStartPosition() const {
+        return _position;
+    }
+
+    U64 GS_SourceLocation::GetEndPosition() const {
+        return _position + _length;
     }
 
     U64 GS_SourceLocation::GetPosition() const {
         return _position;
     }
 
+    U64 GS_SourceLocation::GetLength() const {
+        return _length;
+    }
+
     U64 GS_SourceLocation::GetSourceHash() const {
         return _sourceHash;
     }
 
-    Bool GS_SourceLocation::operator==(ConstLRef<GS_SourceLocation> sourceLocation) const {
-        return _position == sourceLocation.GetPosition()
-            && _sourceHash == sourceLocation.GetSourceHash();
-    }
-
-    std::partial_ordering GS_SourceLocation::operator<=>(ConstLRef<GS_SourceLocation> sourceLocation) const {
-        auto position = sourceLocation.GetPosition();
-        auto sourceHash = sourceLocation.GetSourceHash();
-
-        if ((_position == InvalidPosition && _sourceHash == InvalidHash)
-         || (position == InvalidPosition && sourceHash == InvalidHash)) {
-            return std::partial_ordering::unordered;
-        }
-
-        return _position <=> position;
+    Bool GS_SourceLocation::operator==(ConstLRef<GS_SourceLocation> location) const {
+        return _position == location.GetPosition()
+            && _length == location.GetLength()
+            && _sourceHash == location.GetSourceHash();
     }
 
     // TODO: create messages registry
@@ -136,46 +142,6 @@ namespace GSLanguageCompiler::IO {
                                          sourceHash);
     }
 
-    GS_SourceRange::GS_SourceRange(GS_SourceLocation startLocation,
-                                   GS_SourceLocation endLocation)
-            : _startLocation(startLocation),
-              _endLocation(endLocation) {
-        if (_startLocation.GetSourceHash() != _endLocation.GetSourceHash()) {
-            Driver::GlobalContext().Exit("Can`t create source location range with different source hash in source locations!");
-        }
-
-        if (_startLocation.GetPosition() != InvalidPosition && _startLocation.GetSourceHash() != InvalidHash
-            && _endLocation.GetPosition() != InvalidPosition && _endLocation.GetSourceHash() != InvalidHash) {
-            if (_startLocation > _endLocation) {
-                Driver::GlobalContext().Exit("Can`t create source range with start location \"bigger\" than end location!");
-            }
-        }
-    }
-
-    GS_SourceRange GS_SourceRange::Create(GS_SourceLocation startLocation,
-                                          GS_SourceLocation endLocation) {
-        return GS_SourceRange(startLocation,
-                              endLocation);
-    }
-
-    GS_SourceRange GS_SourceRange::Create() {
-        return GS_SourceRange::Create(GS_SourceLocation::Create(),
-                                      GS_SourceLocation::Create());
-    }
-
-    GS_SourceLocation GS_SourceRange::GetStartLocation() const {
-        return _startLocation;
-    }
-
-    GS_SourceLocation GS_SourceRange::GetEndLocation() const {
-        return _endLocation;
-    }
-
-    Bool GS_SourceRange::operator==(ConstLRef<GS_SourceRange> locationRange) const {
-        return _startLocation == locationRange.GetStartLocation()
-            && _endLocation == locationRange.GetEndLocation();
-    }
-
     GS_SourceBuffer::GS_SourceBuffer(UString source)
             : _source(std::move(source)) {}
 
@@ -184,12 +150,9 @@ namespace GSLanguageCompiler::IO {
     }
 
     // TODO: check
-    U64 GetIndexByLocation(GS_SourceLocation sourceLocation,
+    U64 GetIndexByLocation(U64 position,
                            ConstLRef<GS_SourceBuffer> sourceBuffer) {
-        auto position = sourceLocation.GetPosition();
-
-        if (sourceLocation.GetPosition() == InvalidPosition
-         && sourceLocation.GetSourceHash() == InvalidHash) {
+        if (position == InvalidPosition) {
             return 0;
         }
 
@@ -202,22 +165,22 @@ namespace GSLanguageCompiler::IO {
         return index;
     }
 
-    GS_SourceBuffer::Iterator GS_SourceBuffer::GetIteratorByLocation(GS_SourceLocation sourceLocation) {
-        return _source.begin() + GetIndexByLocation(sourceLocation,
+    GS_SourceBuffer::Iterator GS_SourceBuffer::GetIteratorByPosition(U64 position) {
+        return _source.begin() + GetIndexByLocation(position,
                                                     *this);
     }
 
-    GS_SourceBuffer::ConstIterator GS_SourceBuffer::GetIteratorByLocation(GS_SourceLocation sourceLocation) const {
-        return _source.cbegin() + GetIndexByLocation(sourceLocation,
+    GS_SourceBuffer::ConstIterator GS_SourceBuffer::GetIteratorByPosition(U64 position) const {
+        return _source.cbegin() + GetIndexByLocation(position,
                                                      *this);
     }
 
-    UString GS_SourceBuffer::GetCodeInRange(GS_SourceRange locationRange) const {
-        auto startLocation = locationRange.GetStartLocation();
-        auto endLocation = locationRange.GetEndLocation();
+    UString GS_SourceBuffer::GetCodeInRange(GS_SourceLocation location) const {
+        auto startPosition = location.GetStartPosition();
+        auto endPosition = location.GetEndPosition();
 
-        auto startIterator = GetIteratorByLocation(startLocation);
-        auto endIterator = GetIteratorByLocation(endLocation);
+        auto startIterator = GetIteratorByPosition(startPosition);
+        auto endIterator = GetIteratorByPosition(endPosition);
 
         UString code;
 
@@ -393,16 +356,16 @@ namespace GSLanguageCompiler::IO {
                                  GS_SourceName::CreateCustom(std::move(name)));
     }
 
-    GS_Source::Iterator GS_Source::GetIteratorByLocation(GS_SourceLocation sourceLocation) {
-        return _buffer.GetIteratorByLocation(sourceLocation);
+    GS_Source::Iterator GS_Source::GetIteratorByPosition(U64 position) {
+        return _buffer.GetIteratorByPosition(position);
     }
 
-    GS_Source::ConstIterator GS_Source::GetIteratorByLocation(GS_SourceLocation sourceLocation) const {
-        return _buffer.GetIteratorByLocation(sourceLocation);
+    GS_Source::ConstIterator GS_Source::GetIteratorByPosition(U64 position) const {
+        return _buffer.GetIteratorByPosition(position);
     }
 
-    UString GS_Source::GetCodeInRange(GS_SourceRange locationRange) const {
-        return _buffer.GetCodeInRange(locationRange);
+    UString GS_Source::GetCodeInRange(GS_SourceLocation location) const {
+        return _buffer.GetCodeInRange(location);
     }
 
     GS_Source::ConstIterator GS_Source::begin() const {

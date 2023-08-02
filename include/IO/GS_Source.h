@@ -9,15 +9,24 @@
 
 namespace GSLanguageCompiler::IO {
 
-    /**
-     * Invalid hash constant
+    /*
+     * TODO: Replace U64 position arguments to position class or type?
      */
-    inline constexpr U64 InvalidHash = 0;
 
     /**
      * Invalid source position constant
      */
     inline constexpr U64 InvalidPosition = 0;
+
+    /**
+     * Invalid source length constant
+     */
+    inline constexpr U64 InvalidLength = 0;
+
+    /**
+     * Invalid hash constant
+     */
+    inline constexpr U64 InvalidHash = 0;
 
     /**
      * Class for containing information about source location
@@ -34,9 +43,11 @@ namespace GSLanguageCompiler::IO {
         /**
          * Constructor for source location
          * @param position Position
+         * @param length Length
          * @param sourceHash Source hash
          */
         GS_SourceLocation(U64 position,
+                          U64 length,
                           U64 sourceHash);
 
     public:
@@ -48,7 +59,18 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Creating concrete source location
+         * Creating source location
+         * @param position Position
+         * @param length Length
+         * @param sourceHash Source hash
+         * @return Source location
+         */
+        static GS_SourceLocation Create(U64 position,
+                                        U64 length,
+                                        U64 sourceHash);
+
+        /**
+         * Creating source location for one symbol
          * @param position Position
          * @param sourceHash Source hash
          * @return Source location
@@ -57,17 +79,30 @@ namespace GSLanguageCompiler::IO {
                                         U64 sourceHash);
 
         /**
-         * Creating source location without source hash
-         * @param position Position
-         * @return Source location
-         */
-        static GS_SourceLocation Create(U64 position);
-
-        /**
          * Creating invalid source location
          * @return Source location
          */
         static GS_SourceLocation Create();
+
+    public:
+
+        /*
+         *
+         * GS_SourceLocation PUBLIC METHODS
+         *
+         */
+
+        /**
+         * Getting start position (position)
+         * @return Start position
+         */
+        U64 GetStartPosition() const;
+
+        /**
+         * Getting end position (position + length)
+         * @return End position
+         */
+        U64 GetEndPosition() const;
 
     public:
 
@@ -82,6 +117,12 @@ namespace GSLanguageCompiler::IO {
          * @return Position
          */
         U64 GetPosition() const;
+
+        /**
+         * Getter for length
+         * @return Length
+         */
+        U64 GetLength() const;
 
         /**
          * Getter for source hash
@@ -99,17 +140,10 @@ namespace GSLanguageCompiler::IO {
 
         /**
          * Equality operator for source location
-         * @param sourceLocation Source location
+         * @param location Location
          * @return Is equal source locations
          */
-        Bool operator==(ConstLRef<GS_SourceLocation> sourceLocation) const;
-
-        /**
-         * Comparison operator for source location
-         * @param sourceLocation Source location
-         * @return Partial comparison ordering
-         */
-        std::partial_ordering operator<=>(ConstLRef<GS_SourceLocation> sourceLocation) const;
+        Bool operator==(ConstLRef<GS_SourceLocation> location) const;
 
     private:
 
@@ -125,6 +159,11 @@ namespace GSLanguageCompiler::IO {
         U64 _position;
 
         /**
+         * Length
+         */
+        U64 _length;
+
+        /**
          * Source hash
          */
         U64 _sourceHash;
@@ -137,11 +176,11 @@ namespace GSLanguageCompiler::IO {
 
     /**
      * Converting byte source location to line column source location
-     * @param sourceLocation Byte source location
+     * @param location Byte source location
      * @param source Source
      * @return Line column source location
      */
-    std::tuple<U64, U64, U64> ToLineColumnLocation(ConstLRef<GS_SourceLocation> sourceLocation,
+    std::tuple<U64, U64, U64> ToLineColumnLocation(ConstLRef<GS_SourceLocation> location,
                                                    ConstLRef<GS_Source> source);
 
     /**
@@ -156,103 +195,6 @@ namespace GSLanguageCompiler::IO {
                                      U64 column,
                                      U64 sourceHash,
                                      ConstLRef<GS_Source> source);
-
-    /**
-     * Class for containing source location range
-     */
-    class GS_SourceRange {
-    public:
-
-        /*
-         *
-         * GS_SourceRange PUBLIC CONSTRUCTORS
-         *
-         */
-
-        /**
-         * Constructor for source location range [startLocation..endLocation]
-         * @param startLocation Start source location
-         * @param endLocation End source location
-         */
-        GS_SourceRange(GS_SourceLocation startLocation,
-                       GS_SourceLocation endLocation);
-
-    public:
-
-        /*
-         *
-         * GS_SourceRange PUBLIC STATIC CREATE METHODS
-         *
-         */
-
-        /**
-         * Creating source location range
-         * @param startLocation Start source location
-         * @param endLocation End source location
-         * @return Source location range [startLocation..endLocation]
-         */
-        static GS_SourceRange Create(GS_SourceLocation startLocation,
-                                     GS_SourceLocation endLocation);
-
-        /**
-         * Creating invalid source location range
-         * @return Source location range
-         */
-        static GS_SourceRange Create();
-
-    public:
-
-        /*
-         *
-         * GS_SourceRange PUBLIC GETTER METHODS
-         *
-         */
-
-        /**
-         * Getter for start source location
-         * @return Start source location
-         */
-        GS_SourceLocation GetStartLocation() const;
-
-        /**
-         * Getter for end source location
-         * @return End source location
-         */
-        GS_SourceLocation GetEndLocation() const;
-
-    public:
-
-        /*
-         *
-         * GS_SourceRange PUBLIC OPERATOR METHODS
-         *
-         */
-
-        /**
-         * Equality operator for source location range
-         * @param locationRange Source location range
-         * @return Is equal source location ranges
-         */
-        Bool operator==(ConstLRef<GS_SourceRange> locationRange) const;
-
-    private:
-
-        /*
-         *
-         * GS_SourceRange PRIVATE FIELDS
-         *
-         */
-
-        /**
-         * Start source location
-         */
-        GS_SourceLocation _startLocation;
-
-        /**
-         * End source location
-         */
-        GS_SourceLocation _endLocation;
-    };
 
     /**
      * Class for containing source code
@@ -314,25 +256,27 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Getting source code iterator by source location
-         * @param sourceLocation Source location
+         * Getting source code iterator by position
+         * @param position Position
          * @return Source code iterator
          */
-        Iterator GetIteratorByLocation(GS_SourceLocation sourceLocation);
+        Iterator GetIteratorByPosition(U64 position);
 
         /**
-         * Getting source code const iterator by source location
-         * @param sourceLocation Source location
+         * Getting source code const iterator by position
+         * @param position Position
          * @return Source code const iterator
          */
-        ConstIterator GetIteratorByLocation(GS_SourceLocation sourceLocation) const;
+        ConstIterator GetIteratorByPosition(U64 position) const;
 
         /**
-         * Getting code from source buffer in source location range
-         * @param locationRange Source location range
-         * @return Code in range [startLocation..endLocation)
+         * Getting code from source buffer by location
+         * @param location Location
+         * @return Code in range [position..position + length)
          */
-        UString GetCodeInRange(GS_SourceRange locationRange) const;
+        UString GetCodeInRange(GS_SourceLocation location) const;
+
+        UString GetCodeWhile(GS_SourceLocation loc, Bool (*predicate)(ConstLRef<USymbol> symbol));
 
     public:
 
@@ -679,25 +623,25 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
-         * Getting source code iterator by source location
-         * @param sourceLocation Source location
+         * Getting source code iterator by position
+         * @param position Position
          * @return Source code iterator
          */
-        Iterator GetIteratorByLocation(GS_SourceLocation sourceLocation);
+        Iterator GetIteratorByPosition(U64 position);
 
         /**
-         * Getting source code const iterator by source location
-         * @param sourceLocation Source location
+         * Getting source code const iterator by position
+         * @param position Position
          * @return Source code const iterator
          */
-        ConstIterator GetIteratorByLocation(GS_SourceLocation sourceLocation) const;
+        ConstIterator GetIteratorByPosition(U64 position) const;
 
         /**
-         * Getting code from source in source location range
-         * @param locationRange Source location range
-         * @return Code in range [startLocation..endLocation)
+         * Getting code from source by location
+         * @param location Location
+         * @return Code in range [position..position + length)
          */
-        UString GetCodeInRange(GS_SourceRange locationRange) const;
+        UString GetCodeInRange(GS_SourceLocation location) const;
 
     public:
 

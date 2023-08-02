@@ -5,8 +5,6 @@
 namespace GSLanguageCompiler::Parser {
 
     std::map<Lexer::TokenType, I32> OperatorsPrecedence = {
-            {Lexer::TokenType::KeywordAs,     11},
-
             {Lexer::TokenType::SymbolStar,    10},
             {Lexer::TokenType::SymbolSlash,   10},
             {Lexer::TokenType::SymbolPercent, 10},

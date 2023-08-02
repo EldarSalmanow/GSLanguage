@@ -2,62 +2,12 @@
 
 namespace GSLanguageCompiler::Lexer {
 
-    inline TokenType ReservedSymbolType(ConstLRef<USymbol> symbol) {
-        if (symbol == '(') {
-            return TokenType::SymbolLeftParen;
-        } else if (symbol == ')') {
-            return TokenType::SymbolRightParen;
-        } else if (symbol == '{') {
-            return TokenType::SymbolLeftBrace;
-        } else if (symbol == '}') {
-            return TokenType::SymbolRightBrace;
-        } else if (symbol == '[') {
-            return TokenType::SymbolLeftBracket;
-        } else if (symbol == ']') {
-            return TokenType::SymbolRightBracket;
-        } else if (symbol == ':') {
-            return TokenType::SymbolColon;
-        } else if (symbol == ',') {
-            return TokenType::SymbolComma;
-        } else if (symbol == '.') {
-            return TokenType::SymbolDot;
-        } else if (symbol == '+') {
-            return TokenType::SymbolPlus;
-        } else if (symbol == '-') {
-            return TokenType::SymbolMinus;
-        } else if (symbol == '*') {
-            return TokenType::SymbolStar;
-        } else if (symbol == '/') {
-            return TokenType::SymbolSlash;
-        } else if (symbol == '%') {
-            return TokenType::SymbolPercent;
-        } else if (symbol == '&') {
-            return TokenType::SymbolAnd;
-        } else if (symbol == '|') {
-            return TokenType::SymbolOr;
-        } else if (symbol == '^') {
-            return TokenType::SymbolCaret;
-        } else if (symbol == '>') {
-            return TokenType::SymbolGt;
-        } else if (symbol == '<') {
-            return TokenType::SymbolLt;
-        } else if (symbol == '!') {
-            return TokenType::SymbolNot;
-        } else if (symbol == '=') {
-            return TokenType::SymbolEq;
-        }
-
-        return TokenType::Unknown;
-    }
-
     GS_Lexer::GS_Lexer(LRef<Driver::GS_Session> session,
                        ConstLRef<IO::GS_Source> source)
             : _session(session),
               _messageQueue(IO::GS_MessageQueue::Create()),
-              _source(source),
-              _sourceIterator(_source.cbegin()),
-              _currentPosition(1) {
-        auto sourceHash = _source.GetHash();
+              _cursor(source) {
+        auto sourceHash = source.GetHash();
 
         auto optionalSource = _session.GetSource(sourceHash);
 
@@ -111,380 +61,372 @@ namespace GSLanguageCompiler::Lexer {
     GS_Token GS_Lexer::GetToken() {
         auto symbol = CurrentSymbol();
 
+        auto tokenBuilder = GS_TokenBuilder::Create();
+
+        SavePosition();
+
+        // tokenizing whitespace
         if (symbol.IsWhitespace()) {
-            // tokenizing whitespace
+            tokenBuilder.Type(TokenType::SymbolSpace)
+                        .Location(CurrentLocation());
+        }
 
-            auto startPosition = CurrentLocation(),
-                 endPosition = CurrentLocation();
-
-            NextSymbol();
-
-            return GS_Token::Create(TokenType::SymbolSpace,
-                                    IO::GS_SourceRange::Create(startPosition,
-                                                               endPosition));
-        } else if (symbol.IsIDStart()) {
-            // tokenizing word
-
+        // tokenizing word
+        else if (symbol.IsIDStart()) {
             UString string;
-
-            auto startPosition = CurrentLocation(),
-                 endPosition = CurrentLocation();
 
             while (true) {
                 string += CurrentSymbol();
 
-                endPosition = CurrentLocation();
+                if (!LookupSymbol(1).IsIDContinue()) {
+                    tokenBuilder.Location(CurrentLocation());
 
-                NextSymbol();
-
-                if (!CurrentSymbol().IsIDContinue()) {
                     break;
                 }
-            }
 
-            TokenType tokenType = TokenType::Identifier;
+                NextSymbol();
+            }
 
             if (string == "module") {
-                tokenType = TokenType::KeywordModule;
+                tokenBuilder.Type(TokenType::KeywordModule);
             } else if (string == "import") {
-                tokenType = TokenType::KeywordImport;
+                tokenBuilder.Type(TokenType::KeywordImport);
             } else if (string == "func") {
-                tokenType = TokenType::KeywordFunc;
+                tokenBuilder.Type(TokenType::KeywordFunc);
             } else if (string == "var") {
-                tokenType = TokenType::KeywordVar;
+                tokenBuilder.Type(TokenType::KeywordVar);
             } else if (string == "if") {
-                tokenType = TokenType::KeywordIf;
+                tokenBuilder.Type(TokenType::KeywordIf);
             } else if (string == "else") {
-                tokenType = TokenType::KeywordElse;
+                tokenBuilder.Type(TokenType::KeywordElse);
             } else if (string == "for") {
-                tokenType = TokenType::KeywordFor;
+                tokenBuilder.Type(TokenType::KeywordFor);
             } else if (string == "while") {
-                tokenType = TokenType::KeywordWhile;
+                tokenBuilder.Type(TokenType::KeywordWhile);
             } else if (string == "match") {
-                tokenType = TokenType::KeywordMatch;
+                tokenBuilder.Type(TokenType::KeywordMatch);
             } else if (string == "return") {
-                tokenType = TokenType::KeywordReturn;
+                tokenBuilder.Type(TokenType::KeywordReturn);
             } else if (string == "in") {
-                tokenType = TokenType::KeywordIn;
+                tokenBuilder.Type(TokenType::KeywordIn);
             } else if (string == "as") {
-                tokenType = TokenType::KeywordAs;
+                tokenBuilder.Type(TokenType::KeywordAs);
             } else if (string == "extern") {
-                tokenType = TokenType::KeywordExtern;
+                tokenBuilder.Type(TokenType::KeywordExtern);
+            } else {
+                tokenBuilder.Type(TokenType::Identifier)
+                            .Value(string);
             }
+        }
 
-            if (tokenType == TokenType::Identifier) {
-                return GS_Token::Create(TokenType::Identifier,
-                                        string,
-                                        IO::GS_SourceRange::Create(startPosition,
-                                                                   endPosition));
+        // tokenizing reserved symbol
+        else if (symbol == '(') {
+            tokenBuilder.Type(TokenType::SymbolLeftParen)
+                        .Location(CurrentLocation());
+        } else if (symbol == ')') {
+            tokenBuilder.Type(TokenType::SymbolRightParen)
+                        .Location(CurrentLocation());
+        } else if (symbol == '{') {
+            tokenBuilder.Type(TokenType::SymbolLeftBrace)
+                        .Location(CurrentLocation());
+        } else if (symbol == '}') {
+            tokenBuilder.Type(TokenType::SymbolRightBrace)
+                        .Location(CurrentLocation());
+        } else if (symbol == '[') {
+            tokenBuilder.Type(TokenType::SymbolLeftBracket)
+                        .Location(CurrentLocation());
+        } else if (symbol == ']') {
+            tokenBuilder.Type(TokenType::SymbolRightBracket)
+                        .Location(CurrentLocation());
+        } else if (symbol == ':') {
+            tokenBuilder.Type(TokenType::SymbolColon)
+                        .Location(CurrentLocation());
+        } else if (symbol == ',') {
+            tokenBuilder.Type(TokenType::SymbolComma)
+                        .Location(CurrentLocation());
+        } else if (symbol == '.') {
+            if (LookupSymbol(1) == '.') {
+                NextSymbol(); // skip '.'
+
+                tokenBuilder.Type(TokenType::SymbolDotDot)
+                            .Location(CurrentLocation());
+            } else {
+                tokenBuilder.Type(TokenType::SymbolDot)
+                            .Location(CurrentLocation());
             }
+        } else if (symbol == '+') {
+            if (LookupSymbol(1) == '+') {
+                NextSymbol(); // skip '+'
 
-            return GS_Token::Create(tokenType,
-                                    IO::GS_SourceRange::Create(startPosition,
-                                                               endPosition));
-        } else if (ReservedSymbolType(symbol) != TokenType::Unknown) {
-            // tokenizing reserved symbol
+                tokenBuilder.Type(TokenType::SymbolPlusPlus)
+                            .Location(CurrentLocation());
+            } else if (LookupSymbol(1) == '=') {
+                NextSymbol(); // skip '+'
 
-            auto startPosition = CurrentLocation(),
-                 endPosition = CurrentLocation();
-
-            NextSymbol();
-
-            auto type = TokenType::Unknown;
-
-            if (symbol == '(') {
-                type = TokenType::SymbolLeftParen;
-            } else if (symbol == ')') {
-                type = TokenType::SymbolRightParen;
-            } else if (symbol == '{') {
-                type = TokenType::SymbolLeftBrace;
-            } else if (symbol == '}') {
-                type = TokenType::SymbolRightBrace;
-            } else if (symbol == '[') {
-                type = TokenType::SymbolLeftBracket;
-            } else if (symbol == ']') {
-                type = TokenType::SymbolRightBracket;
-            } else if (symbol == ':') {
-                type = TokenType::SymbolColon;
-            } else if (symbol == ',') {
-                type = TokenType::SymbolComma;
-            } else if (symbol == '.') {
-                NextSymbol();
-
-                if (CurrentSymbol() == '.') {
-                    type = TokenType::SymbolDotDot;
-
-                    endPosition = CurrentLocation();
-                } else {
-                    type = TokenType::SymbolDot;
-                }
-            } else if (symbol == '+') {
-                NextSymbol();
-
-                if (CurrentSymbol() == '+') {
-                    type = TokenType::SymbolPlusPlus;
-
-                    endPosition = CurrentLocation();
-                } else if (CurrentSymbol() == '=') {
-                    type = TokenType::SymbolPlusEq;
-
-                    endPosition = CurrentLocation();
-                } else {
-                    type = TokenType::SymbolPlus;
-                }
-            } else if (symbol == '-') {
-                NextSymbol();
-
-                if (CurrentSymbol() == '-') {
-                    type = TokenType::SymbolMinusMinus;
-
-                    endPosition = CurrentLocation();
-                } else if (CurrentSymbol() == '=') {
-                    type = TokenType::SymbolMinusEq;
-
-                    endPosition = CurrentLocation();
-                } else {
-                    type = TokenType::SymbolMinus;
-                }
-            } else if (symbol == '*') {
-                NextSymbol();
-
-                if (CurrentSymbol() == '*') {
-                    type = TokenType::SymbolStarStar;
-
-                    endPosition = CurrentLocation();
-                } else if (CurrentSymbol() == '=') {
-                    type = TokenType::SymbolStarEq;
-
-                    endPosition = CurrentLocation();
-                } else {
-                    type = TokenType::SymbolStar;
-                }
-            } else if (symbol == '/') {
-                NextSymbol();
-
-                if (CurrentSymbol() == '=') {
-                    type = TokenType::SymbolSlashEq;
-
-                    endPosition = CurrentLocation();
-                } else {
-                    type = TokenType::SymbolSlash;
-                }
-            } else if (symbol == '%') {
-                NextSymbol();
-
-                if (CurrentSymbol() == '=') {
-                    type = TokenType::SymbolPercentEq;
-
-                    endPosition = CurrentLocation();
-                } else {
-                    type = TokenType::SymbolPercent;
-                }
-            } else if (symbol == '^') {
-                NextSymbol();
-
-                if (CurrentSymbol() == '=') {
-                    type = TokenType::SymbolCaretEq;
-
-                    endPosition = CurrentLocation();
-                } else {
-                    type = TokenType::SymbolCaret;
-                }
-            } else if (symbol == '&') {
-                NextSymbol();
-
-                if (CurrentSymbol() == '&') {
-                    type = TokenType::SymbolAndAnd;
-
-                    endPosition = CurrentLocation();
-                } else if (CurrentSymbol() == '=') {
-                    type = TokenType::SymbolAndEq;
-
-                    endPosition = CurrentLocation();
-                } else {
-                    type = TokenType::SymbolAnd;
-                }
-            } else if (symbol == '|') {
-                NextSymbol();
-
-                if (CurrentSymbol() == '|') {
-                    type = TokenType::SymbolOrOr;
-
-                    endPosition = CurrentLocation();
-                } else if (CurrentSymbol() == '=') {
-                    type = TokenType::SymbolOrEq;
-
-                    endPosition = CurrentLocation();
-                } else {
-                    type = TokenType::SymbolOr;
-                }
-            } else if (symbol == '>') {
-                NextSymbol();
-
-                if (CurrentSymbol() == '>') {
-                    type = TokenType::SymbolGtGt;
-
-                    endPosition = CurrentLocation();
-                } else if (CurrentSymbol() == '=') {
-                    type = TokenType::SymbolGtEq;
-
-                    endPosition = CurrentLocation();
-                } else {
-                    type = TokenType::SymbolGt;
-                }
-            } else if (symbol == '<') {
-                NextSymbol();
-
-                if (CurrentSymbol() == '<') {
-                    type = TokenType::SymbolLtLt;
-
-                    endPosition = CurrentLocation();
-                } else if (CurrentSymbol() == '=') {
-                    type = TokenType::SymbolLtEq;
-
-                    endPosition = CurrentLocation();
-                } else {
-                    type = TokenType::SymbolLt;
-                }
-            } else if (symbol == '!') {
-                NextSymbol();
-
-                if (CurrentSymbol() == '=') {
-                    type = TokenType::SymbolNotEq;
-
-                    endPosition = CurrentLocation();
-                } else {
-                    type = TokenType::SymbolNot;
-                }
-            } else if (symbol == '=') {
-                NextSymbol();
-
-                if (CurrentSymbol() == '=') {
-                    type = TokenType::SymbolEqEq;
-
-                    endPosition = CurrentLocation();
-                } else if (CurrentSymbol() == '>') {
-                    type = TokenType::SymbolEqGt;
-
-                    endPosition = CurrentLocation();
-                } else {
-                    type = TokenType::SymbolEq;
-                }
+                tokenBuilder.Type(TokenType::SymbolPlusEq)
+                            .Location(CurrentLocation());
+            } else {
+                tokenBuilder.Type(TokenType::SymbolPlus)
+                            .Location(CurrentLocation());
             }
+        } else if (symbol == '-') {
+            if (LookupSymbol(1) == '-') {
+                NextSymbol(); // skip '-'
 
-            return GS_Token::Create(type,
-                                    IO::GS_SourceRange::Create(startPosition,
-                                                               endPosition));
-        } else if (symbol.IsDigit()) {
-            // tokenizing digit literal
+                tokenBuilder.Type(TokenType::SymbolMinusMinus)
+                            .Location(CurrentLocation());
+            } else if (LookupSymbol(1) == '=') {
+                NextSymbol(); // skip '-'
 
+                tokenBuilder.Type(TokenType::SymbolMinusEq)
+                            .Location(CurrentLocation());
+            } else {
+                tokenBuilder.Type(TokenType::SymbolMinus)
+                            .Location(CurrentLocation());
+            }
+        } else if (symbol == '*') {
+            if (LookupSymbol(1) == '*') {
+                NextSymbol(); // skip '*'
+
+                tokenBuilder.Type(TokenType::SymbolStarStar)
+                            .Location(CurrentLocation());
+            } else if (LookupSymbol(1) == '=') {
+                NextSymbol(); // skip '*'
+
+                tokenBuilder.Type(TokenType::SymbolStarEq)
+                            .Location(CurrentLocation());
+            } else {
+                tokenBuilder.Type(TokenType::SymbolStar)
+                            .Location(CurrentLocation());
+            }
+        } else if (symbol == '/') {
+            if (LookupSymbol(1) == '=') {
+                NextSymbol(); // skip '/'
+
+                tokenBuilder.Type(TokenType::SymbolSlashEq)
+                            .Location(CurrentLocation());
+            } else {
+                tokenBuilder.Type(TokenType::SymbolSlash)
+                            .Location(CurrentLocation());
+            }
+        } else if (symbol == '%') {
+            if (LookupSymbol(1) == '=') {
+                NextSymbol(); // skip '%'
+
+                tokenBuilder.Type(TokenType::SymbolPercentEq)
+                            .Location(CurrentLocation());
+            } else {
+                tokenBuilder.Type(TokenType::SymbolPercent)
+                            .Location(CurrentLocation());
+            }
+        } else if (symbol == '^') {
+            if (LookupSymbol(1) == '=') {
+                NextSymbol(); // skip '^'
+
+                tokenBuilder.Type(TokenType::SymbolCaretEq)
+                            .Location(CurrentLocation());
+            } else {
+                tokenBuilder.Type(TokenType::SymbolCaret)
+                            .Location(CurrentLocation());
+            }
+        } else if (symbol == '&') {
+            if (LookupSymbol(1) == '&') {
+                NextSymbol(); // skip '&'
+
+                tokenBuilder.Type(TokenType::SymbolAndAnd)
+                            .Location(CurrentLocation());
+            } else if (LookupSymbol(1) == '=') {
+                NextSymbol(); // skip '&'
+
+                tokenBuilder.Type(TokenType::SymbolAndEq)
+                            .Location(CurrentLocation());
+            } else {
+                tokenBuilder.Type(TokenType::SymbolAnd)
+                            .Location(CurrentLocation());
+            }
+        } else if (symbol == '|') {
+            if (LookupSymbol(1) == '|') {
+                NextSymbol(); // skip '|'
+
+                tokenBuilder.Type(TokenType::SymbolOrOr)
+                            .Location(CurrentLocation());
+            } else if (LookupSymbol(1) == '=') {
+                NextSymbol(); // skip '|'
+
+                tokenBuilder.Type(TokenType::SymbolOrEq)
+                            .Location(CurrentLocation());
+            } else {
+                tokenBuilder.Type(TokenType::SymbolOr)
+                            .Location(CurrentLocation());
+            }
+        } else if (symbol == '>') {
+            if (LookupSymbol(1) == '>') {
+                NextSymbol(); // skip '>'
+
+                tokenBuilder.Type(TokenType::SymbolGtGt)
+                            .Location(CurrentLocation());
+            } else if (LookupSymbol(1) == '=') {
+                NextSymbol(); // skip '>'
+
+                tokenBuilder.Type(TokenType::SymbolGtEq)
+                            .Location(CurrentLocation());
+            } else {
+                tokenBuilder.Type(TokenType::SymbolGt)
+                            .Location(CurrentLocation());
+            }
+        } else if (symbol == '<') {
+            if (LookupSymbol(1) == '<') {
+                NextSymbol(); // skip '<'
+
+                tokenBuilder.Type(TokenType::SymbolLtLt)
+                            .Location(CurrentLocation());
+            } else if (LookupSymbol(1) == '=') {
+                NextSymbol(); // skip '<'
+
+                tokenBuilder.Type(TokenType::SymbolLtEq)
+                            .Location(CurrentLocation());
+            } else {
+                tokenBuilder.Type(TokenType::SymbolLt)
+                            .Location(CurrentLocation());
+            }
+        } else if (symbol == '!') {
+            if (LookupSymbol(1) == '=') {
+                NextSymbol(); // skip '!'
+
+                tokenBuilder.Type(TokenType::SymbolNotEq)
+                            .Location(CurrentLocation());
+            } else {
+                tokenBuilder.Type(TokenType::SymbolNot)
+                            .Location(CurrentLocation());
+            }
+        } else if (symbol == '=') {
+            if (LookupSymbol(1) == '=') {
+                NextSymbol(); // skip '='
+
+                tokenBuilder.Type(TokenType::SymbolEqEq)
+                            .Location(CurrentLocation());
+            } else if (LookupSymbol(1) == '>') {
+                NextSymbol(); // skip '='
+
+                tokenBuilder.Type(TokenType::SymbolEqGt)
+                            .Location(CurrentLocation());
+            } else {
+                tokenBuilder.Type(TokenType::SymbolEq)
+                            .Location(CurrentLocation());
+            }
+        }
+
+        // tokenizing digit literal
+        else if (symbol.IsDigit()) {
             UString string;
-
-            auto startPosition = CurrentLocation(),
-                 endPosition = CurrentLocation();
 
             while (true) {
                 string += CurrentSymbol();
 
-                endPosition = CurrentLocation();
+                if (!LookupSymbol(1).IsDigit()) {
+                    tokenBuilder.Type(TokenType::LiteralNumber)
+                                .Value(string)
+                                .Location(CurrentLocation());
 
-                NextSymbol();
-
-                if (!CurrentSymbol().IsDigit()) {
                     break;
                 }
+
+                NextSymbol();
             }
+        }
 
-            return GS_Token::Create(TokenType::LiteralNumber,
-                                    string,
-                                    IO::GS_SourceRange::Create(startPosition,
-                                                               endPosition));
-        } else if (symbol == '\'') {
-            // tokenizing symbol literal
-
+        // tokenizing symbol literal
+        else if (symbol == '\'') {
             UString string;
 
-            auto startPosition = CurrentLocation(),
-                 endPosition = CurrentLocation();
-
-            NextSymbol();
+            NextSymbol(); // skip '''
 
             string += CurrentSymbol();
 
-            NextSymbol();
+            NextSymbol(); // skip '''
 
             if (CurrentSymbol() != '\'') {
                 Driver::GlobalContext().Exit();
             }
 
-            endPosition = CurrentLocation();
+            tokenBuilder.Type(TokenType::LiteralSymbol)
+                        .Value(string)
+                        .Location(CurrentLocation());
+        }
 
-            NextSymbol();
-
-            return GS_Token::Create(TokenType::LiteralSymbol,
-                                    string,
-                                    IO::GS_SourceRange::Create(startPosition,
-                                                               endPosition));
-        } else if (symbol == '\"') {
-            // tokenizing string literal
-
+        // tokenizing string literal
+        else if (symbol == '\"') {
             UString string;
 
-            auto startPosition = CurrentLocation(),
-                 endPosition = CurrentLocation();
-
-            NextSymbol();
+            NextSymbol(); // skip '"'
 
             while (true) {
                 string += CurrentSymbol();
 
-                NextSymbol();
+                if (LookupSymbol(1) == '\"') {
+                    NextSymbol(); // skip '"'
 
-                if (CurrentSymbol() == '\"') {
-                    NextSymbol();
-
-                    endPosition = CurrentLocation();
+                    tokenBuilder.Type(TokenType::LiteralString)
+                                .Value(string)
+                                .Location(CurrentLocation());
 
                     break;
                 }
+
+                NextSymbol();
             }
+        }
 
-            return GS_Token::Create(TokenType::LiteralString,
-                                    string,
-                                    IO::GS_SourceRange::Create(startPosition,
-                                                               endPosition));
-        } else if (_sourceIterator == _source.cend()) {
-            // end of file
-
-            return GS_Token::Create(TokenType::EndOfFile,
-                                    IO::GS_SourceRange::Create(CurrentLocation(),
-                                                               CurrentLocation()));
+        // end of file
+        else if (IsEnd()) {
+            tokenBuilder.Type(TokenType::EndOfFile)
+                        .Location(CurrentLocation());
         }
 
         // unknown symbol
+        else {
+            UStringStream stringStream;
 
-        _messageQueue << _session.ErrorMessage()
-                                 .Text("Unknown symbol '"_us + symbol + "'!"_us)
-                                 .Message();
+            stringStream << "Unknown symbol '"_us
+                         << UString() + symbol // TODO
+                         << "'!"_us;
 
-        return GS_Token::Create(TokenType::Unknown,
-                                IO::GS_SourceRange::Create(CurrentLocation(),
-                                                           CurrentLocation()));
+            _messageQueue << _session.ErrorMessage()
+                                     .Text(stringStream.String())
+                                     .Message();
+
+            tokenBuilder.Type(TokenType::Unknown)
+                        //.Value(UString() + symbol) TODO
+                        .Location(CurrentLocation());
+        }
+
+        NextSymbol();
+
+        return tokenBuilder.Token();
     }
 
-    USymbol GS_Lexer::CurrentSymbol() {
-        return *_sourceIterator;
+    USymbol GS_Lexer::CurrentSymbol() const {
+        return *_cursor;
     }
 
     Void GS_Lexer::NextSymbol() {
-        ++_sourceIterator;
+        ++_cursor;
+    }
 
-        ++_currentPosition;
+    USymbol GS_Lexer::LookupSymbol(U64 index) const {
+        return _cursor.LookupSymbol(index);
     }
 
     IO::GS_SourceLocation GS_Lexer::CurrentLocation() const {
-        return IO::GS_SourceLocation::Create(_currentPosition,
-                                             _source.GetHash());
+        return _cursor.CurrentLocation();
+    }
+
+    Void GS_Lexer::SavePosition() {
+        _cursor.SavePosition();
+    }
+
+    Bool GS_Lexer::IsEnd() const {
+        return _cursor.IsEnd();
     }
 
 }

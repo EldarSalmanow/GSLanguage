@@ -677,11 +677,11 @@ namespace GSLanguageCompiler::AST {
         /**
          * Create variable using expression
          * @param name Name
-         * @param nameLocation Name source location range
+         * @param nameLocation Name location
          * @return Variable using expression
          */
         NodePtr<GS_VariableUsingExpression> CreateVariableUsingExpression(UString name,
-                                                                          IO::GS_SourceRange nameLocationRange);
+                                                                          IO::GS_SourceRange nameLocation);
 
         /**
          * Create variable using expression

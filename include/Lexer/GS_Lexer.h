@@ -5,6 +5,8 @@
 
 #include <Lexer/GS_Token.h>
 
+#include <Lexer/GS_Cursor.h>
+
 namespace GSLanguageCompiler::Lexer {
 
     /**
@@ -43,6 +45,9 @@ namespace GSLanguageCompiler::Lexer {
          */
         static GS_Lexer Create(LRef<Driver::GS_Session> session,
                                ConstLRef<IO::GS_Source> source);
+
+//        static GS_Lexer Create(LRef<Driver::GS_Session> session,
+//                               GS_Cursor cursor); TODO
 
     public:
 
@@ -91,9 +96,9 @@ namespace GSLanguageCompiler::Lexer {
 
         /**
          * Getting current symbol from cursor
-         * @return Current symbol value
+         * @return Current symbol
          */
-        USymbol CurrentSymbol();
+        USymbol CurrentSymbol() const;
 
         /**
          * Setting cursor to next symbol in source
@@ -102,10 +107,29 @@ namespace GSLanguageCompiler::Lexer {
         Void NextSymbol();
 
         /**
-         * Getting current source location
-         * @return Current source location
+         * Lookup for next symbol by offset from current position
+         * @param index Index
+         * @return Symbol by offset
+         */
+        USymbol LookupSymbol(U64 index) const;
+
+        /**
+         * Getting current location
+         * @return Current location
          */
         IO::GS_SourceLocation CurrentLocation() const;
+
+        /**
+         * Saving current position for calculating length of token in future
+         * @return Void return
+         */
+        Void SavePosition();
+
+        /**
+         * Is end of source
+         * @return Is end of source
+         */
+        Bool IsEnd() const;
 
     private:
 
@@ -126,19 +150,9 @@ namespace GSLanguageCompiler::Lexer {
         IO::GS_MessageQueue _messageQueue;
 
         /**
-         * Source
+         * Cursor
          */
-        ConstLRef<IO::GS_Source> _source;
-
-        /**
-         * Source buffer iterator (source cursor)
-         */
-        IO::GS_Source::ConstIterator _sourceIterator;
-
-        /**
-         * Current position in source (cursor position)
-         */
-        I64 _currentPosition;
+        GS_Cursor _cursor;
     };
 
 }
