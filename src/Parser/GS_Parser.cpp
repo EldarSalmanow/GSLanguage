@@ -1159,8 +1159,8 @@ namespace GSLanguageCompiler::Parser {
         return CurrentToken().GetValue();
     }
 
-    IO::GS_SourceRange GS_Parser::TokenLocation() {
-        return CurrentToken().GetLocationRange();
+    IO::GS_SourceLocation GS_Parser::TokenLocation() {
+        return CurrentToken().GetLocation();
     }
 
     Void GS_Parser::NextToken() {

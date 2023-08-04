@@ -203,26 +203,18 @@ namespace GSLanguageCompiler::Driver {
 
     IO::GS_MessageBuilder GS_Session::Message(UString messageText,
                                               IO::MessageLevel messageLevel,
-                                              std::optional<IO::GS_SourceRange> messageLocationRange) const {
+                                              std::optional<IO::GS_SourceLocation> messageLocation) const {
         return IO::GS_MessageBuilder::Create(std::move(messageText),
                                              messageLevel,
-                                             messageLocationRange);
+                                             messageLocation);
     }
 
     IO::GS_MessageBuilder GS_Session::Message(UString messageText,
                                               IO::MessageLevel messageLevel,
-                                              IO::GS_SourceRange messageLocationRange) const {
+                                              IO::GS_SourceLocation messageLocation) const {
         return IO::GS_MessageBuilder::Create(std::move(messageText),
                                              messageLevel,
-                                             messageLocationRange);
-    }
-
-    IO::GS_MessageBuilder GS_Session::Message(UString messageText,
-                                              IO::MessageLevel messageLevel,
-                                              IO::GS_SourceLocation messageSourceLocation) const {
-        return IO::GS_MessageBuilder::Create(std::move(messageText),
-                                             messageLevel,
-                                             messageSourceLocation);
+                                             messageLocation);
     }
 
     IO::GS_MessageBuilder GS_Session::Message(UString messageText,

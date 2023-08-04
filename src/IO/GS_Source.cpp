@@ -331,6 +331,13 @@ namespace GSLanguageCompiler::IO {
     }
 
     UString GS_Source::GetCodeInRange(GS_SourceLocation location) const {
+        auto sourceHash = location.GetSourceHash();
+
+        if (sourceHash != InvalidHash
+         && sourceHash != _hash) {
+            Driver::GlobalContext().Exit();
+        }
+
         auto startPosition = location.GetStartPosition();
         auto endPosition = location.GetEndPosition();
 

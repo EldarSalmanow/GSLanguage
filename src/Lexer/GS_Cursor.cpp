@@ -27,7 +27,7 @@ namespace GSLanguageCompiler::Lexer {
     }
 
     IO::GS_SourceLocation GS_Cursor::CurrentLocation() const {
-        auto location = IO::GS_SourceLocation::Create(_currentPosition,
+        auto location = IO::GS_SourceLocation::Create(_savedPosition,
                                                       (_currentPosition - _savedPosition) + 1,
                                                       _source.GetHash());
 

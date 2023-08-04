@@ -175,8 +175,8 @@ namespace GSLanguageCompiler::CodeGenerator {
             case AST::ExpressionType::LiteralExpression: {
                 auto constantExpression = AST::ToExpression<AST::GS_LiteralExpression>(expression);
 
-                return GenerateConstantExpression(session,
-                                                  constantExpression);
+                return GenerateLiteralExpression(session,
+                                                 constantExpression);
             }
             case AST::ExpressionType::UnaryExpression: {
                 auto unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(expression);
@@ -233,12 +233,12 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateModuleDeclaration(LRef<Driver::GS_Session> session,
                                                                AST::NodePtrLRef<AST::GS_ModuleDeclaration> moduleDeclaration) {
-
+        return nullptr;
     }
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateImportDeclaration(LRef<Driver::GS_Session> session,
                                                                AST::NodePtrLRef<AST::GS_ImportDeclaration> importDeclaration) {
-
+        return nullptr;
     }
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateFunctionDeclaration(LRef<Driver::GS_Session> session,
@@ -339,27 +339,27 @@ namespace GSLanguageCompiler::CodeGenerator {
         auto ifBody = ifStatement->GetIfBody();
         auto elseBody = ifStatement->GetElseBody();
 
-
+        return nullptr;
     }
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateForStatement(LRef<Driver::GS_Session> session,
                                                           AST::NodePtrLRef<AST::GS_ForStatement> forStatement) {
-
+        return nullptr;
     }
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateWhileStatement(LRef<Driver::GS_Session> session,
                                                             std::shared_ptr<GSLanguageCompiler::AST::GS_WhileStatement> &whileStatement) {
-
+        return nullptr;
     }
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateMatchStatement(LRef<Driver::GS_Session> session,
                                                             std::shared_ptr<GSLanguageCompiler::AST::GS_MatchStatement> &matchStatement) {
-
+        return nullptr;
     }
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateReturnStatement(LRef<Driver::GS_Session> session,
                                                              std::shared_ptr<GSLanguageCompiler::AST::GS_ReturnStatement> &returnStatement) {
-
+        return nullptr;
     }
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateExpressionStatement(LRef<Driver::GS_Session> session,
@@ -486,7 +486,7 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateRangeExpression(LRef<Driver::GS_Session> session,
                                                              AST::NodePtrLRef<AST::GS_RangeExpression> rangeExpression) {
-
+        return nullptr;
     }
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateUnaryExpression(LRef<Driver::GS_Session> session,
@@ -511,22 +511,22 @@ namespace GSLanguageCompiler::CodeGenerator {
         auto secondExpression = binaryExpression->GetSecondExpression();
 
         switch (operation) {
-            case AST::BinaryOperation::Plus:
+            case AST::BinaryOperation::Add:
                 return _builder.CreateAdd(GenerateExpression(session,
                                                              firstExpression),
                                           GenerateExpression(session,
                                                              secondExpression));
-            case AST::BinaryOperation::Minus:
+            case AST::BinaryOperation::Sub:
                 return _builder.CreateSub(GenerateExpression(session,
                                                              firstExpression),
                                           GenerateExpression(session,
                                                              secondExpression));
-            case AST::BinaryOperation::Star:
+            case AST::BinaryOperation::Mul:
                 return _builder.CreateMul(GenerateExpression(session,
                                                              firstExpression),
                                           GenerateExpression(session,
                                                              secondExpression));
-            case AST::BinaryOperation::Slash:
+            case AST::BinaryOperation::Div:
                 return _builder.CreateSDiv(GenerateExpression(session,
                                                               firstExpression),
                                            GenerateExpression(session,
@@ -538,7 +538,7 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateIndexExpression(LRef<Driver::GS_Session> session,
                                                              AST::NodePtrLRef<AST::GS_IndexExpression> indexExpression) {
-
+        return nullptr;
     }
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateCastExpression(LRef<Driver::GS_Session> session,
@@ -546,7 +546,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         auto expression = castExpression->GetExpression();
         auto type = castExpression->GetType();
 
-
+        return nullptr;
     }
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateVariableUsingExpression(LRef<Driver::GS_Session> session,

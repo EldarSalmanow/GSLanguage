@@ -330,7 +330,7 @@ namespace GSLanguageCompiler::Parser {
          * Getting current token location
          * @return Current token location
          */
-        IO::GS_SourceRange TokenLocation();
+        IO::GS_SourceLocation TokenLocation();
 
         /**
          * Setting token iterator to next token in token buffer

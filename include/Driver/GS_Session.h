@@ -251,34 +251,23 @@ namespace GSLanguageCompiler {
              * Creating message builder for creating message
              * @param messageText Message text
              * @param messageLevel Message level
-             * @param messageLocationRange Optional message source location range
+             * @param messageLocation Optional message location
              * @return Message builder
              */
             IO::GS_MessageBuilder Message(UString messageText,
                                           IO::MessageLevel messageLevel,
-                                          std::optional<IO::GS_SourceRange> messageLocationRange) const;
+                                          std::optional<IO::GS_SourceLocation> messageLocation) const;
 
             /**
              * Creating message builder for creating message
              * @param messageText Message text
              * @param messageLevel Message level
-             * @param messageLocationRange Message source location range
+             * @param messageLocation Message location
              * @return Message builder
              */
             IO::GS_MessageBuilder Message(UString messageText,
                                           IO::MessageLevel messageLevel,
-                                          IO::GS_SourceRange messageLocationRange) const;
-
-            /**
-             * Creating message builder for creating message
-             * @param messageText Message text
-             * @param messageLevel Message level
-             * @param messageSourceLocation Message byte source location [sourceLocation, sourceLocation + 1) (one symbol)
-             * @return Message builder
-             */
-            IO::GS_MessageBuilder Message(UString messageText,
-                                          IO::MessageLevel messageLevel,
-                                          IO::GS_SourceLocation messageSourceLocation) const;
+                                          IO::GS_SourceLocation messageLocation) const;
 
             /**
              * Creating message builder for creating message
