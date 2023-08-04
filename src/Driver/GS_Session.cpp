@@ -111,27 +111,27 @@ namespace GSLanguageCompiler::Driver {
 
         // TODO
 
-        std::vector<UString> objectFiles;
-
-        for (auto &translationUnitDeclaration : translationUnitDeclarations) {
-            auto codeHolder = _backend->Generate(*this,
-                                                 translationUnitDeclaration);
-
-            UStringStream fileNameStringStream;
-            fileNameStringStream << std::filesystem::path(translationUnitDeclaration->GetName().AsUTF8()).filename().string()
-                                 << ".o"_us;
-            auto fileName = fileNameStringStream.String();
-
-            _backend->Write(*this,
-                            fileName,
-                            codeHolder);
-
-            objectFiles.emplace_back(fileName);
-        }
-
-        _backend->Link(*this,
-                       objectFiles,
-                       "main.exe");
+//        std::vector<UString> objectFiles;
+//
+//        for (auto &translationUnitDeclaration : translationUnitDeclarations) {
+//            auto codeHolder = _backend->Generate(*this,
+//                                                 translationUnitDeclaration);
+//
+//            UStringStream fileNameStringStream;
+//            fileNameStringStream << std::filesystem::path(translationUnitDeclaration->GetName().AsUTF8()).filename().string()
+//                                 << ".o"_us;
+//            auto fileName = fileNameStringStream.String();
+//
+//            _backend->Write(*this,
+//                            fileName,
+//                            codeHolder);
+//
+//            objectFiles.emplace_back(fileName);
+//        }
+//
+//        _backend->Link(*this,
+//                       objectFiles,
+//                       "main.exe");
 
         return CompilingResult::Success;
     }

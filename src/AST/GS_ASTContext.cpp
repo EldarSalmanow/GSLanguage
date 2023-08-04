@@ -67,6 +67,10 @@ namespace GSLanguageCompiler::AST {
                                           size);
     }
 
+    Semantic::TypePtr<Semantic::GS_RangeType> GS_ASTContext::GetRangeType(Semantic::GSTypePtr elementsType) const {
+        return _typeContext->GetRangeType(std::move(elementsType));
+    }
+
     LRef<Semantic::GS_TypeContext> GS_ASTContext::GetTypeContext() {
         return *_typeContext;
     }

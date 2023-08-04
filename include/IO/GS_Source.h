@@ -11,6 +11,8 @@ namespace GSLanguageCompiler::IO {
 
     /*
      * TODO: Replace U64 position arguments to position class or type?
+     * TODO: Create messages registry
+     * TODO: Check all conversion functions
      */
 
     /**
@@ -170,33 +172,6 @@ namespace GSLanguageCompiler::IO {
     };
 
     /**
-     * Declaring source for converting location functions
-     */
-    class GS_Source;
-
-    /**
-     * Converting byte source location to line column source location
-     * @param location Byte source location
-     * @param source Source
-     * @return Line column source location
-     */
-    std::tuple<U64, U64, U64> ToLineColumnLocation(ConstLRef<GS_SourceLocation> location,
-                                                   ConstLRef<GS_Source> source);
-
-    /**
-     * Converting line column source location to byte source location
-     * @param line Line
-     * @param column Column
-     * @param sourceHash Source hash
-     * @param source Source
-     * @return Byte source location
-     */
-    GS_SourceLocation ToByteLocation(U64 line,
-                                     U64 column,
-                                     U64 sourceHash,
-                                     ConstLRef<GS_Source> source);
-
-    /**
      * Class for containing source code
      */
     class GS_SourceBuffer {
@@ -246,37 +221,6 @@ namespace GSLanguageCompiler::IO {
          * @return Source buffer
          */
         static GS_SourceBuffer Create(UString source);
-
-    public:
-
-        /*
-         *
-         * GS_SourceBuffer PUBLIC METHODS
-         *
-         */
-
-        /**
-         * Getting source code iterator by position
-         * @param position Position
-         * @return Source code iterator
-         */
-        Iterator GetIteratorByPosition(U64 position);
-
-        /**
-         * Getting source code const iterator by position
-         * @param position Position
-         * @return Source code const iterator
-         */
-        ConstIterator GetIteratorByPosition(U64 position) const;
-
-        /**
-         * Getting code from source buffer by location
-         * @param location Location
-         * @return Code in range [position..position + length)
-         */
-        UString GetCodeInRange(GS_SourceLocation location) const;
-
-        UString GetCodeWhile(GS_SourceLocation loc, Bool (*predicate)(ConstLRef<USymbol> symbol));
 
     public:
 
@@ -623,6 +567,22 @@ namespace GSLanguageCompiler::IO {
          */
 
         /**
+         * Converting byte position to line column position in source
+         * @param position Byte position
+         * @return Line column position
+         */
+        std::tuple<U64, U64> GetLineColumnPosition(U64 position) const;
+
+        /**
+         * Converting line column position to byte position in source
+         * @param line Line
+         * @param column Column
+         * @return Byte position
+         */
+        U64 GetBytePosition(U64 line,
+                            U64 column) const;
+
+        /**
          * Getting source code iterator by position
          * @param position Position
          * @return Source code iterator
@@ -637,11 +597,47 @@ namespace GSLanguageCompiler::IO {
         ConstIterator GetIteratorByPosition(U64 position) const;
 
         /**
+         * Getting source code iterator by position
+         * @param line Line
+         * @param column Column
+         * @return Source code iterator
+         */
+        Iterator GetIteratorByPosition(U64 line,
+                                       U64 column);
+
+        /**
+         * Getting source code const iterator by position
+         * @param line Line
+         * @param column Column
+         * @return Source code const iterator
+         */
+        ConstIterator GetIteratorByPosition(U64 line,
+                                            U64 column) const;
+
+        /**
          * Getting code from source by location
          * @param location Location
          * @return Code in range [position..position + length)
          */
         UString GetCodeInRange(GS_SourceLocation location) const;
+
+        /**
+         * Getting code from source by begin and end iterators
+         * @param beginIterator Iterator of code start
+         * @param endIterator Iterator of code end
+         * @return Code in range [beginIterator..endIterator)
+         */
+        UString GetCodeInRange(ConstIterator beginIterator,
+                               ConstIterator endIterator) const;
+
+        /**
+         * Getting code from source while predicate returns true
+         * @param beginIterator Iterator of code start
+         * @param predicate Predicate
+         * @return Code in range [beginIterator..falsePredicatePosition)
+         */
+        UString GetCodeWhile(ConstIterator beginIterator,
+                             Bool (*predicate)(ConstLRef<USymbol> symbol)) const;
 
     public:
 

@@ -152,8 +152,8 @@ namespace GSLanguageCompiler::Debug {
             Print("}"_us, session);
         }
 
-        Void VisitConstantExpression(LRef<Driver::GS_Session> session,
-                                     AST::NodePtrLRef<AST::GS_LiteralExpression> constantExpression) override {
+        Void VisitLiteralExpression(LRef<Driver::GS_Session> session,
+                                    AST::NodePtrLRef<AST::GS_LiteralExpression> literalExpression) override {
             Print("LiteralExpression: {"_us, session);
 
             IncTab();
@@ -162,7 +162,7 @@ namespace GSLanguageCompiler::Debug {
 
             IncTab();
 
-            auto value = AST::ToValue<AST::GS_LiteralValue>(constantExpression->GetValue());
+            auto value = AST::ToValue<AST::GS_LiteralValue>(literalExpression->GetValue());
             auto typeName = value->GetType()->GetName();
 
             Print("Type: " + typeName.AsUTF8(), session);
@@ -204,7 +204,7 @@ namespace GSLanguageCompiler::Debug {
             UString stringOperation;
 
             switch (operation) {
-                case AST::UnaryOperation::Minus:
+                case AST::UnaryOperation::Neg:
                     stringOperation = "Minus (-)"_us;
 
                     break;
@@ -250,19 +250,19 @@ namespace GSLanguageCompiler::Debug {
             UString stringOperation;
 
             switch (operation) {
-                case AST::BinaryOperation::Plus:
+                case AST::BinaryOperation::Add:
                     stringOperation = "Plus (+)"_us;
 
                     break;
-                case AST::BinaryOperation::Minus:
+                case AST::BinaryOperation::Sub:
                     stringOperation = "Minus (-)"_us;
 
                     break;
-                case AST::BinaryOperation::Star:
+                case AST::BinaryOperation::Mul:
                     stringOperation = "Star (*)"_us;
 
                     break;
-                case AST::BinaryOperation::Slash:
+                case AST::BinaryOperation::Div:
                     stringOperation = "Slash (/)"_us;
 
                     break;

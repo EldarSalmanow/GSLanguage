@@ -21,6 +21,7 @@ namespace GSLanguageCompiler::Semantic {
         String,
 
         Array,
+        Range,
 
         User
     };
@@ -864,7 +865,7 @@ namespace GSLanguageCompiler::Semantic {
          */
 
         /**
-         * Constructor for Array type
+         * Creating Array type
          * @param elementsType Type of array elements
          * @param size Size of array
          * @return Array type ptr
@@ -923,6 +924,81 @@ namespace GSLanguageCompiler::Semantic {
          * Size of array
          */
         U64 _size;
+    };
+
+    /**
+     * Builtin Range type
+     */
+    class GS_RangeType : public GS_Type {
+    public:
+
+        /*
+         *
+         * GS_RangeType PUBLIC CONSTRUCTORS
+         *
+         */
+
+        /**
+         * Constructor for Range type
+         * @param elementsType Type of range elements
+         */
+        explicit GS_RangeType(GSTypePtr elementsType);
+
+    public:
+
+        /*
+         *
+         * GS_RangeType PUBLIC STATIC CREATE METHODS
+         *
+         */
+
+        /**
+         * Creating Range type
+         * @param elementsType Type of range elements
+         * @return Range type ptr
+         */
+        static std::shared_ptr<GS_RangeType> Create(GSTypePtr elementsType);
+
+    public:
+
+        /*
+         *
+         * GS_RangeType PUBLIC GETTER METHODS
+         *
+         */
+
+        /**
+         * Getter for type of range elements
+         * @return Type of range elements
+         */
+        ConstLRef<GSTypePtr> GetElementsType() const;
+
+    public:
+
+        /*
+         *
+         * GS_RangeType PUBLIC OVERRIDE METHODS
+         *
+         */
+
+        /**
+         * Getter for type of type
+         * @return Type of type
+         */
+        TypeType GetType() const override;
+
+    private:
+
+        /*
+         *
+         * GS_RangeType PRIVATE FIELDS
+         *
+         */
+
+        /**
+         * Type of range elements
+         */
+        GSTypePtr _elementsType;
     };
 
     /**
@@ -1062,6 +1138,13 @@ namespace GSLanguageCompiler::Semantic {
 
                 break;
             }
+            case TypeType::Range: {
+                if constexpr (!std::is_same_v<GS_RangeType, TypeT>) {
+                    return nullptr;
+                }
+
+                break;
+            }
             case TypeType::User: {
                 return nullptr;
             }
@@ -1187,12 +1270,19 @@ namespace GSLanguageCompiler::Semantic {
 
         /**
          * Getter for default Array type
-         * @param type Type of array elements
+         * @param elementsType Type of array elements
          * @param size Size of array
          * @return Array type
          */
-        TypePtr<GS_ArrayType> GetArrayType(GSTypePtr type,
+        TypePtr<GS_ArrayType> GetArrayType(GSTypePtr elementsType,
                                            U64 size) const;
+
+        /**
+         * Getter for default Range type
+         * @param elementsType Type of range elements
+         * @return Range type
+         */
+        TypePtr<GS_RangeType> GetRangeType(GSTypePtr elementsType) const;
     };
 
     /**

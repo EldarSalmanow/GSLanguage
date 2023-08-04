@@ -205,6 +205,22 @@ namespace GSLanguageCompiler::Semantic {
         return TypeType::Array;
     }
 
+    GS_RangeType::GS_RangeType(GSTypePtr elementsType)
+            : _elementsType(std::move(elementsType)),
+              GS_Type("Range["_us + elementsType->GetName() + "]"_us) {}
+
+    std::shared_ptr<GS_RangeType> GS_RangeType::Create(GSTypePtr elementsType) {
+        return std::make_shared<GS_RangeType>(std::move(elementsType));
+    }
+
+    ConstLRef<GSTypePtr> GS_RangeType::GetElementsType() const {
+        return _elementsType;
+    }
+
+    TypeType GS_RangeType::GetType() const {
+        return TypeType::Range;
+    }
+
     GS_TypeContext::GS_TypeContext() = default;
 
     std::unique_ptr<GS_TypeContext> GS_TypeContext::Create() {
@@ -259,10 +275,14 @@ namespace GSLanguageCompiler::Semantic {
         return GS_StringType::Create();
     }
 
-    TypePtr<GS_ArrayType> GS_TypeContext::GetArrayType(GSTypePtr type,
+    TypePtr<GS_ArrayType> GS_TypeContext::GetArrayType(GSTypePtr elementsType,
                                                        U64 size) const {
-        return GS_ArrayType::Create(std::move(type),
+        return GS_ArrayType::Create(std::move(elementsType),
                                     size);
+    }
+
+    TypePtr<GS_RangeType> GS_TypeContext::GetRangeType(GSTypePtr elementsType) const {
+        return GS_RangeType::Create(std::move(elementsType));
     }
 
 }

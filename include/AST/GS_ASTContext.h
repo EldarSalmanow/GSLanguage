@@ -135,6 +135,13 @@ namespace GSLanguageCompiler::AST {
         Semantic::TypePtr<Semantic::GS_ArrayType> GetArrayType(Semantic::GSTypePtr elementsType,
                                                                U64 size) const;
 
+        /**
+         * Getter for default Range type
+         * @param elementsType Type of array elements
+         * @return Range type
+         */
+        Semantic::TypePtr<Semantic::GS_RangeType> GetRangeType(Semantic::GSTypePtr elementsType) const;
+
     public:
 
         /*

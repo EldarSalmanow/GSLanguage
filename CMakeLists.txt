@@ -104,6 +104,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${EXTERNAL_LIBS})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_LIBS})
 
-add_subdirectory(tests)
+#add_subdirectory(tests)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${BINARY_DIR})

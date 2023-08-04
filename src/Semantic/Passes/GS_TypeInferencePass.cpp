@@ -39,7 +39,18 @@ namespace GSLanguageCompiler::Semantic {
                 break;
             }
             case AST::ExpressionType::RangeExpression: {
+                auto rangeExpression = AST::ToExpression<AST::GS_RangeExpression>(expression);
 
+                auto startExpressionType = InferType(session,
+                                                     rangeExpression->GetStartExpression());
+                auto endExpressionType = InferType(session,
+                                                   rangeExpression->GetEndExpression());
+
+                if (startExpressionType != endExpressionType) {
+                    break;
+                }
+
+                expressionType = startExpressionType;
 
                 break;
             }

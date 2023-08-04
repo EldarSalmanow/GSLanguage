@@ -59,136 +59,11 @@ namespace GSLanguageCompiler::IO {
             && _sourceHash == location.GetSourceHash();
     }
 
-    // TODO: create messages registry
-    // TODO: check
-    std::tuple<U64, U64, U64> ToLineColumnLocation(ConstLRef<GS_SourceLocation> sourceLocation,
-                                                   ConstLRef<GS_Source> source) {
-        auto position = sourceLocation.GetPosition();
-        auto sourceHash = sourceLocation.GetSourceHash();
-
-        if (position == InvalidPosition
-         && sourceHash == InvalidHash) {
-            return std::make_tuple(InvalidPosition,
-                                   InvalidPosition,
-                                   InvalidHash);
-        }
-
-        if (position > source.GetBuffer().GetSource().Size()) {
-            Driver::GlobalContext().Exit("Can`t convert byte source location to line column source location with position in byte source location bigger than source size!");
-        }
-
-        if (sourceHash != InvalidHash
-         && sourceHash != source.GetHash()) {
-            Driver::GlobalContext().Exit("Can`t convert byte source location to line column source location with different source hash in byte source location and source!");
-        }
-
-        U64 line = 1, column = 1;
-
-        for (U64 index = 0; index < position; ++index) {
-            if (source[index] == '\n') {
-                ++line;
-
-                column = 1;
-
-                continue;
-            }
-
-            ++column;
-        }
-
-        return std::make_tuple(line,
-                               column,
-                               sourceHash);
-    }
-
-    GS_SourceLocation ToByteLocation(U64 line,
-                                     U64 column,
-                                     U64 sourceHash,
-                                     ConstLRef<GS_Source> source) {
-        if (line == InvalidPosition
-         && column == InvalidPosition
-         && sourceHash == InvalidHash) {
-            return GS_SourceLocation::Create();
-        }
-
-        if (sourceHash != InvalidHash
-         && sourceHash != source.GetHash()) {
-            Driver::GlobalContext().Exit("Can`t convert line column source location to byte source location with different source hash in line column source location and source!");
-        }
-
-        U64 position = 1;
-
-        for (U64 lineIndex = 1; lineIndex < line; ++position) {
-            if (position > source.GetBuffer().GetSource().Size()) {
-                Driver::GlobalContext().Exit("Can`t convert line column source location to byte source location with line in line column source location bigger than source size!");
-            }
-
-            if (source[position - 1] == '\n') {
-                ++lineIndex;
-            }
-        }
-
-        for (U64 columnIndex = 1; columnIndex < column; ++position) {
-            if (position > source.GetBuffer().GetSource().Size()) {
-                Driver::GlobalContext().Exit("Can`t convert line column source location to byte source location with column in line column source location bigger than source size!");
-            }
-
-            if (source[position - 1] == '\n') {
-                Driver::GlobalContext().Exit("Can`t convert line column source location to byte source location with column in line column source location bigger than column in line!");
-            }
-        }
-
-        return GS_SourceLocation::Create(position,
-                                         sourceHash);
-    }
-
     GS_SourceBuffer::GS_SourceBuffer(UString source)
             : _source(std::move(source)) {}
 
     GS_SourceBuffer GS_SourceBuffer::Create(UString source) {
         return GS_SourceBuffer(std::move(source));
-    }
-
-    // TODO: check
-    U64 GetIndexByLocation(U64 position,
-                           ConstLRef<GS_SourceBuffer> sourceBuffer) {
-        if (position == InvalidPosition) {
-            return 0;
-        }
-
-        if (position > sourceBuffer.GetSource().Size()) {
-            Driver::GlobalContext().Exit("Can`t convert byte source location to index with position in byte source location bigger than source buffer size!");
-        }
-
-        auto index = position - 1;
-
-        return index;
-    }
-
-    GS_SourceBuffer::Iterator GS_SourceBuffer::GetIteratorByPosition(U64 position) {
-        return _source.begin() + GetIndexByLocation(position,
-                                                    *this);
-    }
-
-    GS_SourceBuffer::ConstIterator GS_SourceBuffer::GetIteratorByPosition(U64 position) const {
-        return _source.cbegin() + GetIndexByLocation(position,
-                                                     *this);
-    }
-
-    UString GS_SourceBuffer::GetCodeInRange(GS_SourceLocation location) const {
-        auto startPosition = location.GetStartPosition();
-        auto endPosition = location.GetEndPosition();
-
-        auto startIterator = GetIteratorByPosition(startPosition);
-        auto endIterator = GetIteratorByPosition(endPosition);
-
-        UString code;
-
-        for (; startIterator != endIterator; ++startIterator) {
-            code += *startIterator;
-        }
-
-        return code;
     }
 
     GS_SourceBuffer::Iterator GS_SourceBuffer::begin() {
@@ -356,16 +231,140 @@ namespace GSLanguageCompiler::IO {
                                  GS_SourceName::CreateCustom(std::move(name)));
     }
 
+    std::tuple<U64, U64> GS_Source::GetLineColumnPosition(U64 position) const {
+        if (position == InvalidPosition) {
+            return std::make_tuple(InvalidPosition,
+                                   InvalidPosition);
+        }
+
+        if (position > _buffer.GetSource().Size()) {
+            Driver::GlobalContext().Exit("Can`t convert byte position to line column position with position bigger than source size!");
+        }
+
+        U64 line = 1, column = 1;
+
+        for (U64 index = 0; index < position; ++index) {
+            if (_buffer[index] == '\n') {
+                ++line;
+
+                column = 1;
+
+                continue;
+            }
+
+            ++column;
+        }
+
+        return std::make_tuple(line,
+                               column);
+    }
+
+    U64 GS_Source::GetBytePosition(U64 line,
+                                   U64 column) const {
+        if (line == InvalidPosition
+         || column == InvalidPosition) {
+            return InvalidPosition;
+        }
+
+        U64 position = 1;
+
+        for (U64 lineIndex = 1; lineIndex < line; ++position) {
+            if (position > _buffer.GetSource().Size()) {
+                Driver::GlobalContext().Exit("Can`t convert line column position to byte position with line bigger than source size!");
+            }
+
+            if (_buffer[position - 1] == '\n') {
+                ++lineIndex;
+            }
+        }
+
+        for (U64 columnIndex = 1; columnIndex < column; ++position) {
+            if (position > _buffer.GetSource().Size()) {
+                Driver::GlobalContext().Exit("Can`t convert line column position to byte position with column bigger than source size!");
+            }
+
+            if (_buffer[position - 1] == '\n') {
+                Driver::GlobalContext().Exit("Can`t convert line column position to byte position with column bigger than column in line!");
+            }
+        }
+
+        return position;
+    }
+
+    U64 GetIndexByLocation(U64 position,
+                           ConstLRef<GS_SourceBuffer> sourceBuffer) {
+        if (position == InvalidPosition) {
+            return 0;
+        }
+
+        if (position > sourceBuffer.GetSource().Size()) {
+            Driver::GlobalContext().Exit("Can`t convert byte source location to index with position in byte source location bigger than source buffer size!");
+        }
+
+        auto index = position - 1;
+
+        return index;
+    }
+
     GS_Source::Iterator GS_Source::GetIteratorByPosition(U64 position) {
-        return _buffer.GetIteratorByPosition(position);
+        return _buffer.begin() + GetIndexByLocation(position,
+                                                    _buffer);
     }
 
     GS_Source::ConstIterator GS_Source::GetIteratorByPosition(U64 position) const {
-        return _buffer.GetIteratorByPosition(position);
+        return _buffer.cbegin() + GetIndexByLocation(position,
+                                                     _buffer);
+    }
+
+    GS_Source::Iterator GS_Source::GetIteratorByPosition(U64 line,
+                                                         U64 column) {
+        auto position = GetBytePosition(line, column);
+
+        return GetIteratorByPosition(position);
+    }
+
+    GS_Source::ConstIterator GS_Source::GetIteratorByPosition(U64 line,
+                                                              U64 column) const {
+        auto position = GetBytePosition(line, column);
+
+        return GetIteratorByPosition(position);
     }
 
     UString GS_Source::GetCodeInRange(GS_SourceLocation location) const {
-        return _buffer.GetCodeInRange(location);
+        auto startPosition = location.GetStartPosition();
+        auto endPosition = location.GetEndPosition();
+
+        auto beginIterator = GetIteratorByPosition(startPosition);
+        auto endIterator = GetIteratorByPosition(endPosition);
+
+        return GetCodeInRange(beginIterator,
+                              endIterator);
+    }
+
+    UString GS_Source::GetCodeInRange(GS_Source::ConstIterator beginIterator,
+                                      GS_Source::ConstIterator endIterator) const {
+        UString string;
+
+        for (auto currentIterator = beginIterator;
+             currentIterator != endIterator && currentIterator != _buffer.cend();
+             ++currentIterator) {
+            string += *currentIterator;
+        }
+
+        return string;
+    }
+
+    UString GS_Source::GetCodeWhile(GS_Source::ConstIterator beginIterator,
+                                    Bool (*predicate)(ConstLRef<USymbol>)) const {
+        UString string;
+
+        for (auto currentIterator = beginIterator;
+             predicate(*currentIterator) && currentIterator != _buffer.cend();
+             ++currentIterator) {
+            string += *currentIterator;
+        }
+
+        return string;
     }
 
     GS_Source::ConstIterator GS_Source::begin() const {

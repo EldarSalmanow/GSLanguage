@@ -163,6 +163,13 @@ namespace GSLanguageCompiler::AST {
                                                                   U64 size);
 
         /**
+         * Create Range type
+         * @param elementsType Type of range elements
+         * @return Range type
+         */
+        Semantic::TypePtr<Semantic::GS_RangeType> CreateRangeType(Semantic::GSTypePtr elementsType);
+
+        /**
          * Create any value
          * @param type Type
          * @return Value
