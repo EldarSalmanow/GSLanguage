@@ -109,8 +109,6 @@ Program - one file.
 
     primary_expr ::= literal_expr 
                    | array_expr 
-                   | range_expr 
-                   | index_expr 
                    | var_using_expr 
                    | func_call_expr 
                    | paren_expr
@@ -125,9 +123,9 @@ Program - one file.
                    | expr ',' array_values 
                    | empty
 
-    range_expr ::= expr '..' expr
+    range_expr ::= binary_expr '..' binary_expr
 
-    unary_expr ::= unary_op primary_expr
+    unary_expr ::= unary_op index_expr
     
     unary_op ::= '-' 
                | '!'
@@ -166,7 +164,7 @@ Program - one file.
                 | '&='
                 | '|='
 
-    index_expr ::= expr '[' expr ']'
+    index_expr ::= primary_expr '[' expr ']'
 
     cast_expr ::= unary_expr 'as' id
 

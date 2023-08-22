@@ -1,7 +1,10 @@
 #ifndef GSLANGUAGE_GS_LLVMVISITOR_H
 #define GSLANGUAGE_GS_LLVMVISITOR_H
 
+#pragma warning(push)
+#pragma warning(disable : 4624)
 #include <llvm/IR/IRBuilder.h>
+#pragma warning(pop)
 
 #include <AST/GS_Visitor.h>
 

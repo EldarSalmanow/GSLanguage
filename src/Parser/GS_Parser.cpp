@@ -628,11 +628,10 @@ namespace GSLanguageCompiler::Parser {
     AST::GSExpressionPtr GS_Parser::ParseExpression() {
         AST::GSExpressionPtr expression;
 
-        expression = TryParse(&GS_Parser::ParseCastExpression);
+        expression = TryParse(&GS_Parser::ParseRangeExpression);
 
         if (expression) {
-            return ParseBinaryExpression(0,
-                                         expression);
+            return expression;
         }
 
         ErrorMessage("Unknown expression!"_us);
@@ -663,11 +662,10 @@ namespace GSLanguageCompiler::Parser {
     AST::GSExpressionPtr GS_Parser::ParseRValueExpression() {
         AST::GSExpressionPtr expression;
 
-        expression = TryParse(&GS_Parser::ParseCastExpression);
+        expression = TryParse(&GS_Parser::ParseBinaryExpression);
 
         if (expression) {
-            return ParseBinaryExpression(0,
-                                         expression);
+            return expression;
         }
 
         ErrorMessage("Unknown right value expression!"_us);
@@ -717,35 +715,46 @@ namespace GSLanguageCompiler::Parser {
         return _builder->CreateArrayExpression(expressions);
     }
 
-    AST::NodePtr<AST::GS_RangeExpression> GS_Parser::ParseRangeExpression() {
-        auto startExpression = ParseExpression();
+    AST::GSExpressionPtr GS_Parser::ParseRangeExpression() {
+        auto startExpression = ParseBinaryExpression();
 
-        if (!IsTokenType(Lexer::TokenType::SymbolDotDot)) {
-            ErrorMessage("Missed symbol '..' in range expression!");
+        if (IsTokenType(Lexer::TokenType::SymbolDotDot)) {
+            NextToken(); // skip '..'
 
-            return nullptr;
+            auto endExpression = ParseBinaryExpression();
+
+            return _builder->CreateRangeExpression(startExpression,
+                                                   endExpression);
         }
 
-        NextToken(); // skip '..'
+        return startExpression;
 
-        auto endExpression = ParseExpression();
-
-        return _builder->CreateRangeExpression(startExpression,
-                                               endExpression);
+//        if (!IsTokenType(Lexer::TokenType::SymbolDotDot)) {
+//            ErrorMessage("Missed symbol '..' in range expression!");
+//
+//            return nullptr;
+//        }
+//
+//        NextToken(); // skip '..'
+//
+//        auto endExpression = ParseBinaryExpression();
+//
+//        return _builder->CreateRangeExpression(startExpression,
+//                                               endExpression);
     }
 
     AST::GSExpressionPtr GS_Parser::ParseUnaryExpression() {
         if (IsTokenType(Lexer::TokenType::SymbolMinus)) {
             NextToken(); // skip '-'
 
-            auto expression = ParsePrimaryExpression();
+            auto expression = ParseIndexExpression();
 
             return _builder->CreateUnaryExpression(AST::UnaryOperation::Neg,
                                                    expression);
         } else if (IsTokenType(Lexer::TokenType::SymbolNot)) {
             NextToken(); // skip '!'
 
-            auto expression = ParsePrimaryExpression();
+            auto expression = ParseIndexExpression();
 
             return _builder->CreateUnaryExpression(AST::UnaryOperation::Not,
                                                    expression);
@@ -863,8 +872,21 @@ namespace GSLanguageCompiler::Parser {
         }
     }
 
-    AST::NodePtr<AST::GS_IndexExpression> GS_Parser::ParseIndexExpression() {
-        auto expression = ParseExpression();
+    AST::GSExpressionPtr GS_Parser::ParseBinaryExpression() {
+        AST::GSExpressionPtr expression;
+
+        expression = TryParse(&GS_Parser::ParseCastExpression);
+
+        if (expression) {
+            return ParseBinaryExpression(0,
+                                         expression);
+        }
+
+        return nullptr;
+    }
+
+    AST::GSExpressionPtr GS_Parser::ParseIndexExpression() {
+        auto expression = ParsePrimaryExpression();
 
         if (!IsTokenType(Lexer::TokenType::SymbolLeftBracket)) {
             ErrorMessage("Missed symbol '[' in index expression!");
@@ -993,18 +1015,6 @@ namespace GSLanguageCompiler::Parser {
         }
 
         expression = TryParse(&GS_Parser::ParseArrayExpression);
-
-        if (expression) {
-            return expression;
-        }
-
-        expression = TryParse(&GS_Parser::ParseRangeExpression);
-
-        if (expression) {
-            return expression;
-        }
-
-        expression = TryParse(&GS_Parser::ParseIndexExpression);
 
         if (expression) {
             return expression;

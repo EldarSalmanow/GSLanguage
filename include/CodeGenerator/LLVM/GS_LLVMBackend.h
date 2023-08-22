@@ -1,8 +1,11 @@
 #ifndef GSLANGUAGE_GS_LLVMBACKEND_H
 #define GSLANGUAGE_GS_LLVMBACKEND_H
 
+#pragma warning(push)
+#pragma warning(disable : 4624)
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
+#pragma warning(pop)
 
 #include <CodeGenerator/GS_Backend.h>
 

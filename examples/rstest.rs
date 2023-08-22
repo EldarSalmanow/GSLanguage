@@ -32,4 +32,14 @@ fn main() {
     -a as i32;
 
     let g = (1..10)[1];
+
+    1 as i8..2 as i8 + 12;
+
+    let x = 1;
+
+    if x != 0 {
+        print!("1");
+    } else {
+        print!("2");
+    }
 }

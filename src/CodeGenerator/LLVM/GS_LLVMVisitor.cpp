@@ -128,6 +128,18 @@ namespace GSLanguageCompiler::CodeGenerator {
                 return GenerateTranslationUnitDeclaration(session,
                                                           translationUnitDeclaration);
             }
+            case AST::DeclarationType::ModuleDeclaration: {
+                auto moduleDeclaration = AST::ToDeclaration<AST::GS_ModuleDeclaration>(declaration);
+
+                return GenerateModuleDeclaration(session,
+                                                 moduleDeclaration);
+            }
+            case AST::DeclarationType::ImportDeclaration: {
+                auto importDeclaration = AST::ToDeclaration<AST::GS_ImportDeclaration>(declaration);
+
+                return GenerateImportDeclaration(session,
+                                                 importDeclaration);
+            }
             case AST::DeclarationType::FunctionDeclaration: {
                 auto functionDeclaration = AST::ToDeclaration<AST::GS_FunctionDeclaration>(declaration);
 
@@ -156,6 +168,36 @@ namespace GSLanguageCompiler::CodeGenerator {
                 return GenerateAssignmentStatement(session,
                                                    assignmentStatement);
             }
+            case AST::StatementType::IfStatement: {
+                auto ifStatement = AST::ToStatement<AST::GS_IfStatement>(statement);
+
+                return GenerateIfStatement(session,
+                                           ifStatement);
+            }
+            case AST::StatementType::ForStatement: {
+                auto forStatement = AST::ToStatement<AST::GS_ForStatement>(statement);
+
+                return GenerateForStatement(session,
+                                            forStatement);
+            }
+            case AST::StatementType::WhileStatement: {
+                auto whileStatement = AST::ToStatement<AST::GS_WhileStatement>(statement);
+
+                return GenerateWhileStatement(session,
+                                              whileStatement);
+            }
+            case AST::StatementType::MatchStatement: {
+                auto matchStatement = AST::ToStatement<AST::GS_MatchStatement>(statement);
+
+                return GenerateMatchStatement(session,
+                                              matchStatement);
+            }
+            case AST::StatementType::ReturnStatement: {
+                auto returnStatement = AST::ToStatement<AST::GS_ReturnStatement>(statement);
+
+                return GenerateReturnStatement(session,
+                                               returnStatement);
+            }
             case AST::StatementType::ExpressionStatement: {
                 auto expressionStatement = AST::ToStatement<AST::GS_ExpressionStatement>(statement);
 
@@ -173,10 +215,22 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         switch (expressionType) {
             case AST::ExpressionType::LiteralExpression: {
-                auto constantExpression = AST::ToExpression<AST::GS_LiteralExpression>(expression);
+                auto literalExpression = AST::ToExpression<AST::GS_LiteralExpression>(expression);
 
                 return GenerateLiteralExpression(session,
-                                                 constantExpression);
+                                                 literalExpression);
+            }
+            case AST::ExpressionType::ArrayExpression: {
+                auto arrayExpression = AST::ToExpression<AST::GS_ArrayExpression>(expression);
+
+                return GenerateArrayExpression(session,
+                                               arrayExpression);
+            }
+            case AST::ExpressionType::RangeExpression: {
+                auto rangeExpression = AST::ToExpression<AST::GS_RangeExpression>(expression);
+
+                return GenerateRangeExpression(session,
+                                               rangeExpression);
             }
             case AST::ExpressionType::UnaryExpression: {
                 auto unaryExpression = AST::ToExpression<AST::GS_UnaryExpression>(expression);
@@ -190,11 +244,17 @@ namespace GSLanguageCompiler::CodeGenerator {
                 return GenerateBinaryExpression(session,
                                                 binaryExpression);
             }
-            case AST::ExpressionType::ArrayExpression: {
-                auto arrayExpression = AST::ToExpression<AST::GS_ArrayExpression>(expression);
+            case AST::ExpressionType::IndexExpression: {
+                auto indexExpression = AST::ToExpression<AST::GS_IndexExpression>(expression);
 
-                return GenerateArrayExpression(session,
-                                               arrayExpression);
+                return GenerateIndexExpression(session,
+                                               indexExpression);
+            }
+            case AST::ExpressionType::CastExpression: {
+                auto castExpression = AST::ToExpression<AST::GS_CastExpression>(expression);
+
+                return GenerateCastExpression(session,
+                                              castExpression);
             }
             case AST::ExpressionType::VariableUsingExpression: {
                 auto variableUsingExpression = AST::ToExpression<AST::GS_VariableUsingExpression>(expression);
@@ -231,11 +291,13 @@ namespace GSLanguageCompiler::CodeGenerator {
         return nullptr;
     }
 
+    // this node may be desugared
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateModuleDeclaration(LRef<Driver::GS_Session> session,
                                                                AST::NodePtrLRef<AST::GS_ModuleDeclaration> moduleDeclaration) {
         return nullptr;
     }
 
+    // this node may be desugared
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateImportDeclaration(LRef<Driver::GS_Session> session,
                                                                AST::NodePtrLRef<AST::GS_ImportDeclaration> importDeclaration) {
         return nullptr;
@@ -339,6 +401,45 @@ namespace GSLanguageCompiler::CodeGenerator {
         auto ifBody = ifStatement->GetIfBody();
         auto elseBody = ifStatement->GetElseBody();
 
+        auto llvmCondition = GenerateExpression(session,
+                                                condition);
+
+        auto llvmFunction = _builder.GetInsertBlock()->getParent();
+
+        auto ifBranch = llvm::BasicBlock::Create(GetContext(),
+                                                 "if_branch",
+                                                 llvmFunction);
+        auto elseBranch = llvm::BasicBlock::Create(GetContext(),
+                                                   "else_branch");
+        auto exitBranch = llvm::BasicBlock::Create(GetContext(),
+                                                   "exit_branch");
+
+        _builder.CreateCondBr(llvmCondition, ifBranch, elseBranch);
+
+        _builder.SetInsertPoint(ifBranch);
+
+        for (auto &statement : ifBody) {
+            GenerateStatement(session,
+                              statement);
+        }
+
+        _builder.CreateBr(exitBranch);
+
+        ifBranch = _builder.GetInsertBlock();
+
+        _builder.SetInsertPoint(elseBranch);
+
+        for (auto &statement : elseBody) {
+            GenerateStatement(session,
+                              statement);
+        }
+
+        _builder.CreateBr(exitBranch);
+
+        elseBranch = _builder.GetInsertBlock();
+
+        _builder.SetInsertPoint(exitBranch);
+
         return nullptr;
     }
 
@@ -349,6 +450,9 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateWhileStatement(LRef<Driver::GS_Session> session,
                                                             std::shared_ptr<GSLanguageCompiler::AST::GS_WhileStatement> &whileStatement) {
+        auto condition = whileStatement->GetCondition();
+        auto body = whileStatement->GetBody();
+
         return nullptr;
     }
 
@@ -359,7 +463,14 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateReturnStatement(LRef<Driver::GS_Session> session,
                                                              std::shared_ptr<GSLanguageCompiler::AST::GS_ReturnStatement> &returnStatement) {
-        return nullptr;
+        auto expression = returnStatement->GetExpression();
+
+        if (expression) {
+            return _builder.CreateRet(GenerateExpression(session,
+                                                         expression));
+        } else {
+            return _builder.CreateRetVoid();
+        }
     }
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateExpressionStatement(LRef<Driver::GS_Session> session,
@@ -496,9 +607,11 @@ namespace GSLanguageCompiler::CodeGenerator {
 
         switch (operation) {
             case AST::UnaryOperation::Neg:
-                return _builder.CreateUnOp(llvm::Instruction::UnaryOps::FNeg,
-                                           GenerateExpression(session,
+                return _builder.CreateFNeg(GenerateExpression(session,
                                                               expression));
+            case AST::UnaryOperation::Not:
+                return _builder.CreateNot(GenerateExpression(session,
+                                                             expression));
         }
 
         return nullptr;
@@ -531,6 +644,72 @@ namespace GSLanguageCompiler::CodeGenerator {
                                                               firstExpression),
                                            GenerateExpression(session,
                                                               secondExpression));
+            case AST::BinaryOperation::Rem:
+                return _builder.CreateSRem(GenerateExpression(session,
+                                                              firstExpression),
+                                           GenerateExpression(session,
+                                                              secondExpression));
+
+            case AST::BinaryOperation::And:
+            case AST::BinaryOperation::Or:
+                return nullptr;
+
+            case AST::BinaryOperation::BitXor:
+                return _builder.CreateXor(GenerateExpression(session,
+                                                             firstExpression),
+                                          GenerateExpression(session,
+                                                             secondExpression));
+            case AST::BinaryOperation::BitAnd:
+                return _builder.CreateAnd(GenerateExpression(session,
+                                                             firstExpression),
+                                          GenerateExpression(session,
+                                                             secondExpression));
+            case AST::BinaryOperation::BitOr:
+                return _builder.CreateOr(GenerateExpression(session,
+                                                            firstExpression),
+                                         GenerateExpression(session,
+                                                            secondExpression));
+            case AST::BinaryOperation::Shl:
+                return _builder.CreateShl(GenerateExpression(session,
+                                                             firstExpression),
+                                          GenerateExpression(session,
+                                                             secondExpression));
+            case AST::BinaryOperation::Shr:
+                return _builder.CreateAShr(GenerateExpression(session,
+                                                              firstExpression),
+                                           GenerateExpression(session,
+                                                              secondExpression));
+
+            case AST::BinaryOperation::Eq:
+                return _builder.CreateICmpEQ(GenerateExpression(session,
+                                                                firstExpression),
+                                             GenerateExpression(session,
+                                                                secondExpression));
+            case AST::BinaryOperation::Ne:
+                return _builder.CreateICmpNE(GenerateExpression(session,
+                                                                firstExpression),
+                                             GenerateExpression(session,
+                                                                secondExpression));
+            case AST::BinaryOperation::Gt:
+                return _builder.CreateICmpSGT(GenerateExpression(session,
+                                                                 firstExpression),
+                                              GenerateExpression(session,
+                                                                 secondExpression));
+            case AST::BinaryOperation::Ge:
+                return _builder.CreateICmpSGE(GenerateExpression(session,
+                                                                 firstExpression),
+                                              GenerateExpression(session,
+                                                                 secondExpression));
+            case AST::BinaryOperation::Lt:
+                return _builder.CreateICmpSLT(GenerateExpression(session,
+                                                                 firstExpression),
+                                              GenerateExpression(session,
+                                                                 secondExpression));
+            case AST::BinaryOperation::Le:
+                return _builder.CreateICmpSLE(GenerateExpression(session,
+                                                                 firstExpression),
+                                              GenerateExpression(session,
+                                                                 secondExpression));
         }
 
         return nullptr;

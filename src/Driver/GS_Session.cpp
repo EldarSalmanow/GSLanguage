@@ -112,11 +112,11 @@ namespace GSLanguageCompiler::Driver {
         // TODO
 
 //        std::vector<UString> objectFiles;
-//
-//        for (auto &translationUnitDeclaration : translationUnitDeclarations) {
-//            auto codeHolder = _backend->Generate(*this,
-//                                                 translationUnitDeclaration);
-//
+
+        for (auto &translationUnitDeclaration : translationUnitDeclarations) {
+            auto codeHolder = _backend->Generate(*this,
+                                                 translationUnitDeclaration);
+
 //            UStringStream fileNameStringStream;
 //            fileNameStringStream << std::filesystem::path(translationUnitDeclaration->GetName().AsUTF8()).filename().string()
 //                                 << ".o"_us;
@@ -127,7 +127,7 @@ namespace GSLanguageCompiler::Driver {
 //                            codeHolder);
 //
 //            objectFiles.emplace_back(fileName);
-//        }
+        }
 //
 //        _backend->Link(*this,
 //                       objectFiles,

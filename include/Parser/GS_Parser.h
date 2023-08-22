@@ -205,7 +205,7 @@ namespace GSLanguageCompiler::Parser {
          * Parsing range expression
          * @return Range expression
          */
-        AST::NodePtr<AST::GS_RangeExpression> ParseRangeExpression();
+        AST::GSExpressionPtr ParseRangeExpression();
 
         /**
          * Parsing unary expression
@@ -223,10 +223,16 @@ namespace GSLanguageCompiler::Parser {
                                                    LRef<AST::GSExpressionPtr> expression);
 
         /**
+         * Parsing binary expression
+         * @return Binary expression
+         */
+        AST::GSExpressionPtr ParseBinaryExpression();
+
+        /**
          * Parsing index expression
          * @return Index expression
          */
-        AST::NodePtr<AST::GS_IndexExpression> ParseIndexExpression();
+        AST::GSExpressionPtr ParseIndexExpression();
 
         /**
          * Parsing cast expression
