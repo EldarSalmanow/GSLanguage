@@ -1,95 +1,23 @@
-#include <map>
-
 #include <LLVM/GS_LLVMVisitor.h>
 
 namespace GSLanguageCompiler::CodeGenerator {
 
-    // TODO update
-
-//    class GS_LLVMTableOfSymbols {
-//    public:
-//
-//        GS_LLVMTableOfSymbols() {
-//            _types.emplace_back(std::make_pair("Void"_us, Semantic::GS_VoidType::Create()));
-//
-//            _types.emplace_back(std::make_pair("Char"_us, Semantic::GS_CharType::Create()));
-//        }
-//
-//    public:
-//
-//        Ptr<llvm::Type> GetType(Semantic::GSTypePtr type) {
-//            auto movedType = std::move(type);
-//
-//            auto typeName = movedType->GetName();
-//
-//            for (auto &llvmType : _types) {
-//                if (typeName == llvmType.first) {
-//                    return llvmType.second;
-//                }
-//            }
-//
-//            return nullptr;
-//        }
-//
-//        Ptr<llvm::AllocaInst> GetVariable(UString name) {
-//            for (auto &variable : _variables) {
-//                if (name == variable.first) {
-//                    return variable.second;
-//                }
-//            }
-//
-//            return nullptr;
-//        }
-//
-//    private:
-//
-//        std::vector<std::pair<UString, Ptr<llvm::Type>>> _types;
-//
-//        std::vector<std::pair<UString, Ptr<llvm::AllocaInst>>> _variables;
-//    };
-//
-//    void f() {
-//        auto tos = GS_LLVMTableOfSymbols();
-//
-//        auto llvmType = tos.GetType(Semantic::GS_VoidType::Create());
-//
-//        auto var = tos.GetVariable("a"_us);
-//    }
-
-    llvm::Type *LLVMType(UString name,
-                         LRef<llvm::LLVMContext> context) {
-        if (name == "Void"_us) {
-            return llvm::Type::getVoidTy(context);
-        } else if (name == "Char"_us) {
-            return llvm::Type::getInt8Ty(context);
-        } else if (name == "I8"_us) {
-            return llvm::Type::getInt8Ty(context);
-        } else if (name == "I16"_us) {
-            return llvm::Type::getInt16Ty(context);
-        } else if (name == "I32"_us) {
-            return llvm::Type::getInt32Ty(context);
-        } else if (name == "I64"_us) {
-            return llvm::Type::getInt64Ty(context);
-        } else if (name == "U8"_us) {
-            return llvm::Type::getInt8Ty(context);
-        } else if (name == "U16"_us) {
-            return llvm::Type::getInt16Ty(context);
-        } else if (name == "U32"_us) {
-            return llvm::Type::getInt32Ty(context);
-        } else if (name == "U64"_us) {
-            return llvm::Type::getInt64Ty(context);
-        } else if (name == "String"_us) {
-            return llvm::Type::getInt8PtrTy(context);
-        } else {
-            return nullptr;
-        }
-    }
-
-    std::map<UString, Ptr<llvm::AllocaInst>> Variables;
-
     GS_LLVMVisitor::GS_LLVMVisitor(LRef<GS_LLVMCodeHolder> codeHolder)
             : _codeHolder(codeHolder),
-              _builder(_codeHolder.GetContext()) {}
+              _builder(_codeHolder.GetContext()) {
+        _types["Void"] = llvm::Type::getVoidTy(GetContext());
+        _types["Bool"] = llvm::Type::getInt8Ty(GetContext());
+        _types["Char"] = llvm::Type::getInt8Ty(GetContext());
+        _types["I8"] = llvm::Type::getInt8Ty(GetContext());
+        _types["I16"] = llvm::Type::getInt16Ty(GetContext());
+        _types["I32"] = llvm::Type::getInt32Ty(GetContext());
+        _types["I64"] = llvm::Type::getInt64Ty(GetContext());
+        _types["U8"] = llvm::Type::getInt8Ty(GetContext());
+        _types["U16"] = llvm::Type::getInt16Ty(GetContext());
+        _types["U32"] = llvm::Type::getInt32Ty(GetContext());
+        _types["U64"] = llvm::Type::getInt64Ty(GetContext());
+        _types["String"] = llvm::Type::getInt8PtrTy(GetContext());
+    }
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateNode(LRef<Driver::GS_Session> session,
                                                   LRef<AST::GSNodePtr> node) {
@@ -318,7 +246,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         for (auto &param : params) {
             auto paramType = param.GetType();
 
-            auto llvmParamType = LLVMType(paramType->GetName(), GetContext());
+            auto llvmParamType = _types[paramType->GetName()];
 
             llvmParamTypes.emplace_back(llvmParamType);
         }
@@ -328,7 +256,7 @@ namespace GSLanguageCompiler::CodeGenerator {
         if (!returnType) {
             llvmReturnType = llvm::Type::getVoidTy(GetContext());
         } else {
-            llvmReturnType = LLVMType(returnType->GetName(), GetContext());
+            llvmReturnType = _types[returnType->GetName()];
         }
 
         auto llvmFunctionType = llvm::FunctionType::get(llvmReturnType,
@@ -339,6 +267,8 @@ namespace GSLanguageCompiler::CodeGenerator {
                                                    llvm::Function::LinkageTypes::ExternalLinkage,
                                                    name.AsUTF8(),
                                                    GetModule());
+
+        _functions[name] = llvmFunction;
 
         U64 index = 0;
         for (auto &argument : llvmFunction->args()) {
@@ -373,11 +303,9 @@ namespace GSLanguageCompiler::CodeGenerator {
         auto type = variableDeclarationStatement->GetType();
         auto expression = variableDeclarationStatement->GetExpression();
 
-        auto llvmType = LLVMType(type->GetName(), GetContext());
+        auto llvmAllocaInstruction = _builder.CreateAlloca(_types[type->GetName()]);
 
-        auto llvmAllocaInstruction = _builder.CreateAlloca(llvmType);
-
-        Variables[name] = llvmAllocaInstruction;
+        _variables[name] = llvmAllocaInstruction;
 
         return _builder.CreateStore(GenerateExpression(session,
                                                        expression),
@@ -494,10 +422,16 @@ namespace GSLanguageCompiler::CodeGenerator {
         switch (typeType) {
             case Semantic::TypeType::Void:
                 return nullptr;
+            case Semantic::TypeType::Bool: {
+                auto boolValue = literalValue->GetValueWithCast<Bool>();
+
+                return llvm::ConstantInt::get(_types[type->GetName()],
+                                              boolValue ? 1 : 0);
+            }
             case Semantic::TypeType::Char: {
                 auto symbol = literalValue->GetValueWithCast<USymbol>();
 
-                return llvm::ConstantInt::get(LLVMType(type->GetName(), GetContext()),
+                return llvm::ConstantInt::get(_types[type->GetName()],
                                               (I8) symbol.CodePoint());
             }
             case Semantic::TypeType::Integer: {
@@ -511,25 +445,25 @@ namespace GSLanguageCompiler::CodeGenerator {
                     case Semantic::IntegerType::I8: {
                         auto number = integerValue->GetValueWithCast<I8>();
 
-                        return llvm::ConstantInt::get(LLVMType(type->GetName(), GetContext()),
+                        return llvm::ConstantInt::get(_types[type->GetName()],
                                                       number);
                     }
                     case Semantic::IntegerType::I16: {
                         auto number = integerValue->GetValueWithCast<I16>();
 
-                        return llvm::ConstantInt::get(LLVMType(type->GetName(), GetContext()),
+                        return llvm::ConstantInt::get(_types[type->GetName()],
                                                       number);
                     }
                     case Semantic::IntegerType::I32: {
                         auto number = integerValue->GetValueWithCast<I32>();
 
-                        return llvm::ConstantInt::get(LLVMType(type->GetName(), GetContext()),
+                        return llvm::ConstantInt::get(_types[type->GetName()],
                                                       number);
                     }
                     case Semantic::IntegerType::I64: {
                         auto number = integerValue->GetValueWithCast<I64>();
 
-                        return llvm::ConstantInt::get(LLVMType(type->GetName(), GetContext()),
+                        return llvm::ConstantInt::get(_types[type->GetName()],
                                                       number);
                     }
                     case Semantic::IntegerType::User: {
@@ -548,25 +482,25 @@ namespace GSLanguageCompiler::CodeGenerator {
                     case Semantic::UIntegerType::U8: {
                         auto number = uIntegerValue->GetValueWithCast<I8>();
 
-                        return llvm::ConstantInt::get(LLVMType(type->GetName(), GetContext()),
+                        return llvm::ConstantInt::get(_types[type->GetName()],
                                                       number);
                     }
                     case Semantic::UIntegerType::U16: {
                         auto number = uIntegerValue->GetValueWithCast<I16>();
 
-                        return llvm::ConstantInt::get(LLVMType(type->GetName(), GetContext()),
+                        return llvm::ConstantInt::get(_types[type->GetName()],
                                                       number);
                     }
                     case Semantic::UIntegerType::U32: {
                         auto number = uIntegerValue->GetValueWithCast<I32>();
 
-                        return llvm::ConstantInt::get(LLVMType(type->GetName(), GetContext()),
+                        return llvm::ConstantInt::get(_types[type->GetName()],
                                                       number);
                     }
                     case Semantic::UIntegerType::U64: {
                         auto number = uIntegerValue->GetValueWithCast<I64>();
 
-                        return llvm::ConstantInt::get(LLVMType(type->GetName(), GetContext()),
+                        return llvm::ConstantInt::get(_types[type->GetName()],
                                                       number);
                     }
                     case Semantic::UIntegerType::User: {
@@ -592,6 +526,8 @@ namespace GSLanguageCompiler::CodeGenerator {
 
     Ptr<llvm::Value> GS_LLVMVisitor::GenerateArrayExpression(LRef<Driver::GS_Session> session,
                                                              AST::NodePtrLRef<AST::GS_ArrayExpression> arrayExpression) {
+        auto expressions = arrayExpression->GetExpressions();
+
         return nullptr;
     }
 
@@ -732,7 +668,7 @@ namespace GSLanguageCompiler::CodeGenerator {
                                                                      AST::NodePtrLRef<AST::GS_VariableUsingExpression> variableUsingExpression) {
         auto name = variableUsingExpression->GetName();
 
-        auto llvmAllocaInstruction = Variables[name];
+        auto llvmAllocaInstruction = _variables[name];
 
         return _builder.CreateLoad(llvmAllocaInstruction->getAllocatedType(),
                                    llvmAllocaInstruction,

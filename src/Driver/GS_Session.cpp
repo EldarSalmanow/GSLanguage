@@ -100,7 +100,7 @@ namespace GSLanguageCompiler::Driver {
                                                                    *source);
 
             semanticAnalyzer->Analyze(translationUnitDeclaration);
-            optimizer->Optimize(translationUnitDeclaration);
+//            optimizer->Optimize(translationUnitDeclaration);
 
 //            Debug::DumpAST(translationUnitDeclaration,
 //                           *this);

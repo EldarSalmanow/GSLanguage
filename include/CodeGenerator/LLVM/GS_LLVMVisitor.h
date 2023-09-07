@@ -1,9 +1,12 @@
 #ifndef GSLANGUAGE_GS_LLVMVISITOR_H
 #define GSLANGUAGE_GS_LLVMVISITOR_H
 
+#include <map>
+
 #pragma warning(push)
 #pragma warning(disable : 4624)
 #include <llvm/IR/IRBuilder.h>
+#include <llvm/IR/Function.h>
 #pragma warning(pop)
 
 #include <AST/GS_Visitor.h>
@@ -276,6 +279,12 @@ namespace GSLanguageCompiler::CodeGenerator {
          * LLVM IR builder
          */
         llvm::IRBuilder<> _builder;
+
+        std::map<UString, Ptr<llvm::Type>> _types;
+
+        std::map<UString, Ptr<llvm::Function>> _functions;
+
+        std::map<UString, Ptr<llvm::AllocaInst>> _variables;
     };
 
 }
